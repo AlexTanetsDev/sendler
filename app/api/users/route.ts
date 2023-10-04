@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import db from "@/db";
 
+// create User
 export async function POST(req: Request) {
   const body = await req.json();
   const { login, tel, password, email } = body;
@@ -12,3 +13,6 @@ export async function POST(req: Request) {
   const user = response[0];
   return NextResponse.json({ user: user }, { status: 201 });
 }
+
+// get all users
+export async function GET(req: Request) {}
