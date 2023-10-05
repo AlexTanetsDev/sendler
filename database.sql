@@ -11,10 +11,11 @@ CREATE TABLE users (
 
 CREATE TABLE clients (
     client_id SERIAL,
-    tel INT UNIQUE,
+    tel INT,
     user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
     PRIMARY KEY (client_id, user_id)
 );
+
 
 CREATE TABLE send_groups (
    group_id SERIAL,
