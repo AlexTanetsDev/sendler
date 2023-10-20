@@ -18,5 +18,11 @@ export async function GET(request, { params }) {
 
 // delete one sending group
 export async function DELETE(request, { params }) {
-  const id = params.id;
+  const { id } = params;
+
+  await db.query(
+    `DELETE FROM send_groups
+		WHERE send_groups.group_id = ${id} `
+  );
+  return NextResponse.json(`Group with id=${id} is deleted`, { status: 200 });
 }
