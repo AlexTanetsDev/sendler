@@ -21,7 +21,8 @@
 
 // export default db;
 
-const Pool = require('pg').Pool;
+// const Pool = require('pg').Pool;
+import { Pool } from 'pg';
 const { DB_HOST, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
 let pool;
@@ -37,5 +38,4 @@ if (!pool) {
 	});
 }
 
-
-module.exports = pool;
+export default pool;

@@ -29,5 +29,8 @@
   "main": "next.config.js",
   "author": "",
   "license": "ISC",
-  "keywords": []
+  "keywords": [],
+  "devDependencies": {
+    "@types/pg": "^8.10.7"
+  }
 }

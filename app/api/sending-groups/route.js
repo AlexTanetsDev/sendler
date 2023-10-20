@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-// import db from "@/db";
-const db = require("../../../db");
+import db from "@/db";
 
 // get all groups for all users
 // or

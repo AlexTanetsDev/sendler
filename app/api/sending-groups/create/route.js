@@ -1,7 +1,5 @@
 import { NextResponse } from "next/server";
-// import db from "@/db";
-
-const db = require("../../../../db");
+import db from "@/db";
 
 export async function POST(request) {
   const { id, name, clients } = await request.json();
