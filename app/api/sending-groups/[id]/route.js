@@ -12,7 +12,6 @@ export async function GET(request, { params }) {
 		WHERE groups_members.group_id = ${id} `
   );
 
-  // console.log("params:  ", params)
   return NextResponse.json(userGroup.rows, { status: 200 });
 }
 
