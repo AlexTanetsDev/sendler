@@ -7,8 +7,6 @@ import db from "@/db";
 export async function GET(request) {
   const { searchParams } = new URL(request.url);
   const id = searchParams.get("userId");
-  console.log(searchParams);
-  console.log(id);
 
   if (id) {
     // getting logic for one user
