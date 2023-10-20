@@ -1,15 +1,18 @@
-const db = require("../../../../../db");
+import { NextResponse } from "next/server";
+// import db from "@/db";
 
-export async function POST(request, response) {
+const db = require("../../../../db");
+
+export async function POST(request) {
   const { id, name, clients } = await request.json();
 
-  async function insertClient(number, userId, groupId) {
+  async function insertClient(tel, userId, groupId) {
     await db.query(
       `INSERT INTO clients (tel, user_id) values($1, $2) RETURNING *`,
-      [number, userId]
+      [tel, userId]
     );
     const clientId = await db.query(
-      `SELECT client_id FROM clients WHERE user_id = ${userId} AND tel=${number} `
+      `SELECT client_id FROM clients WHERE user_id = ${userId} AND tel=${tel} `
     );
 
     const { client_id } = clientId.rows[0];
@@ -41,13 +44,13 @@ export async function POST(request, response) {
       if (
         !numberClients.find((numberClient) => numberClient === client.number)
       ) {
-        const { number } = client;
-        insertClient(number, id, group_id);
+        const { tel } = client;
+        insertClient(tel, id, group_id);
       }
     });
 
-    return new Response(JSON.stringify(group.rows[0]), { status: 200 });
+    return NextResponse.json(group.rows[0], { status: 200 });
   } catch (error) {
-    return new Response("Failed to create a new group", { status: 500 });
+    return NextResponse.json("Failed to create a new group", { status: 500 });
   }
 }

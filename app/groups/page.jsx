@@ -20,7 +20,7 @@ const CreateGroup = () => {
     const id = 1;
 
     try {
-      const response = await axios.post(`api/sending-groups/${id}/create`, {
+      const response = await axios.post(`api/sending-groups/create`, {
         id: id,
         name: "women",
         clients: clients,
@@ -43,7 +43,6 @@ const CreateGroup = () => {
       <button type="submit" onClick={xport}>
         <b>Enter</b>
       </button>
-      {/* </form> */}
     </div>
   );
 };
