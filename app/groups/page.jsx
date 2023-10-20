@@ -25,7 +25,6 @@ const CreateGroup = () => {
         name: "women",
         clients: clients,
       });
-      console.log("Create group:  ", response.data);
     } catch (error) {
       console.log(error);
     }

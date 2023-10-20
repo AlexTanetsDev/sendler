@@ -23,7 +23,12 @@ export async function GET(request) {
   }
 
   //getting all groups
-  return NextResponse.json(null);
+  try {
+    const groups = await db.query(`SELECT group_name FROM send_groups`);
+    return NextResponse.json(groups.rows);
+  } catch (error) {
+    return NextResponse.json(error);
+  }
 }
 
 // add new sendig group, here we working with excel file of clients and get user ID from search params
