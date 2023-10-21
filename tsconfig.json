@@ -22,6 +22,6 @@
       "@/*": ["./*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/api/sending-groups/create/route.js", "app/api/sending-groups/[id]/route.js", "app/api/sending-groups/route.js"],
   "exclude": ["node_modules"]
 }
