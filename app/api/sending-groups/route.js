@@ -32,13 +32,8 @@ export async function GET(request) {
 // add new sendig group, here we working with excel file of clients and get user ID from search params
 // 1. we adding all clients to clients table and getting all clients id in array
 // 2. create sending group with user_id from search params and array of clients
-// export async function POST(request: Request) {
-//   const { searchParams } = new URL(request.url);
-//   const id = searchParams.get("userId");
-//   const body = await request.json();
-// }
 export async function POST(request) {
-  const { id, name, clients } = await request.json();
+  const { userId, name, clients } = await request.json();
 
   async function insertClient(tel, userId, groupId) {
     await db.query(
@@ -58,12 +53,16 @@ export async function POST(request) {
   }
 
   try {
+    const id = await db.query(
+      `SELECT user_id FROM users WHERE user_id=${userId}`
+    );
+
     const group = await db.query(
       `INSERT INTO send_groups (group_name, user_id) values($1, $2) RETURNING *`,
-      [name, id]
+      [name, userId]
     );
     const userClients = await db.query(
-      `SELECT tel FROM clients WHERE user_id = ${id}`
+      `SELECT tel FROM clients WHERE user_id = ${userId}`
     );
 
     const userClientsArray = userClients.rows;
@@ -75,11 +74,9 @@ export async function POST(request) {
     }
 
     clients.map((client) => {
-      if (
-        !numberClients.find((numberClient) => numberClient === client.number)
-      ) {
+      if (!numberClients.find((numberClient) => numberClient === client.tel)) {
         const { tel } = client;
-        insertClient(tel, id, group_id);
+        insertClient(tel, userId, group_id);
       }
     });
 
