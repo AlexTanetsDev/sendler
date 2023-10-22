@@ -17,16 +17,15 @@ const CreateGroup = () => {
     const wb = XLSX.read(ab);
     const wsname = wb.SheetNames[0];
     const clients = XLSX.utils.sheet_to_json(wb.Sheets[wsname]);
-    const id = 1;
+    const userId = 1;
 
     try {
-      const response = await axios.post(`api/sending-groups`, {
-        id: id,
-        name: "women",
+      await axios.post(`api/sending-groups/${userId}`, {
+        name: "men",
         clients: clients,
       });
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data);
     }
   });
 
