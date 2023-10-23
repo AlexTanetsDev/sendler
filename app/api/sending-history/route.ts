@@ -1,53 +1,70 @@
 import { NextRequest, NextResponse } from "next/server";
-import { NextApiRequest, NextApiResponse } from "next";
 import db from "@/db";
 
 export async function GET(req: NextRequest) {
   try {
-    // const userId = params.id;
     const searchParams = req.nextUrl.searchParams;
     const start_date = searchParams.get("start_date");
     const end_date = searchParams.get("end_date");
     const user_id = searchParams.get("id");
 
-    const query = `
-            SELECT sg.group_name
+    if (!user_id) {
+      return NextResponse.json(
+        { error: "ID required for getting user's history" },
+        { status: 400 }
+      );
+    }
+
+    if (!start_date || !end_date) {
+      const query = `
+            SELECT sh.history_id, sh.sending_group_date, sg.group_name
             FROM send_groups sg
             INNER JOIN sending_history sh ON sg.group_id = sh.group_id
-            INNER JOIN users u ON sg.user_id = u.user_id;
-            WHERE sh.sending_group_date >= $1 AND sh.sending_group_date <= $2
+            INNER JOIN users u ON sg.user_id = u.user_id
+            WHERE u.user_id = $1 
         `;
 
-    const result = await db.query(query, [start_date, end_date]);
+      const result = await db.query(query, [user_id]);
+      const data = result.rows;
 
-    // const groupNames = result.rows.map((row: any) => {
-    //   console.log(row);
-    //   return row.group_name;
-    // });
-    // const data = await result.json();
+      return NextResponse.json({ data });
+    }
 
-    return NextResponse.json({ result });
+    const query = `
+            SELECT sh.history_id, sh.sending_group_date, sg.group_name
+            FROM send_groups sg
+            INNER JOIN sending_history sh ON sg.group_id = sh.group_id
+            INNER JOIN users u ON sg.user_id = u.user_id
+            WHERE u.user_id = $1 
+            AND sh.sending_group_date >= $2 
+            AND sh.sending_group_date <= $3
+        `;
+
+    const result = await db.query(query, [user_id, start_date, end_date]);
+    const data = result.rows;
+
+    return NextResponse.json({ data });
   } catch (error) {
     console.error(error);
     NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
 
-export async function PUT(req: NextRequest) {
+export async function POST(req: NextRequest) {
   const formData = await req.formData();
   const group_id = formData.get("groupId");
-  const user_id = formData.get("userId");
 
   try {
     const query = `
-        INSERT INTO sending_history (group_id, user_id)
-        VALUES ($1, $2);
+        INSERT INTO sending_history (group_id)
+        VALUES ($1);
+        RETURNING history_id
       `;
 
-    const result = await db.query(query, [group_id, user_id]);
+    const historyId = await db.query(query, [group_id]);
 
     return NextResponse.json({
-      result,
+      historyId,
       message: "Data successfully added to history",
     });
   } catch (error) {
@@ -59,15 +76,20 @@ export async function PUT(req: NextRequest) {
 //For admin service
 export async function DELETE(req: NextRequest) {
   const formData = await req.formData();
-  const history_id = formData.get("historyId");
+  const user_id = formData.get("id");
 
   try {
     const query = `
         DELETE FROM sending_history
-        WHERE history_id = $1;
+        WHERE group_id IN (
+          SELECT group_id
+          FROM send_groups
+          WHERE user_id = $1
+        )
+        RETURNING *
       `;
 
-    const result = await db.query(query, [history_id]);
+    const deletedData = await db.query(query, [user_id]);
 
     return NextResponse.json({
       message: "Data successfully deleted from history",
