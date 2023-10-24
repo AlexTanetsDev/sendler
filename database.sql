@@ -6,7 +6,7 @@
 
 --     tel INT NOT NULL,
 
---     password VARCHAR(11) NOT NULL,
+--     password VARCHAR(32) NOT NULL,
 
 --     balance INT NOT NULL DEFAULT 0,
 
@@ -143,7 +143,7 @@ CREATE TABLE
         user_id SERIAL PRIMARY KEY,
         user_login TEXT UNIQUE NOT NULL,
         tel INT NOT NULL,
-        user_password VARCHAR(11) NOT NULL,
+        user_password TEXT NOT NULL,
         balance INT NOT NULL DEFAULT 0,
         user_token TEXT,
         email TEXT NOT NULL,
