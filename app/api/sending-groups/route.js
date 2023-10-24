@@ -32,6 +32,28 @@ export async function GET(request) {
 // add new sendig group, here we working with excel file of clients and get user ID from search params
 // 1. we adding all clients to clients table and getting all clients id in array
 // 2. create sending group with user_id from search params and array of clients
+
+// async function insertClient(tel, userId) {
+//   await db.query(
+//     `INSERT INTO clients (tel, user_id) values($1, $2) RETURNING *`,
+//     [tel, userId]
+//   );
+// }
+
+// async function insertGroupMember(tel, userId, groupId) {
+//   const clientId = await db.query(
+//     `SELECT client_id FROM clients WHERE user_id = ${userId} AND tel=${tel} `
+//   );
+
+//   console.log(clientId.rows[0]);
+
+//   const { client_id } = clientId.rows[0];
+//   await db.query(
+//     `INSERT INTO groups_members (group_id, client_id) values($1, $2) RETURNING *`,
+//     [groupId, client_id]
+//   );
+// }
+
 export async function POST(request) {
   const { groupName, clients } = await request.json();
   const { searchParams } = new URL(request.url);
@@ -85,11 +107,14 @@ export async function POST(request) {
     );
   }
 
-  async function insertClient(tel, userId, groupId) {
+  async function insertClient(tel, userId) {
     await db.query(
       `INSERT INTO clients (tel, user_id) values($1, $2) RETURNING *`,
       [tel, userId]
     );
+  }
+
+  async function insertGroupMember(tel, userId, groupId) {
     const clientId = await db.query(
       `SELECT client_id FROM clients WHERE user_id = ${userId} AND tel=${tel} `
     );
@@ -113,23 +138,19 @@ export async function POST(request) {
 
     //checking whether a client exists in the user's client list
     //and adding client
-    const userClientArray = userClients.rows;
+    const userClientsRes = userClients.rows;
     const { group_id } = group.rows[0];
 
-    const numbersClientInDatabase = [];
-    for (const numberClient of userClientArray) {
-      numbersClientInDatabase.push(numberClient.tel);
-    }
-
     clients.map((client) => {
+      const { tel } = client;
       if (
-        !numbersClientInDatabase.find(
-          (numberClientInDatabase) => numberClientInDatabase === client.tel
+        !userClientsRes.find(
+          (userClientRes) => userClientRes.tel === String(tel)
         )
       ) {
-        const { tel } = client;
-        insertClient(tel, id, group_id);
+        insertClient(tel, id);
       }
+      insertGroupMember(tel, id, group_id);
     });
     return NextResponse.json(group.rows[0], { status: 200 });
   } catch (error) {
