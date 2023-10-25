@@ -84,17 +84,13 @@ export async function PUT(request, { params }) {
     });
   }
 
-  //checking user_id existense
-  const groupIdRes = await db.query(`SELECT group_id FROM send_groups`);
-  const groupIdObjectArray = groupIdRes.rows;
-  const groupsIdInDatabase = [];
-  for (const groupIdObject of groupIdObjectArray) {
-    groupsIdInDatabase.push(groupIdObject.group_id);
-  }
+  //checking group existense
+  const groupsIdRes = await db.query(`SELECT group_id FROM send_groups`);
+  const groupsIdInDatabase = groupsIdRes.rows;
 
   if (
     !groupsIdInDatabase.find(
-      (groupIdInDatabase) => groupIdInDatabase === Number(id)
+      (groupIdInDatabase) => groupIdInDatabase.group_id === Number(id)
     )
   ) {
     return NextResponse.json(`The group with id = ${id} does not exist`, {
@@ -109,7 +105,7 @@ export async function PUT(request, { params }) {
     );
   }
 
-  async function insertRowInGroupsMember(tel, userId, groupId) {
+  async function insertGroupMember(tel, userId, groupId) {
     const clientId = await db.query(
       `SELECT client_id FROM clients WHERE user_id = ${userId} AND tel=${tel} `
     );
@@ -124,7 +120,7 @@ export async function PUT(request, { params }) {
   try {
     await db.query(
       `DELETE FROM groups_members
-		WHERE groups_members.group_id = ${id}`
+    WHERE groups_members.group_id = ${id}`
     );
 
     const userIdRes = await db.query(
@@ -133,33 +129,23 @@ export async function PUT(request, { params }) {
 
     const { user_id } = userIdRes.rows[0];
 
-    const userClients = await db.query(
+    const userClientsRes = await db.query(
       `SELECT tel FROM clients WHERE user_id = ${user_id}`
     );
 
     //checking whether a client exists in the user's client list
     //and adding client
-    const userClientArray = userClients.rows;
+    const userClients = userClientsRes.rows;
 
-    const numbersClientInDatabase = [];
-    for (const numberClient of userClientArray) {
-      numbersClientInDatabase.push(numberClient.tel);
+    for (const client of clients) {
+      const { tel } = client;
+      if (!userClients.find((userClient) => userClient.tel === String(tel))) {
+        await insertClient(tel, user_id);
+      }
+      await insertGroupMember(tel, user_id, id);
     }
 
-    clients.map((client) => {
-      const { tel } = client;
-      if (
-        !numbersClientInDatabase.find(
-          (numberClientInDatabase) => numberClientInDatabase === client.tel
-        )
-      ) {
-        // insertClient(tel, user_id);
-        console.log(tel);
-      }
-      // insertRowInGroupsMember(client.tel, user_id, id);
-    });
-
-    return NextResponse.json(group.rows[0], { status: 200 });
+    return NextResponse.json(id, { status: 200 });
   } catch (error) {
     return NextResponse.json(`Failed to update a group with id = ${id}`, {
       status: 500,

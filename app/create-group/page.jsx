@@ -22,12 +22,12 @@ const CreateGroup = () => {
       await axios.post(
         `api/sending-groups`,
         {
-          groupName: "children",
+          groupName: "men",
           clients: clients,
         },
         {
           params: {
-            userId: 1,
+            userId: 999,
           },
         }
       );
