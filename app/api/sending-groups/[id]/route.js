@@ -6,16 +6,12 @@ export async function GET(request, { params }) {
   const { id } = params;
 
   //checking group_id existense
-  const groupIdRes = await db.query("SELECT group_id FROM send_groups");
-  const groupIdObjectArray = groupIdRes.rows;
-  const groupsIdInDatabase = [];
-  for (const groupIdObject of groupIdObjectArray) {
-    groupsIdInDatabase.push(groupIdObject.group_id);
-  }
+  const groupsIdRes = await db.query("SELECT group_id FROM send_groups");
+  const groupsIdInDatabase = groupsIdRes.rows;
 
   if (
     !groupsIdInDatabase.find(
-      (groupIdInDatabase) => groupIdInDatabase === Number(id)
+      (groupIdInDatabase) => groupIdInDatabase.group_id === Number(id)
     )
   ) {
     return NextResponse.json(`The group with id = ${id} does not exist`, {
@@ -42,16 +38,12 @@ export async function DELETE(request, { params }) {
   const { id } = params;
 
   //checking group_id existense
-  const groupIdRes = await db.query("SELECT group_id FROM send_groups");
-  const groupIdObjectArray = groupIdRes.rows;
-  const groupsIdInDatabase = [];
-  for (const groupIdObject of groupIdObjectArray) {
-    groupsIdInDatabase.push(groupIdObject.group_id);
-  }
+  const groupsIdRes = await db.query("SELECT group_id FROM send_groups");
+  const groupsIdInDatabase = groupsIdRes.rows;
 
   if (
     !groupsIdInDatabase.find(
-      (groupIdInDatabase) => groupIdInDatabase === Number(id)
+      (groupIdInDatabase) => groupIdInDatabase.group_id === Number(id)
     )
   ) {
     return NextResponse.json(`The group with id = ${id} does not exist`, {
