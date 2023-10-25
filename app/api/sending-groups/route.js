@@ -45,36 +45,24 @@ export async function POST(request) {
   }
 
   //checking user_id existense
-  const userIdRes = await db.query(`SELECT user_id FROM users`);
-  const userIdObjectArray = userIdRes.rows;
-  const usersIdInDatabase = [];
-  for (const userIdObject of userIdObjectArray) {
-    usersIdInDatabase.push(userIdObject.user_id);
-  }
+  const usersIdRes = await db.query(`SELECT user_id FROM users`);
+  const usersId = usersIdRes.rows;
 
-  if (
-    !usersIdInDatabase.find(
-      (userIdInDatabase) => userIdInDatabase === Number(id)
-    )
-  ) {
+  if (!usersId.find((userId) => userId.user_id === Number(id))) {
     return NextResponse.json(`The user with id = ${id} does not exist`, {
       status: 400,
     });
   }
 
   //checking same group_name existense for user
-  const groupNameRes = await db.query(
+  const groupsNameRes = await db.query(
     `SELECT group_name FROM send_groups WHERE user_id=${id}`
   );
-  const groupIdObjectArray = groupNameRes.rows;
-  const groupNamesInDatabase = [];
-  for (const groupIdObject of groupIdObjectArray) {
-    groupNamesInDatabase.push(groupIdObject.group_name);
-  }
+  const groupsNameInDatabase = groupsNameRes.rows;
 
   if (
-    groupNamesInDatabase.find(
-      (groupNameInDatabase) => groupNameInDatabase === groupName
+    groupsNameInDatabase.find(
+      (groupNameInDatabase) => groupNameInDatabase.group_name === groupName
     )
   ) {
     return NextResponse.json(
@@ -85,16 +73,19 @@ export async function POST(request) {
     );
   }
 
-  async function insertClient(tel, userId, groupId) {
+  async function insertClient(tel, userId) {
     await db.query(
       `INSERT INTO clients (tel, user_id) values($1, $2) RETURNING *`,
       [tel, userId]
     );
-    const clientId = await db.query(
+  }
+
+  async function insertGroupMember(tel, userId, groupId) {
+    const clientIdRes = await db.query(
       `SELECT client_id FROM clients WHERE user_id = ${userId} AND tel=${tel} `
     );
 
-    const { client_id } = clientId.rows[0];
+    const { client_id } = clientIdRes.rows[0];
 
     await db.query(
       `INSERT INTO groups_members (group_id, client_id) values($1, $2) RETURNING *`,
@@ -107,30 +98,24 @@ export async function POST(request) {
       `INSERT INTO send_groups (group_name, user_id) values($1, $2) RETURNING *`,
       [groupName, id]
     );
-    const userClients = await db.query(
+    const userClientsRes = await db.query(
       `SELECT tel FROM clients WHERE user_id = ${id}`
     );
 
     //checking whether a client exists in the user's client list
     //and adding client
-    const userClientArray = userClients.rows;
+    const userClients = userClientsRes.rows;
     const { group_id } = group.rows[0];
 
-    const numbersClientInDatabase = [];
-    for (const numberClient of userClientArray) {
-      numbersClientInDatabase.push(numberClient.tel);
+    for (const client of clients) {
+      const { tel } = client;
+
+      if (!userClients.find((userClient) => userClient.tel === String(tel))) {
+        await insertClient(tel, id);
+      }
+      await insertGroupMember(tel, id, group_id);
     }
 
-    clients.map((client) => {
-      if (
-        !numbersClientInDatabase.find(
-          (numberClientInDatabase) => numberClientInDatabase === client.tel
-        )
-      ) {
-        const { tel } = client;
-        insertClient(tel, id, group_id);
-      }
-    });
     return NextResponse.json(group.rows[0], { status: 200 });
   } catch (error) {
     return NextResponse.json("Failed to create a new group", { status: 500 });
