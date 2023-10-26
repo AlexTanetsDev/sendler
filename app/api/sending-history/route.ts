@@ -72,30 +72,3 @@ export async function POST(req: NextRequest) {
     NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
-
-//For admin service
-export async function DELETE(req: NextRequest) {
-  const formData = await req.formData();
-  const user_id = formData.get("id");
-
-  try {
-    const query = `
-        DELETE FROM sending_history
-        WHERE group_id IN (
-          SELECT group_id
-          FROM send_groups
-          WHERE user_id = $1
-        )
-        RETURNING *
-      `;
-
-    const deletedData = await db.query(query, [user_id]);
-
-    return NextResponse.json({
-      message: "Data successfully deleted from history",
-    });
-  } catch (error) {
-    console.error(error);
-    NextResponse.json({ error: "Server error" }, { status: 500 });
-  }
-}
