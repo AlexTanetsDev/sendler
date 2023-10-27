@@ -13,7 +13,7 @@ const CreateGroup = () => {
   };
 
   const xport = useCallback(async () => {
-    const ab = await (await file).arrayBuffer();
+    const ab = await file.arrayBuffer();
     const wb = XLSX.read(ab);
     const wsname = wb.SheetNames[0];
     const clients = XLSX.utils.sheet_to_json(wb.Sheets[wsname]);
@@ -27,7 +27,7 @@ const CreateGroup = () => {
     } catch (error) {
       console.log(error.response.data.message);
     }
-  });
+  }, [file]);
 
   return (
     <div className="flex flex-col items-center py-8">
