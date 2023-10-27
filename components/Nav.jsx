@@ -4,7 +4,8 @@ import Link from "next/link";
 
 const navigation = [
   { id: 1, title: "Home", path: "/" },
-  { id: 2, title: "Groups", path: "/groups" },
+  { id: 2, title: "Create group", path: "/create-group" },
+  { id: 3, title: "Update group", path: "/update-group" },
 ];
 
 const Nav = () => {
