@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import axios from "axios";
-import { resellerAuth } from "../resellerAuth";
+import resellerAuth from "../helpers/resellerAuth";
 
 const { RESELLER_URL } = process.env;
 
