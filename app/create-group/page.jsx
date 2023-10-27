@@ -19,20 +19,21 @@ const CreateGroup = () => {
     const clients = XLSX.utils.sheet_to_json(wb.Sheets[wsname]);
 
     try {
-      await axios.post(
-        `api/sending-groups`,
+      const response = await axios.post(
+        `api/admin/sending-groups`,
         {
           groupName: "men",
           clients: clients,
         },
         {
           params: {
-            userId: 999,
+            userId: 1,
           },
         }
       );
+      console.log(response.data.message);
     } catch (error) {
-      console.log(error);
+      console.log(error.response.data.message);
     }
   });
 

@@ -6,24 +6,24 @@ import db from "@/db";
 // get all groups for one user by user ID
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);
-	const id = Number(searchParams.get("userId"));
+	const userId = Number(searchParams.get("userId"));
 
-	if (id) {
+	if (userId) {
 		// getting logic for one user
 		//checking user_id existense
-		const usersIdRes = await db.query(`SELECT user_id FROM users`);
-		const usersId = usersIdRes.rows;
+		const usersRes = await db.query(`SELECT user_id FROM users`);
+		const users = usersRes.rows;
 
-		if (!usersId.find((userId) => userId.user_id === Number(id))) {
+		if (!users.find((user) => user.user_id === userId)) {
 			return NextResponse.json(
-				{ message: `The user with id = ${id} does not exist` },
+				{ message: `The user with id = ${userId} does not exist` },
 				{ status: 400, }
 			);
 		}
 
 		try {
 			const groups = await db.query(
-				`SELECT group_name FROM send_groups WHERE user_id = ${id}`
+				`SELECT group_name FROM send_groups WHERE user_id = ${userId}`
 			);
 			return NextResponse.json(
 				{ groups: groups.rows },
@@ -41,14 +41,6 @@ export async function GET(request: Request) {
 		{ message: `No userId` },
 		{ status: 400, }
 	);
-
-	//getting all groups
-	// try {
-	//   const groups = await db.query(`SELECT group_name FROM send_groups`);
-	//   return NextResponse.json(groups.rows);
-	// } catch (error) {
-	//   return NextResponse.json(error);
-	// }
 }
 
 // add new sendig group, here we working with excel file of clients and get user ID from search params
@@ -57,7 +49,7 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
 	const { groupName, clients } = await request.json();
 	const { searchParams } = new URL(request.url);
-	const id = Number(searchParams.get("userId"));
+	const userId = Number(searchParams.get("userId"));
 
 	//checking the content of the entered group
 	if (clients.length === 0) {
@@ -68,19 +60,19 @@ export async function POST(request: Request) {
 	}
 
 	//checking user_id existense
-	const usersIdRes = await db.query(`SELECT user_id FROM users`);
-	const usersId = usersIdRes.rows;
+	const usersRes = await db.query(`SELECT user_id FROM users`);
+	const users = usersRes.rows;
 
-	if (!usersId.find((userId) => userId.user_id === Number(id))) {
+	if (!users.find((user) => user.user_id === userId)) {
 		return NextResponse.json(
-			{ message: `The user with id = ${id} does not exist` },
+			{ message: `The user with id = ${userId} does not exist` },
 			{ status: 400, }
 		);
 	}
 
 	//checking same group_name existense for user
 	const groupsNameRes = await db.query(
-		`SELECT group_name FROM send_groups WHERE user_id=${id}`
+		`SELECT group_name FROM send_groups WHERE user_id=${userId}`
 	);
 	const groupsNameInDatabase = groupsNameRes.rows;
 
@@ -95,51 +87,51 @@ export async function POST(request: Request) {
 		);
 	}
 
-	async function insertClient(tel: number, userId: number) {
+	async function insertNewClient(tel: number, user_id: number) {
 		await db.query(
 			`INSERT INTO clients (tel, user_id) values($1, $2) RETURNING *`,
-			[tel, userId]
+			[tel, user_id]
 		);
 	}
 
-	async function insertGroupMember(tel: number, userId: number, groupId: number) {
+	async function insertGroupMember(tel: number, user_id: number, group_id: number) {
 		const clientIdRes = await db.query(
-			`SELECT client_id FROM clients WHERE user_id = ${userId} AND tel=${tel} `
+			`SELECT client_id FROM clients WHERE user_id = ${user_id} AND tel=${tel} `
 		);
 
 		const { client_id } = clientIdRes.rows[0];
 
 		await db.query(
 			`INSERT INTO groups_members (group_id, client_id) values($1, $2) RETURNING *`,
-			[groupId, client_id]
+			[group_id, client_id]
 		);
 	}
 
 	try {
 		const group = await db.query(
 			`INSERT INTO send_groups (group_name, user_id) values($1, $2) RETURNING *`,
-			[groupName, id]
+			[groupName, userId]
 		);
 		const userClientsRes = await db.query(
-			`SELECT tel FROM clients WHERE user_id = ${id}`
+			`SELECT tel FROM clients WHERE user_id = ${userId}`
 		);
 
 		//checking whether a client exists in the user's client list
 		//and adding client
 		const userClients = userClientsRes.rows;
-		const { group_id } = group.rows[0];
+		const groupId = group.rows[0].group_id;
 
 		for (const client of clients) {
-			const { tel } = client;
+			const tel = client.tel;
 
 			if (!userClients.find((userClient) => userClient.tel === String(tel))) {
-				await insertClient(tel, id);
+				await insertNewClient(tel, userId);
 			}
-			await insertGroupMember(tel, id, group_id);
+			await insertGroupMember(tel, userId, groupId);
 		}
 
 		return NextResponse.json(
-			{ group: group.rows[0], message: "Group created successfully" },
+			{ group: group.rows[0], message: "New group created successfully" },
 			{ status: 201 }
 		);
 	} catch (error) {
