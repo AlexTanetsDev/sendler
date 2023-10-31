@@ -1,7 +1,11 @@
 import { NextResponse } from "next/server";
 import db from "@/db";
 
-// get one sending group
+import HttpError from "@/helpers/HttpError";
+import insertNewClient from "@/helpers/insertNewClient";
+import insertGroupMember from "@/helpers/insertGroupMember";
+
+// get one group with id from params
 export async function GET(request: Request, { params }: { params: { id: string } }) {
 	const groupId = Number(params.id);
 
@@ -14,10 +18,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 			(group) => group.group_id === groupId
 		)
 	) {
-		return NextResponse.json(
-			{ message: `The group with id = ${groupId} does not exist` },
-			{ status: 400 }
-		);
+		return HttpError(400, `The group with id = ${groupId} does not exist`);
 	}
 
 	try {
@@ -40,7 +41,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 	}
 }
 
-// delete one sending group
+// delete one group with id from params
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
 	const groupId = Number(params.id);
 
@@ -53,10 +54,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 			(group) => group.group_id === groupId
 		)
 	) {
-		return NextResponse.json(
-			{ message: `The group with id = ${groupId} does not exist` },
-			{ status: 400 }
-		);
+		return HttpError(400, `The group with id = ${groupId} does not exist`);
 	}
 
 	try {
@@ -77,16 +75,14 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 	}
 }
 
+//update one group with id from params
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
 	const { clients } = await request.json();
 	const groupId = Number(params.id);
 
 	//checking the content of the entered group
 	if (clients.length === 0) {
-		return NextResponse.json(
-			{ message: `The clients list is empty` },
-			{ status: 400 }
-		);
+		return HttpError(400, `The clients list is empty`);
 	}
 
 	//checking group existense
@@ -98,29 +94,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 			(groupIdInDatabase) => groupIdInDatabase.group_id === groupId
 		)
 	) {
-		return NextResponse.json(
-			{ message: `The group with id = ${groupId} does not exist` },
-			{ status: 400 }
-		);
-	}
-
-	async function insertClient(tel: number, user_id: number) {
-		await db.query(
-			`INSERT INTO clients (tel, user_id) values($1, $2) RETURNING *`,
-			[tel, user_id]
-		);
-	}
-
-	async function insertGroupMember(tel: number, user_id: number, group_id: number) {
-		const clientId = await db.query(
-			`SELECT client_id FROM clients WHERE user_id = ${user_id} AND tel=${tel} `
-		);
-
-		const { client_id } = clientId.rows[0];
-		await db.query(
-			`INSERT INTO groups_members (group_id, client_id) values($1, $2) RETURNING *`,
-			[group_id, client_id]
-		);
+		return HttpError(400, `The group with id = ${groupId} does not exist`);
 	}
 
 	try {
@@ -146,7 +120,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 		for (const client of clients) {
 			const { tel } = client;
 			if (!userClients.find((userClient) => userClient.tel === String(tel))) {
-				await insertClient(tel, userId);
+				await insertNewClient(tel, userId);
 			}
 			await insertGroupMember(tel, userId, groupId);
 		}
