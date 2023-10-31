@@ -13,19 +13,24 @@ const CreateGroup = () => {
   };
 
   const xport = useCallback(async () => {
-    const ab = await file.arrayBuffer();
-    const wb = XLSX.read(ab);
-    const wsname = wb.SheetNames[0];
-    const clients = XLSX.utils.sheet_to_json(wb.Sheets[wsname]);
-    const groupId = 115;
+    const aa = file;
+    if (file) {
+      const ab = await aa.arrayBuffer();
+      const wb = XLSX.read(ab);
+      const wsname = wb.SheetNames[0];
+      const clients = XLSX.utils.sheet_to_json(wb.Sheets[wsname]);
+      const groupId = 135;
 
-    try {
-      const response = await axios.put(`api/admin/sending-groups/${groupId}`, {
-        clients: clients,
-      });
-      console.log(response.data.message);
-    } catch (error) {
-      console.log(error.response.data.message);
+      try {
+        const response = await axios.put(`api/sending-groups/${groupId}`, {
+          clients: clients,
+        });
+        console.log(response.data.message);
+      } catch (error) {
+        console.log(error.response.data.message);
+      }
+    } else {
+      console.log("Please, select file!");
     }
   }, [file]);
 
