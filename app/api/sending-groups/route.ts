@@ -5,8 +5,6 @@ import HttpError from '@/helpers/HttpError';
 import insertNewClient from "@/helpers/insertNewClient";
 import insertGroupMember from "@/helpers/insertGroupMember";
 
-// get all groups for all users
-// or
 // get all groups for one user by user ID
 export async function GET(request: Request) {
 	const { searchParams } = new URL(request.url);

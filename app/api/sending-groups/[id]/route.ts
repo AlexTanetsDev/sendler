@@ -5,7 +5,7 @@ import HttpError from "@/helpers/HttpError";
 import insertNewClient from "@/helpers/insertNewClient";
 import insertGroupMember from "@/helpers/insertGroupMember";
 
-// get one sending group
+// get one group with id from params
 export async function GET(request: Request, { params }: { params: { id: string } }) {
 	const groupId = Number(params.id);
 
@@ -41,7 +41,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 	}
 }
 
-// delete one sending group
+// delete one group with id from params
 export async function DELETE(request: Request, { params }: { params: { id: string } }) {
 	const groupId = Number(params.id);
 
@@ -75,6 +75,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 	}
 }
 
+//update one group with id from params
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
 	const { clients } = await request.json();
 	const groupId = Number(params.id);
