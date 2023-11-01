@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import db from "@/db";
+import { hash, compare } from "bcrypt";
 
 // get user by ID
 export async function GET(req: Request) {
@@ -73,6 +74,59 @@ export async function PUT(req: Request) {
     { user: rest, message: `User with id ${id} apdated` },
     { status: 200 }
   );
+}
+
+//update password
+
+export async function PATCH(req: Request) {
+  try {
+    const body = await req.json();
+
+    const { oldPassword, newPassword } = body;
+
+    const trimmedOldPassword = oldPassword.trim();
+
+    const trimmedNewPassword = newPassword.trim();
+
+    const id = req.url.slice(req.url.lastIndexOf("/") + 1);
+
+    const response = await db.query(
+      "SELECT user_password FROM users WHERE user_id = $1",
+      [id]
+    );
+
+    const userPassword = response.rows[0].user_password;
+
+    if (!userPassword) {
+      return NextResponse.json(
+        { user: null, message: `User with id ${id} not found` },
+        { status: 404 }
+      );
+    }
+
+    const isPasswordMatched = await compare(trimmedOldPassword, userPassword);
+
+    if (!isPasswordMatched) {
+      return NextResponse.json(
+        { user: null, message: `Old password is incorrect` },
+        { status: 400 }
+      );
+    }
+
+    const newHashPassword = await hash(trimmedNewPassword, 10);
+
+    const userData = await db.query(
+      "UPDATE users SET  user_password = $1 where user_id = $2",
+      [newHashPassword, id]
+    );
+
+    return NextResponse.json({ message: `Password updated` }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json(
+      { message: "Something went wrong!" },
+      { status: 500 }
+    );
+  }
 }
 
 //delete user
