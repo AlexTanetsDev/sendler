@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
-
-type ErrorType = 400 | 401 | 403 | 404 | 409;
+import { ErrorType } from "@/globaltypes/types";
 
 const errorMessageList = {
 	400: "Bad Request",

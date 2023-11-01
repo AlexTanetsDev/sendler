@@ -2,8 +2,13 @@ import { NextResponse } from "next/server";
 import db from "@/db";
 
 import HttpError from "@/helpers/HttpError";
-import insertNewClient from "@/helpers/insertNewClient";
-import insertGroupMember from "@/helpers/insertGroupMember";
+import insertNewClient from "@/services/insertNewClient/insertNewClient";
+import insertGroupMember from "@/services/insertGroupMember/insertGroupMember";
+
+import { IGroupIdInDatabase } from "@/globaltypes/types";
+import { IUserClientTelObject } from "@/globaltypes/types";
+import { IGroupId } from "@/globaltypes/types";
+import { IQieryParamsUpdateGroup } from "./types";
 
 // get one group with id from params
 export async function GET(request: Request, { params }: { params: { id: string } }) {
@@ -11,11 +16,11 @@ export async function GET(request: Request, { params }: { params: { id: string }
 
 	//checking group_id existense
 	const groupsRes = await db.query("SELECT group_id FROM send_groups");
-	const groups = groupsRes.rows;
+	const groupsId: IGroupId[] = groupsRes.rows;
 
 	if (
-		!groups.find(
-			(group) => group.group_id === groupId
+		!groupsId.find(
+			(group: IGroupId) => group.group_id === groupId
 		)
 	) {
 		return HttpError(400, `The group with id = ${groupId} does not exist`);
@@ -46,12 +51,12 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 	const groupId = Number(params.id);
 
 	//checking group_id existense
-	const groupsRes = await db.query("SELECT group_id FROM send_groups");
-	const groups = groupsRes.rows;
+	const groupsIdRes = await db.query("SELECT group_id FROM send_groups");
+	const groupsIdInDatabase: IGroupIdInDatabase[] = groupsIdRes.rows;
 
 	if (
-		!groups.find(
-			(group) => group.group_id === groupId
+		!groupsIdInDatabase.find(
+			(groupIdInDatabase: IGroupIdInDatabase) => groupIdInDatabase.group_id === groupId
 		)
 	) {
 		return HttpError(400, `The group with id = ${groupId} does not exist`);
@@ -77,7 +82,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 
 //update one group with id from params
 export async function PUT(request: Request, { params }: { params: { id: string } }) {
-	const { clients } = await request.json();
+	const { clients }: IQieryParamsUpdateGroup = await request.json();
 	const groupId = Number(params.id);
 
 	//checking the content of the entered group
@@ -87,11 +92,11 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
 	//checking group existense
 	const groupsIdRes = await db.query(`SELECT group_id FROM send_groups`);
-	const groupsIdInDatabase = groupsIdRes.rows;
+	const groupsIdInDatabase: IGroupIdInDatabase[] = groupsIdRes.rows;
 
 	if (
 		!groupsIdInDatabase.find(
-			(groupIdInDatabase) => groupIdInDatabase.group_id === groupId
+			(groupIdInDatabase: IGroupIdInDatabase) => groupIdInDatabase.group_id === groupId
 		)
 	) {
 		return HttpError(400, `The group with id = ${groupId} does not exist`);
@@ -115,11 +120,12 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
 		//checking whether a client exists in the user's client list
 		//and adding client
-		const userClients = userClientsRes.rows;
+		const userClients: IUserClientTelObject[] = userClientsRes.rows;
 
 		for (const client of clients) {
-			const { tel } = client;
-			if (!userClients.find((userClient) => userClient.tel === String(tel))) {
+			const tel = Number(client.tel);
+
+			if (!userClients.find((userClient: IUserClientTelObject) => userClient.tel === String(tel))) {
 				await insertNewClient(tel, userId);
 			}
 			await insertGroupMember(tel, userId, groupId);
