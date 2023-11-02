@@ -1,0 +1,1 @@
+export interface IQieryParamsCreateGroup { groupName: string, clients: { tel: string }[] };

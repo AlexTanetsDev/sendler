@@ -2,21 +2,27 @@ import { NextResponse } from "next/server";
 import db from "@/db";
 
 import HttpError from '@/helpers/HttpError';
-import insertNewClient from "@/helpers/insertNewClient";
-import insertGroupMember from "@/helpers/insertGroupMember";
+import insertNewClient from "@/services/insertNewClient/insertNewClient";
+import insertGroupMember from "@/services/insertGroupMember/insertGroupMember";
+
+import { IUserIdInDataBase } from "@/globaltypes/types";
+import { IGroupNameInDatabase } from "@/globaltypes/types";
+import { IUserClientTelObject } from "@/globaltypes/types";
+import { IQieryParamsCreateGroup } from "./types";
 
 // get all groups for one user by user ID
 export async function GET(request: Request) {
+
 	const { searchParams } = new URL(request.url);
 	const userId = Number(searchParams.get("userId"));
 
 	if (userId) {
 		// getting logic for one user
 		//checking user_id existense
-		const usersRes = await db.query(`SELECT user_id FROM users`);
-		const users = usersRes.rows;
+		const usersIdRes = await db.query(`SELECT user_id FROM users`);
+		const usersIdInDatabase = usersIdRes.rows;
 
-		if (!users.find((user) => user.user_id === userId)) {
+		if (!usersIdInDatabase.find((userIdInDatabase: IUserIdInDataBase) => userIdInDatabase.user_id === userId)) {
 			return HttpError(400, `The user with id = ${userId} does not exist`);
 		}
 
@@ -43,9 +49,11 @@ export async function GET(request: Request) {
 // 1. we adding all clients to clients table and getting all clients id in array
 // 2. create sending group with user_id from search params and array of clients
 export async function POST(request: Request) {
-	const { groupName, clients } = await request.json();
+	const { groupName, clients }: IQieryParamsCreateGroup = await request.json();
 	const { searchParams } = new URL(request.url);
 	const userId = Number(searchParams.get("userId"));
+
+	console.log("searchParams", searchParams);
 
 	//checking the content of the entered group
 	if (clients.length === 0) {
@@ -53,22 +61,22 @@ export async function POST(request: Request) {
 	}
 
 	//checking user_id existense
-	const usersRes = await db.query(`SELECT user_id FROM users`);
-	const users = usersRes.rows;
+	const usersIdRes = await db.query(`SELECT user_id FROM users`);
+	const usersIdInDatabase: IUserIdInDataBase[] = usersIdRes.rows;
 
-	if (!users.find((user) => user.user_id === userId)) {
+	if (!usersIdInDatabase.find((userIdInDatabase: IUserIdInDataBase) => userIdInDatabase.user_id === userId)) {
 		return HttpError(400, `The user with id = ${userId} does not exist`);
 	}
 
 	//checking same group_name existense for user
-	const groupsNameRes = await db.query(
+	const groupsRes = await db.query(
 		`SELECT group_name FROM send_groups WHERE user_id=${userId}`
 	);
-	const groupsNameInDatabase = groupsNameRes.rows;
+	const groupsNameInDatabase = groupsRes.rows;
 
 	if (
 		groupsNameInDatabase.find(
-			(groupNameInDatabase) => groupNameInDatabase.group_name === groupName
+			(groupNameInDatabase: IGroupNameInDatabase) => groupNameInDatabase.group_name === groupName
 		)
 	) {
 
@@ -90,9 +98,9 @@ export async function POST(request: Request) {
 		const groupId = group.rows[0].group_id;
 
 		for (const client of clients) {
-			const tel = client.tel;
+			const tel = Number(client.tel);
 
-			if (!userClients.find((userClient) => userClient.tel === String(tel))) {
+			if (!userClients.find((userClient: IUserClientTelObject) => userClient.tel === String(tel))) {
 				await insertNewClient(tel, userId);
 			}
 			await insertGroupMember(tel, userId, groupId);
