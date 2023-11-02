@@ -14,7 +14,7 @@ export interface IUser extends ITel, IUserId { };
 
 export interface IClient extends IClientId, ITel { };
 
-export interface IUserlient extends IClient, IUserId { };
+export interface IUserСlient extends IClient, IUserId { };
 
 export interface IGroup extends IGroupId, IGroupName, IUserId { };
 
