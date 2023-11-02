@@ -33,12 +33,12 @@ export async function GET(req: Request) {
 export async function PUT(req: Request) {
   const body = await req.json();
 
-  const { user_login, tel, email } = body;
+  const { user_login, tel, email, user_name } = body;
 
   const id = req.url.slice(req.url.lastIndexOf("/") + 1);
 
   const response = await db.query(
-    "SELECT email, user_login, user_password, tel FROM users WHERE user_id = $1",
+    "SELECT email, user_login, user_password, tel, user_name FROM users WHERE user_id = $1",
     [id]
   );
 
@@ -50,6 +50,11 @@ export async function PUT(req: Request) {
       { status: 404 }
     );
   }
+
+  const updateUserName =
+    user_name !== newDataUser.user_name && user_name !== ""
+      ? user_name
+      : newDataUser.user_name;
 
   const updateUserLogin =
     user_login !== newDataUser.user_login && user_login !== ""
@@ -63,8 +68,8 @@ export async function PUT(req: Request) {
     email !== newDataUser.email && email !== "" ? email : newDataUser.email;
 
   const userData = await db.query(
-    "UPDATE users SET user_login = $1, tel = $2,  email = $3  WHERE user_id = $4 RETURNING *",
-    [updateUserLogin, updateTel, updateEmail, id]
+    "UPDATE users SET user_login = $1, tel = $2,  email = $3, user_name = $4  WHERE user_id = $5 RETURNING *",
+    [updateUserLogin, updateTel, updateEmail, updateUserName, id]
   );
 
   const user = userData.rows[0];
@@ -115,10 +120,10 @@ export async function PATCH(req: Request) {
 
     const newHashPassword = await hash(trimmedNewPassword, 10);
 
-    const userData = await db.query(
-      "UPDATE users SET  user_password = $1 where user_id = $2",
-      [newHashPassword, id]
-    );
+    await db.query("UPDATE users SET  user_password = $1 where user_id = $2", [
+      newHashPassword,
+      id,
+    ]);
 
     return NextResponse.json({ message: `Password updated` }, { status: 200 });
   } catch (error) {
@@ -129,25 +134,38 @@ export async function PATCH(req: Request) {
   }
 }
 
-//delete user
+//disactive user
 export async function DELETE(req: Request) {
   const id = req.url.slice(req.url.lastIndexOf("/") + 1);
-  const user = await db.query(
-    "DELETE FROM users WHERE user_id = $1  RETURNING *",
+
+  const response = await db.query(
+    "SELECT user_active FROM users WHERE user_id = $1",
     [id]
   );
-  const data = user.rows[0];
 
-  if (!data) {
+  const userActive = response.rows[0];
+
+  if (!userActive) {
     return NextResponse.json(
-      { message: `User with id ${id} not found` },
+      { user: null, message: `User with id ${id} not found` },
       { status: 404 }
     );
   }
 
-  const { user_password: NewUserPassword, ...rest } = data;
+  await db.query("UPDATE users SET  user_active = $1 where user_id = $2", [
+    !userActive.user_active,
+    id,
+  ]);
+
+  if (!userActive.user_active) {
+    return NextResponse.json(
+      { message: `User with id ${id} activited` },
+      { status: 200 }
+    );
+  }
+
   return NextResponse.json(
-    { user: rest, message: `User with id ${id} deleted` },
+    { message: `User with id ${id} disactivited` },
     { status: 200 }
   );
 }
