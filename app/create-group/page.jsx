@@ -29,7 +29,7 @@ const CreateGroup = () => {
           },
           {
             params: {
-              userId: 1,
+              userId: 66,
             },
           }
         );
