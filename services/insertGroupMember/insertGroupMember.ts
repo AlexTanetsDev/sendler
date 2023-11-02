@@ -1,7 +1,12 @@
 import db from "@/db";
 
+import {
+	IClientId,
+	QueryResult,
+} from "@/globaltypes/types";
+
 export default async function insertGroupMember(tel: number, user_id: number, group_id: number) {
-	const clientId = await db.query(
+	const clientId: QueryResult<IClientId> = await db.query(
 		`SELECT client_id FROM clients WHERE user_id = ${user_id} AND tel=${tel} `
 	);
 
