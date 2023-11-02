@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/db";
+import HttpError from "@/helpers/HttpError";
 
 export async function DELETE(req: NextRequest) {
   const formData = await req.formData();
@@ -19,17 +20,13 @@ export async function DELETE(req: NextRequest) {
     const deletedData = await db.query(query, [user_id]);
 
     if (!deletedData) {
-      return NextResponse.json(
-        { error: "Failed to delete all user's history by userID" },
-        { status: 404 }
-      );
+      return HttpError(404, `Failed to delete all user's history by userID`);
     }
 
     return NextResponse.json({
       message: "All user's data successfully deleted from history",
     });
   } catch (error) {
-    console.error(error);
-    NextResponse.json({ error: "Server error" }, { status: 500 });
+    NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }

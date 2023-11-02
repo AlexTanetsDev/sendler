@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/db";
+import HttpError from "@/helpers/HttpError";
 
 export async function GET(req: NextRequest) {
   try {
@@ -9,10 +10,7 @@ export async function GET(req: NextRequest) {
     const user_id = searchParams.get("id");
 
     if (!user_id) {
-      return NextResponse.json(
-        { error: "ID required for getting user's history" },
-        { status: 400 }
-      );
+      return HttpError(400, `ID required for getting user's history`);
     }
 
     if (!start_date || !end_date) {
@@ -45,7 +43,6 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ data });
   } catch (error) {
-    console.error(error);
     NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
@@ -58,17 +55,16 @@ export async function POST(req: NextRequest) {
     const query = `
         INSERT INTO sending_history (group_id)
         VALUES ($1);
-        RETURNING history_id
+        RETURNING *
       `;
 
-    const historyId = await db.query(query, [group_id]);
+    const addedHistory = await db.query(query, [group_id]);
 
     return NextResponse.json({
-      historyId,
+      addedHistory,
       message: "Data successfully added to history",
     });
   } catch (error) {
-    console.error(error);
     NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
