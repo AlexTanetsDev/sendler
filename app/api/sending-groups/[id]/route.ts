@@ -15,7 +15,7 @@ import {
 import { IQieryParamsUpdateGroup } from "./types";
 
 // get one group with id from params
-export async function GET(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ clients: any[]; }>> {
+export async function GET(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ clients: IClient[]; }>> {
 
 	const groupId = Number(params.id);
 
@@ -32,8 +32,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
 	}
 
 	try {
-		const groupClients: QueryResult<IClient[]> = await db.query(
-			`SELECT groups_members.client_id, clients.tel 
+		const groupClients: QueryResult<IClient> = await db.query(
+			`SELECT groups_members.client_id, clients.tel xport
 		FROM groups_members
 		JOIN clients ON groups_members.client_id = clients.client_id
 		WHERE groups_members.group_id = ${groupId} `

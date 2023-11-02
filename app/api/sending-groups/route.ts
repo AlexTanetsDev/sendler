@@ -17,7 +17,7 @@ import {
 
 
 // get all groups for one user by user ID
-export async function GET(request: Request): Promise<NextResponse<{ message: string; }> | NextResponse<{ groups: any[]; }>> {
+export async function GET(request: Request): Promise<NextResponse<{ message: string; }> | NextResponse<{ groups: IGroupName[]; }>> {
 
 	const { searchParams }: URL = new URL(request.url);
 	const userId = Number(searchParams.get("userId"));

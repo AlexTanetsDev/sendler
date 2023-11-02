@@ -2,19 +2,21 @@ export type ErrorType = 400 | 401 | 403 | 404 | 409;
 
 export interface ITel { tel: string };
 
-export interface IUser extends ITel { user_id: number };
+export interface IUserId { user_id: number };
 
 export interface IGroupId { group_id: number };
-
-export interface IUserId { user_id: number };
 
 export interface IClientId { client_id: number };
 
 export interface IGroupName { group_name: string };
 
-export interface IClient extends ITel, IUser { client_id: number };
+export interface IUser extends ITel, IUserId { };
 
-export interface IGroup extends IGroupName, IUserId { group_id: number };
+export interface IClient extends IClientId, ITel { };
+
+export interface IUserСlient extends IClient, IUserId { };
+
+export interface IGroup extends IGroupId, IGroupName, IUserId { };
 
 //?-------------------------------------------------------------------
 
