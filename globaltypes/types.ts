@@ -10,7 +10,7 @@ export interface IClientId { client_id: number };
 
 export interface IGroupName { group_name: string };
 
-export interface IUser extends ITel, IUserId { };
+// export interface IUser extends ITel, IUserId { };
 
 export interface IClient extends IClientId, ITel { };
 
