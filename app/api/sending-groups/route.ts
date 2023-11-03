@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import db from "@/db";
 
+import ctrl from '@/app/api/controllers/sending-groups';
+
 import HttpError from '@/helpers/HttpError';
 import insertNewClient from "@/services/insertNewClient/insertNewClient";
 import insertGroupMember from "@/services/insertGroupMember/insertGroupMember";
@@ -17,7 +19,7 @@ import {
 
 
 // get all groups for one user by user ID
-export async function GET(request: Request): Promise<NextResponse<{ message: string; }> | NextResponse<{ groups: IGroupName[]; }>> {
+export async function GET(request: Request): Promise<NextResponse<{ message: string; }> | NextResponse<Promise<IGroupName[] | null>>> {
 
 	const { searchParams }: URL = new URL(request.url);
 	const userId = Number(searchParams.get("userId"));
@@ -25,19 +27,26 @@ export async function GET(request: Request): Promise<NextResponse<{ message: str
 	if (userId) {
 		// getting logic for one user
 		//checking user_id existense
-		const usersIdRes: QueryResult<IUserId> = await db.query(`SELECT user_id FROM users`);
-		const usersIdInDatabase = usersIdRes.rows;
-
-		if (!usersIdInDatabase.find((userIdInDatabase: IUserId) => userIdInDatabase.user_id === userId)) {
-			return HttpError(400, `The user with id = ${userId} does not exist`);
-		}
-
 		try {
-			const groups: QueryResult<IGroupName> = await db.query(
-				`SELECT group_name FROM send_groups WHERE user_id = ${userId}`
-			);
+
+			// const usersIdRes: QueryResult<IUserId> = await db.query(`SELECT user_id FROM users`);
+			// const usersIdInDatabase = usersIdRes.rows;
+
+			// if (!usersIdInDatabase.find((userIdInDatabase: IUserId) => userIdInDatabase.user_id === userId)) {
+			// 	return HttpError(400, `The user with id = ${userId} does not exist`);
+			// }
+
+
+			// const groups: QueryResult<IGroupName> = await db.query(
+			// 	`SELECT group_name FROM send_groups WHERE user_id = ${userId}`
+			// );
+			const res: null | IGroupName = await ctrl.getUserGroupes(userId);
+
+			if (res === null) {
+				return HttpError(400, `The user with id = ${userId} does not exist`);
+			}
 			return NextResponse.json(
-				{ groups: groups.rows },
+				{ groups: res, message: 'Get a groups' },
 				{ status: 200 }
 			);
 		} catch (error) {
