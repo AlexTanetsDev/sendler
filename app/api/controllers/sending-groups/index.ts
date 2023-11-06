@@ -1,6 +1,1 @@
-import getUserGroupes from "./getUserGroups";
-
-
-export default {
-	getUserGroupes,
-}
+export { default as getUserGroupes } from './getUserGroups';

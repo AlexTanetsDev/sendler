@@ -1,1 +1,4 @@
-export interface IQieryParamsCreateGroup { groupName: string, clients: { tel: string }[] };
+
+import { IUserСlient } from "@/globaltypes/types";
+
+export interface IQieryParamsCreateGroup { groupName: string, clients: IUserСlient[] };

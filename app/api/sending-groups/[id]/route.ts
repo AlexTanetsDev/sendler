@@ -10,7 +10,8 @@ import {
 	IGroupId,
 	QueryResult,
 	IClient,
-	IUserId
+	IUserId,
+	ITelRes
 } from "@/globaltypes/types";
 import { IQieryParamsUpdateGroup } from "./types";
 
@@ -119,21 +120,27 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 
 		const userId = userIdRes.rows[0].user_id;
 
-		const userClientsRes: QueryResult<ITel> = await db.query(
+		const userClientsRes: QueryResult<ITelRes> = await db.query(
 			`SELECT tel FROM clients WHERE user_id = ${userId}`
 		);
 
 		//checking whether a client exists in the user's client list
 		//and adding client
-		const userClients: ITel[] = userClientsRes.rows;
+		const userClients = userClientsRes.rows;
 
 		for (const client of clients) {
-			const tel = Number(client.tel);
+			const tel = client.tel;
 
-			if (!userClients.find((userClient: ITel) => userClient.tel === String(tel))) {
-				await insertNewClient(tel, userId);
+			if (!userClients.find((userClient: ITelRes) => userClient.tel === String(tel))) {
+				const res: any = await insertNewClient(client, userId);
+				if (res) {
+					return NextResponse.json({ message: `Failed to update a group with id = ${groupId}` + " - " + res.message }, { status: 500 });
+				}
 			}
-			await insertGroupMember(tel, userId, groupId);
+			const res: any = await insertGroupMember(tel, userId, groupId);
+			if (res) {
+				return NextResponse.json({ message: "Failed to create a new group" + " - " + res.message }, { status: 500 });
+			}
 		}
 
 		return NextResponse.json(
@@ -141,7 +148,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 			{ status: 200 }
 		);
 	} catch (error) {
-		return NextResponse.json(`Failed to update a group with id = ${groupId}`, {
+		return NextResponse.json({ message: `Failed to update a group with id = ${groupId}` }, {
 			status: 500,
 		});
 	}
