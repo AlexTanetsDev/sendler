@@ -1,1 +1,3 @@
-export interface IQieryParamsUpdateGroup { clients: { tel: string }[] };
+import { IUserСlient } from "@/globaltypes/types";
+
+export interface IQieryParamsUpdateGroup { clients: IUserСlient[] };

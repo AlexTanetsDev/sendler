@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import db from "@/db";
 
-import ctrl from '@/app/api/controllers/sending-groups';
+import getUserGroupes from '@/app/api/controllers/sending-groups/getUserGroups';
 
 import HttpError from '@/helpers/HttpError';
 import insertNewClient from "@/services/insertNewClient/insertNewClient";
@@ -14,7 +14,8 @@ import {
 	IGroup,
 	QueryResult,
 	IGroupName,
-	ITel
+	ITel,
+	IUserСlient
 } from "@/globaltypes/types";
 
 
@@ -24,23 +25,10 @@ export async function GET(request: Request): Promise<NextResponse<{ message: str
 	const { searchParams }: URL = new URL(request.url);
 	const userId = Number(searchParams.get("userId"));
 
+	//checking user_id existense
 	if (userId) {
-		// getting logic for one user
-		//checking user_id existense
 		try {
-
-			// const usersIdRes: QueryResult<IUserId> = await db.query(`SELECT user_id FROM users`);
-			// const usersIdInDatabase = usersIdRes.rows;
-
-			// if (!usersIdInDatabase.find((userIdInDatabase: IUserId) => userIdInDatabase.user_id === userId)) {
-			// 	return HttpError(400, `The user with id = ${userId} does not exist`);
-			// }
-
-
-			// const groups: QueryResult<IGroupName> = await db.query(
-			// 	`SELECT group_name FROM send_groups WHERE user_id = ${userId}`
-			// );
-			const res: null | IGroupName = await ctrl.getUserGroupes(userId);
+			const res: null | IGroupName = await getUserGroupes(userId);
 
 			if (res === null) {
 				return HttpError(400, `The user with id = ${userId} does not exist`);
@@ -71,34 +59,35 @@ export async function POST(request: Request): Promise<NextResponse<{
 	const userId = Number(searchParams.get("userId"));
 
 	//checking the content of the entered group
-	if (clients.length === 0) {
-		return HttpError(400, `The clients list is empty`);
-	}
-
-	//checking user_id existense
-	const usersIdRes: QueryResult<IUserId> = await db.query(`SELECT user_id FROM users`);
-	const usersIdInDatabase: IUserId[] = usersIdRes.rows;
-
-	if (!usersIdInDatabase.find((userIdInDatabase: IUserId) => userIdInDatabase.user_id === userId)) {
-		return HttpError(400, `The user with id = ${userId} does not exist`);
-	}
-
-	//checking same group_name existense for user
-	const groupsNameRes: QueryResult<IGroupName> = await db.query(
-		`SELECT group_name FROM send_groups WHERE user_id=${userId}`
-	);
-	const groupsNameInDatabase = groupsNameRes.rows;
-
-	if (
-		groupsNameInDatabase.find(
-			(groupNameInDatabase: IGroupName) => groupNameInDatabase.group_name === groupName
-		)
-	) {
-
-		return HttpError(400, `The group with name ${groupName} already exists`);
-	}
-
 	try {
+		if (clients.length === 0) {
+			return HttpError(400, `The clients list is empty`);
+		}
+
+		//checking user_id existense
+		const usersIdRes: QueryResult<IUserId> = await db.query(`SELECT user_id FROM users`);
+		const usersIdInDatabase: IUserId[] = usersIdRes.rows;
+
+		if (!usersIdInDatabase.find((userIdInDatabase: IUserId) => userIdInDatabase.user_id === userId)) {
+			return HttpError(400, `The user with id = ${userId} does not exist`);
+		}
+
+		//checking same group_name existense for user
+		const groupsNameRes: QueryResult<IGroupName> = await db.query(
+			`SELECT group_name FROM send_groups WHERE user_id=${userId}`
+		);
+		const groupsNameInDatabase = groupsNameRes.rows;
+
+		if (
+			groupsNameInDatabase.find(
+				(groupNameInDatabase: IGroupName) => groupNameInDatabase.group_name === groupName
+			)
+		) {
+
+			return HttpError(400, `The group with name ${groupName} already exists`);
+		}
+
+
 		const group: QueryResult<IGroup> = await db.query(
 			`INSERT INTO send_groups (group_name, user_id) values($1, $2) RETURNING *`,
 			[groupName, userId]
@@ -113,12 +102,19 @@ export async function POST(request: Request): Promise<NextResponse<{
 		const groupId = group.rows[0].group_id;
 
 		for (const client of clients) {
-			const tel = Number(client.tel);
+			const { tel } = client;
 
-			if (!userClientsInDtabase.find((userClientInDtabase: ITel) => userClientInDtabase.tel === String(tel))) {
-				await insertNewClient(tel, userId);
+			if (!userClientsInDtabase.find((userClientInDtabase: ITel) => userClientInDtabase.tel === tel)) {
+				const res: any = await insertNewClient(client, userId);
+				if (res) {
+					await db.query(`DELETE FROM send_groups	WHERE send_groups.group_id = ${groupId}`);
+					return NextResponse.json({ message: "Failed to create a new group" + " - " + res.message }, { status: 500 });
+				}
 			}
-			await insertGroupMember(tel, userId, groupId);
+			const res: any = await insertGroupMember(tel, userId, groupId);
+			if (res) {
+				return NextResponse.json({ message: "Failed to create a new group" + " - " + res.message }, { status: 500 });
+			}
 		}
 
 		return NextResponse.json(
