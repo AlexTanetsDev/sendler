@@ -31,6 +31,12 @@ CREATE TABLE
         client_id SERIAL,
         tel BIGINT NOT NULL,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
+        first_name TEXT,
+        middle_name TEXT,
+        last_name TEXT,
+        date_of_birth DATE,
+        parameter_1 TEXT,
+        parameter_2 TEXT,
         PRIMARY KEY (client_id)
     );
 

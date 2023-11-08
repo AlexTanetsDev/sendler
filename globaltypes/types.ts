@@ -1,12 +1,14 @@
 export type ErrorType = 400 | 401 | 403 | 404 | 409;
 
-export interface ITel {
-  tel: string;
-}
 
 export interface IUserId {
   user_id: number;
 }
+
+export interface ITel { tel: number };
+
+export interface ITelRes { tel: string };
+
 
 export interface IGroupId {
   group_id: number;
@@ -31,11 +33,15 @@ export interface IUser extends ITel, IUserId {
   user_create_date: Date;
 }
 
+
 export interface IClient extends IClientId, ITel {}
 
-export interface IUserСlient extends IClient, IUserId {}
+export interface IUser extends ITel, IUserId { user_login: string, user_password: string, balance: number, user_token?: string, email: string, user_create_date: Date };
 
 export interface IGroup extends IGroupId, IGroupName, IUserId {}
+
+export interface IUserСlient extends IClient, IUserId { first_name?: string, middle_name?: string, last_name?: string, date_of_birth?: Date, parameter_1?: string, parameter_2?: string };
+
 
 export interface IUserChangePassword {
   oldPassword: string;
