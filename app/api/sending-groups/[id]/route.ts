@@ -16,23 +16,22 @@ import {
 import { IQieryParamsUpdateGroup } from "./types";
 
 // get one group with id from params
-export async function GET(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ clients: IClient[]; }>> {
+export async function GET(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }> | NextResponse<{ clients: IClient[]; }>> {
 
 	const groupId = Number(params.id);
 
-	//checking group_id existense
-	const groupsRes: QueryResult<IGroupId> = (await db.query("SELECT group_id FROM send_groups"));
-	const groupsId: IGroupId[] = groupsRes.rows;
-
-	if (
-		!groupsId.find(
-			(group: IGroupId) => group.group_id === groupId
-		)
-	) {
-		return HttpError(400, `The group with id = ${groupId} does not exist`);
-	}
-
 	try {
+		//checking group_id existense
+		const groupsRes: QueryResult<IGroupId> = (await db.query("SELECT group_id FROM send_groups"));
+		const groupsId: IGroupId[] = groupsRes.rows;
+
+		if (
+			!groupsId.find(
+				(group: IGroupId) => group.group_id === groupId
+			)
+		) {
+			return HttpError(400, `The group with id = ${groupId} does not exist`);
+		}
 		const groupClients: QueryResult<IClient> = await db.query(
 			`SELECT groups_members.client_id, clients.tel xport
 		FROM groups_members
@@ -44,16 +43,16 @@ export async function GET(request: Request, { params }: { params: { id: string }
 			{ clients: groupClients.rows },
 			{ status: 200 }
 		);
-	} catch (error) {
+	} catch (error: any) {
 		return NextResponse.json(
-			{ message: "Failed to get a groups list" },
+			{ message: "Failed to get a groups list", error: error.message },
 			{ status: 500 }
 		);
 	}
 }
 
 // delete one group with id from params
-export async function DELETE(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }>> {
+export async function DELETE(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }>> {
 	const groupId = Number(params.id);
 
 	//checking group_id existense
@@ -78,18 +77,19 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 			{ message: `Group with id = ${groupId} is deleted` },
 			{ status: 200 }
 		);
-	} catch (error) {
+	} catch (error: any) {
 		return NextResponse.json(
-			{ message: "Failed to delete a group" },
+			{ message: "Failed to delete a group", error: error.message },
 			{ status: 500 }
 		);
 	}
 }
 
 //update one group with id from params
-export async function PUT(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<string>> {
+export async function PUT(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: any; }> | NextResponse<string>> {
 	const { clients }: IQieryParamsUpdateGroup = await request.json();
 	const groupId = Number(params.id);
+	const method = request.method;
 
 	//checking the content of the entered group
 	if (clients.length === 0) {
@@ -97,18 +97,20 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 	}
 
 	//checking group existense
-	const groupsIdRes: QueryResult<IGroupId> = await db.query(`SELECT group_id FROM send_groups`);
-	const groupsIdInDatabase: IGroupId[] = groupsIdRes.rows;
 
-	if (
-		!groupsIdInDatabase.find(
-			(groupIdInDatabase: IGroupId) => groupIdInDatabase.group_id === groupId
-		)
-	) {
-		return HttpError(400, `The group with id = ${groupId} does not exist`);
-	}
 
 	try {
+		const groupsIdRes: QueryResult<IGroupId> = await db.query(`SELECT group_id FROM send_groups`);
+		const groupsIdInDatabase: IGroupId[] = groupsIdRes.rows;
+
+		if (
+			!groupsIdInDatabase.find(
+				(groupIdInDatabase: IGroupId) => groupIdInDatabase.group_id === groupId
+			)
+		) {
+			return HttpError(400, `The group with id = ${groupId} does not exist`);
+		}
+
 		await db.query(
 			`DELETE FROM groups_members
     WHERE groups_members.group_id = ${groupId}`
@@ -132,24 +134,17 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 			const tel = client.tel;
 
 			if (!userClients.find((userClient: ITelRes) => userClient.tel === String(tel))) {
-				const res: any = await insertNewClient(client, userId);
-				if (res) {
-					return NextResponse.json({ message: `Failed to update a group with id = ${groupId}` + " - " + res.message }, { status: 500 });
-				}
+				await insertNewClient(client, userId, groupId, method);
 			}
-			const res: any = await insertGroupMember(tel, userId, groupId);
-			if (res) {
-				return NextResponse.json({ message: "Failed to create a new group" + " - " + res.message }, { status: 500 });
-			}
+			await insertGroupMember(tel, userId, groupId);
 		}
 
 		return NextResponse.json(
 			{ message: `The group is updated` },
 			{ status: 200 }
 		);
-	} catch (error) {
-		return NextResponse.json({ message: `Failed to update a group with id = ${groupId}` }, {
-			status: 500,
-		});
+	} catch (error: any) {
+		return NextResponse.json({ error: error.message }, { status: 500 });
+
 	}
 }

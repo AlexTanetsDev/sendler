@@ -10,5 +10,5 @@ const errorMessageList = {
 };
 
 export default function HttpError(statusError: ErrorType, messageError = errorMessageList[statusError]) {
-	return NextResponse.json({ message: messageError }, { status: statusError });
+	return NextResponse.json({ error: messageError }, { status: statusError });
 }

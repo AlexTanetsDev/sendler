@@ -1,4 +1,4 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import db from "@/db";
 
 import getUserGroupes from '@/app/api/controllers/sending-groups/getUserGroups';
@@ -15,12 +15,12 @@ import {
 	QueryResult,
 	IGroupName,
 	ITel,
-	IUserСlient
+	ITelRes
 } from "@/globaltypes/types";
 
 
 // get all groups for one user by user ID
-export async function GET(request: Request): Promise<NextResponse<{ message: string; }> | NextResponse<Promise<IGroupName[] | null>>> {
+export async function GET(request: NextRequest): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }> | NextResponse<Promise<IGroupName[] | null>>> {
 
 	const { searchParams }: URL = new URL(request.url);
 	const userId = Number(searchParams.get("userId"));
@@ -53,10 +53,11 @@ export async function GET(request: Request): Promise<NextResponse<{ message: str
 // 2. create sending group with user_id from search params and array of clients
 export async function POST(request: Request): Promise<NextResponse<{
 	message: string;
-}> | NextResponse<string>> {
+}> | NextResponse<{ error: any; }> | NextResponse<string>> {
 	const { groupName, clients }: IQieryParamsCreateGroup = await request.json();
 	const { searchParams }: URL = new URL(request.url);
 	const userId = Number(searchParams.get("userId"));
+	const method = request.method;
 
 	//checking the content of the entered group
 	try {
@@ -92,36 +93,30 @@ export async function POST(request: Request): Promise<NextResponse<{
 			`INSERT INTO send_groups (group_name, user_id) values($1, $2) RETURNING *`,
 			[groupName, userId]
 		);
-		const userClientsRes: QueryResult<ITel> = await db.query(
+		const groupId = group.rows[0].group_id;
+
+		const userClientsRes: QueryResult<ITelRes> = await db.query(
 			`SELECT tel FROM clients WHERE user_id = ${userId}`
 		);
 
 		//checking whether a client exists in the user's client list
 		//and adding client
 		const userClientsInDtabase = userClientsRes.rows;
-		const groupId = group.rows[0].group_id;
 
 		for (const client of clients) {
-			const { tel } = client;
+			const tel = client.tel;
 
-			if (!userClientsInDtabase.find((userClientInDtabase: ITel) => userClientInDtabase.tel === tel)) {
-				const res: any = await insertNewClient(client, userId);
-				if (res) {
-					await db.query(`DELETE FROM send_groups	WHERE send_groups.group_id = ${groupId}`);
-					return NextResponse.json({ message: "Failed to create a new group" + " - " + res.message }, { status: 500 });
-				}
+			if (!userClientsInDtabase.find((userClientInDtabase: ITelRes) => userClientInDtabase.tel === String(tel))) {
+				await insertNewClient(client, userId, groupId, method);
 			}
-			const res: any = await insertGroupMember(tel, userId, groupId);
-			if (res) {
-				return NextResponse.json({ message: "Failed to create a new group" + " - " + res.message }, { status: 500 });
-			}
+			await insertGroupMember(tel, userId, groupId);
 		}
 
 		return NextResponse.json(
 			{ group: group.rows[0], message: "New group created successfully" },
 			{ status: 201 }
 		);
-	} catch (error) {
-		return NextResponse.json("Failed to create a new group", { status: 500 });
+	} catch (error: any) {
+		return NextResponse.json({ error: error.message }, { status: 500 });
 	}
 }
