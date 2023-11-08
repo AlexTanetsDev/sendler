@@ -3,6 +3,8 @@ import db from "@/db";
 import { hash } from "bcrypt";
 import { schemaCreateNewUser } from "@/models/users";
 
+
+
 // create User
 
 export async function POST(req: Request) {

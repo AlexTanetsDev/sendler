@@ -23,7 +23,7 @@ CREATE TABLE
         user_password TEXT NOT NULL,
         balance INT NOT NULL DEFAULT 0,
         user_token TEXT,
-        user_create_date TIMESTAMP DEFAULT NOW() :: timestamp
+        user_create_date TIMESTAMP DEFAULT NOW():: timestamp
     );
 
 CREATE TABLE
@@ -55,7 +55,7 @@ CREATE TABLE
     sending_history(
         history_id SERIAL,
         group_id INT REFERENCES send_groups(group_id) ON DELETE CASCADE,
-        sending_group_date TIMESTAMP DEFAULT NOW() :: timestamp,
+        sending_group_date TIMESTAMP DEFAULT NOW():: timestamp,
         PRIMARY KEY (history_id)
     );
 
@@ -70,7 +70,7 @@ CREATE TABLE
         client_id INT REFERENCES clients(client_id) ON DELETE CASCADE,
         recipient_status status_type,
         PRIMARY KEY (recipient_id),
-        status_changing_date TIMESTAMP DEFAULT NOW() :: timestamp
+        status_changing_date TIMESTAMP DEFAULT NOW():: timestamp
     );
 
 CREATE TABLE
@@ -81,5 +81,5 @@ CREATE TABLE
         sms_count INT NOT NULL,
         money_count MONEY NOT NULL,
         PRIMARY KEY (transaction_id),
-        transactions_date TIMESTAMP DEFAULT NOW() :: timestamp
+        transactions_date TIMESTAMP DEFAULT NOW():: timestamp
     );
