@@ -1,15 +1,17 @@
 import { NextResponse } from "next/server";
 import db from "@/db";
 import { hash, compare } from "bcrypt";
+import { IUser } from "@/globaltypes/types";
+import { schemaNewDateUser } from "@/models/users";
 
 // get user by ID
 export async function GET(req: Request) {
   try {
-    const id = req.url.slice(req.url.lastIndexOf("/") + 1);
+    const id = Number(req.url.slice(req.url.lastIndexOf("/") + 1));
     const response = await db.query("SELECT * FROM users WHERE user_id = $1", [
       id,
     ]);
-    const user = response.rows[0];
+    const user: IUser = response.rows[0];
 
     if (!user) {
       return NextResponse.json(
@@ -33,9 +35,34 @@ export async function GET(req: Request) {
 export async function PUT(req: Request) {
   const body = await req.json();
 
-  const { user_login, tel, email, user_name } = body;
+ 
+
+  const { error, value } = schemaNewDateUser.validate(body);
+
+  if (error) {
+    return NextResponse.json(
+      { message: error.details[0].message },
+      { status: 400 }
+    );
+  }
+
+  const { user_login, tel, email, user_name } = value;
 
   const id = req.url.slice(req.url.lastIndexOf("/") + 1);
+
+  const userActive = await db.query(
+    "SELECT user_active FROM users WHERE user_id = $1",
+    [id]
+  );
+
+  const isUserActive = userActive.rows[0];
+
+  if (!isUserActive.user_active) {
+    return NextResponse.json(
+      { user: null, message: `User with id ${id} not active` },
+      { status: 404 }
+    );
+  }
 
   const response = await db.query(
     "SELECT email, user_login, user_password, tel, user_name FROM users WHERE user_id = $1",
@@ -51,21 +78,72 @@ export async function PUT(req: Request) {
     );
   }
 
+  const allUserName = await db.query("SELECT user_name FROM users");
+
   const updateUserName =
     user_name !== newDataUser.user_name && user_name !== ""
       ? user_name
       : newDataUser.user_name;
+
+  const isUniqueUserName = allUserName.rows.find(
+    (user) => user.user_name === updateUserName
+  );
+  if (isUniqueUserName) {
+    return NextResponse.json(
+      { message: `User with name ${updateUserName} already exists` },
+      { status: 409 }
+    );
+  }
+
+  const allUserLogin = await db.query("SELECT user_login FROM users");
 
   const updateUserLogin =
     user_login !== newDataUser.user_login && user_login !== ""
       ? user_login
       : newDataUser.user_login;
 
+  const isUniqueUserLogin = allUserLogin.rows.find(
+    (user) => user.user_login === updateUserLogin
+  );
+
+  if (isUniqueUserLogin) {
+    return NextResponse.json(
+      { message: `User with login ${updateUserLogin} already exists` },
+      { status: 409 }
+    );
+  }
+
   const updateTel =
     tel !== newDataUser.tel && tel !== null ? tel : newDataUser.tel;
 
+  const allUserTel = await db.query("SELECT tel FROM users");
+
+  const isUniqueUserTel = allUserTel.rows.find(
+    (user) => Number(user.tel) === updateTel
+  );
+
+  if (isUniqueUserTel) {
+    return NextResponse.json(
+      { message: `User with tel ${updateTel} already exists` },
+      { status: 409 }
+    );
+  }
+
   const updateEmail =
     email !== newDataUser.email && email !== "" ? email : newDataUser.email;
+
+  const allUserEmail = await db.query("SELECT email FROM users");
+
+  const isUniqueUserEmail = allUserEmail.rows.find(
+    (user) => user.email === updateEmail
+  );
+
+  if (isUniqueUserEmail) {
+    return NextResponse.json(
+      { message: `User with email ${updateEmail} already exists` },
+      { status: 409 }
+    );
+  }
 
   const userData = await db.query(
     "UPDATE users SET user_login = $1, tel = $2,  email = $3, user_name = $4  WHERE user_id = $5 RETURNING *",
@@ -94,6 +172,20 @@ export async function PATCH(req: Request) {
     const trimmedNewPassword = newPassword.trim();
 
     const id = req.url.slice(req.url.lastIndexOf("/") + 1);
+
+    const userActive = await db.query(
+      "SELECT user_active FROM users WHERE user_id = $1",
+      [id]
+    );
+
+    const isUserActive = userActive.rows[0];
+
+    if (!isUserActive.user_active) {
+      return NextResponse.json(
+        { user: null, message: `User with id ${id} not active` },
+        { status: 404 }
+      );
+    }
 
     const response = await db.query(
       "SELECT user_password FROM users WHERE user_id = $1",

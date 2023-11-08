@@ -1,5 +1,3 @@
-
-
 DROP TABLE recipients_status;
 
 DROP TABLE transactions_history;
@@ -18,11 +16,13 @@ CREATE TABLE
     users (
         user_id SERIAL PRIMARY KEY,
         user_login TEXT UNIQUE NOT NULL,
+        email TEXT NOT NULL,
+        user_name TEXT NOT NULL ,
+        user_active BOOLEAN DEFAULT true,
         tel BIGINT NOT NULL,
         user_password TEXT NOT NULL,
         balance INT NOT NULL DEFAULT 0,
         user_token TEXT,
-        email TEXT NOT NULL,
         user_create_date TIMESTAMP DEFAULT NOW() :: timestamp
     );
 
@@ -43,7 +43,6 @@ CREATE TABLE
     );
 
 CREATE UNIQUE INDEX send_groups_group_id_idx ON send_groups(group_id);
-
 
 CREATE TABLE
     groups_members(

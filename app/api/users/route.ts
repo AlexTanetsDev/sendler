@@ -1,13 +1,25 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/db";
 import { hash } from "bcrypt";
+import { schemaCreateNewUser } from "@/models/users";
 
 // create User
 
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { user_login, tel, user_password, email, user_name } = body;
+   
+const {error, value} = schemaCreateNewUser.validate(body)
+
+if (error) {
+  return NextResponse.json(
+    { message: error.details[0].message },
+    { status: 400 }
+  );
+}
+
+const { user_login, tel, user_password, email, user_name } = value;
+
     const hashedPassword = await hash(user_password, 10);
 
     //existing user by email
@@ -86,7 +98,7 @@ export async function POST(req: Request) {
 // GET all users
 export async function GET() {
   try {
-    const allUser = await db.query("SELECT * FROM users");
+    const allUser = await db.query("SELECT * FROM users where user_active = true");
     const data = allUser.rows;
 
     return NextResponse.json({ data }, { status: 200 });
