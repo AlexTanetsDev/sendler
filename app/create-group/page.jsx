@@ -24,18 +24,18 @@ const CreateGroup = () => {
         const response = await axios.post(
           `api/sending-groups`,
           {
-            groupName: "men",
+            groupName: "women",
             clients: clients,
           },
           {
             params: {
-              userId: 1,
+              userId: 5,
             },
           }
         );
         console.log(response.data.message);
       } catch (error) {
-        console.log(error.response.data.message);
+        console.log(error.message + " | " + error.response.data.error);
       }
     } else {
       console.log("Please, select file!");
@@ -44,12 +44,13 @@ const CreateGroup = () => {
 
   return (
     <div className="flex flex-col items-center py-8">
+      <p className="mb-8 text-emerald-400">CREATE GROUPE</p>
       <input
         type="file"
         name="file"
         accept=".xls"
         onChange={handleFileChange}
-        className="mb-8"
+        className="mb-8 bg-slate-300"
       />
       <button type="submit" onClick={xport}>
         <b>Enter</b>

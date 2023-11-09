@@ -9,6 +9,6 @@ const errorMessageList = {
 	409: "Conflict",
 };
 
-export default function HttpError(statusError: ErrorType, messageError = errorMessageList[statusError]) {
-	return NextResponse.json({ message: messageError }, { status: statusError });
+export default function HttpError(statusError: ErrorType, messageError = errorMessageList[statusError]): NextResponse<{ error: string; }> {
+	return NextResponse.json({ error: messageError }, { status: statusError });
 }

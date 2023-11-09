@@ -5,7 +5,7 @@ import {
 	QueryResult,
 } from "@/globaltypes/types";
 
-export default async function insertGroupMember(tel: number, user_id: number, group_id: number) {
+export default async function insertGroupMember(tel: number, user_id: number, group_id: number): Promise<void> {
 	try {
 		const clientId: QueryResult<IClientId> = await db.query(
 			`SELECT client_id FROM clients WHERE user_id = ${user_id} AND tel=${tel} `
@@ -16,8 +16,9 @@ export default async function insertGroupMember(tel: number, user_id: number, gr
 			`INSERT INTO groups_members (group_id, client_id) values($1, $2) RETURNING *`,
 			[group_id, client_id]
 		);
-	} catch (error) {
-		return error;
+	} catch (error: any) {
+		await db.query(`DELETE FROM send_groups	WHERE send_groups.group_id = ${group_id}`);
+		throw new Error(error.message);
 	}
 
 }

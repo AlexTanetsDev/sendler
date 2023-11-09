@@ -19,7 +19,7 @@ const CreateGroup = () => {
       const wb = XLSX.read(ab);
       const wsname = wb.SheetNames[0];
       const clients = XLSX.utils.sheet_to_json(wb.Sheets[wsname]);
-      const groupId = 10;
+      const groupId = 61;
 
       try {
         const response = await axios.put(`api/sending-groups/${groupId}`, {
@@ -27,21 +27,22 @@ const CreateGroup = () => {
         });
         console.log(response.data.message);
       } catch (error) {
-        console.log(error.response.data.message);
+        console.log(error.message + " | " + error.response.data.error);
       }
     } else {
-      console.log("Please, select file!");
+      console.log("Please, select a file!");
     }
   }, [file]);
 
   return (
     <div className="flex flex-col items-center py-8">
+      <p className="mb-8 text-red-400">UPDATE GROUPE</p>
       <input
         type="file"
         name="file"
         accept=".xls"
         onChange={handleFileChange}
-        className="mb-8"
+        className="mb-8 bg-slate-300"
       />
       <button type="submit" onClick={xport}>
         <b>Enter</b>
