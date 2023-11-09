@@ -2,11 +2,13 @@ import { NextResponse } from "next/server";
 import db from "@/db";
 
 import HttpError from "@/helpers/HttpError";
+
 import insertNewClient from "@/services/insertNewClient/insertNewClient";
 import insertGroupMember from "@/services/insertGroupMember/insertGroupMember";
 
+import getGroup from '@/app/api/controllers/sending-groups/getGroup';
+
 import {
-	ITel,
 	IGroupId,
 	QueryResult,
 	IClient,
@@ -16,31 +18,15 @@ import {
 import { IQieryParamsUpdateGroup } from "./types";
 
 // get one group with id from params
-export async function GET(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }> | NextResponse<{ clients: IClient[]; }>> {
+export async function GET(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }> | NextResponse<{ clients: IClient[] | NextResponse<{ error: string; }> }>> {
 
 	const groupId = Number(params.id);
 
 	try {
-		//checking group_id existense
-		const groupsRes: QueryResult<IGroupId> = (await db.query("SELECT group_id FROM send_groups"));
-		const groupsId: IGroupId[] = groupsRes.rows;
-
-		if (
-			!groupsId.find(
-				(group: IGroupId) => group.group_id === groupId
-			)
-		) {
-			return HttpError(400, `The group with id = ${groupId} does not exist`);
-		}
-		const groupClients: QueryResult<IClient> = await db.query(
-			`SELECT groups_members.client_id, clients.tel xport
-		FROM groups_members
-		JOIN clients ON groups_members.client_id = clients.client_id
-		WHERE groups_members.group_id = ${groupId} `
-		);
+		const res: IClient[] | NextResponse<{ error: string; }> = await getGroup(groupId);
 
 		return NextResponse.json(
-			{ clients: groupClients.rows },
+			{ clients: res },
 			{ status: 200 }
 		);
 	} catch (error: any) {
@@ -55,19 +41,18 @@ export async function GET(request: Request, { params }: { params: { id: string }
 export async function DELETE(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }>> {
 	const groupId = Number(params.id);
 
-	//checking group_id existense
-	const groupsIdRes: QueryResult<IGroupId> = (await db.query("SELECT group_id FROM send_groups"));
-	const groupsIdInDatabase: IGroupId[] = groupsIdRes.rows;
-
-	if (
-		!groupsIdInDatabase.find(
-			(groupIdInDatabase: IGroupId) => groupIdInDatabase.group_id === groupId
-		)
-	) {
-		return HttpError(400, `The group with id = ${groupId} does not exist`);
-	}
-
 	try {
+		//checking group_id existense
+		const groupsIdRes: QueryResult<IGroupId> = (await db.query("SELECT group_id FROM send_groups"));
+		const groupsIdInDatabase: IGroupId[] = groupsIdRes.rows;
+
+		if (
+			!groupsIdInDatabase.find(
+				(groupIdInDatabase: IGroupId) => groupIdInDatabase.group_id === groupId
+			)
+		) {
+			return HttpError(400, `The group with id = ${groupId} does not exist`);
+		}
 		await db.query(
 			`DELETE FROM send_groups
 		WHERE send_groups.group_id = ${groupId}`

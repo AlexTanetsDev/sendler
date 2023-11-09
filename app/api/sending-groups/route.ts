@@ -14,7 +14,6 @@ import {
 	IGroup,
 	QueryResult,
 	IGroupName,
-	ITel,
 	ITelRes
 } from "@/globaltypes/types";
 
@@ -37,9 +36,9 @@ export async function GET(request: NextRequest): Promise<NextResponse<{ message:
 				{ groups: res, message: 'Get a groups' },
 				{ status: 200 }
 			);
-		} catch (error) {
+		} catch (error: any) {
 			return NextResponse.json(
-				{ message: "Failed to get a list of group" },
+				{ message: "Failed to get a list of group", error: error.message },
 				{ status: 500, }
 			);
 		}
