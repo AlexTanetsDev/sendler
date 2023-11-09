@@ -1,49 +1,44 @@
 import { NextResponse } from "next/server";
 import db from "@/db";
 import { hash, compare } from "bcrypt";
-
-// get user by ID
-export async function GET(req: Request) {
-  try {
-    const id = req.url.slice(req.url.lastIndexOf("/") + 1);
-    const response = await db.query("SELECT * FROM users WHERE user_id = $1", [
-      id,
-    ]);
-    const user = response.rows[0];
-
-    if (!user) {
-      return NextResponse.json(
-        { user: [], message: `User not found` },
-        { status: 404 }
-      );
-    }
-
-    const { user_password: NewUserPassword, ...rest } = user;
-
-    return NextResponse.json({ user: rest });
-  } catch (error) {
-    return NextResponse.json(
-      { message: "Something went wrong!" },
-      { status: 500 }
-    );
-  }
-}
+import { IUser } from "@/globaltypes/types";
+import { schemaNewDateUser, schemaUpdateUserPassword } from "@/models/users";
+import { AllUserWithFild, userActive } from "@/helpers/Users";
 
 // update user
 export async function PUT(req: Request) {
   const body = await req.json();
 
-  const { user_login, tel, email, user_name } = body;
+  const { error, value } = schemaNewDateUser.validate(body);
+
+  if (error) {
+    return NextResponse.json(
+      { message: error.details[0].message },
+      { status: 400 }
+    );
+  }
+
+  const { user_login, tel, email, user_name } = value;
+  
 
   const id = req.url.slice(req.url.lastIndexOf("/") + 1);
 
+  const isUserActive = await userActive(id);
+
+  if (!isUserActive) {
+    return NextResponse.json(
+      { user: null, message: `User with id ${id} not active` },
+      { status: 404 }
+    );
+  }
+
   const response = await db.query(
-    "SELECT email, user_login, user_password, tel, user_name FROM users WHERE user_id = $1",
+    "SELECT email, user_login, tel, user_name FROM users WHERE user_id = $1",
     [id]
   );
 
   const newDataUser = response.rows[0];
-
+  
   if (!newDataUser) {
     return NextResponse.json(
       { user: null, message: `User with id ${id} not found` },
@@ -51,25 +46,53 @@ export async function PUT(req: Request) {
     );
   }
 
-  const updateUserName =
-    user_name !== newDataUser.user_name && user_name !== ""
-      ? user_name
-      : newDataUser.user_name;
+  const userName = await AllUserWithFild(id, "user_name", user_name, newDataUser);
 
-  const updateUserLogin =
-    user_login !== newDataUser.user_login && user_login !== ""
-      ? user_login
-      : newDataUser.user_login;
+  const { isUniqueUserFild: isUniqueUserName, updateUserColumnName: updateUserName} = userName
 
-  const updateTel =
-    tel !== newDataUser.tel && tel !== null ? tel : newDataUser.tel;
+  if (isUniqueUserName) {
+    return NextResponse.json(
+      { message: `User name already exists` },
+      { status: 409 }
+    );
+  }
 
-  const updateEmail =
-    email !== newDataUser.email && email !== "" ? email : newDataUser.email;
+  const userLogin = await AllUserWithFild(id, "user_login",  user_login, newDataUser);
+
+  const { isUniqueUserFild: isUniqueUserLogin, updateUserColumnName: updateUserLogin} = userLogin
+
+  if (isUniqueUserLogin) {
+    return NextResponse.json(
+      { message: `User login already exists` },
+      { status: 409 }
+    );
+  }
+
+  const userTel = await AllUserWithFild(id, "tel", tel, newDataUser);
+
+  const { isUniqueUserFild: isUniqueUserTel, updateUserColumnName: updateUserTel} = userTel
+
+  if (isUniqueUserTel) {
+    return NextResponse.json(
+      { message: `User phone already exists` },
+      { status: 409 }
+    );
+  }
+
+  const userEmail = await AllUserWithFild(id, "email", email, newDataUser);
+
+  const { isUniqueUserFild: isUniqueUserEmail, updateUserColumnName: updateUserEmail} = userEmail
+
+  if (isUniqueUserEmail) {
+    return NextResponse.json(
+      { message: `User email already exists` },
+      { status: 409 }
+    );
+  }
 
   const userData = await db.query(
-    "UPDATE users SET user_login = $1, tel = $2,  email = $3, user_name = $4  WHERE user_id = $5 RETURNING *",
-    [updateUserLogin, updateTel, updateEmail, updateUserName, id]
+    "UPDATE users SET user_login = $1, tel = $2, email = $3, user_name = $4  WHERE user_id = $5 RETURNING *",
+    [updateUserLogin, updateUserTel, updateUserEmail, updateUserName, id]
   );
 
   const user = userData.rows[0];
@@ -87,13 +110,36 @@ export async function PATCH(req: Request) {
   try {
     const body = await req.json();
 
-    const { oldPassword, newPassword } = body;
+    const { error, value } = schemaUpdateUserPassword.validate(body);
 
-    const trimmedOldPassword = oldPassword.trim();
+    if (error) {
+      return NextResponse.json(
+        { message: error.details[0].message },
+        { status: 400 }
+      );
+    }
 
-    const trimmedNewPassword = newPassword.trim();
+    const { oldPassword, newPassword } = value;
+
+    const isTheSamePassword = oldPassword === newPassword;
+
+    if (isTheSamePassword) {
+      return NextResponse.json(
+        { message: " This the same password " },
+        { status: 400 }
+      );
+    }
 
     const id = req.url.slice(req.url.lastIndexOf("/") + 1);
+
+    const isUserActive = await userActive(id);
+
+    if (!isUserActive.user_active) {
+      return NextResponse.json(
+        { user: null, message: `User with id ${id} not active` },
+        { status: 404 }
+      );
+    }
 
     const response = await db.query(
       "SELECT user_password FROM users WHERE user_id = $1",
@@ -109,7 +155,7 @@ export async function PATCH(req: Request) {
       );
     }
 
-    const isPasswordMatched = await compare(trimmedOldPassword, userPassword);
+    const isPasswordMatched = await compare(oldPassword, userPassword);
 
     if (!isPasswordMatched) {
       return NextResponse.json(
@@ -118,7 +164,7 @@ export async function PATCH(req: Request) {
       );
     }
 
-    const newHashPassword = await hash(trimmedNewPassword, 10);
+    const newHashPassword = await hash(newPassword, 10);
 
     await db.query("UPDATE users SET  user_password = $1 where user_id = $2", [
       newHashPassword,
@@ -132,40 +178,4 @@ export async function PATCH(req: Request) {
       { status: 500 }
     );
   }
-}
-
-//disactive user
-export async function DELETE(req: Request) {
-  const id = req.url.slice(req.url.lastIndexOf("/") + 1);
-
-  const response = await db.query(
-    "SELECT user_active FROM users WHERE user_id = $1",
-    [id]
-  );
-
-  const userActive = response.rows[0];
-
-  if (!userActive) {
-    return NextResponse.json(
-      { user: null, message: `User with id ${id} not found` },
-      { status: 404 }
-    );
-  }
-
-  await db.query("UPDATE users SET  user_active = $1 where user_id = $2", [
-    !userActive.user_active,
-    id,
-  ]);
-
-  if (!userActive.user_active) {
-    return NextResponse.json(
-      { message: `User with id ${id} activited` },
-      { status: 200 }
-    );
-  }
-
-  return NextResponse.json(
-    { message: `User with id ${id} disactivited` },
-    { status: 200 }
-  );
 }
