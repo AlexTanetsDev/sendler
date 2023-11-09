@@ -10,17 +10,22 @@ import {
 	IClient,
 } from "@/globaltypes/types";
 
-export default async function getGroup(groupId: number): Promise<IClient[] | NextResponse<{ error: string; }>> {
+export default async function getGroup(groupId: number): Promise<IClient[] | NextResponse<{ message: string; }> | null> {
 	try {
 		const groupsRes: QueryResult<IGroupId> = (await db.query("SELECT group_id FROM send_groups"));
 		const groupsId: IGroupId[] = groupsRes.rows;
+
+		console.log('groupId: ', groupId);
+		console.log('groupsId: ', groupsId);
+
 
 		if (
 			!groupsId.find(
 				(group: IGroupId) => group.group_id === groupId
 			)
 		) {
-			return HttpError(400, `The group with id = ${groupId} does not exist`);
+			return null
+			// throw HttpError(400, `The group with id = ${groupId} does not exist`);
 		}
 		const groupClients: QueryResult<IClient> = await db.query(
 			`SELECT groups_members.client_id

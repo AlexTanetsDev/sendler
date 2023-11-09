@@ -1,5 +1,7 @@
 export type ErrorType = 400 | 401 | 403 | 404 | 409;
 
+export type ErrorCase = 1 | 2 | 3;
+
 export interface ITel { tel: number };
 
 export interface ITelRes { tel: string };

@@ -1,20 +1,16 @@
 import { NextRequest, NextResponse } from "next/server";
-import db from "@/db";
 
 import getUserGroupes from '@/app/api/controllers/sending-groups/getUserGroups';
+import createGroup from '@/app/api/controllers/sending-groups/createGroup';
+
 
 import HttpError from '@/helpers/HttpError';
-import insertNewClient from "@/services/insertNewClient/insertNewClient";
-import insertGroupMember from "@/services/insertGroupMember/insertGroupMember";
-
 
 import { IQieryParamsCreateGroup } from "./types";
 import {
-	IUserId,
 	IGroup,
-	QueryResult,
 	IGroupName,
-	ITelRes
+	ErrorCase
 } from "@/globaltypes/types";
 
 
@@ -58,61 +54,29 @@ export async function POST(request: Request): Promise<NextResponse<{
 	const userId = Number(searchParams.get("userId"));
 	const method = request.method;
 
-	//checking the content of the entered group
 	try {
-		if (clients.length === 0) {
-			return HttpError(400, `The clients list is empty`);
-		}
 
-		//checking user_id existense
-		const usersIdRes: QueryResult<IUserId> = await db.query(`SELECT user_id FROM users`);
-		const usersIdInDatabase: IUserId[] = usersIdRes.rows;
+		const res: IGroup | ErrorCase | NextResponse<{
+			error: string;
+		}> = await createGroup(groupName, clients, userId, method);
 
-		if (!usersIdInDatabase.find((userIdInDatabase: IUserId) => userIdInDatabase.user_id === userId)) {
-			return HttpError(400, `The user with id = ${userId} does not exist`);
-		}
-
-		//checking same group_name existense for user
-		const groupsNameRes: QueryResult<IGroupName> = await db.query(
-			`SELECT group_name FROM send_groups WHERE user_id=${userId}`
-		);
-		const groupsNameInDatabase = groupsNameRes.rows;
-
-		if (
-			groupsNameInDatabase.find(
-				(groupNameInDatabase: IGroupName) => groupNameInDatabase.group_name === groupName
-			)
-		) {
-
-			return HttpError(400, `The group with name ${groupName} already exists`);
-		}
-
-
-		const group: QueryResult<IGroup> = await db.query(
-			`INSERT INTO send_groups (group_name, user_id) values($1, $2) RETURNING *`,
-			[groupName, userId]
-		);
-		const groupId = group.rows[0].group_id;
-
-		const userClientsRes: QueryResult<ITelRes> = await db.query(
-			`SELECT tel FROM clients WHERE user_id = ${userId}`
-		);
-
-		//checking whether a client exists in the user's client list
-		//and adding client
-		const userClientsInDtabase = userClientsRes.rows;
-
-		for (const client of clients) {
-			const tel = client.tel;
-
-			if (!userClientsInDtabase.find((userClientInDtabase: ITelRes) => userClientInDtabase.tel === String(tel))) {
-				await insertNewClient(client, userId, groupId, method);
-			}
-			await insertGroupMember(tel, userId, groupId);
+		switch (res) {
+			case 1:
+				{
+					return HttpError(400, `The clients list is empty`);
+				};
+			case 2:
+				{
+					return HttpError(400, `The user with id = ${userId} does not exist`);
+				};
+			case 3:
+				{
+					return HttpError(400, `The group with name ${groupName} already exists`);
+				}
 		}
 
 		return NextResponse.json(
-			{ group: group.rows[0], message: "New group created successfully" },
+			{ group: res, message: "New group created successfully" },
 			{ status: 201 }
 		);
 	} catch (error: any) {

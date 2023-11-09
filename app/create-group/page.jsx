@@ -24,7 +24,7 @@ const CreateGroup = () => {
         const response = await axios.post(
           `api/sending-groups`,
           {
-            groupName: "children",
+            groupName: "women",
             clients: clients,
           },
           {

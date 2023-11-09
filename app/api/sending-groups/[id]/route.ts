@@ -1,19 +1,14 @@
 import { NextResponse } from "next/server";
-import db from "@/db";
 
 import HttpError from "@/helpers/HttpError";
 
-import insertNewClient from "@/services/insertNewClient/insertNewClient";
-import insertGroupMember from "@/services/insertGroupMember/insertGroupMember";
-
 import getGroup from '@/app/api/controllers/sending-groups/getGroup';
+import deleteGroup from "@/app/api/controllers/sending-groups/deleteGroup";
+import updateGroup from "@/app/api/controllers/sending-groups/updateGroup";
 
 import {
-	IGroupId,
-	QueryResult,
 	IClient,
-	IUserId,
-	ITelRes
+	ErrorCase
 } from "@/globaltypes/types";
 import { IQieryParamsUpdateGroup } from "./types";
 
@@ -23,10 +18,15 @@ export async function GET(request: Request, { params }: { params: { id: string }
 	const groupId = Number(params.id);
 
 	try {
-		const res: IClient[] | NextResponse<{ error: string; }> = await getGroup(groupId);
+		const res: IClient[] | NextResponse<{
+			message: string;
+		}> | null = await getGroup(groupId);
 
+		if (res === null) {
+			return HttpError(400, `The group with id = ${groupId} does not exist`);
+		}
 		return NextResponse.json(
-			{ clients: res },
+			{ clients: res, message: 'Group memebers' },
 			{ status: 200 }
 		);
 	} catch (error: any) {
@@ -42,22 +42,13 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 	const groupId = Number(params.id);
 
 	try {
-		//checking group_id existense
-		const groupsIdRes: QueryResult<IGroupId> = (await db.query("SELECT group_id FROM send_groups"));
-		const groupsIdInDatabase: IGroupId[] = groupsIdRes.rows;
+		const res: NextResponse<{
+			error: string;
+		}> | null | undefined = await deleteGroup(groupId);
 
-		if (
-			!groupsIdInDatabase.find(
-				(groupIdInDatabase: IGroupId) => groupIdInDatabase.group_id === groupId
-			)
-		) {
+		if (res === null) {
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
 		}
-		await db.query(
-			`DELETE FROM send_groups
-		WHERE send_groups.group_id = ${groupId}`
-		);
-
 		return NextResponse.json(
 			{ message: `Group with id = ${groupId} is deleted` },
 			{ status: 200 }
@@ -74,54 +65,22 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 export async function PUT(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: any; }> | NextResponse<string>> {
 	const { clients }: IQieryParamsUpdateGroup = await request.json();
 	const groupId = Number(params.id);
-	const method = request.method;
-
-	//checking the content of the entered group
-	if (clients.length === 0) {
-		return HttpError(400, `The clients list is empty`);
-	}
-
-	//checking group existense
-
+	const method: string = request.method;
 
 	try {
-		const groupsIdRes: QueryResult<IGroupId> = await db.query(`SELECT group_id FROM send_groups`);
-		const groupsIdInDatabase: IGroupId[] = groupsIdRes.rows;
+		const res: ErrorCase | NextResponse<{
+			error: string;
+		}> | undefined = await updateGroup(clients, groupId, method);
 
-		if (
-			!groupsIdInDatabase.find(
-				(groupIdInDatabase: IGroupId) => groupIdInDatabase.group_id === groupId
-			)
-		) {
-			return HttpError(400, `The group with id = ${groupId} does not exist`);
-		}
-
-		await db.query(
-			`DELETE FROM groups_members
-    WHERE groups_members.group_id = ${groupId}`
-		);
-
-		const userIdRes: QueryResult<IUserId> = await db.query(
-			`SELECT user_id FROM send_groups WHERE send_groups.group_id = ${groupId}`
-		);
-
-		const userId = userIdRes.rows[0].user_id;
-
-		const userClientsRes: QueryResult<ITelRes> = await db.query(
-			`SELECT tel FROM clients WHERE user_id = ${userId}`
-		);
-
-		//checking whether a client exists in the user's client list
-		//and adding client
-		const userClients = userClientsRes.rows;
-
-		for (const client of clients) {
-			const tel = client.tel;
-
-			if (!userClients.find((userClient: ITelRes) => userClient.tel === String(tel))) {
-				await insertNewClient(client, userId, groupId, method);
-			}
-			await insertGroupMember(tel, userId, groupId);
+		switch (res) {
+			case 1:
+				{
+					return HttpError(400, `The clients list is empty`);
+				};
+			case 2:
+				{
+					return HttpError(400, `The group with id = ${groupId} does not exist`);
+				};
 		}
 
 		return NextResponse.json(
