@@ -33,6 +33,15 @@ export interface IUser extends ITel, IUserId {
   user_create_date: Date;
 }
 
+export interface INewDataUser {
+  email: string;
+  user_login: string;
+  tel: string;
+  user_name: string; 
+  user_fild: string;
+}
+
+
 
 export interface IClient extends IClientId, ITel {}
 
