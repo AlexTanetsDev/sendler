@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import db from "@/db";
 import { hash } from "bcrypt";
 import { schemaCreateNewUser } from "@/models/users";
+import { generateToken } from "@/helpers/Users";
 
 // create User
 
@@ -73,20 +74,28 @@ const { user_login, tel, user_password, email, user_name } = value;
         { status: 409 }
       );
     }
+    const token = await generateToken({ userPassword: user_password, userEmail: email });
+    if (!token) {
+      return NextResponse.json(
+        { message: "Token generation failed" },
+        { status: 500 })
+    }
+console.log('token', token);
 
     //create new user
     const newUser = await db.query(
-      "INSERT INTO users (user_login, tel, user_password, email, user_name) VALUES ($1, $2, $3, $4, $5) RETURNING *",
-      [user_login, tel, hashedPassword, email, user_name]
+      "INSERT INTO users (user_login, tel, user_password, email, user_name, user_token) VALUES ($1, $2, $3, $4, $5,$6) RETURNING *",
+      [user_login, tel, hashedPassword, email, user_name, token]
     );
 
     const userCreate = newUser.rows[0];
     const { user_password: NewUserPassword, ...rest } = userCreate;
-
+    
     return NextResponse.json(
       { users: rest, message: "User Created successfully" },
       { status: 201 }
     );
+
   } catch (error) {
     return NextResponse.json(
       { message: "Something went wrong!" },

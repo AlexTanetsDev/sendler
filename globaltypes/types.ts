@@ -42,11 +42,7 @@ export interface INewDataUser {
   user_fild: string;
 }
 
-
-
 export interface IClient extends IClientId, ITel {}
-
-export interface IUser extends ITel, IUserId { user_login: string, user_password: string, balance: number, user_token?: string, email: string, user_create_date: Date };
 
 export interface IGroup extends IGroupId, IGroupName, IUserId {}
 
