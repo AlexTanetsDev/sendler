@@ -2,7 +2,11 @@ import { NextResponse } from "next/server";
 import db from "@/db";
 
 // get one sending group
-export async function GET(request: Request, { params }: { params: { id: string } }) {
+export async function GET(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{
+	message: string;
+}> | NextResponse<{
+	clients: any[];
+}>> {
 	const groupId = Number(params.id);
 
 	//checking group_id existense
@@ -41,7 +45,9 @@ export async function GET(request: Request, { params }: { params: { id: string }
 }
 
 // delete one sending group
-export async function DELETE(request: Request, { params }: { params: { id: string } }) {
+export async function DELETE(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{
+	message: string;
+}>> {
 	const groupId = Number(params.id);
 
 	//checking group_id existense
@@ -77,7 +83,9 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 	}
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }) {
+export async function PUT(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{
+	message: string;
+}> | NextResponse<string>> {
 	const { clients } = await request.json();
 	const groupId = Number(params.id);
 

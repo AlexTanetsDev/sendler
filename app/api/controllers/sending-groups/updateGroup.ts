@@ -1,15 +1,12 @@
 import { NextResponse } from "next/server";
 import db from "@/db";
 
-import HttpError from "@/helpers/HttpError";
-
 import insertNewClient from "@/services/insertNewClient/insertNewClient";
 import insertGroupMember from "@/services/insertGroupMember/insertGroupMember";
 
 import {
 	IGroupId,
 	QueryResult,
-	IClient,
 	IUserId,
 	ITelRes,
 	IUserСlient,
@@ -59,7 +56,7 @@ export default async function updateGroup(clients: IUserСlient[], groupId: numb
 		const userClients = userClientsRes.rows;
 
 		for (const client of clients) {
-			const tel = client.tel;
+			const tel = Number(client.tel);
 
 			if (!userClients.find((userClient: ITelRes) => userClient.tel === String(tel))) {
 				await insertNewClient(client, userId, groupId, method);
