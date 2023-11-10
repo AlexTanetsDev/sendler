@@ -6,12 +6,12 @@ import { updateClient } from "../../controllers/clients";
 
 import {
 	ErrorCase,
-	IUserСlient
+	IClientDatabase
 } from "@/globaltypes/types";
 import { IQieryParamsUpdateClient } from "./types";
 
 export async function PUT(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{
-	res: IUserСlient | ErrorCase;
+	res: IClientDatabase | ErrorCase;
 	message: string;
 }> | NextResponse<{
 	error: any;

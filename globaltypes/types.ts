@@ -53,9 +53,7 @@ export interface IClient extends ITel {
 	parameter_2?: string
 };
 
-export interface IClientDatabase extends IClientId, IClient { };
-
-export interface IUserСlient extends IClientDatabase { };
+export interface IClientDatabase extends IClientId, IClient, IUserId { };
 
 export interface IGroup extends IGroupId, IGroupName, IUserId { };
 
