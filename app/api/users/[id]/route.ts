@@ -6,8 +6,9 @@ import { schemaNewDateUser, schemaUpdateUserPassword } from "@/models/users";
 import { AllUserWithFild, userActive } from "@/helpers/Users";
 
 // update user
-export async function PUT(req: Request) {
+export async function PUT(req: Request, { params }: { params: { id: string } }) {
   const body = await req.json();
+  const id = params.id;
 
   const { error, value } = schemaNewDateUser.validate(body);
 
@@ -19,9 +20,7 @@ export async function PUT(req: Request) {
   }
 
   const { user_login, tel, email, user_name } = value;
-  
 
-  const id = req.url.slice(req.url.lastIndexOf("/") + 1);
 
   const isUserActive = await userActive(id);
 
@@ -38,7 +37,7 @@ export async function PUT(req: Request) {
   );
 
   const newDataUser = response.rows[0];
-  
+
   if (!newDataUser) {
     return NextResponse.json(
       { user: null, message: `User with id ${id} not found` },
@@ -46,9 +45,17 @@ export async function PUT(req: Request) {
     );
   }
 
-  const userName = await AllUserWithFild(id, "user_name", user_name, newDataUser);
+  const userName = await AllUserWithFild(
+    id,
+    "user_name",
+    user_name,
+    newDataUser
+  );
 
-  const { isUniqueUserFild: isUniqueUserName, updateUserColumnName: updateUserName} = userName
+  const {
+    isUniqueUserFild: isUniqueUserName,
+    updateUserColumnName: updateUserName,
+  } = userName;
 
   if (isUniqueUserName) {
     return NextResponse.json(
@@ -57,9 +64,17 @@ export async function PUT(req: Request) {
     );
   }
 
-  const userLogin = await AllUserWithFild(id, "user_login",  user_login, newDataUser);
+  const userLogin = await AllUserWithFild(
+    id,
+    "user_login",
+    user_login,
+    newDataUser
+  );
 
-  const { isUniqueUserFild: isUniqueUserLogin, updateUserColumnName: updateUserLogin} = userLogin
+  const {
+    isUniqueUserFild: isUniqueUserLogin,
+    updateUserColumnName: updateUserLogin,
+  } = userLogin;
 
   if (isUniqueUserLogin) {
     return NextResponse.json(
@@ -70,7 +85,10 @@ export async function PUT(req: Request) {
 
   const userTel = await AllUserWithFild(id, "tel", tel, newDataUser);
 
-  const { isUniqueUserFild: isUniqueUserTel, updateUserColumnName: updateUserTel} = userTel
+  const {
+    isUniqueUserFild: isUniqueUserTel,
+    updateUserColumnName: updateUserTel,
+  } = userTel;
 
   if (isUniqueUserTel) {
     return NextResponse.json(
@@ -81,7 +99,10 @@ export async function PUT(req: Request) {
 
   const userEmail = await AllUserWithFild(id, "email", email, newDataUser);
 
-  const { isUniqueUserFild: isUniqueUserEmail, updateUserColumnName: updateUserEmail} = userEmail
+  const {
+    isUniqueUserFild: isUniqueUserEmail,
+    updateUserColumnName: updateUserEmail,
+  } = userEmail;
 
   if (isUniqueUserEmail) {
     return NextResponse.json(
@@ -106,8 +127,12 @@ export async function PUT(req: Request) {
 
 //update password
 
-export async function PATCH(req: Request) {
+export async function PATCH(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
   try {
+    const id = params.id;
     const body = await req.json();
 
     const { error, value } = schemaUpdateUserPassword.validate(body);
@@ -129,8 +154,6 @@ export async function PATCH(req: Request) {
         { status: 400 }
       );
     }
-
-    const id = req.url.slice(req.url.lastIndexOf("/") + 1);
 
     const isUserActive = await userActive(id);
 

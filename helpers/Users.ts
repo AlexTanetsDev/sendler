@@ -1,6 +1,8 @@
-import { NextResponse } from "next/server";
 import db from "@/db";
 import { INewDataUser } from "@/globaltypes/types";
+import jwt from 'jsonwebtoken';
+
+const SECRET_KEY = process.env.SECRET_KEY;
 
 export async function userActive(id: string) {
   const userActive = await db.query(
@@ -35,3 +37,24 @@ export async function AllUserWithFild(
 
   return { isUniqueUserFild, updateUserColumnName };
 }
+
+
+
+
+export async function generateToken(userData: { userPassword: string, userEmail: string }): Promise<string> {
+  const payload = {
+    userPassword: userData.userPassword,
+    userEmail: userData.userEmail,
+  };
+
+  const key = SECRET_KEY;
+  if (key) {
+    return new Promise((resolve, reject) => {
+      jwt.sign(payload, key, { expiresIn: '1h' }, (err, token) => {
+        if (err) reject(err);
+        resolve(token!); 
+      });
+    });
+  }
+  throw new Error('SECRET_KEY is not defined');
+  }
