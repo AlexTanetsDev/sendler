@@ -44,6 +44,7 @@ export interface INewDataUser {
 
 
 
+
 export interface IClient extends ITel {
 	first_name?: string,
 	middle_name?: string,
@@ -56,6 +57,8 @@ export interface IClient extends ITel {
 export interface IClientDatabase extends IClientId, IClient { };
 
 export interface IUserСlient extends IClientDatabase { };
+
+export interface IGroup extends IGroupId, IGroupName, IUserId {};
 
 export interface IGroup extends IGroupId, IGroupName, IUserId { };
 
