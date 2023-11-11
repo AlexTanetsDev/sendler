@@ -61,7 +61,7 @@ export default async function createGroup(groupName: string, clients: IUserСlie
 		const userClientsInDtabase = userClientsRes.rows;
 
 		for (const client of clients) {
-			const tel = client.tel;
+			const tel = Number(client.tel);
 
 			if (!userClientsInDtabase.find((userClientInDtabase: ITelRes) => userClientInDtabase.tel === String(tel))) {
 				await insertNewClient(client, userId, groupId, method);
