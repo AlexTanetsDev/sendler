@@ -5,21 +5,20 @@ import { schemaCreateNewUser } from "@/models/users";
 import { generateToken } from "@/helpers/Users";
 
 // create User
-
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-   
-const {error, value} = schemaCreateNewUser.validate(body)
 
-if (error) {
-  return NextResponse.json(
-    { message: error.details[0].message },
-    { status: 400 }
-  );
-}
+    const { error, value } = schemaCreateNewUser.validate(body);
 
-const { user_login, tel, user_password, email, user_name } = value;
+    if (error) {
+      return NextResponse.json(
+        { message: error.details[0].message },
+        { status: 400 }
+      );
+    }
+
+    const { user_login, tel, user_password, email, user_name } = value;
 
     const hashedPassword = await hash(user_password, 10);
 
@@ -74,13 +73,16 @@ const { user_login, tel, user_password, email, user_name } = value;
         { status: 409 }
       );
     }
-    const token = await generateToken({ userPassword: user_password, userEmail: email });
+    const token = await generateToken({
+      userPassword: user_password,
+      userEmail: email,
+    });
     if (!token) {
       return NextResponse.json(
         { message: "Token generation failed" },
-        { status: 500 })
+        { status: 500 }
+      );
     }
-console.log('token', token);
 
     //create new user
     const newUser = await db.query(
@@ -90,12 +92,11 @@ console.log('token', token);
 
     const userCreate = newUser.rows[0];
     const { user_password: NewUserPassword, ...rest } = userCreate;
-    
+
     return NextResponse.json(
       { users: rest, message: "User Created successfully" },
       { status: 201 }
     );
-
   } catch (error) {
     return NextResponse.json(
       { message: "Something went wrong!" },

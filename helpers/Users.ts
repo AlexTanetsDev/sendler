@@ -1,6 +1,7 @@
 import db from "@/db";
 import { INewDataUser } from "@/globaltypes/types";
 import jwt from 'jsonwebtoken';
+import { NextResponse } from "next/server";
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
@@ -37,9 +38,6 @@ export async function AllUserWithFild(
 
   return { isUniqueUserFild, updateUserColumnName };
 }
-
-
-
 
 export async function generateToken(userData: { userPassword: string, userEmail: string }): Promise<string> {
   const payload = {
