@@ -7,14 +7,10 @@ import {
 	IClient,
 } from "@/globaltypes/types";
 
-export default async function getGroup(groupId: number): Promise<IClient[] | NextResponse<{ message: string; }> | null> {
+export default async function getGroupClients(groupId: number): Promise<IClient[] | NextResponse<{ message: string; }> | null> {
 	try {
 		const groupsRes: QueryResult<IGroupId> = (await db.query("SELECT group_id FROM send_groups"));
 		const groupsId: IGroupId[] = groupsRes.rows;
-
-		console.log('groupId: ', groupId);
-		console.log('groupsId: ', groupsId);
-
 
 		if (
 			!groupsId.find(

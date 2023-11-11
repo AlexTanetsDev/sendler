@@ -3,7 +3,7 @@ import db from "@/db";
 import { IUserId, IGroupName, QueryResult } from "@/globaltypes/types";
 
 // get all groups for one user by user ID
-export default async function getUserGroupes(userId: number): Promise<IGroupName | null> {
+export default async function getUserGroups(userId: number): Promise<IGroupName | null> {
 	try {
 		const usersIdRes: QueryResult<IUserId> = await db.query(`SELECT user_id FROM users`);
 		const usersIdInDatabase = usersIdRes.rows;

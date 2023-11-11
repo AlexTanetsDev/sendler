@@ -1,13 +1,10 @@
-import { NextResponse } from "next/server";
-import db from "@/db";
-
 import {
-	getTelClient,
+	getUserClientsTel,
 	insertNewGroup,
 	insertGroupMember,
 	insertNewClient,
 	getGroupName,
-	getUsersName
+	getUsersId
 } from "@/app/utils";
 
 import {
@@ -28,7 +25,7 @@ export default async function createGroup(groupName: string, clients: IClientDat
 		}
 
 		//checking user_id existense
-		const usersIdRes: QueryResult<IUserId> = await getUsersName();
+		const usersIdRes: QueryResult<IUserId> = await getUsersId();
 		const usersIdInDatabase: IUserId[] = usersIdRes.rows;
 
 		if (!usersIdInDatabase.find((userIdInDatabase: IUserId) => userIdInDatabase.user_id === userId)) {
@@ -49,7 +46,7 @@ export default async function createGroup(groupName: string, clients: IClientDat
 
 		const groupData: Promise<QueryResult<IGroup>> = insertNewGroup(groupName, userId);
 
-		const userClientsResData: Promise<QueryResult<ITelRes>> = getTelClient(userId);
+		const userClientsResData: Promise<QueryResult<ITelRes>> = getUserClientsTel(userId);
 
 		const [group, userClientsRes] = await Promise.all([groupData, userClientsResData]);
 

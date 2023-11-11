@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
-import db from "@/db";
 
 import {
-	getTelClient,
-	insertNewGroup,
+	getUserClientsTel,
 	insertGroupMember,
-	insertNewClient
+	insertNewClient,
+	getGroupsId,
+	deleteGroupMembers,
+	getGroupUserId
 } from "@/app/utils";
 
 import {
@@ -14,7 +15,7 @@ import {
 	IUserId,
 	ITelRes,
 	IClientDatabase,
-	ErrorCase
+	ErrorCase,
 } from "@/globaltypes/types";
 // import { IQieryParamsUpdateGroup } from "./types";
 
@@ -29,7 +30,7 @@ export default async function updateGroup(clients: IClientDatabase[], groupId: n
 		}
 
 		//checking group existense
-		const groupsIdRes: QueryResult<IGroupId> = await db.query(`SELECT group_id FROM send_groups`);
+		const groupsIdRes: QueryResult<IGroupId> = await getGroupsId();
 		const groupsIdInDatabase: IGroupId[] = groupsIdRes.rows;
 
 		if (
@@ -40,20 +41,18 @@ export default async function updateGroup(clients: IClientDatabase[], groupId: n
 			return 2;
 		}
 
-		await db.query(
-			`DELETE FROM groups_members
-    WHERE groups_members.group_id = ${groupId}`
-		);
+		// await deleteGroupMembers(groupId);
 
-		const userIdRes: QueryResult<IUserId> = await db.query(
-			`SELECT user_id FROM send_groups WHERE send_groups.group_id = ${groupId}`
-		);
+		// const userIdRes: QueryResult<IUserId> = await getGroupUserId(groupId);
+		const deleteFunction = deleteGroupMembers(groupId);
+
+		const userIdResData: Promise<QueryResult<IUserId>> = getGroupUserId(groupId);
+
+		const [userIdRes] = await Promise.all([userIdResData, deleteFunction]);
 
 		const userId = userIdRes.rows[0].user_id;
 
-		const userClientsRes: QueryResult<ITelRes> = await db.query(
-			`SELECT tel FROM clients WHERE user_id = ${userId}`
-		);
+		const userClientsRes: QueryResult<ITelRes> = await getUserClientsTel(userId);
 
 		//checking whether a client exists in the user's client list
 		//and adding client

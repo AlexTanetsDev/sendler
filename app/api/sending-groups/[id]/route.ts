@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 
 import HttpError from "@/helpers/HttpError";
 
-import getGroup from '@/app/api/controllers/sending-groups/getGroup';
+import getGroupClients from '@/app/api/controllers/sending-groups/getGroupClients';
 import deleteGroup from "@/app/api/controllers/sending-groups/deleteGroup";
 import updateGroup from "@/app/api/controllers/sending-groups/updateGroup";
 
@@ -20,7 +20,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 	try {
 		const res: IClient[] | NextResponse<{
 			message: string;
-		}> | null = await getGroup(groupId);
+		}> | null = await getGroupClients(groupId);
 
 		if (res === null) {
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
