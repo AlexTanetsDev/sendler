@@ -1,20 +1,24 @@
 import { NextResponse } from "next/server";
 import db from "@/db";
 
-import insertNewClient from "@/services/insertNewClient/insertNewClient";
-import insertGroupMember from "@/services/insertGroupMember/insertGroupMember";
+import {
+	getTelClient,
+	insertNewGroup,
+	insertGroupMember,
+	insertNewClient
+} from "@/app/utils";
 
 import {
 	IGroupId,
 	QueryResult,
 	IUserId,
 	ITelRes,
-	IUserСlient,
+	IClientDatabase,
 	ErrorCase
 } from "@/globaltypes/types";
 // import { IQieryParamsUpdateGroup } from "./types";
 
-export default async function updateGroup(clients: IUserСlient[], groupId: number, method: string): Promise<ErrorCase | NextResponse<{
+export default async function updateGroup(clients: IClientDatabase[], groupId: number, method: string): Promise<ErrorCase | NextResponse<{
 	error: string;
 }> | undefined> {
 

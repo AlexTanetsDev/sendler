@@ -1,9 +1,6 @@
 import { NextResponse } from "next/server";
 import db from "@/db";
 
-import HttpError from "@/helpers/HttpError";
-
-
 import {
 	IGroupId,
 	QueryResult,
