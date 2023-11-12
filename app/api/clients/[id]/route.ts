@@ -29,7 +29,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 				};
 			case 2:
 				{
-					return HttpError(400, `The group with id = ${clientId} does not exist`);
+					return HttpError(400, `The client with id = ${clientId} does not exist`);
 				};
 		}
 

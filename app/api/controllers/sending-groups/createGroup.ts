@@ -19,6 +19,7 @@ import {
 
 
 export default async function createGroup(groupName: string, clients: IClientDatabase[], userId: number, method: string): Promise<IGroup | ErrorCase> {
+
 	try {
 		if (clients.length === 0) {
 			return 1;

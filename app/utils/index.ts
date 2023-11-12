@@ -7,3 +7,5 @@ export { default as getUsersId } from './getUsersId';
 export { default as getGroupsId } from './getGroupsId';
 export { default as deleteGroupMembers } from './deleteGroupMembers';
 export { default as getGroupUserId } from './getGroupUserId';
+export { default as getClientData } from './getClientData';
+export { default as updateClientData } from './updateClientData';

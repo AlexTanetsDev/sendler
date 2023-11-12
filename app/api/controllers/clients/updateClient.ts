@@ -1,9 +1,14 @@
-import db from "@/db";
+import { getClientData, updateClientData } from "@/app/utils";
 
-
-import { IClientId, QueryResult, IClient, ErrorCase, IClientDatabase, } from "@/globaltypes/types";
+import {
+	QueryResult,
+	IClient,
+	ErrorCase,
+	IClientDatabase,
+} from "@/globaltypes/types";
 
 export default async function updateClient(client: IClient, clientId: number): Promise<IClientDatabase | ErrorCase> {
+
 	let {
 		tel,
 		first_name,
@@ -20,7 +25,7 @@ export default async function updateClient(client: IClient, clientId: number): P
 		}
 
 		//checking client existense
-		const clientRes: QueryResult<IClientDatabase> = await db.query(`SELECT client_id, first_name, middle_name, last_name, date_of_birth, parameter_1, parameter_2 FROM clients WHERE  client_id=${clientId}`);
+		const clientRes: QueryResult<IClientDatabase> = await getClientData(clientId);
 
 		const clientInDatabase = clientRes.rows[0];
 
@@ -53,10 +58,8 @@ export default async function updateClient(client: IClient, clientId: number): P
 			parameter_2 = clientInDatabase.parameter_2;
 		};
 
-		const clientDataRes: QueryResult<IClientDatabase> = await db.query(
-			"UPDATE clients SET first_name = $1, middle_name = $2, last_name = $3, date_of_birth = $4, parameter_1=$5, parameter_2=$6, tel=$7  WHERE client_id = $8 RETURNING *",
-			[first_name, middle_name, last_name, date_of_birth, parameter_1, parameter_2, tel, clientId]
-		);
+		const clientDataRes: QueryResult<IClientDatabase> = await updateClientData(first_name, middle_name, last_name, date_of_birth, parameter_1, parameter_2, tel, clientId);
+
 		return clientDataRes.rows[0];
 
 	} catch (error: any) {
