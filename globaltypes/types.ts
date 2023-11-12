@@ -64,6 +64,10 @@ export interface IUserChangePassword {
 	newPassword: string;
 };
 
+// export interface ISchemasReqCreatGroup extends IGroup, IClient {
+// 	cache: string;
+// }
+
 // export interface IUser extends ITel, IUserId { user_login: string, user_password: string, balance?: number | undefined, user_token?: string, email: string, user_create_date: Date };
 
 

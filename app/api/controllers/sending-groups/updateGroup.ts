@@ -15,19 +15,14 @@ import {
 	IUserId,
 	ITelRes,
 	IClientDatabase,
-	ErrorCase,
 } from "@/globaltypes/types";
 // import { IQieryParamsUpdateGroup } from "./types";
 
-export default async function updateGroup(clients: IClientDatabase[], groupId: number, method: string): Promise<ErrorCase | NextResponse<{
+export default async function updateGroup(clients: IClientDatabase[], groupId: number, method: string): Promise<null | NextResponse<{
 	error: string;
 }> | undefined> {
 
 	try {
-		//checking the content of the entered group
-		if (clients.length === 0) {
-			return 1;
-		}
 
 		//checking group existense
 		const groupsIdRes: QueryResult<IGroupId> = await getGroupsId();
@@ -38,7 +33,7 @@ export default async function updateGroup(clients: IClientDatabase[], groupId: n
 				(groupIdInDatabase: IGroupId) => groupIdInDatabase.group_id === groupId
 			)
 		) {
-			return 2;
+			return null;
 		}
 
 		// await deleteGroupMembers(groupId);

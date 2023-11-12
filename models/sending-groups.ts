@@ -1,9 +1,6 @@
 import Joi from "joi";
 
-import {
-	IClient,
-	IGroupName
-} from "@/globaltypes/types";
+import { IClient } from "@/globaltypes/types";
 
 export const schemaClient: Joi.ObjectSchema<IClient> = Joi.object({
 	tel: Joi.number().integer(),
@@ -17,6 +14,11 @@ export const schemaClient: Joi.ObjectSchema<IClient> = Joi.object({
 
 export const schemaReqCreateGroup: Joi.ObjectSchema<any> = Joi.object({
 	groupName: Joi.string(),
+	clients: Joi.array().items(schemaClient),
+	cache: Joi.string(),
+});
+
+export const schemaReqUpdateGroup: Joi.ObjectSchema<any> = Joi.object({
 	clients: Joi.array().items(schemaClient),
 	cache: Joi.string(),
 });
