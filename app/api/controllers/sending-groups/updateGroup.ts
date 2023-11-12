@@ -1,31 +1,31 @@
 import { NextResponse } from "next/server";
-import db from "@/db";
-
-import insertNewClient from "@/services/insertNewClient/insertNewClient";
-import insertGroupMember from "@/services/insertGroupMember/insertGroupMember";
 
 import {
+	getUserClientsTel,
+	insertGroupMember,
+	insertNewClient,
+	getGroupsId,
+	deleteGroupMembers,
+	getGroupUserId
+} from "@/app/utils";
+
+import { QueryResult } from "pg";
+import {
 	IGroupId,
-	QueryResult,
 	IUserId,
 	ITelRes,
-	IUserСlient,
-	ErrorCase
+	IClientDatabase,
 } from "@/globaltypes/types";
 // import { IQieryParamsUpdateGroup } from "./types";
 
-export default async function updateGroup(clients: IUserСlient[], groupId: number, method: string): Promise<ErrorCase | NextResponse<{
+export default async function updateGroup(clients: IClientDatabase[], groupId: number, method: string): Promise<null | NextResponse<{
 	error: string;
 }> | undefined> {
 
 	try {
-		//checking the content of the entered group
-		if (clients.length === 0) {
-			return 1;
-		}
 
 		//checking group existense
-		const groupsIdRes: QueryResult<IGroupId> = await db.query(`SELECT group_id FROM send_groups`);
+		const groupsIdRes: QueryResult<IGroupId> = await getGroupsId();
 		const groupsIdInDatabase: IGroupId[] = groupsIdRes.rows;
 
 		if (
@@ -33,23 +33,21 @@ export default async function updateGroup(clients: IUserСlient[], groupId: numb
 				(groupIdInDatabase: IGroupId) => groupIdInDatabase.group_id === groupId
 			)
 		) {
-			return 2;
+			return null;
 		}
 
-		await db.query(
-			`DELETE FROM groups_members
-    WHERE groups_members.group_id = ${groupId}`
-		);
+		// await deleteGroupMembers(groupId);
 
-		const userIdRes: QueryResult<IUserId> = await db.query(
-			`SELECT user_id FROM send_groups WHERE send_groups.group_id = ${groupId}`
-		);
+		// const userIdRes: QueryResult<IUserId> = await getGroupUserId(groupId);
+		const deleteFunction = deleteGroupMembers(groupId);
+
+		const userIdResData: Promise<QueryResult<IUserId>> = getGroupUserId(groupId);
+
+		const [userIdRes] = await Promise.all([userIdResData, deleteFunction]);
 
 		const userId = userIdRes.rows[0].user_id;
 
-		const userClientsRes: QueryResult<ITelRes> = await db.query(
-			`SELECT tel FROM clients WHERE user_id = ${userId}`
-		);
+		const userClientsRes: QueryResult<ITelRes> = await getUserClientsTel(userId);
 
 		//checking whether a client exists in the user's client list
 		//and adding client

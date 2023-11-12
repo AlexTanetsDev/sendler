@@ -1,12 +1,8 @@
 import { NextResponse } from "next/server";
 import db from "@/db";
 
-import HttpError from "@/helpers/HttpError";
-
-import {
-	IGroupId,
-	QueryResult,
-} from "@/globaltypes/types";
+import { QueryResult } from "pg";
+import { IGroupId } from "@/globaltypes/types";
 // import { IQieryParamsUpdateGroup } from "./types";
 
 export default async function deleteGroupe(groupId: number): Promise<NextResponse<{

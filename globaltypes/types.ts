@@ -15,10 +15,6 @@ export interface IGroupId {
 	group_id: number;
 }
 
-export interface IClientId {
-	client_id: number;
-}
-
 export interface IGroupName {
 	group_name: string;
 }
@@ -54,52 +50,58 @@ export interface IClient extends ITel {
 	parameter_2?: string
 };
 
+
+export interface IClientId {
+	client_id: number;
+}
+
 export interface IClientDatabase extends IClientId, IClient, IUserId { };
 
-export interface IGroup extends IGroupId, IGroupName, IUserId {};
-
 export interface IGroup extends IGroupId, IGroupName, IUserId { };
-
 
 export interface IUserChangePassword {
 	oldPassword: string;
 	newPassword: string;
 };
 
+// export interface ISchemasReqCreatGroup extends IGroup, IClient {
+// 	cache: string;
+// }
+
 // export interface IUser extends ITel, IUserId { user_login: string, user_password: string, balance?: number | undefined, user_token?: string, email: string, user_create_date: Date };
 
 
 //?-------------------------------------------------------------------
 
-export interface QueryResultBase {
-	command: string;
-	rowCount: number;
-	oid: number;
-	fields: FieldDef[];
-}
+// export interface QueryResultBase {
+// 	command: string;
+// 	rowCount: number;
+// 	oid: number;
+// 	fields: FieldDef[];
+// }
 
-export interface QueryResultRow {
-	[column: string]: any;
-}
+// export interface QueryResultRow {
+// 	[column: string]: any;
+// }
 
-export interface QueryResult<R extends QueryResultRow = any>
-	extends QueryResultBase {
-	rows: R[];
-}
+// export interface QueryResult<R extends QueryResultRow = any>
+// 	extends QueryResultBase {
+// 	rows: R[];
+// }
 
-export interface QueryArrayResult<R extends any[] = any[]>
-	extends QueryResultBase {
-	rows: R[];
-}
+// export interface QueryArrayResult<R extends any[] = any[]>
+// 	extends QueryResultBase {
+// 	rows: R[];
+// }
 
-export interface FieldDef {
-	name: string;
-	tableID: number;
-	columnID: number;
-	dataTypeID: number;
-	dataTypeSize: number;
-	dataTypeModifier: number;
-	format: string;
-}
+// export interface FieldDef {
+// 	name: string;
+// 	tableID: number;
+// 	columnID: number;
+// 	dataTypeID: number;
+// 	dataTypeSize: number;
+// 	dataTypeModifier: number;
+// 	format: string;
+// }
 
 //?-------------------------------------------------------------------

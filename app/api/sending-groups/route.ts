@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import getUserGroupes from '@/app/api/controllers/sending-groups/getUserGroups';
+import getUserGroups from '@/app/api/controllers/sending-groups/getUserGroups';
 import createGroup from '@/app/api/controllers/sending-groups/createGroup';
 
 
@@ -13,6 +13,10 @@ import {
 	ErrorCase
 } from "@/globaltypes/types";
 
+import {
+	schemaReqCreateGroup
+} from "@/models/sending-groups"
+
 
 // get all groups for one user by user ID
 export async function GET(request: NextRequest): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }> | NextResponse<Promise<IGroupName[] | null>>> {
@@ -23,7 +27,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<{ message:
 	//checking user_id existense
 	if (userId) {
 		try {
-			const res: null | IGroupName = await getUserGroupes(userId);
+			const res: null | IGroupName = await getUserGroups(userId);
 
 			if (res === null) {
 				return HttpError(400, `The user with id = ${userId} does not exist`);
@@ -46,15 +50,33 @@ export async function GET(request: NextRequest): Promise<NextResponse<{ message:
 // add new sendig group, here we working with excel file of clients and get user ID from search params
 // 1. we adding all clients to clients table and getting all clients id in array
 // 2. create sending group with user_id from search params and array of clients
-export async function POST(request: Request): Promise<NextResponse<{
-	message: string;
-}> | NextResponse<{ error: any; }> | NextResponse<string>> {
-	const { groupName, clients }: IQieryParamsCreateGroup = await request.json();
-	const { searchParams }: URL = new URL(request.url);
-	const userId = Number(searchParams.get("userId"));
-	const method = request.method;
+export async function POST(request: Request): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: any; }> | NextResponse<string>> {
 
 	try {
+
+		const body: IQieryParamsCreateGroup = await request.json();
+		const { error, value } = schemaReqCreateGroup.validate(body);
+
+		if (error) {
+			return NextResponse.json(
+				{ error: error.message },
+				{ status: 400 }
+			);
+		}
+
+		const { groupName, clients } = value;
+
+		const { searchParams }: URL = new URL(request.url);
+		const userId = Number(searchParams.get("userId"));
+		const method = request.method;
+
+		if (!groupName) {
+			return HttpError(400, `The input does not contain the group name.`);
+		}
+
+		if (clients.length === 0) {
+			return HttpError(400, `The clients list is empty`);
+		}
 
 		const res: IGroup | ErrorCase | NextResponse<{
 			error: string;
@@ -63,13 +85,9 @@ export async function POST(request: Request): Promise<NextResponse<{
 		switch (res) {
 			case 1:
 				{
-					return HttpError(400, `The clients list is empty`);
-				};
-			case 2:
-				{
 					return HttpError(400, `The user with id = ${userId} does not exist`);
 				};
-			case 3:
+			case 2:
 				{
 					return HttpError(400, `The group with name ${groupName} already exists`);
 				}

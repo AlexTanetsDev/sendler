@@ -1,64 +1,58 @@
-import { NextResponse } from "next/server";
-import db from "@/db";
+import {
+	getUserClientsTel,
+	insertNewGroup,
+	insertGroupMember,
+	insertNewClient,
+	getGroupName,
+	getUsersId
+} from "@/app/utils";
 
-import insertNewClient from "@/services/insertNewClient/insertNewClient";
-import insertGroupMember from "@/services/insertGroupMember/insertGroupMember";
-
+import { QueryResult } from "pg";
 import {
 	IUserId,
 	IGroup,
-	QueryResult,
 	IGroupName,
 	ITelRes,
-	IUserСlient,
+	IClientDatabase,
 	ErrorCase
 } from "@/globaltypes/types";
 
 
-export default async function createGroup(groupName: string, clients: IUserСlient[], userId: number, method: string): Promise<IGroup | ErrorCase | NextResponse<{
-	error: string;
-}>> {
+export default async function createGroup(groupName: string, clients: IClientDatabase[], userId: number, method: string): Promise<IGroup | ErrorCase> {
+
 	try {
-		if (clients.length === 0) {
-			return 1;
-		}
 
 		//checking user_id existense
-		const usersIdRes: QueryResult<IUserId> = await db.query(`SELECT user_id FROM users`);
+		const usersIdRes: QueryResult<IUserId> = await getUsersId();
 		const usersIdInDatabase: IUserId[] = usersIdRes.rows;
 
 		if (!usersIdInDatabase.find((userIdInDatabase: IUserId) => userIdInDatabase.user_id === userId)) {
-			return 2;
+			return 1;
 		}
 
 		//checking same group_name existense for user
-		const groupsNameRes: QueryResult<IGroupName> = await db.query(
-			`SELECT group_name FROM send_groups WHERE user_id=${userId}`
-		);
-		const groupsNameInDatabase = groupsNameRes.rows;
+		const groupsNameRes: QueryResult<IGroupName> = await getGroupName(userId);
+		const groupsNameInDatabase: IGroupName[] = groupsNameRes.rows;
 
 		if (
 			groupsNameInDatabase.find(
 				(groupNameInDatabase: IGroupName) => groupNameInDatabase.group_name === groupName
 			)
 		) {
-			return 3;
+			return 2;
 		}
 
+		const groupData: Promise<QueryResult<IGroup>> = insertNewGroup(groupName, userId);
 
-		const group: QueryResult<IGroup> = await db.query(
-			`INSERT INTO send_groups (group_name, user_id) values($1, $2) RETURNING *`,
-			[groupName, userId]
-		);
-		const groupId = group.rows[0].group_id;
+		const userClientsResData: Promise<QueryResult<ITelRes>> = getUserClientsTel(userId);
 
-		const userClientsRes: QueryResult<ITelRes> = await db.query(
-			`SELECT tel FROM clients WHERE user_id = ${userId}`
-		);
+		const [group, userClientsRes] = await Promise.all([groupData, userClientsResData]);
+
+		const groupId: number = group.rows[0].group_id;
 
 		//checking whether a client exists in the user's client list
 		//and adding client
-		const userClientsInDtabase = userClientsRes.rows;
+		const userClientsInDtabase: ITelRes[] = userClientsRes.rows;
 
 		for (const client of clients) {
 			const tel = Number(client.tel);
