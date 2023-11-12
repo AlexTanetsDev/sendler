@@ -50,10 +50,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<{ message:
 // add new sendig group, here we working with excel file of clients and get user ID from search params
 // 1. we adding all clients to clients table and getting all clients id in array
 // 2. create sending group with user_id from search params and array of clients
-export async function POST(request: Request)
-	: Promise<NextResponse<{
-		message: string;
-	}> | NextResponse<{ error: any; }> | NextResponse<string>> {
+export async function POST(request: Request): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: any; }> | NextResponse<string>> {
 
 	try {
 
@@ -66,6 +63,7 @@ export async function POST(request: Request)
 				{ status: 400 }
 			);
 		}
+
 		const { groupName, clients } = value;
 
 		const { searchParams }: URL = new URL(request.url);
