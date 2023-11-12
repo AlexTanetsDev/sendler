@@ -6,11 +6,10 @@ import {
 import { QueryResult } from "pg";
 import {
 	IClient,
-	ErrorCase,
 	IClientDatabase,
 } from "@/globaltypes/types";
 
-export default async function updateClient(client: IClient, clientId: number): Promise<IClientDatabase | ErrorCase> {
+export default async function updateClient(client: IClient, clientId: number): Promise<null | IClientDatabase> {
 
 	let {
 		tel,
@@ -22,18 +21,14 @@ export default async function updateClient(client: IClient, clientId: number): P
 		parameter_2 } = client;
 
 	try {
-		//checking the content of the entered client
-		if (!tel) {
-			return 1;
-		}
-
 		//checking client existense
 		const clientRes: QueryResult<IClientDatabase> = await getClientData(clientId);
 
 		const clientInDatabase = clientRes.rows[0];
 
+
 		if (!clientInDatabase) {
-			return 2;
+			return null;
 		}
 
 		//check optional parameters
@@ -60,6 +55,8 @@ export default async function updateClient(client: IClient, clientId: number): P
 		if (!parameter_2) {
 			parameter_2 = clientInDatabase.parameter_2;
 		};
+
+
 
 		const clientDataRes: QueryResult<IClientDatabase> = await updateClientData(first_name, middle_name, last_name, date_of_birth, parameter_1, parameter_2, tel, clientId);
 

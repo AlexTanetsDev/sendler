@@ -12,6 +12,10 @@ export const schemaClient: Joi.ObjectSchema<IClient> = Joi.object({
 	parameter_2: Joi.string(),
 });
 
+export const schemaReqUpdateClient = Joi.object({
+	client: schemaClient
+})
+
 export const schemaReqCreateGroup: Joi.ObjectSchema<any> = Joi.object({
 	groupName: Joi.string(),
 	clients: Joi.array().items(schemaClient),
