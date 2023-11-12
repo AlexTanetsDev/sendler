@@ -21,16 +21,13 @@ import {
 export default async function createGroup(groupName: string, clients: IClientDatabase[], userId: number, method: string): Promise<IGroup | ErrorCase> {
 
 	try {
-		if (clients.length === 0) {
-			return 1;
-		}
 
 		//checking user_id existense
 		const usersIdRes: QueryResult<IUserId> = await getUsersId();
 		const usersIdInDatabase: IUserId[] = usersIdRes.rows;
 
 		if (!usersIdInDatabase.find((userIdInDatabase: IUserId) => userIdInDatabase.user_id === userId)) {
-			return 2;
+			return 1;
 		}
 
 		//checking same group_name existense for user
@@ -42,7 +39,7 @@ export default async function createGroup(groupName: string, clients: IClientDat
 				(groupNameInDatabase: IGroupName) => groupNameInDatabase.group_name === groupName
 			)
 		) {
-			return 3;
+			return 2;
 		}
 
 		const groupData: Promise<QueryResult<IGroup>> = insertNewGroup(groupName, userId);

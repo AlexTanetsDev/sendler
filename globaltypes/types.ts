@@ -15,10 +15,6 @@ export interface IGroupId {
 	group_id: number;
 }
 
-export interface IClientId {
-	client_id: number;
-}
-
 export interface IGroupName {
 	group_name: string;
 }
@@ -54,12 +50,14 @@ export interface IClient extends ITel {
 	parameter_2?: string
 };
 
+
+export interface IClientId {
+	client_id: number;
+}
+
 export interface IClientDatabase extends IClientId, IClient, IUserId { };
 
 export interface IGroup extends IGroupId, IGroupName, IUserId { };
-
-export interface IGroup extends IGroupId, IGroupName, IUserId { };
-
 
 export interface IUserChangePassword {
 	oldPassword: string;
