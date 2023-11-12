@@ -7,10 +7,10 @@ import {
 	getUsersId
 } from "@/app/utils";
 
+import { QueryResult } from "pg";
 import {
 	IUserId,
 	IGroup,
-	QueryResult,
 	IGroupName,
 	ITelRes,
 	IClientDatabase,

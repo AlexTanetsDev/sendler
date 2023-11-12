@@ -1,6 +1,7 @@
 import db from "@/db";
 
-import { IClientDatabase, QueryResult } from "@/globaltypes/types";
+import { QueryResult } from "pg";
+import { IClientDatabase } from "@/globaltypes/types";
 
 export default async function getClientData(id: number) {
 

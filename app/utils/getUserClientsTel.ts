@@ -1,6 +1,7 @@
 import db from "@/db";
 
-import { ITelRes, QueryResult } from "@/globaltypes/types";
+import { QueryResult } from "pg";
+import { ITelRes } from "@/globaltypes/types";
 
 export default async function getUserClientsTel(id: number): Promise<QueryResult<ITelRes>> {
 	const res: QueryResult<ITelRes> = await db.query(

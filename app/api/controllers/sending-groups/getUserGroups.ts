@@ -1,6 +1,10 @@
 import db from "@/db";
 
-import { IUserId, IGroupName, QueryResult } from "@/globaltypes/types";
+import { QueryResult } from "pg";
+import {
+	IUserId,
+	IGroupName
+} from "@/globaltypes/types";
 
 // get all groups for one user by user ID
 export default async function getUserGroups(userId: number): Promise<IGroupName | null> {

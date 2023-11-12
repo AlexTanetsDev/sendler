@@ -1,6 +1,7 @@
 import db from "@/db";
 
-import { IGroup, QueryResult } from "@/globaltypes/types";
+import { QueryResult } from "pg";
+import { IGroup } from "@/globaltypes/types";
 
 export default async function insertNewGroup(name: string, id: number): Promise<QueryResult<IGroup>> {
 	const res: QueryResult<IGroup> = await db.query(

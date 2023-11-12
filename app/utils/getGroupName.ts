@@ -1,9 +1,7 @@
 import db from "@/db";
 
-import {
-	IGroupName,
-	QueryResult,
-} from "@/globaltypes/types";
+import { QueryResult } from "pg";
+import { IGroupName } from "@/globaltypes/types";
 
 export default async function getGroupName(id: number): Promise<QueryResult<IGroupName>> {
 	const res = await db.query(

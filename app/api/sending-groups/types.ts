@@ -1,4 +1,4 @@
 
-import { IUserСlient } from "@/globaltypes/types";
+import { IClientDatabase } from "@/globaltypes/types";
 
-export interface IQieryParamsCreateGroup { groupName: string, clients: IUserСlient[] };
+export interface IQieryParamsCreateGroup { groupName: string, clients: IClientDatabase[] };

@@ -1,7 +1,10 @@
-import { getClientData, updateClientData } from "@/app/utils";
-
 import {
-	QueryResult,
+	getClientData,
+	updateClientData
+} from "@/app/utils";
+
+import { QueryResult } from "pg";
+import {
 	IClient,
 	ErrorCase,
 	IClientDatabase,

@@ -56,7 +56,7 @@ export interface IClient extends ITel {
 
 export interface IClientDatabase extends IClientId, IClient, IUserId { };
 
-export interface IGroup extends IGroupId, IGroupName, IUserId {};
+export interface IGroup extends IGroupId, IGroupName, IUserId { };
 
 export interface IGroup extends IGroupId, IGroupName, IUserId { };
 
@@ -71,35 +71,35 @@ export interface IUserChangePassword {
 
 //?-------------------------------------------------------------------
 
-export interface QueryResultBase {
-	command: string;
-	rowCount: number;
-	oid: number;
-	fields: FieldDef[];
-}
+// export interface QueryResultBase {
+// 	command: string;
+// 	rowCount: number;
+// 	oid: number;
+// 	fields: FieldDef[];
+// }
 
-export interface QueryResultRow {
-	[column: string]: any;
-}
+// export interface QueryResultRow {
+// 	[column: string]: any;
+// }
 
-export interface QueryResult<R extends QueryResultRow = any>
-	extends QueryResultBase {
-	rows: R[];
-}
+// export interface QueryResult<R extends QueryResultRow = any>
+// 	extends QueryResultBase {
+// 	rows: R[];
+// }
 
-export interface QueryArrayResult<R extends any[] = any[]>
-	extends QueryResultBase {
-	rows: R[];
-}
+// export interface QueryArrayResult<R extends any[] = any[]>
+// 	extends QueryResultBase {
+// 	rows: R[];
+// }
 
-export interface FieldDef {
-	name: string;
-	tableID: number;
-	columnID: number;
-	dataTypeID: number;
-	dataTypeSize: number;
-	dataTypeModifier: number;
-	format: string;
-}
+// export interface FieldDef {
+// 	name: string;
+// 	tableID: number;
+// 	columnID: number;
+// 	dataTypeID: number;
+// 	dataTypeSize: number;
+// 	dataTypeModifier: number;
+// 	format: string;
+// }
 
 //?-------------------------------------------------------------------

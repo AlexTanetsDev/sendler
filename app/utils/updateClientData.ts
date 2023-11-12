@@ -1,6 +1,7 @@
 import db from "@/db";
 
-import { IClientDatabase, QueryResult } from "@/globaltypes/types";
+import { QueryResult } from "pg";
+import { IClientDatabase } from "@/globaltypes/types";
 
 export default async function updateClient(first_name: string | undefined, middle_name: string | undefined, last_name: string | undefined, date_of_birth: Date | undefined, parameter_1: string | undefined, parameter_2: string | undefined, tel: number, clientId: number) {
 

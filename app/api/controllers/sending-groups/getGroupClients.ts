@@ -1,9 +1,9 @@
 import { NextResponse } from "next/server";
 import db from "@/db";
 
+import { QueryResult } from "pg";
 import {
 	IGroupId,
-	QueryResult,
 	IClient,
 } from "@/globaltypes/types";
 

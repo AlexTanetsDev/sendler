@@ -1,4 +1,5 @@
 import db from "@/db";
+
 import { IClientDatabase } from "@/globaltypes/types";
 
 export default async function insertNewClient(client: IClientDatabase, user_id: number, group_id: number, method: string): Promise<void> {

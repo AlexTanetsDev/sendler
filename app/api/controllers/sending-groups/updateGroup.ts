@@ -9,9 +9,9 @@ import {
 	getGroupUserId
 } from "@/app/utils";
 
+import { QueryResult } from "pg";
 import {
 	IGroupId,
-	QueryResult,
 	IUserId,
 	ITelRes,
 	IClientDatabase,
