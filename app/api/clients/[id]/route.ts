@@ -5,34 +5,49 @@ import HttpError from "@/helpers/HttpError";
 import { updateClient } from "../../controllers/clients";
 
 import {
-	ErrorCase,
+	IClient,
 	IClientDatabase
 } from "@/globaltypes/types";
 import { IQieryParamsUpdateClient } from "./types";
 
+import { schemaReqUpdateClient } from '@/models/sending-groups';
+
 export async function PUT(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{
-	res: IClientDatabase | ErrorCase;
+	res: IClientDatabase | null;
 	message: string;
 }> | NextResponse<{
 	error: any;
 }>> {
-	const { client }: IQieryParamsUpdateClient = await request.json();
-	const clientId = Number(params.id);
 
 	try {
-		const res = await updateClient(client, clientId);
 
-		switch (res) {
-			case 1:
-				{
-					return HttpError(400, `The client is empty`);
-				};
-			case 2:
-				{
-					return HttpError(400, `The client with id = ${clientId} does not exist`);
-				};
+		const body: IQieryParamsUpdateClient = await request.json();
+
+
+		const { error, value } = schemaReqUpdateClient.validate(body);
+
+		if (error) {
+			return NextResponse.json(
+				{ error: error.message },
+				{ status: 400 }
+			);
 		}
 
+		const { client } = value;
+
+		// const { client }: IQieryParamsUpdateClient = await request.json();
+
+		//checking the content of the entered client
+		if (!client.tel) {
+			return HttpError(400, `The clients list is empty`);
+		}
+
+		const clientId = Number(params.id);
+		const res = await updateClient(client, clientId);
+
+		if (res === null) {
+			return HttpError(400, `The client with id = ${clientId} does not exist`);
+		}
 		return NextResponse.json(
 			{ res, message: `The client is updated` },
 			{ status: 200 }
