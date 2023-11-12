@@ -24,6 +24,7 @@ const CreateGroup = () => {
       try {
         const response = await axios.put(`api/sending-groups/${groupId}`, {
           clients: clients,
+          cache: "no-store",
         });
         console.log(response.data.message);
       } catch (error) {

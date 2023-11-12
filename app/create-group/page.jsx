@@ -26,6 +26,7 @@ const CreateGroup = () => {
           {
             groupName: "women",
             clients: clients,
+            cache: "no-store",
           },
           {
             params: {
