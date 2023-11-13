@@ -2,46 +2,43 @@
 import { NextResponse } from "next/server";
 import db from "@/db";
 
+import {
+	fetchUsersId,
+	fetchUserGroupsName,
+	fetchAllGroupName
+} from "@/app/utils";
+
 // get all groups for all users
 // or
 // get all groups for one user by user ID
 export async function GET(request: Request) {
-	const { searchParams } = new URL(request.url);
-	const userId = Number(searchParams.get("userId"));
 
-	if (userId) {
-		// getting logic for one user
-		//checking user_id existense
-		const usersRes = await db.query(`SELECT user_id FROM users`);
-		const users = usersRes.rows;
+	try {
 
-		if (!users.find((user) => user.user_id === userId)) {
-			return NextResponse.json(
-				{ message: `The user with id = ${userId} does not exist` },
-				{ status: 400, }
-			);
-		}
+		const { searchParams } = new URL(request.url);
+		const userId = Number(searchParams.get("userId"));
 
-		try {
-			const groups = await db.query(
-				`SELECT group_name FROM send_groups WHERE user_id = ${userId}`
-			);
+		if (userId) {
+			// getting logic for one user
+			//checking user_id existense
+			const usersRes = await fetchUsersId();
+			const users = usersRes.rows;
+
+			if (!users.find((user) => user.user_id === userId)) {
+				return NextResponse.json(
+					{ message: `The user with id = ${userId} does not exist` },
+					{ status: 400, }
+				);
+			}
+
+			const groups = await fetchUserGroupsName(userId);
 			return NextResponse.json(
 				{ groups: groups.rows },
 				{ status: 200 }
 			);
-		} catch (error) {
-			return NextResponse.json(
-				{ message: "Failed to get a list of group" },
-				{ status: 500, }
-			);
 		}
-	}
 
-	try {
-		const groups = await db.query(
-			`SELECT group_name FROM send_groups`
-		);
+		const groups = await fetchAllGroupName();
 		return NextResponse.json(
 			{ groups: groups.rows },
 			{ status: 200 }

@@ -29,16 +29,23 @@ export async function GET(request: NextRequest): Promise<NextResponse<{ message:
 		try {
 			const res: null | IGroupName = await getUserGroups(userId);
 
+			console.log('res: ', res)
+
 			if (res === null) {
-				return HttpError(400, `The user with id = ${userId} does not exist`);
+				return HttpError(400, `The user with id = ${userId} does not exist.`);
 			}
+
+			if (res === undefined) {
+				return HttpError(400, `The user with id = ${userId} have not any groups.`);
+			}
+
 			return NextResponse.json(
-				{ groups: res, message: 'Get a groups' },
+				{ groups: res, message: 'Get a groups.' },
 				{ status: 200 }
 			);
 		} catch (error: any) {
 			return NextResponse.json(
-				{ message: "Failed to get a list of group", error: error.message },
+				{ message: "Failed to get a list of group.", error: error.message },
 				{ status: 500, }
 			);
 		}
