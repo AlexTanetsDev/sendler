@@ -7,22 +7,28 @@ export async function GET(req: NextRequest) {
     const searchParams = req.nextUrl.searchParams;
     const start_date = searchParams.get("start_date");
     const end_date = searchParams.get("end_date");
-    const user_id = searchParams.get("id");
+    const user_id = searchParams.get("userId");
 
     if (!user_id) {
       return HttpError(400, `ID required for getting user's history`);
     }
 
     if (!start_date || !end_date) {
+      // const query = `
+      //       SELECT sh.history_id, sh.sending_group_date, sg.group_name
+      //       FROM send_groups sg
+      //       INNER JOIN sending_history sh ON sg.group_id = sh.group_id
+      //       INNER JOIN users u ON sg.user_id = u.user_id
+      //       WHERE u.user_id = $1
+      //   `;
+
       const query = `
-            SELECT sh.history_id, sh.sending_group_date, sg.group_name
-            FROM send_groups sg
-            INNER JOIN sending_history sh ON sg.group_id = sh.group_id
-            INNER JOIN users u ON sg.user_id = u.user_id
-            WHERE u.user_id = $1 
+            SELECT history_id FROM sending_history
         `;
 
       const result = await db.query(query, [user_id]);
+      console.log(result);
+
       const data = result.rows;
 
       return NextResponse.json({ data });
@@ -43,7 +49,7 @@ export async function GET(req: NextRequest) {
 
     return NextResponse.json({ data });
   } catch (error) {
-    NextResponse.json({ error: "Server error" }, { status: 500 });
+    NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }
 
@@ -65,6 +71,6 @@ export async function POST(req: NextRequest) {
       message: "Data successfully added to history",
     });
   } catch (error) {
-    NextResponse.json({ error: "Server error" }, { status: 500 });
+    NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }
