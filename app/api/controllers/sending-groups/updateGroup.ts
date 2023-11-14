@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 
 import {
-	getUserClientsTel,
+	fetchUserClientsTel,
 	insertGroupMember,
 	insertNewClient,
-	getGroupsId,
-	deleteGroupMembers,
-	getGroupUserId
+	fetchAllGroupId,
+	deleteGroupMembersData,
+	fetchGroupUserId
 } from "@/app/utils";
 
 import { QueryResult } from "pg";
@@ -25,7 +25,7 @@ export default async function updateGroup(clients: IClientDatabase[], groupId: n
 	try {
 
 		//checking group existense
-		const groupsIdRes: QueryResult<IGroupId> = await getGroupsId();
+		const groupsIdRes: QueryResult<IGroupId> = await fetchAllGroupId();
 		const groupsIdInDatabase: IGroupId[] = groupsIdRes.rows;
 
 		if (
@@ -39,15 +39,15 @@ export default async function updateGroup(clients: IClientDatabase[], groupId: n
 		// await deleteGroupMembers(groupId);
 
 		// const userIdRes: QueryResult<IUserId> = await getGroupUserId(groupId);
-		const deleteFunction = deleteGroupMembers(groupId);
+		const deleteFunction = deleteGroupMembersData(groupId);
 
-		const userIdResData: Promise<QueryResult<IUserId>> = getGroupUserId(groupId);
+		const userIdResData: Promise<QueryResult<IUserId>> = fetchGroupUserId(groupId);
 
 		const [userIdRes] = await Promise.all([userIdResData, deleteFunction]);
 
 		const userId = userIdRes.rows[0].user_id;
 
-		const userClientsRes: QueryResult<ITelRes> = await getUserClientsTel(userId);
+		const userClientsRes: QueryResult<ITelRes> = await fetchUserClientsTel(userId);
 
 		//checking whether a client exists in the user's client list
 		//and adding client

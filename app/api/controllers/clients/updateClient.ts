@@ -1,5 +1,5 @@
 import {
-	getClientData,
+	fetchClientData,
 	updateClientData
 } from "@/app/utils";
 
@@ -22,7 +22,7 @@ export default async function updateClient(client: IClient, clientId: number): P
 
 	try {
 		//checking client existense
-		const clientRes: QueryResult<IClientDatabase> = await getClientData(clientId);
+		const clientRes: QueryResult<IClientDatabase> = await fetchClientData(clientId);
 
 		const clientInDatabase = clientRes.rows[0];
 
@@ -55,8 +55,6 @@ export default async function updateClient(client: IClient, clientId: number): P
 		if (!parameter_2) {
 			parameter_2 = clientInDatabase.parameter_2;
 		};
-
-
 
 		const clientDataRes: QueryResult<IClientDatabase> = await updateClientData(first_name, middle_name, last_name, date_of_birth, parameter_1, parameter_2, tel, clientId);
 

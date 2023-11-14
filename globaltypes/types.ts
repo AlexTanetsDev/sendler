@@ -1,6 +1,6 @@
 export type ErrorType = 400 | 401 | 403 | 404 | 409;
 
-export type ErrorCase = 1 | 2 | 3;
+export type ErrorCase = 1 | 2;
 
 export interface IUserId {
 	user_id: number;
@@ -37,9 +37,6 @@ export interface INewDataUser {
 	user_name: string;
 	user_fild: string;
 };
-
-
-
 
 export interface IClient extends ITel {
 	first_name?: string,
