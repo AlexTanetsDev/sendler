@@ -15,7 +15,7 @@ import {
 
 import {
 	schemaReqCreateGroup
-} from "@/models/sending-groups"
+} from "@/models/sending-groups";
 
 
 // get all groups for one user by user ID
@@ -27,9 +27,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<{ message:
 	//checking user_id existense
 	if (userId) {
 		try {
-			const res: null | IGroupName = await getUserGroups(userId);
-
-			console.log('res: ', res)
+			const res: null | IGroupName[] = await getUserGroups(userId);
 
 			if (res === null) {
 				return HttpError(400, `The user with id = ${userId} does not exist.`);
@@ -72,7 +70,6 @@ export async function POST(request: Request): Promise<NextResponse<{ message: st
 		}
 
 		const { groupName, clients } = value;
-
 		const { searchParams }: URL = new URL(request.url);
 		const userId = Number(searchParams.get("userId"));
 		const method = request.method;
