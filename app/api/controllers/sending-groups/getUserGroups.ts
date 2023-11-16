@@ -12,7 +12,7 @@ import {
 } from "@/globaltypes/types";
 
 // get all groups for one user by user ID
-export default async function getUserGroups(userId: number): Promise<IGroupName | null> {
+export default async function getUserGroups(userId: number): Promise<IGroupName[] | null> {
 	try {
 		const usersIdRes: QueryResult<IUserId> = await fetchUsersId();
 		const usersIdInDatabase = usersIdRes.rows;
@@ -23,7 +23,7 @@ export default async function getUserGroups(userId: number): Promise<IGroupName 
 
 		const groups: QueryResult<IGroupName> = await fetchUserGroupsName(userId);
 
-		return groups.rows[0];
+		return groups.rows;
 	} catch (error: any) {
 		throw new Error(error.message);
 	}
