@@ -16,6 +16,8 @@ const SendingHistory = () => {
         },
       });
       setHistory(response.data.history);
+
+      const response1 = await axios.delete(`api/admin/sending-history`);
     } catch (error) {
       console.log(error);
     }
