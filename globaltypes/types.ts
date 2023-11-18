@@ -27,7 +27,6 @@ export interface INewDataUser {
 	tel: string;
 	user_name: string;
 	user_fild: string;
-
 };
 
 
@@ -49,7 +48,9 @@ export interface IGroupId { group_id: number; }
 
 export interface IGroupName { group_name: string; }
 
-export interface IGroup extends IGroupId, IGroupName, IUserId { };
+export interface IGroup extends IGroupId, IGroupName { };
+
+export interface IGroupDatabase extends IGroupId, IGroupName, IUserId { };
 
 
 export interface IUserChangePassword {

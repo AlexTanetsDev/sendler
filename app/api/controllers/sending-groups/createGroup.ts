@@ -2,7 +2,7 @@ import {
 	fetchUserClientsTel,
 	insertNewGroup,
 	insertGroupMember,
-	insertNewClient,
+	insertNewClientGroup,
 	fetchUserGroupsName,
 	fetchUsersId
 } from "@/app/utils";
@@ -10,7 +10,7 @@ import {
 import { QueryResult } from "pg";
 import {
 	IUserId,
-	IGroup,
+	IGroupDatabase,
 	IGroupName,
 	ITelRes,
 	IClientDatabase,
@@ -18,7 +18,7 @@ import {
 } from "@/globaltypes/types";
 
 
-export default async function createGroup(groupName: string, clients: IClientDatabase[], userId: number, method: string): Promise<IGroup | ErrorCase> {
+export default async function createGroup(groupName: string, clients: IClientDatabase[], userId: number, method: string): Promise<IGroupDatabase | ErrorCase> {
 
 	try {
 
@@ -42,7 +42,7 @@ export default async function createGroup(groupName: string, clients: IClientDat
 			return 2;
 		}
 
-		const groupData: Promise<QueryResult<IGroup>> = insertNewGroup(groupName, userId);
+		const groupData: Promise<QueryResult<IGroupDatabase>> = insertNewGroup(groupName, userId);
 
 		const userClientsResData: Promise<QueryResult<ITelRes>> = fetchUserClientsTel(userId);
 
@@ -58,7 +58,7 @@ export default async function createGroup(groupName: string, clients: IClientDat
 			const tel = Number(client.tel);
 
 			if (!userClientsInDtabase.find((userClientInDtabase: ITelRes) => userClientInDtabase.tel === String(tel))) {
-				await insertNewClient(client, userId, groupId, method);
+				await insertNewClientGroup(client, userId, groupId, method);
 			}
 			await insertGroupMember(tel, userId, groupId);
 		}

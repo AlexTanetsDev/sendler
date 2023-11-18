@@ -5,7 +5,8 @@ import HttpError from "@/helpers/HttpError";
 import {
 	updateClient,
 	deleteClient,
-} from "../../controllers/clients";
+	getClient
+} from "@/app/api/controllers/clients";
 
 import {
 	IClientDatabase
@@ -13,7 +14,6 @@ import {
 import { IQieryParamsUpdateClient } from "./types";
 
 import { schemaReqUpdateClient } from '@/models/sending-groups';
-import getClient from "../../controllers/clients/getClient";
 
 //get one client by id
 export async function GET(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{

@@ -1,22 +1,18 @@
 
 import { NextResponse } from "next/server";
 
-import getUserGroups from '@/app/api/controllers/sending-groups/getUserGroups';
-import createGroup from '@/app/api/controllers/sending-groups/createGroup';
+import {
+	getAllGroups,
+	getUserGroups,
+	createGroup
+} from "../../controllers/sending-groups";
 
 import HttpError from '@/helpers/HttpError';
 
-import {
-	fetchUsersId,
-	fetchUserGroupsName,
-	fetchAllGroupName
-} from "@/app/utils";
-
 import { IQieryParamsCreateGroup } from "./types";
 import {
-	IGroup,
-	IGroupName,
-	ErrorCase
+	IGroupDatabase,
+	ErrorCase,
 } from "@/globaltypes/types";
 
 import {
@@ -26,7 +22,13 @@ import {
 // get all groups for all users
 // or
 // get all groups for one user by user ID
-export async function GET(request: Request) {
+export async function GET(request: Request): Promise<NextResponse<{
+	error: string;
+}> | NextResponse<{
+	groups: IGroupDatabase[];
+}> | NextResponse<{
+	message: string;
+}>> {
 
 	try {
 
@@ -35,7 +37,7 @@ export async function GET(request: Request) {
 
 		if (userId) {
 
-			const res: null | IGroupName[] = await getUserGroups(userId);
+			const res: null | IGroupDatabase[] = await getUserGroups(userId);
 
 			if (res === null) {
 				return HttpError(400, `The user with id = ${userId} does not exist.`);
@@ -51,9 +53,10 @@ export async function GET(request: Request) {
 			);
 		}
 
-		const groups = await fetchAllGroupName();
+		// const groups: QueryResult<IGroup> = await fetchAllGroups();
+		const res: IGroupDatabase[] = await getAllGroups();
 		return NextResponse.json(
-			{ groups: groups.rows },
+			{ groups: res },
 			{ status: 200 }
 		);
 	} catch (error) {
@@ -94,7 +97,7 @@ export async function POST(request: Request): Promise<NextResponse<{ message: st
 			return HttpError(400, `The clients list is empty`);
 		}
 
-		const res: IGroup | ErrorCase | NextResponse<{
+		const res: IGroupDatabase | ErrorCase | NextResponse<{
 			error: string;
 		}> = await createGroup(groupName, clients, userId, method);
 

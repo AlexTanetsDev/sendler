@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import {
 	fetchUserClientsTel,
 	insertGroupMember,
-	insertNewClient,
+	insertNewClientGroup,
 	fetchAllGroupId,
 	deleteGroupMembersData,
 	fetchGroupUserId
@@ -57,7 +57,7 @@ export default async function updateGroup(clients: IClientDatabase[], groupId: n
 			const tel = Number(client.tel);
 
 			if (!userClients.find((userClient: ITelRes) => userClient.tel === String(tel))) {
-				await insertNewClient(client, userId, groupId, method);
+				await insertNewClientGroup(client, userId, groupId, method);
 			}
 			await insertGroupMember(tel, userId, groupId);
 		}

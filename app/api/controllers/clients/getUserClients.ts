@@ -1,16 +1,16 @@
 import {
-	fetchUserGroups,
+	fetchUserClients,
 	fetchUsersId
 } from "@/app/utils";
 
 import { QueryResult } from "pg";
 import {
 	IUserId,
-	IGroupDatabase,
+	IClient,
 } from "@/globaltypes/types";
 
 // get all groups for one user by user ID
-export default async function getUserGroups(userId: number): Promise<IGroupDatabase[] | null> {
+export default async function getUserClients(userId: number): Promise<IClient[] | null> {
 	try {
 		const usersIdRes: QueryResult<IUserId> = await fetchUsersId();
 		const usersIdInDatabase = usersIdRes.rows;
@@ -19,15 +19,10 @@ export default async function getUserGroups(userId: number): Promise<IGroupDatab
 			return null;
 		};
 
-		const groups: QueryResult<IGroupDatabase> = await fetchUserGroups(userId);
+		const clients: QueryResult<IClient> = await fetchUserClients(userId);
 
-		return groups.rows;
+		return clients.rows;
 	} catch (error: any) {
 		throw new Error(error.message);
 	}
 }
-
-
-
-
-
