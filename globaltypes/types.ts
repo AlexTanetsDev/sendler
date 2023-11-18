@@ -44,6 +44,7 @@ export interface INewDataUser {
   tel: string;
   user_name: string;
   user_fild: string;
+  user_token?: string;
 }
 
 export interface IClient extends ITel {

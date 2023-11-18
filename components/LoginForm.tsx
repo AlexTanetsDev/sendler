@@ -1,11 +1,35 @@
+"use client";
+
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+axios.defaults.baseURL = "http://localhost:3000/";
 
 const LoginForm = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    try {
+      const response = await axios({
+        method: "post",
+        url: "api/users/login",
+        data: {
+          user_login: email,
+          user_password: password,
+        },
+      });
+
+      if (response.status === 200) {
+        setEmail("");
+        setPassword("");
+        router.push("http://localhost:3000/");
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -18,7 +42,7 @@ const LoginForm = () => {
           Email
         </label>
         <input
-          type="email"
+          // type="email"
           id="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}

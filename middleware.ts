@@ -10,7 +10,7 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get("token");
 
   try {
-    if (!token || !SECRET_KEY) {
+    if (!token?.value || !SECRET_KEY) {
       NextResponse.json(
         { success: false, message: "Authorization token missing" },
         { status: 401 }
@@ -34,6 +34,11 @@ export async function middleware(request: NextRequest) {
       if (decodedToken?.role === Role.ADMIN) {
         return NextResponse.rewrite(new URL(request.url));
       }
+
+      return NextResponse.json(
+        { success: false, message: "Forbidden: no access to delete operation" },
+        { status: 403 }
+      );
     }
   } catch (error) {
     console.error("Error verifying token:", error);
@@ -51,8 +56,12 @@ export async function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
+    // "/((?!login|api|_next/static|_next/image|favicon.ico).*)",
+
+    "/sms-sender/:path*",
+    "/create-group/:path*",
+    "/update-group/:path*",
+    "/sending-history/:path*",
     // "/api/:path*",
-    "/((?!api|sending-history|login|_next/static|_next/image|favicon.ico).*)",
-    // "/((?!^/$|^/login$).*)",
   ],
 };
