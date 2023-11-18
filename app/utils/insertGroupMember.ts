@@ -15,8 +15,6 @@ export default async function insertGroupMember(tel: number, user_id: number, gr
 			[group_id, client_id]
 		);
 	} catch (error: any) {
-		await db.query(`DELETE FROM send_groups	WHERE send_groups.group_id = ${group_id}`);
 		throw new Error(error.message);
 	}
-
 }
