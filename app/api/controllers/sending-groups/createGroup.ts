@@ -2,7 +2,7 @@ import {
 	fetchUserClientsTel,
 	insertNewGroup,
 	insertGroupMember,
-	insertNewClientGroup,
+	insertNewClientInGroup,
 	fetchUserGroupsName,
 	fetchUsersId
 } from "@/app/utils";
@@ -58,7 +58,7 @@ export default async function createGroup(groupName: string, clients: IClientDat
 			const tel = Number(client.tel);
 
 			if (!userClientsInDtabase.find((userClientInDtabase: ITelRes) => userClientInDtabase.tel === String(tel))) {
-				await insertNewClientGroup(client, userId, groupId, method);
+				await insertNewClientInGroup(client, userId, groupId, method);
 			}
 			await insertGroupMember(tel, userId, groupId);
 		}

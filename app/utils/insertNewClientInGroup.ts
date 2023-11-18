@@ -3,11 +3,11 @@ import db from "@/db";
 import {
 	insertNewClient,
 	deleteGroupData
-} from "./";
+} from ".";
 
 import { IClientDatabase } from "@/globaltypes/types";
 
-export default async function insertNewClientGroup(client: IClientDatabase, user_id: number, group_id: number, method: string): Promise<void> {
+export default async function insertNewClientInGroup(client: IClientDatabase, user_id: number, group_id: number, method: string): Promise<void> {
 
 	try {
 		await insertNewClient(client, user_id);
