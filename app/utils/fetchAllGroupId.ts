@@ -4,6 +4,10 @@ import { QueryResult } from "pg";
 import { IGroupId } from "@/globaltypes/types";
 
 export default async function fetchAllGroupId(): Promise<QueryResult<IGroupId>> {
-	const res = await db.query(`SELECT group_id FROM send_groups`);
+
+	const res: QueryResult<IGroupId> = await db.query(
+		`SELECT group_id 
+		FROM send_groups`);
+
 	return res;
 };

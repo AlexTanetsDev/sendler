@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import {
 	fetchUserClientsTel,
 	insertGroupMember,
-	insertNewClient,
+	insertNewClientInGroup,
 	fetchAllGroupId,
 	deleteGroupMembersData,
 	fetchGroupUserId
@@ -14,11 +14,10 @@ import {
 	IGroupId,
 	IUserId,
 	ITelRes,
-	IClientDatabase,
+	IClient,
 } from "@/globaltypes/types";
-// import { IQieryParamsUpdateGroup } from "./types";
 
-export default async function updateGroup(clients: IClientDatabase[], groupId: number, method: string): Promise<null | NextResponse<{
+export default async function updateGroup(clients: IClient[], groupId: number, method: string): Promise<null | NextResponse<{
 	error: string;
 }> | undefined> {
 
@@ -36,14 +35,11 @@ export default async function updateGroup(clients: IClientDatabase[], groupId: n
 			return null;
 		}
 
-		// await deleteGroupMembers(groupId);
-
-		// const userIdRes: QueryResult<IUserId> = await getGroupUserId(groupId);
 		const deleteFunction = deleteGroupMembersData(groupId);
 
-		const userIdResData: Promise<QueryResult<IUserId>> = fetchGroupUserId(groupId);
+		const userIdResData = fetchGroupUserId(groupId);
 
-		const [userIdRes] = await Promise.all([userIdResData, deleteFunction]);
+		const [userIdRes]: [QueryResult<IUserId>, void] = await Promise.all([userIdResData, deleteFunction]);
 
 		const userId = userIdRes.rows[0].user_id;
 
@@ -57,7 +53,7 @@ export default async function updateGroup(clients: IClientDatabase[], groupId: n
 			const tel = Number(client.tel);
 
 			if (!userClients.find((userClient: ITelRes) => userClient.tel === String(tel))) {
-				await insertNewClient(client, userId, groupId, method);
+				await insertNewClientInGroup(client, userId, groupId, method);
 			}
 			await insertGroupMember(tel, userId, groupId);
 		}

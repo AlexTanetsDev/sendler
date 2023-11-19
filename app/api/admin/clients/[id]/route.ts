@@ -15,7 +15,7 @@ import { IQieryParamsUpdateClient } from "./types";
 
 import { schemaReqClient } from '@/models/clients';
 
-//get one client with id from params
+//get one client by id from params
 export async function GET(_request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{
 	error: string;
 }> | NextResponse<{
@@ -25,6 +25,7 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
 	message: string;
 	error: any;
 }>> {
+
 	try {
 		const clientId = Number(params.id);
 
@@ -36,7 +37,7 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
 			return HttpError(400, `The client with id = ${clientId} does not exist`);
 		}
 		return NextResponse.json(
-			{ client: res, message: 'Please, client' },
+			{ client: res, message: 'Please, your client' },
 			{ status: 200 }
 		);
 	} catch (error: any) {
@@ -71,7 +72,7 @@ export async function DELETE(_request: NextRequest, { params }: { params: { id: 
 	}
 }
 
-//update one client with id from params
+//update client with id from params
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{
 	client: IClientDatabase;
 	message: string;

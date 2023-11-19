@@ -1,22 +1,17 @@
+import { NextResponse, NextRequest } from "next/server";
 
-import { NextResponse } from "next/server";
-
-import getUserGroups from '@/app/api/controllers/sending-groups/getUserGroups';
-import createGroup from '@/app/api/controllers/sending-groups/createGroup';
+import {
+	getAllGroups,
+	getUserGroups,
+	createGroup
+} from "@/app/api/controllers/sending-groups";
 
 import HttpError from '@/helpers/HttpError';
 
-import {
-	fetchUsersId,
-	fetchUserGroupsName,
-	fetchAllGroupName
-} from "@/app/utils";
-
 import { IQieryParamsCreateGroup } from "./types";
 import {
-	IGroup,
-	IGroupName,
-	ErrorCase
+	IGroupDatabase,
+	ErrorCase,
 } from "@/globaltypes/types";
 
 import {
@@ -26,7 +21,13 @@ import {
 // get all groups for all users
 // or
 // get all groups for one user by user ID
-export async function GET(request: Request) {
+export async function GET(request: NextRequest): Promise<NextResponse<{
+	error: string;
+}> | NextResponse<{
+	groups: IGroupDatabase[];
+}> | NextResponse<{
+	message: string;
+}>> {
 
 	try {
 
@@ -35,7 +36,7 @@ export async function GET(request: Request) {
 
 		if (userId) {
 
-			const res: null | IGroupName[] = await getUserGroups(userId);
+			const res: null | IGroupDatabase[] = await getUserGroups(userId);
 
 			if (res === null) {
 				return HttpError(400, `The user with id = ${userId} does not exist.`);
@@ -50,10 +51,9 @@ export async function GET(request: Request) {
 				{ status: 200 }
 			);
 		}
-
-		const groups = await fetchAllGroupName();
+		const res: IGroupDatabase[] = await getAllGroups();
 		return NextResponse.json(
-			{ groups: groups.rows },
+			{ groups: res },
 			{ status: 200 }
 		);
 	} catch (error) {
@@ -64,10 +64,8 @@ export async function GET(request: Request) {
 	}
 }
 
-// add new sendig group, here we working with excel file of clients and get user ID from search params
-// 1. we adding all clients to clients table and getting all clients id in array
-// 2. create sending group with user_id from search params and array of clients
-export async function POST(request: Request): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: any; }> | NextResponse<string>> {
+// create sending group with user_id from search params
+export async function POST(request: NextRequest): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: any; }> | NextResponse<string>> {
 
 	try {
 
@@ -81,12 +79,12 @@ export async function POST(request: Request): Promise<NextResponse<{ message: st
 			);
 		}
 
-		const { groupName, clients } = value;
+		const { group_name, clients } = value;
 		const { searchParams }: URL = new URL(request.url);
 		const userId = Number(searchParams.get("userId"));
 		const method = request.method;
 
-		if (!groupName) {
+		if (!group_name) {
 			return HttpError(400, `The input does not contain the group name.`);
 		}
 
@@ -94,9 +92,9 @@ export async function POST(request: Request): Promise<NextResponse<{ message: st
 			return HttpError(400, `The clients list is empty`);
 		}
 
-		const res: IGroup | ErrorCase | NextResponse<{
+		const res: IGroupDatabase | ErrorCase | NextResponse<{
 			error: string;
-		}> = await createGroup(groupName, clients, userId, method);
+		}> = await createGroup(group_name, clients, userId, method);
 
 		switch (res) {
 			case 1:
@@ -105,7 +103,7 @@ export async function POST(request: Request): Promise<NextResponse<{ message: st
 				};
 			case 2:
 				{
-					return HttpError(400, `The group with name ${groupName} already exists`);
+					return HttpError(400, `The group with name ${group_name} already exists`);
 				}
 		}
 

@@ -25,7 +25,7 @@ export default async function deleteGroup(groupId: number): Promise<NextResponse
 			return null;
 		}
 
-		await deleteGroupData(groupId)
+		await deleteGroupData(groupId);
 
 	} catch (error: any) {
 		throw new Error(error.message);

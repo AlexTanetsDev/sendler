@@ -31,6 +31,7 @@ export interface IUser extends ITel, IUserId {
 }
 
 export interface INewDataUser {
+
   email: string;
   user_login: string;
   tel: string;
@@ -38,6 +39,7 @@ export interface INewDataUser {
   user_fild: string;
   user_token?: string;
 }
+
 
 export interface IClient extends ITel {
 	first_name?: string,
@@ -47,6 +49,16 @@ export interface IClient extends ITel {
 	parameter_1?: string,
 	parameter_2?: string
 };
+
+export interface IClientReq {
+	client: IClient
+};
+
+export interface IClientUpdateReqArray {
+	clients: IClient[]
+};
+
+export interface IClentCreateReqArray extends IGroupName, IClientUpdateReqArray { };
 
 export interface IClientId { client_id: number; }
 
@@ -61,7 +73,9 @@ export interface IGroupId { group_id: number; }
 
 export interface IGroupName { group_name: string; }
 
-export interface IGroup extends IGroupId, IGroupName, IUserId { };
+export interface IGroup extends IGroupId, IGroupName { };
+
+export interface IGroupDatabase extends IGroupId, IGroupName, IUserId { };
 
 
 export interface IUserChangePassword {
