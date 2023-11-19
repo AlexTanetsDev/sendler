@@ -13,7 +13,7 @@ import {
 } from "@/globaltypes/types";
 import { IQieryParamsUpdateClient } from "./types";
 
-import { schemaReqUpdateClient } from '@/models/sending-groups';
+import { schemaReqClient } from '@/models/clients';
 
 //get one client by id
 export async function GET(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{
@@ -84,7 +84,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 		const body: IQieryParamsUpdateClient = await request.json();
 
 
-		const { error, value } = schemaReqUpdateClient.validate(body);
+		const { error, value } = schemaReqClient.validate(body);
 
 		if (error) {
 			return NextResponse.json(

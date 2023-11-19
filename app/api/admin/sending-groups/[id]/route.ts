@@ -75,7 +75,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 			);
 		}
 
-		const { clients }: IQieryParamsUpdateGroup = value;
+		const { clients } = value;
 
 		const groupId = Number(params.id);
 		const method: string = request.method;

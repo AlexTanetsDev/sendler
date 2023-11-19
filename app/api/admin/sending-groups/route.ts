@@ -84,12 +84,12 @@ export async function POST(request: Request): Promise<NextResponse<{ message: st
 			);
 		}
 
-		const { groupName, clients } = value;
+		const { group_name, clients } = value;
 		const { searchParams }: URL = new URL(request.url);
 		const userId = Number(searchParams.get("userId"));
 		const method = request.method;
 
-		if (!groupName) {
+		if (!group_name) {
 			return HttpError(400, `The input does not contain the group name.`);
 		}
 
@@ -99,7 +99,7 @@ export async function POST(request: Request): Promise<NextResponse<{ message: st
 
 		const res: IGroupDatabase | ErrorCase | NextResponse<{
 			error: string;
-		}> = await createGroup(groupName, clients, userId, method);
+		}> = await createGroup(group_name, clients, userId, method);
 
 		switch (res) {
 			case 1:
@@ -108,7 +108,7 @@ export async function POST(request: Request): Promise<NextResponse<{ message: st
 				};
 			case 2:
 				{
-					return HttpError(400, `The group with name ${groupName} already exists`);
+					return HttpError(400, `The group with name ${group_name} already exists`);
 				}
 		}
 
