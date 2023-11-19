@@ -16,7 +16,6 @@ import {
 	ITelRes,
 	IClient,
 } from "@/globaltypes/types";
-// import { IQieryParamsUpdateGroup } from "./types";
 
 export default async function updateGroup(clients: IClient[], groupId: number, method: string): Promise<null | NextResponse<{
 	error: string;
@@ -36,9 +35,6 @@ export default async function updateGroup(clients: IClient[], groupId: number, m
 			return null;
 		}
 
-		// await deleteGroupMembers(groupId);
-
-		// const userIdRes: QueryResult<IUserId> = await getGroupUserId(groupId);
 		const deleteFunction = deleteGroupMembersData(groupId);
 
 		const userIdResData: Promise<QueryResult<IUserId>> = fetchGroupUserId(groupId);

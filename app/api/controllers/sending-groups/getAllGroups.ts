@@ -1,6 +1,4 @@
-import {
-	fetchAllGroups,
-} from "@/app/utils";
+import { fetchAllGroups } from "@/app/utils";
 
 import { QueryResult } from "pg";
 import { IGroupDatabase } from "@/globaltypes/types";

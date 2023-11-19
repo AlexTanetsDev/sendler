@@ -1,9 +1,9 @@
-import { QueryResult } from "pg";
 import {
 	fetchClientData,
 	fetchAllClientId
 } from "@/app/utils";
 
+import { QueryResult } from "pg";
 import {
 	IClientId,
 	IClientDatabase,

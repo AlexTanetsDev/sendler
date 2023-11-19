@@ -19,9 +19,7 @@ import {
 
 import { schemaReqClient } from "@/models/clients";
 
-// logic for getting clients and some additional or statistics info
-
-// get all clients for one user by user ID
+// get all clients for one user with user_id from search params
 export async function GET(request: NextRequest) {
 
 	const { searchParams }: URL = new URL(request.url);
@@ -54,7 +52,8 @@ export async function GET(request: NextRequest) {
 	return HttpError(400, `No userId`);
 }
 
-export async function POST(request: Request) {
+// create client for user with user_id from search params
+export async function POST(request: NextRequest) {
 
 	try {
 

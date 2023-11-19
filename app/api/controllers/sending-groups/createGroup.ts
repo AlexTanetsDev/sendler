@@ -21,7 +21,6 @@ import {
 export default async function createGroup(groupName: string, clients: IClient[], userId: number, method: string): Promise<IGroupDatabase | ErrorCase> {
 
 	try {
-
 		//checking user_id existense
 		const usersIdRes: QueryResult<IUserId> = await fetchUsersId();
 		const usersIdInDatabase: IUserId[] = usersIdRes.rows;

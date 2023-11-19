@@ -20,8 +20,9 @@ import {
 
 import { schemaReqClient } from "@/models/clients";
 
-// logic for getting clients and some additional or statistics info
-// get all clients for one user by user ID and for all users
+// get all clints for all users
+// or
+// get all clients for one user by user ID
 export async function GET(request: NextRequest) {
 
 	const { searchParams }: URL = new URL(request.url);
@@ -57,7 +58,9 @@ export async function GET(request: NextRequest) {
 	}
 }
 
-export async function POST(request: Request) {
+
+// create client with user_id from search params
+export async function POST(request: NextRequest) {
 
 	try {
 		const body: IQieryParamsCreateClient = await request.json();

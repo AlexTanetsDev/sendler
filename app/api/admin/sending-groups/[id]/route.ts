@@ -1,10 +1,13 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 import HttpError from "@/helpers/HttpError";
 
-import getGroupClients from '@/app/api/controllers/sending-groups/getGroupClients';
-import deleteGroup from "@/app/api/controllers/sending-groups/deleteGroup";
-import updateGroup from "@/app/api/controllers/sending-groups/updateGroup";
+import {
+	getGroupClients,
+	deleteGroup,
+	updateGroup
+} from '@/app/api/controllers/sending-groups';
+
 
 import { IClient } from "@/globaltypes/types";
 import { IQieryParamsUpdateGroup } from "./types";
@@ -12,7 +15,7 @@ import { IQieryParamsUpdateGroup } from "./types";
 import { schemaReqUpdateGroup } from '@/models/sending-groups';
 
 // get one group with id from params
-export async function GET(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }> | NextResponse<{ clients: IClient[] | NextResponse<{ error: string; }> }>> {
+export async function GET(_request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }> | NextResponse<{ clients: IClient[] | NextResponse<{ error: string; }> }>> {
 
 	const groupId = Number(params.id);
 
@@ -37,7 +40,7 @@ export async function GET(request: Request, { params }: { params: { id: string }
 }
 
 // delete one group with id from params
-export async function DELETE(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }>> {
+export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }>> {
 	const groupId = Number(params.id);
 
 	try {
@@ -61,7 +64,7 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 }
 
 //update one group with id from params
-export async function PUT(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: any; }> | NextResponse<string>> {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: any; }> | NextResponse<string>> {
 
 	try {
 

@@ -6,7 +6,9 @@ import { IClientId } from "@/globaltypes/types";
 export default async function insertGroupMember(tel: number, user_id: number, group_id: number): Promise<void> {
 	try {
 		const clientId: QueryResult<IClientId> = await db.query(
-			`SELECT client_id FROM clients WHERE user_id = ${user_id} AND tel=${tel} `
+			`SELECT client_id 
+			FROM clients
+			WHERE user_id = ${user_id} AND tel=${tel} `
 		);
 
 		const { client_id } = clientId.rows[0];

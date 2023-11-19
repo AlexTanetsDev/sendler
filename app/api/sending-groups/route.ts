@@ -1,8 +1,12 @@
-import { NextRequest, NextResponse } from "next/server";
+import {
+	NextRequest,
+	NextResponse
+} from "next/server";
 
-import getUserGroups from '@/app/api/controllers/sending-groups/getUserGroups';
-import createGroup from '@/app/api/controllers/sending-groups/createGroup';
-
+import {
+	getUserGroups,
+	createGroup
+} from '@/app/api/controllers/sending-groups';
 
 import HttpError from '@/helpers/HttpError';
 
@@ -17,7 +21,7 @@ import {
 } from "@/models/sending-groups";
 
 
-// get all groups for one user by user ID
+// get all groups for one user with user_id from search params
 export async function GET(request: NextRequest): Promise<NextResponse<{
 	error: string;
 }> | NextResponse<{
@@ -59,10 +63,8 @@ export async function GET(request: NextRequest): Promise<NextResponse<{
 	return HttpError(400, `No userId`);
 }
 
-// add new sendig group, here we working with excel file of clients and get user ID from search params
-// 1. we adding all clients to clients table and getting all clients id in array
-// 2. create sending group with user_id from search params and array of clients
-export async function POST(request: Request): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: any; }> | NextResponse<string>> {
+// create sending group for user with user_id from search params
+export async function POST(request: NextRequest): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: any; }> | NextResponse<string>> {
 
 	try {
 

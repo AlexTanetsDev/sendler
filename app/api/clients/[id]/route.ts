@@ -1,11 +1,12 @@
-import { NextResponse } from "next/server";
+import { NextResponse, NextRequest } from "next/server";
 
 import HttpError from "@/helpers/HttpError";
 
 import {
 	updateClient,
 	deleteClient,
-} from "../../controllers/clients";
+	getClient
+} from "@/app/api/controllers/clients";
 
 import {
 	IClientDatabase
@@ -13,10 +14,9 @@ import {
 import { IQieryParamsUpdateClient } from "./types";
 
 import { schemaReqClient } from '@/models/clients';
-import getClient from "../../controllers/clients/getClient";
 
-//get one client by id
-export async function GET(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{
+//get one client with id from params
+export async function GET(_request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{
 	error: string;
 }> | NextResponse<{
 	client: IClientDatabase;
@@ -25,7 +25,6 @@ export async function GET(request: Request, { params }: { params: { id: string }
 	message: string;
 	error: any;
 }>> {
-
 	try {
 		const clientId = Number(params.id);
 
@@ -48,8 +47,8 @@ export async function GET(request: Request, { params }: { params: { id: string }
 	}
 }
 
-// delete one group with id from params
-export async function DELETE(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }>> {
+// delete one client with id from params
+export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }>> {
 	const clientId = Number(params.id);
 
 	try {
@@ -72,7 +71,8 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 	}
 }
 
-export async function PUT(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{
+//update one client with id from params
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{
 	client: IClientDatabase;
 	message: string;
 }> | NextResponse<{
@@ -80,10 +80,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 }>> {
 
 	try {
-
 		const body: IQieryParamsUpdateClient = await request.json();
-
-
 		const { error, value } = schemaReqClient.validate(body);
 
 		if (error) {

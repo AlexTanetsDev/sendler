@@ -12,11 +12,8 @@ import {
 	ErrorCase
 } from "@/globaltypes/types";
 
-
 export default async function createClient(client: IClient, userId: number): Promise<ErrorCase | undefined> {
-
 	try {
-
 		const { tel } = client;
 
 		//checking user_id existense
