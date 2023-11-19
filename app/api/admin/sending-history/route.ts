@@ -7,10 +7,8 @@ import { IHistoryProps } from "@/globaltypes/historyTypes";
 export async function DELETE(
   req: NextRequest
 ): Promise<NextResponse<IErrorResponse> | NextResponse<IHistoryProps>> {
-  // const formData = await req.formData();
-  // const user_id = formData.get("userId");
-
-  const user_id = true;
+  const body = await req.json();
+  const { user_id } = body;
 
   if (!user_id) {
     return HttpError(400, `ID required for deleting user's history`);
@@ -28,13 +26,11 @@ export async function DELETE(
       `;
 
     const result = await db.query(query, [user_id]);
-    // const result = true;
 
     if (!result) {
       return HttpError(404, `Failed to delete all user's history by userID`);
     }
     const deletedHistory = result.rows;
-    // const deletedHistory = result;
 
     console.log("admin/history")
 
