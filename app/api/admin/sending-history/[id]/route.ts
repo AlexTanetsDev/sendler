@@ -1,11 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/db";
 import HttpError from "@/helpers/HttpError";
+import { IErrorResponse } from "@/globalTypes/types";
+import { IHistoryProps } from "@/globaltypes/historyTypes";
 
 export async function DELETE(
   req: NextRequest,
   { params }: { params: { id: string } }
-) {
+): Promise<NextResponse<IErrorResponse> | NextResponse<IHistoryProps>> {
   const historyId = params.id;
 
   try {
@@ -15,16 +17,19 @@ export async function DELETE(
         RETURNING *
       `;
 
-    const deletedData = await db.query(query, [historyId]);
+    const result = await db.query(query, [historyId]);
 
-    if (!deletedData) {
-      return HttpError(404, `Failed to delete history by ID`);
+    if (!result) {
+      return HttpError(404, `Failed to delete user's history by ID`);
     }
 
+    const deletedHistory = result.rows;
+
     return NextResponse.json({
+      deletedHistory,
       message: "Data successfully deleted from history",
     });
   } catch (error) {
-    NextResponse.json({ message: "Server error" }, { status: 500 });
+    return NextResponse.json({ message: "Server error" }, { status: 500 });
   }
 }
