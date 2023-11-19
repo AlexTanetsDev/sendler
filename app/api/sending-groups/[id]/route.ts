@@ -6,10 +6,7 @@ import getGroupClients from '@/app/api/controllers/sending-groups/getGroupClient
 import deleteGroup from "@/app/api/controllers/sending-groups/deleteGroup";
 import updateGroup from "@/app/api/controllers/sending-groups/updateGroup";
 
-import {
-	IClient,
-	ErrorCase
-} from "@/globaltypes/types";
+import { IClient } from "@/globaltypes/types";
 import { IQieryParamsUpdateGroup } from "./types";
 
 import { schemaReqUpdateGroup } from '@/models/sending-groups';
@@ -78,7 +75,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 			);
 		}
 
-		const { clients } = value;
+		const { clients }: IQieryParamsUpdateGroup = value;
 
 		const groupId = Number(params.id);
 		const method: string = request.method;

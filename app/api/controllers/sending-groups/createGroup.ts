@@ -1,10 +1,10 @@
 import {
-	getUserClientsTel,
+	fetchUserClientsTel,
 	insertNewGroup,
 	insertGroupMember,
 	insertNewClient,
-	getGroupName,
-	getUsersId
+	fetchUserGroupsName,
+	fetchUsersId
 } from "@/app/utils";
 
 import { QueryResult } from "pg";
@@ -23,7 +23,7 @@ export default async function createGroup(groupName: string, clients: IClientDat
 	try {
 
 		//checking user_id existense
-		const usersIdRes: QueryResult<IUserId> = await getUsersId();
+		const usersIdRes: QueryResult<IUserId> = await fetchUsersId();
 		const usersIdInDatabase: IUserId[] = usersIdRes.rows;
 
 		if (!usersIdInDatabase.find((userIdInDatabase: IUserId) => userIdInDatabase.user_id === userId)) {
@@ -31,7 +31,7 @@ export default async function createGroup(groupName: string, clients: IClientDat
 		}
 
 		//checking same group_name existense for user
-		const groupsNameRes: QueryResult<IGroupName> = await getGroupName(userId);
+		const groupsNameRes: QueryResult<IGroupName> = await fetchUserGroupsName(userId);
 		const groupsNameInDatabase: IGroupName[] = groupsNameRes.rows;
 
 		if (
@@ -44,7 +44,7 @@ export default async function createGroup(groupName: string, clients: IClientDat
 
 		const groupData: Promise<QueryResult<IGroup>> = insertNewGroup(groupName, userId);
 
-		const userClientsResData: Promise<QueryResult<ITelRes>> = getUserClientsTel(userId);
+		const userClientsResData: Promise<QueryResult<ITelRes>> = fetchUserClientsTel(userId);
 
 		const [group, userClientsRes] = await Promise.all([groupData, userClientsResData]);
 

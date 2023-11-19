@@ -1,16 +1,20 @@
 import { NextResponse } from "next/server";
-import db from "@/db";
+
+import {
+	fetchAllGroupId,
+	deleteGroupData
+} from "@/app/utils";
 
 import { QueryResult } from "pg";
 import { IGroupId } from "@/globaltypes/types";
 // import { IQieryParamsUpdateGroup } from "./types";
 
-export default async function deleteGroupe(groupId: number): Promise<NextResponse<{
+export default async function deleteGroup(groupId: number): Promise<NextResponse<{
 	error: string;
 }> | undefined | null> {
 	try {
 		//checking group_id existense
-		const groupsIdRes: QueryResult<IGroupId> = (await db.query("SELECT group_id FROM send_groups"));
+		const groupsIdRes: QueryResult<IGroupId> = await fetchAllGroupId();
 		const groupsIdInDatabase: IGroupId[] = groupsIdRes.rows;
 
 		if (
@@ -20,10 +24,9 @@ export default async function deleteGroupe(groupId: number): Promise<NextRespons
 		) {
 			return null;
 		}
-		await db.query(
-			`DELETE FROM send_groups
-		WHERE send_groups.group_id = ${groupId}`
-		);
+
+		await deleteGroupData(groupId)
+
 	} catch (error: any) {
 		throw new Error(error.message);
 	}

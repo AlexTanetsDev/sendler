@@ -3,7 +3,7 @@ import Joi from "joi";
 import { IClient } from "@/globaltypes/types";
 
 export const schemaClient: Joi.ObjectSchema<IClient> = Joi.object({
-	tel: Joi.number().integer(),
+	tel: Joi.number().integer().required(),
 	first_name: Joi.string(),
 	middle_name: Joi.string(),
 	last_name: Joi.string(),
@@ -12,13 +12,17 @@ export const schemaClient: Joi.ObjectSchema<IClient> = Joi.object({
 	parameter_2: Joi.string(),
 });
 
+export const schemaReqUpdateClient = Joi.object({
+	client: schemaClient.required(),
+});
+
 export const schemaReqCreateGroup: Joi.ObjectSchema<any> = Joi.object({
-	groupName: Joi.string(),
-	clients: Joi.array().items(schemaClient),
+	groupName: Joi.string().required(),
+	clients: Joi.array().items(schemaClient).required(),
 	cache: Joi.string(),
 });
 
 export const schemaReqUpdateGroup: Joi.ObjectSchema<any> = Joi.object({
-	clients: Joi.array().items(schemaClient),
+	clients: Joi.array().items(schemaClient).required(),
 	cache: Joi.string(),
 });
