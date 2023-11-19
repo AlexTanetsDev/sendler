@@ -16,6 +16,7 @@ export default async function insertGroupMember(tel: number, user_id: number, gr
 			`INSERT INTO groups_members (group_id, client_id) values($1, $2) RETURNING *`,
 			[group_id, client_id]
 		);
+
 	} catch (error: any) {
 		throw new Error(error.message);
 	}

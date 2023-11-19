@@ -98,7 +98,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 		}
 
 		const clientId = Number(params.id);
-		const res = await updateClient(client, clientId);
+		const res: IClientDatabase | null = await updateClient(client, clientId);
 
 		if (res === null) {
 			return HttpError(400, `The client with id = ${clientId} does not exist`);

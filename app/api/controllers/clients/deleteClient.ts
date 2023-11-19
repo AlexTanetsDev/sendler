@@ -5,13 +5,15 @@ import {
 	fetchAllClientId
 } from "@/app/utils";
 
+
+import { QueryResult } from "pg";
 import { IClientId } from "@/globaltypes/types";
 
 export default async function deleteClient(id: number): Promise<NextResponse<{
 	error: string;
 }> | undefined | null> {
 	try {
-		const clientsIdRes = await fetchAllClientId();
+		const clientsIdRes: QueryResult<IClientId> = await fetchAllClientId();
 		const clientsIdInDatabase = clientsIdRes.rows;
 
 		if (

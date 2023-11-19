@@ -37,9 +37,9 @@ export default async function updateGroup(clients: IClient[], groupId: number, m
 
 		const deleteFunction = deleteGroupMembersData(groupId);
 
-		const userIdResData: Promise<QueryResult<IUserId>> = fetchGroupUserId(groupId);
+		const userIdResData = fetchGroupUserId(groupId);
 
-		const [userIdRes] = await Promise.all([userIdResData, deleteFunction]);
+		const [userIdRes]: [QueryResult<IUserId>, void] = await Promise.all([userIdResData, deleteFunction]);
 
 		const userId = userIdRes.rows[0].user_id;
 

@@ -11,7 +11,7 @@ import {
 
 export default async function getClient(id: number): Promise<IClientDatabase | null> {
 	try {
-		const clientsIdRes = await fetchAllClientId();
+		const clientsIdRes: QueryResult<IClientId> = await fetchAllClientId();
 		const clientsIdInDatabase = clientsIdRes.rows;
 
 		if (

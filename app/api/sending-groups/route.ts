@@ -67,7 +67,6 @@ export async function GET(request: NextRequest): Promise<NextResponse<{
 export async function POST(request: NextRequest): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: any; }> | NextResponse<string>> {
 
 	try {
-
 		const body: IQieryParamsCreateGroup = await request.json();
 		const { error, value } = schemaReqCreateGroup.validate(body);
 

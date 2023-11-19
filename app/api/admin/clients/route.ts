@@ -77,14 +77,12 @@ export async function POST(request: NextRequest) {
 		const { searchParams }: URL = new URL(request.url);
 		const userId = Number(searchParams.get("userId"));
 
-		console.log(client)
-
 		if (!client) {
 			return HttpError(400, `The client is empty`);
 		}
 
 		const res: ErrorCase | undefined = await createClient(client, userId);
-		const { tel }: ITel = client;
+		const { tel } = client;
 
 		switch (res) {
 			case 1:

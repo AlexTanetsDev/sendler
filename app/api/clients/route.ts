@@ -56,7 +56,6 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
 
 	try {
-
 		const body: IQieryParamsCreateClient = await request.json();
 		const { error, value } = schemaReqClient.validate(body);
 

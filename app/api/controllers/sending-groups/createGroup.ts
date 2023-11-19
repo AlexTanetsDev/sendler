@@ -51,7 +51,7 @@ export default async function createGroup(groupName: string, clients: IClient[],
 
 		//checking whether a client exists in the user's client list
 		//and adding client
-		const userClientsInDtabase: ITelRes[] = userClientsRes.rows;
+		const userClientsInDtabase = userClientsRes.rows;
 
 		for (const client of clients) {
 			const tel = Number(client.tel);
