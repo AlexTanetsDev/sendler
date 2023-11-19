@@ -21,16 +21,15 @@ import {
 import { schemaReqClient } from "@/models/clients";
 
 // logic for getting clients and some additional or statistics info
-
-// get all clients for one user by user ID
+// get all clients for one user by user ID and for all users
 export async function GET(request: NextRequest) {
 
 	const { searchParams }: URL = new URL(request.url);
 	const userId = Number(searchParams.get("userId"));
 
 	//checking user_id existense
-	if (userId) {
-		try {
+	try {
+		if (userId) {
 			const res: null | IClient[] = await getUserClients(userId);
 
 			if (res === null) {
@@ -45,23 +44,22 @@ export async function GET(request: NextRequest) {
 				{ clients: res, message: 'Get a clients.' },
 				{ status: 200 }
 			);
-		} catch (error: any) {
-			return NextResponse.json(
-				{ message: "Failed to get a list of clients.", error: error.message },
-				{ status: 500, }
-			);
 		}
+		const res = await getAllClients();
+		return NextResponse.json(
+			{ clients: res },
+			{ status: 200 })
+	} catch (error: any) {
+		return NextResponse.json(
+			{ message: "Failed to get a list of clients.", error: error.message },
+			{ status: 500, }
+		);
 	}
-	const res = await getAllClients();
-	return NextResponse.json(
-		{ clients: res },
-		{ status: 200 })
 }
 
 export async function POST(request: Request) {
 
 	try {
-
 		const body: IQieryParamsCreateClient = await request.json();
 		const { error, value } = schemaReqClient.validate(body);
 

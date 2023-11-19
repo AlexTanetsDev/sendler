@@ -52,8 +52,6 @@ export async function GET(request: Request): Promise<NextResponse<{
 				{ status: 200 }
 			);
 		}
-
-		// const groups: QueryResult<IGroup> = await fetchAllGroups();
 		const res: IGroupDatabase[] = await getAllGroups();
 		return NextResponse.json(
 			{ groups: res },
