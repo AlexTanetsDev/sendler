@@ -3,33 +3,41 @@ export type ErrorType = 400 | 401 | 403 | 404 | 409;
 export type ErrorCase = 1 | 2;
 
 
-export interface ITel { tel: number };
+export interface IErrorResponse {
+  message?: string;
+  error?: string;
+}
 
-export interface ITelRes { tel: string };
+export interface ITel {
+  tel: number;
+}
+
+export interface ITelRes {
+  tel: string;
+}
 
 
 export interface IUserId { user_id: number; }
 
 export interface IUser extends ITel, IUserId {
-	user_login: string;
-	emai: string;
-	user_name: string;
-	user_active?: boolean;
-	user_password: string;
-	balance?: number;
-	user_token?: string | null;
-	user_create_date: Date;
+  user_login: string;
+  emai: string;
+  user_name: string;
+  user_active?: boolean;
+  user_password: string;
+  balance?: number;
+  user_token?: string | null;
+  user_create_date: Date;
 }
 
 export interface INewDataUser {
-	email: string;
-	user_login: string;
-	tel: string;
-	user_name: string;
-	user_fild: string;
-
-};
-
+  email: string;
+  user_login: string;
+  tel: string;
+  user_name: string;
+  user_fild: string;
+  user_token?: string;
+}
 
 export interface IClient extends ITel {
 	first_name?: string,
@@ -42,7 +50,11 @@ export interface IClient extends ITel {
 
 export interface IClientId { client_id: number; }
 
-export interface IClientDatabase extends IClientId, IClient, IUserId { };
+export interface IClientId {
+  client_id: number;
+}
+
+export interface IClientDatabase extends IClientId, IClient, IUserId { }
 
 
 export interface IGroupId { group_id: number; }
@@ -53,8 +65,6 @@ export interface IGroup extends IGroupId, IGroupName, IUserId { };
 
 
 export interface IUserChangePassword {
-	oldPassword: string;
-	newPassword: string;
-};
-
-
+  oldPassword: string;
+  newPassword: string;
+}
