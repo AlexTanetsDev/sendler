@@ -39,6 +39,16 @@ export interface IClient extends ITel {
 	parameter_2?: string
 };
 
+export interface IClientReq {
+	client: IClient
+};
+
+export interface IClientUpdateReqArray {
+	clients: IClient[]
+};
+
+export interface IClentCreateReqArray extends IGroupName, IClientUpdateReqArray { };
+
 export interface IClientId { client_id: number; }
 
 export interface IClientDatabase extends IClientId, IClient, IUserId { };

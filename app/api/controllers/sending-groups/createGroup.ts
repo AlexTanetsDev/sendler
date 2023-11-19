@@ -13,12 +13,12 @@ import {
 	IGroupDatabase,
 	IGroupName,
 	ITelRes,
-	IClientDatabase,
+	IClient,
 	ErrorCase
 } from "@/globaltypes/types";
 
 
-export default async function createGroup(groupName: string, clients: IClientDatabase[], userId: number, method: string): Promise<IGroupDatabase | ErrorCase> {
+export default async function createGroup(groupName: string, clients: IClient[], userId: number, method: string): Promise<IGroupDatabase | ErrorCase> {
 
 	try {
 

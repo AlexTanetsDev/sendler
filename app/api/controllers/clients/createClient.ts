@@ -8,12 +8,12 @@ import { QueryResult } from "pg";
 import {
 	IUserId,
 	ITelRes,
-	IClientDatabase,
+	IClient,
 	ErrorCase
 } from "@/globaltypes/types";
 
 
-export default async function createClient(client: IClientDatabase, userId: number): Promise<ErrorCase | undefined> {
+export default async function createClient(client: IClient, userId: number): Promise<ErrorCase | undefined> {
 
 	try {
 

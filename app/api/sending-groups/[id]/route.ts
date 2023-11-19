@@ -64,7 +64,6 @@ export async function DELETE(request: Request, { params }: { params: { id: strin
 export async function PUT(request: Request, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: any; }> | NextResponse<string>> {
 
 	try {
-
 		const body: IQieryParamsUpdateGroup = await request.json();
 		const { error, value } = schemaReqUpdateGroup.validate(body);
 
@@ -75,7 +74,7 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 			);
 		}
 
-		const { clients }: IQieryParamsUpdateGroup = value;
+		const { clients } = value;
 
 		const groupId = Number(params.id);
 		const method: string = request.method;
@@ -92,7 +91,6 @@ export async function PUT(request: Request, { params }: { params: { id: string }
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
 
 		}
-
 
 		return NextResponse.json(
 			{ message: `The group is updated` },

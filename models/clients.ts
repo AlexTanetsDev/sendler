@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-import { IClient } from "@/globaltypes/types";
+import { IClient, IClientReq } from "@/globaltypes/types";
 
 export const schemaClient: Joi.ObjectSchema<IClient> = Joi.object({
 	tel: Joi.number().integer().required(),
@@ -12,6 +12,6 @@ export const schemaClient: Joi.ObjectSchema<IClient> = Joi.object({
 	parameter_2: Joi.string(),
 });
 
-export const schemaReqClient: Joi.ObjectSchema<any> = Joi.object({
+export const schemaReqClient: Joi.ObjectSchema<IClientReq> = Joi.object({
 	client: schemaClient.required(),
 });

@@ -14,11 +14,11 @@ import {
 	IGroupId,
 	IUserId,
 	ITelRes,
-	IClientDatabase,
+	IClient,
 } from "@/globaltypes/types";
 // import { IQieryParamsUpdateGroup } from "./types";
 
-export default async function updateGroup(clients: IClientDatabase[], groupId: number, method: string): Promise<null | NextResponse<{
+export default async function updateGroup(clients: IClient[], groupId: number, method: string): Promise<null | NextResponse<{
 	error: string;
 }> | undefined> {
 

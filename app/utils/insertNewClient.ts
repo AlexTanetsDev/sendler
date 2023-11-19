@@ -1,8 +1,8 @@
 import db from "@/db";
 
-import { IClientDatabase } from "@/globaltypes/types";
+import { IClient } from "@/globaltypes/types";
 
-export default async function insertNewClient(client: IClientDatabase, user_id: number): Promise<void> {
+export default async function insertNewClient(client: IClient, user_id: number): Promise<void> {
 
 	const { tel, first_name, middle_name, last_name, date_of_birth, parameter_1, parameter_2 } = client;
 	try {
