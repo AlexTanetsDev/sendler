@@ -40,12 +40,10 @@ export async function AllUserWithFild(
   return { isUniqueUserFild, updateUserColumnName };
 }
 
-export async function generateToken(userData: {
-  userPassword: string;
-  userEmail: string;
-}): Promise<string> {
+
+export async function generateToken(userData: { userName: string, userEmail: string }): Promise<string> {
   const payload = {
-    userPassword: userData.userPassword,
+    userName: userData.userName,
     userEmail: userData.userEmail,
   };
 
