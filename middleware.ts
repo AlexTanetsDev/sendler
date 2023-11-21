@@ -7,7 +7,8 @@ const SECRET_KEY = process.env.SECRET_KEY;
 
 export async function middleware(request: NextRequest) {
   try {
-    const token = request.cookies.get("token");
+    const token = request.cookies.get("next-auth.session-token");
+console.log("tokenMidl", token);
 
     if (!token?.value || !SECRET_KEY) {
       return NextResponse.redirect(new URL("/login", request.url));
@@ -50,9 +51,9 @@ export const config = {
     // "/((?!login|api|_next/static|_next/image|favicon.ico).*)",
 
     "/sms-sender/:path*",
-    "/create-group/:path*",
-    "/update-group/:path*",
+    // "/create-group/:path*",
+    // "/update-group/:path*",
     "/sending-history/:path*",
-    "/api/:path*",
+    // "/api/:path*",
   ],
 };
