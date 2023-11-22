@@ -3,10 +3,13 @@
 import React, { useState, useCallback, useEffect } from "react";
 import axios from "axios";
 import { IHistoryResponce } from "@/globaltypes/historyTypes";
+import { useSession } from "next-auth/react";
 axios.defaults.baseURL = "http://localhost:3000/";
 
-const SendingHistory = () => {
+const SendingHistory =  () => {
   const [history, setHistory] = useState<IHistoryResponce[]>([]);
+  const { data } = useSession();
+  console.log("Data", data?.user);
 
   const xport = useCallback(async () => {
     try {
@@ -41,6 +44,8 @@ const SendingHistory = () => {
   return (
     <div className="flex flex-col items-center py-8">
       <p className="mb-8 text-emerald-400">Sending-history</p>
+      for  <p className="mb-8 text-emerald-400">User: {data?.user?.user_name}</p>
+      where <p className="mb-8 text-emerald-400">Id_User: {data?.user?.user_id}</p>
       <ul>
         {history.map((item) => {
           return (
