@@ -8,24 +8,18 @@ const navigation = [
   { id: 2, title: "Create group", path: "/create-group" },
   { id: 3, title: "Update group", path: "/update-group" },
   { id: 4, title: "History", path: "/sending-history" },
-  { id: 5, title: "Login", path: "/login" },
 ];
 
 const Nav = () => {
   const { data: session, status } = useSession();
-  console.log("sessionUser", session?.user);
-  console.log("status", status);
+  console.log("sessionUserNav", session);
+  console.log("statusNav", status);
   return (
     <>
       {" "}
       <nav className="bg-white border-gray-200 dark:bg-gray-900">
         <div className="flex flex-wrap items-center justify-between max-w-screen-xl p-4 mx-auto">
           <Link href="/" className="flex items-center">
-            <img
-              src="https://flowbite.com/docs/images/logo.svg"
-              className="h-8 mr-3"
-              alt="Flowbite Logo"
-            />
             <span className="self-center text-2xl font-semibold whitespace-nowrap dark:text-white">
               NextAuthApp
             </span>
@@ -38,7 +32,7 @@ const Nav = () => {
                 type="button"
               >
                 {" "}
-                {session.user?.name} - Logout
+                {session.user?.user_name} - Logout
               </button>
             </>
           ) : (
