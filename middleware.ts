@@ -66,8 +66,9 @@ export const config = {
 
     // "/sms-sender/:path*",
     "/create-group",
-    // "/update-group/:path*",
-    "/sending-history/:path*",
+    "/update-group",
+    "/dashboard",
+    "/sending-history",
     // "/api/:path*",
   ],
 };

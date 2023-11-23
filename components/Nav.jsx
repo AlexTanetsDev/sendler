@@ -39,7 +39,7 @@ const Nav = () => {
             <>
               <div className="flex items-center">
                 <Link
-                  href="/api/users/signup"
+                  href="/signup"
                   className="mr-6 text-sm text-gray-500 dark:text-white hover:underline"
                 >
                   Register
