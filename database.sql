@@ -1,3 +1,4 @@
+-- Active: 1699308256981@@194.28.86.87@5432@bsender
 DROP TABLE recipients_status;
 
 DROP TABLE transactions_history;
@@ -89,3 +90,15 @@ CREATE TABLE
         PRIMARY KEY (transaction_id),
         transactions_date TIMESTAMP DEFAULT NOW():: timestamp
     );
+
+CREATE TABLE
+    sms_identificators(
+        sms_id SERIAL,
+        history_id INT REFERENCES sending_history(history_id) ON DELETE CASCADE,
+        client_id INT REFERENCES clients(client_id),
+        identificator TEXT NOT NULL,
+        PRIMARY KEY (sms_id)
+    );
+
+
+    SELECT clients.client_id, clients.tel FROM clients JOIN groups_members ON groups_members.client_id = clients.client_id AND groups_members.group_id = 90;

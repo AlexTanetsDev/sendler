@@ -2,28 +2,21 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 import resellerAuth from "../helpers/resellerAuth";
 import db from "@/db";
+import { getClientsTelByGroupId } from "../helpers/getClientsTelByGroupId";
+import { createSmsUrlStr } from "../helpers/createSmsQueryString";
 
 const { RESELLER_URL, RESELLER_SOURSE_ADRESS } = process.env;
 
 export async function POST(req: Request) {
   const authRes = await resellerAuth();
-  if (!authRes?.data) throw new Error("Authorisation error");
-  const { groupId, userId, text } = await req.json();
+  if (!authRes) throw new Error("Authorisation error");
+  const { group_id, text } = await req.json();
 
-  const telRes = await db.query(
-    "SELECT client_id FROM groups_members WHERE group_id = $1",
-    [groupId]
-  );
-  const { client_id } = telRes.rows[0];
-
-  const clientTelres = await db.query(
-    "SELECT tel FROM clients WHERE client_id = $1",
-    [client_id]
-  );
-  const { tel } = clientTelres.rows[0];
+  const clients = await getClientsTelByGroupId(group_id);
+  const queryStr = createSmsUrlStr(clients, text);
 
   const res = await axios.post(
-    `${RESELLER_URL}rest/Sms/Send?SessionID=${authRes.data}&DestinationAddress=${tel}&SourceAddress=${RESELLER_SOURSE_ADRESS}&Data=${text}`,
+    `${RESELLER_URL}/rest/Sms/Send?SessionID=${authRes}&SourceAddress=${RESELLER_SOURSE_ADRESS}&${queryStr}`,
     {
       headers: {
         "Content-Type": "application/ x - www - form - urlencoded",
@@ -38,10 +31,10 @@ export async function POST(req: Request) {
   //     sending_group_date: 2023-10-24T17:24:26.964Z
   //   }
   // ]
-  const historyRes = await db.query(
-    "INSERT INTO sending_history (group_id) VALUES ($1) RETURNING *",
-    [groupId]
-  );
+  // const historyRes = await db.query(
+  //   "INSERT INTO sending_history (group_id) VALUES ($1) RETURNING *",
+  //   [groupId]
+  // );
 
   // GET SMS STATUS
   // CreationDateUtc: null;
@@ -55,9 +48,9 @@ export async function POST(req: Request) {
   //   `${RESELLER_URL}rest/Sms/State?sessionId=${authRes.data}&messageId=${res.data[0]}`
   // );
 
-  const addSmsStatus = await db.query(
-    "INSERT INTO recipients_status (group_id, client_id, recipient_status) VALUES ($1, $2, 'pending') RETURNING * ",
-    [groupId, client_id]
-  );
-  return NextResponse.json("sms send sucsessfuly");
+  // const addSmsStatus = await db.query(
+  //   "INSERT INTO recipients_status (group_id, client_id, recipient_status) VALUES ($1, $2, 'pending') RETURNING * ",
+  //   [groupId, client_id]
+  // );
+  return NextResponse.json(res.data);
 }

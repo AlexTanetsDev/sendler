@@ -2,43 +2,42 @@ import { NextResponse } from "next/server";
 import axios from "axios";
 import resellerAuth from "../helpers/resellerAuth";
 import db from "@/db";
+import { getClientsTelByGroupId } from "../helpers/getClientsTelByGroupId";
+import { createSmsUrlStr } from "../helpers/createSmsQueryString";
+import { addSendingHistory } from "../helpers/addSendingHistory";
+import { addSmsIdentificators } from "../helpers/addSmsIdetificators";
+import { addSmsStatus } from "../helpers/addSmsStatus";
 
 const { RESELLER_URL, RESELLER_SOURSE_ADRESS } = process.env;
 
 export async function POST(req: Request) {
   const authRes = await resellerAuth();
-  if (!authRes?.data) throw new Error("Authorisation error");
+  if (!authRes) throw new Error("Authorisation error");
 
-  const { group_id, text } = await req.json();
+  const { group_id, text, client_id } = await req.json();
 
-  const clientsRes = await db.query(
-    "SELECT client_id FROM groups_members WHERE group_id = $1",
-    [group_id]
-  );
-  const clientsId = clientsRes.rows;
-  const clientsTel = await Promise.all(
-    clientsId.map(async (client) => {
-      const clientTelRes = await db.query(
-        "SELECT tel FROM clients WHERE client_id =$1",
-        [client.client_id]
-      );
-      const { tel } = clientTelRes.rows[0];
-      const str = `DestinationAddresses=${tel}&Data=${text}&`;
+  const clients = await getClientsTelByGroupId(group_id);
 
-      return str;
-    })
-  );
-  const urlStr = clientsTel.join("");
-  const normalizedUrlStr = urlStr.slice(0, urlStr.length - 2);
+  const smsQuerystr = createSmsUrlStr(clients, text);
 
-  const res = await axios.post(
-    `${RESELLER_URL}/rest/Sms/SendBulk?SessionID=${authRes.data}&SourceAddress=${RESELLER_SOURSE_ADRESS}&${normalizedUrlStr}`,
+  const sendedSmsRes = await axios.post(
+    `${RESELLER_URL}/rest/Sms/SendBulk?SessionID=${authRes}&SourceAddress=${RESELLER_SOURSE_ADRESS}&${smsQuerystr}`,
     {
       headers: {
         "Content-Type": "application/ x - www - form - urlencoded",
       },
     }
   );
+  const historyId = await addSendingHistory(group_id);
 
-  return NextResponse.json(res.data);
+  const smsIdentificatorsRes = addSmsIdentificators(
+    historyId,
+    clients,
+    sendedSmsRes.data
+  );
+  console.log((await smsIdentificatorsRes).rows);
+
+  const statusRes = await addSmsStatus(group_id, client_id);
+
+  return NextResponse.json(statusRes);
 }
