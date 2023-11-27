@@ -8,8 +8,8 @@ axios.defaults.baseURL = "http://localhost:3000/";
 
 const SendingHistory =  () => {
   const [history, setHistory] = useState<IHistoryResponce[]>([]);
-  const { data } = useSession();
-  console.log("Data", data?.user);
+  
+  const { data: session } = useSession();
 
   const xport = useCallback(async () => {
     try {
@@ -44,8 +44,8 @@ const SendingHistory =  () => {
   return (
     <div className="flex flex-col items-center py-8">
       <p className="mb-8 text-emerald-400">Sending-history</p>
-      for  <p className="mb-8 text-emerald-400">User: {data?.user?.user_name}</p>
-      where <p className="mb-8 text-emerald-400">Id_User: {data?.user?.user_id}</p>
+      for  <p className="mb-8 text-emerald-400">User: {session?.user?.user_login}</p>
+      where <p className="mb-8 text-emerald-400">Id_User: {session?.user?.user_id}</p>
       <ul>
         {history.map((item) => {
           return (

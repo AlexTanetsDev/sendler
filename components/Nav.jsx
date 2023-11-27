@@ -8,6 +8,7 @@ const navigation = [
   { id: 2, title: "Create group", path: "/create-group" },
   { id: 3, title: "Update group", path: "/update-group" },
   { id: 4, title: "History", path: "/sending-history" },
+  { id: 5, title: "Dashboard", path: "/dashboard" },
 ];
 
 const Nav = () => {

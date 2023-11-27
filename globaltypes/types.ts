@@ -82,3 +82,12 @@ export interface IUserChangePassword {
   oldPassword: string;
   newPassword: string;
 }
+
+export interface FormInputsSignUp {
+  login: string;
+  password: string;
+  repeatPassword: string;
+  phone: string;
+  email: string;
+  name: string;
+};
