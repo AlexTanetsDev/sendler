@@ -1,29 +1,28 @@
 import {
-	getUserClientsTel,
+	fetchUserClientsTel,
 	insertNewGroup,
 	insertGroupMember,
-	insertNewClient,
-	getGroupName,
-	getUsersId
+	insertNewClientInGroup,
+	fetchUserGroupsName,
+	fetchUsersId
 } from "@/app/utils";
 
 import { QueryResult } from "pg";
 import {
 	IUserId,
-	IGroup,
+	IGroupDatabase,
 	IGroupName,
 	ITelRes,
-	IClientDatabase,
+	IClient,
 	ErrorCase
 } from "@/globaltypes/types";
 
 
-export default async function createGroup(groupName: string, clients: IClientDatabase[], userId: number, method: string): Promise<IGroup | ErrorCase> {
+export default async function createGroup(groupName: string, clients: IClient[], userId: number, method: string): Promise<IGroupDatabase | ErrorCase> {
 
 	try {
-
 		//checking user_id existense
-		const usersIdRes: QueryResult<IUserId> = await getUsersId();
+		const usersIdRes: QueryResult<IUserId> = await fetchUsersId();
 		const usersIdInDatabase: IUserId[] = usersIdRes.rows;
 
 		if (!usersIdInDatabase.find((userIdInDatabase: IUserId) => userIdInDatabase.user_id === userId)) {
@@ -31,7 +30,7 @@ export default async function createGroup(groupName: string, clients: IClientDat
 		}
 
 		//checking same group_name existense for user
-		const groupsNameRes: QueryResult<IGroupName> = await getGroupName(userId);
+		const groupsNameRes: QueryResult<IGroupName> = await fetchUserGroupsName(userId);
 		const groupsNameInDatabase: IGroupName[] = groupsNameRes.rows;
 
 		if (
@@ -42,9 +41,9 @@ export default async function createGroup(groupName: string, clients: IClientDat
 			return 2;
 		}
 
-		const groupData: Promise<QueryResult<IGroup>> = insertNewGroup(groupName, userId);
+		const groupData: Promise<QueryResult<IGroupDatabase>> = insertNewGroup(groupName, userId);
 
-		const userClientsResData: Promise<QueryResult<ITelRes>> = getUserClientsTel(userId);
+		const userClientsResData: Promise<QueryResult<ITelRes>> = fetchUserClientsTel(userId);
 
 		const [group, userClientsRes] = await Promise.all([groupData, userClientsResData]);
 
@@ -52,13 +51,13 @@ export default async function createGroup(groupName: string, clients: IClientDat
 
 		//checking whether a client exists in the user's client list
 		//and adding client
-		const userClientsInDtabase: ITelRes[] = userClientsRes.rows;
+		const userClientsInDtabase = userClientsRes.rows;
 
 		for (const client of clients) {
 			const tel = Number(client.tel);
 
 			if (!userClientsInDtabase.find((userClientInDtabase: ITelRes) => userClientInDtabase.tel === String(tel))) {
-				await insertNewClient(client, userId, groupId, method);
+				await insertNewClientInGroup(client, userId, groupId, method);
 			}
 			await insertGroupMember(tel, userId, groupId);
 		}

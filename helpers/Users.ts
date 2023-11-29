@@ -1,7 +1,6 @@
 import db from "@/db";
 import { INewDataUser } from "@/globaltypes/types";
-import jwt from 'jsonwebtoken';
-import { NextResponse } from "next/server";
+import jwt, { JwtPayload } from "jsonwebtoken";
 
 const SECRET_KEY = process.env.SECRET_KEY;
 
@@ -34,25 +33,43 @@ export async function AllUserWithFild(
       ? allUserColumnName.rows.some(
           (user) => user[columnName] === String(updateUserColumnName)
         )
-      : allUserColumnName.rows.some((user) => user[columnName] === updateUserColumnName);
+      : allUserColumnName.rows.some(
+          (user) => user[columnName] === updateUserColumnName
+        );
 
   return { isUniqueUserFild, updateUserColumnName };
 }
 
-export async function generateToken(userData: { userPassword: string, userEmail: string }): Promise<string> {
+
+export async function generateToken(userData: { userName: string, userEmail: string }): Promise<string> {
   const payload = {
-    userPassword: userData.userPassword,
+    userName: userData.userName,
     userEmail: userData.userEmail,
   };
 
   const key = SECRET_KEY;
   if (key) {
     return new Promise((resolve, reject) => {
-      jwt.sign(payload, key, { expiresIn: '1h' }, (err, token) => {
+      jwt.sign(payload, key, { expiresIn: "1h" }, (err, token) => {
         if (err) reject(err);
-        resolve(token!); 
+        resolve(token!);
       });
     });
   }
-  throw new Error('SECRET_KEY is not defined');
+  throw new Error("SECRET_KEY is not defined");
+}
+
+export function verifyToken(token: string): JwtPayload | null {
+  try {
+    const decodedToken = jwt.verify(
+      token,
+      process.env.SECRET_KEY!
+    ) as JwtPayload;
+
+    return decodedToken;
+  } catch (err) {
+    console.log("Error verifying token: ", err);
+
+    return null;
   }
+}

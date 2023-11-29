@@ -2,11 +2,16 @@
 
 import React from "react";
 import { useState, useCallback } from "react";
+import { useSession } from "next-auth/react";
 import * as XLSX from "xlsx/xlsx.mjs";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3000/";
 
+
+
 const CreateGroup = () => {
+  const { data } = useSession();
+  console.log("Data", data?.user);
   const [file, setFile] = useState(null);
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -19,7 +24,7 @@ const CreateGroup = () => {
       const wb = XLSX.read(ab);
       const wsname = wb.SheetNames[0];
       const clients = XLSX.utils.sheet_to_json(wb.Sheets[wsname]);
-      const groupId = 78;
+      const groupId = 90;
 
       try {
         const response = await axios.put(`api/sending-groups/${groupId}`, {

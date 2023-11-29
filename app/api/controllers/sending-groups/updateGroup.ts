@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 
 import {
-	getUserClientsTel,
+	fetchUserClientsTel,
 	insertGroupMember,
-	insertNewClient,
-	getGroupsId,
-	deleteGroupMembers,
-	getGroupUserId
+	insertNewClientInGroup,
+	fetchAllGroupId,
+	deleteGroupMembersData,
+	fetchGroupUserId
 } from "@/app/utils";
 
 import { QueryResult } from "pg";
@@ -14,18 +14,17 @@ import {
 	IGroupId,
 	IUserId,
 	ITelRes,
-	IClientDatabase,
+	IClient,
 } from "@/globaltypes/types";
-// import { IQieryParamsUpdateGroup } from "./types";
 
-export default async function updateGroup(clients: IClientDatabase[], groupId: number, method: string): Promise<null | NextResponse<{
+export default async function updateGroup(clients: IClient[], groupId: number, method: string): Promise<null | NextResponse<{
 	error: string;
 }> | undefined> {
 
 	try {
 
 		//checking group existense
-		const groupsIdRes: QueryResult<IGroupId> = await getGroupsId();
+		const groupsIdRes: QueryResult<IGroupId> = await fetchAllGroupId();
 		const groupsIdInDatabase: IGroupId[] = groupsIdRes.rows;
 
 		if (
@@ -36,18 +35,15 @@ export default async function updateGroup(clients: IClientDatabase[], groupId: n
 			return null;
 		}
 
-		// await deleteGroupMembers(groupId);
+		const deleteFunction = deleteGroupMembersData(groupId);
 
-		// const userIdRes: QueryResult<IUserId> = await getGroupUserId(groupId);
-		const deleteFunction = deleteGroupMembers(groupId);
+		const userIdResData = fetchGroupUserId(groupId);
 
-		const userIdResData: Promise<QueryResult<IUserId>> = getGroupUserId(groupId);
-
-		const [userIdRes] = await Promise.all([userIdResData, deleteFunction]);
+		const [userIdRes]: [QueryResult<IUserId>, void] = await Promise.all([userIdResData, deleteFunction]);
 
 		const userId = userIdRes.rows[0].user_id;
 
-		const userClientsRes: QueryResult<ITelRes> = await getUserClientsTel(userId);
+		const userClientsRes: QueryResult<ITelRes> = await fetchUserClientsTel(userId);
 
 		//checking whether a client exists in the user's client list
 		//and adding client
@@ -57,7 +53,7 @@ export default async function updateGroup(clients: IClientDatabase[], groupId: n
 			const tel = Number(client.tel);
 
 			if (!userClients.find((userClient: ITelRes) => userClient.tel === String(tel))) {
-				await insertNewClient(client, userId, groupId, method);
+				await insertNewClientInGroup(client, userId, groupId, method);
 			}
 			await insertGroupMember(tel, userId, groupId);
 		}

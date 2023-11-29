@@ -13,12 +13,15 @@ DROP TABLE clients;
 
 DROP TABLE users;
 
+CREATE TYPE user_role AS ENUM ('admin', 'user', 'superAdmin');
+
 CREATE TABLE
     users (
         user_id SERIAL PRIMARY KEY,
         user_login TEXT UNIQUE NOT NULL,
         email TEXT NOT NULL,
-        user_name TEXT NOT NULL ,
+        user_name TEXT NOT NULL,
+         user_role text NOT NULL DEFAULT 'user'::character varying,
         user_active BOOLEAN DEFAULT true,
         tel BIGINT NOT NULL,
         user_password TEXT NOT NULL,

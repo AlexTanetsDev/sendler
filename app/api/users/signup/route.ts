@@ -74,7 +74,7 @@ export async function POST(req: Request) {
       );
     }
     const token = await generateToken({
-      userPassword: user_password,
+      userName: user_login,
       userEmail: email,
     });
     if (!token) {

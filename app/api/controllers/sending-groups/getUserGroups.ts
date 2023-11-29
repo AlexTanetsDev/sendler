@@ -1,27 +1,27 @@
-import db from "@/db";
+import {
+	fetchUserGroups,
+	fetchUsersId
+} from "@/app/utils";
 
 import { QueryResult } from "pg";
 import {
 	IUserId,
-	IGroupName
+	IGroupDatabase,
 } from "@/globaltypes/types";
 
 // get all groups for one user by user ID
-export default async function getUserGroups(userId: number): Promise<IGroupName | null> {
+export default async function getUserGroups(userId: number): Promise<IGroupDatabase[] | null> {
 	try {
-		const usersIdRes: QueryResult<IUserId> = await db.query(`SELECT user_id FROM users`);
+		const usersIdRes: QueryResult<IUserId> = await fetchUsersId();
 		const usersIdInDatabase = usersIdRes.rows;
 
 		if (!usersIdInDatabase.find((userIdInDatabase: IUserId) => userIdInDatabase.user_id === userId)) {
 			return null;
 		};
 
+		const groups: QueryResult<IGroupDatabase> = await fetchUserGroups(userId);
 
-		const groups: QueryResult<IGroupName> = await db.query(
-			`SELECT group_name FROM send_groups WHERE user_id = ${userId}`
-		);
-
-		return groups.rows[0];
+		return groups.rows;
 	} catch (error: any) {
 		throw new Error(error.message);
 	}
