@@ -1,6 +1,9 @@
 "use client";
 import axios from "axios";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { createSmsUrlStr } from "../api/reseller/helpers/createSmsQueryString";
+import { addSmsIdentificators } from "../api/reseller/helpers/addSmsIdetificators";
+import { useEffect } from "react";
 
 type FormData = {
   clientTel: string;
@@ -8,6 +11,12 @@ type FormData = {
 };
 type Client = {
   tel: number;
+  first_name: string;
+  middle_name: string;
+  last_name: string;
+  date_of_birth: number;
+  parameter_1?: string;
+  parameter_2?: string;
 };
 
 function Sender() {
@@ -20,43 +29,77 @@ function Sender() {
 
   const onSubmit: SubmitHandler<FormData> = (data) => {
     const clients: Client[] = [
-      { tel: 380665616086 },
-      { tel: 380974113718 },
-      { tel: 380951195816 },
+      {
+        tel: 380665616086,
+        first_name: "Oleksa",
+        middle_name: "Oleksa",
+        last_name: "Pupkin",
+        date_of_birth: Date.now(),
+      },
+      // {
+      //   tel: 380974113718,
+      //   first_name: "Orest",
+      //   middle_name: "Oleksa",
+      //   last_name: "Pumpkin",
+      //   date_of_birth: Date.now(),
+      // },
+      // {
+      //   tel: 380951195816,
+      //   first_name: "Zahariy",
+      //   middle_name: "Oleksa",
+      //   last_name: "Berkut",
+      //   date_of_birth: Date.now(),
+      // },
     ];
+
     // const clientObj = { tel: Number(data.clientTel) };
     // clients.push(clientObj);
     handleSendOneClick(clients, data.smsText);
   };
 
   const handleBalanceClick = async () => {
-    const res = await axios.get("api/reseller/get-balance");
-    console.log(res.data);
+    try {
+      const res = await axios.get("api/reseller/get-balance");
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleSendOneClick = async (clients: Client[], text: string) => {
-    const groupResp = await axios.post(`api/sending-groups`, {
-      id: 9,
-      name: clients[0].tel,
-      clients: clients,
-    });
-    const groupId = groupResp.data.group_id;
+    const groupResp = await axios.post(
+      `api/sending-groups`,
+      {
+        groupName: "Anatoliy",
+        clients: clients,
+      },
+      {
+        params: {
+          userId: 13,
+        },
+      }
+    );
+    const groupId = groupResp.data.group.group_id;
+    console.log("group", groupResp.data);
 
-    // const res = await axios.post("api/reseller/send-one", {
-    //   groupId: 26,
-    //   userId: 9,
-    //   text,
-    // });
-    console.log(groupId);
+    const res = await axios.post("api/reseller/send-one", {
+      group_id: groupId,
+      text,
+    });
+    console.log(res.data);
   };
 
-  const handleSendFewClick = async () => {
-    const res = await axios.post("api/reseller/send-few", {
-      group_id: 110,
-      text: "some+test+sms+to+few+clients",
-    });
-
-    console.log(res.data);
+  const handleSendByGroupId = async () => {
+    try {
+      const res = await axios.post("api/reseller/send-sms", {
+        group_id: 80,
+        user_id: 8,
+        text: "send test sms to client with some text more than 140 symbols 1234567891234567788000000000000000000000000000000000000000000000000000000000000000000000000000 00000 00000000000000000 00000000000000 000000000000000000 111111111111 2222222222222 33333333333333  4444444444",
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -70,6 +113,13 @@ function Sender() {
         onClick={handleBalanceClick}
       >
         Get ballance
+      </button>
+      <button
+        type="button"
+        className=" rounded-xl w-40 p-1 bg-slate-500 text-cyan-50 "
+        onClick={handleSendByGroupId}
+      >
+        Send sms by group_id
       </button>
 
       <form
@@ -99,14 +149,6 @@ function Sender() {
           Send sms
         </button>
       </form>
-
-      <button
-        type="button"
-        className=" rounded-xl w-40 p-1 bg-slate-500 text-cyan-50 "
-        onClick={handleSendFewClick}
-      >
-        Send few
-      </button>
     </div>
   );
 }

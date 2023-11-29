@@ -6,10 +6,10 @@ const { RESELLER_URL } = process.env;
 
 export async function GET(req: Request) {
   const authRes = await resellerAuth();
-  if (!authRes?.data) throw new Error("Authorisation error");
+  if (!authRes) throw new Error("Authorisation error");
 
   const res = await axios.get(
-    `${RESELLER_URL}rest/User/Balance?SessionID=${authRes.data}`
+    `${RESELLER_URL}/rest/User/Balance?SessionID=${authRes}`
   );
 
   return NextResponse.json(res.data);
