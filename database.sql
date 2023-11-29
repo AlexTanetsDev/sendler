@@ -1,4 +1,4 @@
--- Active: 1699308256981@@194.28.86.87@5432@bsender
+-- Active: 1701100937268@@194.28.86.87@5432@bsender
 DROP TABLE recipients_status;
 
 DROP TABLE transactions_history;
@@ -66,14 +66,14 @@ CREATE TABLE
         PRIMARY KEY (history_id)
     );
 
-CREATE TYPE status_type AS ENUM ('pending', 'fulfield', 'rejected');
+CREATE TYPE status_type AS ENUM ('pending', 'fullfield', 'rejected');
 
 CREATE UNIQUE INDEX clients_client_id_idx ON clients(client_id);
 
 CREATE TABLE
     recipients_status(
         recipient_id SERIAL,
-        group_id INT REFERENCES send_groups(group_id) ON DELETE CASCADE,
+        history_id INT REFERENCES sending_history(history_id) ON DELETE CASCADE,
         client_id INT REFERENCES clients(client_id) ON DELETE CASCADE,
         recipient_status status_type,
         PRIMARY KEY (recipient_id),
@@ -102,3 +102,15 @@ CREATE TABLE
 
 
     SELECT clients.client_id, clients.tel FROM clients JOIN groups_members ON groups_members.client_id = clients.client_id AND groups_members.group_id = 90;
+
+    INSERT INTO sms_identificators (history_id, client_id, identificator) VALUES (5, 174, '12345'),(5, 174, '123456')  RETURNING *
+
+    
+update recipients_status set 
+    recipient_status = 
+    case client_id
+       when 174 then 'rejected' when 175 then 'rejected' when 176 then 'rejected'
+       else recipient_status
+    end
+where history_id = 22;
+

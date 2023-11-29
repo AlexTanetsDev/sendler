@@ -3,6 +3,7 @@ import axios from "axios";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { createSmsUrlStr } from "../api/reseller/helpers/createSmsQueryString";
 import { addSmsIdentificators } from "../api/reseller/helpers/addSmsIdetificators";
+import { useEffect } from "react";
 
 type FormData = {
   clientTel: string;
@@ -83,57 +84,22 @@ function Sender() {
 
     const res = await axios.post("api/reseller/send-one", {
       group_id: groupId,
-      user_id: 13,
       text,
     });
     console.log(res.data);
   };
 
-  const handleSendFewClick = async () => {
-    const res = await axios.post("api/reseller/send-few", {
-      group_id: 80,
-      text: "some+test+sms+to+few+clients",
-    });
-
-    console.log(res.data);
-  };
-
   const handleSendByGroupId = async () => {
-    const res = await axios.post("api/reseller/send-one", {
-      group_id: 92,
-      user_id: 13,
-      text: "send test sms to client with some text more than 140 symbols 1234567891234567788000000000000000000000000000000000000000000000000000000000000000000000000000 00000 00000000000000000 00000000000000 000000000000000000 111111111111 2222222222222 33333333333333  4444444444",
-    });
-
-    // const test = await addSmsIdentificators(
-    //   "25",
-    //   [
-    //     {
-    //       tel: 380665616086,
-    //       first_name: "Oleksa",
-    //       middle_name: "Oleksa",
-    //       last_name: "Pupkin",
-    //       date_of_birth: Date.now(),
-    //     },
-    //     {
-    //       tel: 380974113718,
-    //       first_name: "Orest",
-    //       middle_name: "Oleksa",
-    //       last_name: "Pumpkin",
-    //       date_of_birth: Date.now(),
-    //     },
-    //     {
-    //       tel: 380951195816,
-    //       first_name: "Zahariy",
-    //       middle_name: "Oleksa",
-    //       last_name: "Berkut",
-    //       date_of_birth: Date.now(),
-    //     },
-    //   ],
-    //   ["1", "2", "3", "4", "5", "6"]
-    // );
-
-    // console.log(test);
+    try {
+      const res = await axios.post("api/reseller/send-sms", {
+        group_id: 80,
+        user_id: 8,
+        text: "send test sms to client with some text more than 140 symbols 1234567891234567788000000000000000000000000000000000000000000000000000000000000000000000000000 00000 00000000000000000 00000000000000 000000000000000000 111111111111 2222222222222 33333333333333  4444444444",
+      });
+      console.log(res.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -183,14 +149,6 @@ function Sender() {
           Send sms
         </button>
       </form>
-
-      <button
-        type="button"
-        className=" rounded-xl w-40 p-1 bg-slate-500 text-cyan-50 "
-        onClick={handleSendFewClick}
-      >
-        Send few
-      </button>
     </div>
   );
 }

@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 const { RESELLER_URL, RESELLER_LOGIN, RESELLER_PASSWORD } = process.env;
 
