@@ -7,11 +7,6 @@ export interface IErrorResponse {
   error?: string;
 }
 
-export interface IErrorResponse {
-  message?: string;
-  error?: string;
-}
-
 export interface ITel {
   tel: number;
 }
