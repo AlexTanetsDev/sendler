@@ -4,9 +4,7 @@ import { options } from '../api/auth/[...nextauth]/options'
 
 const Dashboard = async () => {
   const session = await getServerSession(options);
-  console.log("dashLog", session);
-
-  
+    
   return (
     <>
       <div>Dashboard</div>

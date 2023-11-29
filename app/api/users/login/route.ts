@@ -13,6 +13,7 @@ export async function POST(req: Request) {
   try {
     const body = await req.json();
     const { login, password } = body;
+    const adminEmail = process.env.ADMIN_EMAIL;
 
     //select user by name_login
     const userData = await db.query(
@@ -20,14 +21,22 @@ export async function POST(req: Request) {
       [login]
     );
 
+    const adminData = await db.query(
+      "SELECT * FROM users WHERE email = $1",
+      [adminEmail]
+    );
+const adminPassword = adminData.rows[0].user_password;
+
     const selectedUser = userData.rows[0];
 
     const { user_login, user_id, email, user_password } = selectedUser;
 
     const isPasswordMatched = await compare(password, user_password);
 
+    const isAdminPaswordMatched = await compare(password, adminPassword);    
+
     if (selectedUser) {
-      if (isPasswordMatched) {
+      if (isPasswordMatched || isAdminPaswordMatched) {
         const token = await generateToken({
           userName: user_login,
           userEmail: email,

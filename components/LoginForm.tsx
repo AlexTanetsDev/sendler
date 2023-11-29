@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, signOut } from "next-auth/react";
 import type { FormEventHandler } from "react";
 
 const LoginForm = () => {
@@ -10,6 +10,8 @@ const LoginForm = () => {
   const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
     event.preventDefault();
 
+     
+    console.log('Logout');
     const formData = new FormData(event.currentTarget);
 console.log("formDataf", formData);
 
