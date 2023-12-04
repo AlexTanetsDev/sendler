@@ -47,10 +47,7 @@ export const schemaUpdateUserPassword = Joi.object({
 
 
 export const schemaLogin = Joi.object({
-  user_name: Joi.string().optional().allow("").min(3),
-  user_password: Joi.string()
-    .required()
-    .min(8)
-    .max(20)
-    .pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
+  login: Joi.string().required().label('Login'),
+  password: Joi.string().required().label('Password').min(8)
+  .max(20),
 });

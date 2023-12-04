@@ -2,10 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import type { FormEventHandler } from "react";
-import { config } from "process";
 import { useForm, SubmitHandler } from 'react-hook-form';
-import axios from 'axios';
 import {validationSchemaSignUp } from "@/models/users";
 import { FormInputsSignUp } from "@/globaltypes/types";
 
@@ -41,10 +38,6 @@ const SingUpForm = () => {
   const router = useRouter();
 
   const onSubmit: SubmitHandler<FormInputsSignUp> = async (data) => {
-    // event.preventDefault();
-
-    // const formData = new FormData(event.currentTarget);
-
     const res = await fetch("http://localhost:3000/api/users/signup", {
       method: "POST",
       body: JSON.stringify({
@@ -62,14 +55,11 @@ const SingUpForm = () => {
         redirect: false,
       });
       if (credentialsRes && !credentialsRes.error) {
-        router.push("http://localhost:3000/");
+        router.push("/");
       } else {
         console.log(credentialsRes);
       }
     }
-
-    console.log("RES", res);
-    console.log(data);
   };
 
   return (
