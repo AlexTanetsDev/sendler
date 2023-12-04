@@ -108,3 +108,8 @@ export interface FormInputsSignUp {
   email: string;
   name: string;
 };
+
+export interface FormInputsLogin {
+  login: string;
+  password: string;
+};

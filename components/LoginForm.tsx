@@ -1,52 +1,116 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { signIn, signOut } from "next-auth/react";
-import type { FormEventHandler } from "react";
+import { signIn } from "next-auth/react";
+import Link from "next/link";
+import { SubmitHandler, useForm } from "react-hook-form";
+import { FormInputsLogin } from "@/globaltypes/types";
+import { schemaLogin } from "@/models/users";
 
 const LoginForm = () => {
   const router = useRouter();
 
-  const handleSubmit: FormEventHandler<HTMLFormElement> = async (event) => {
-    event.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormInputsLogin>({
+    resolver: async (data) => {
+      try {
+        await schemaLogin.validateAsync(data, { abortEarly: false });
+        return { values: data, errors: {} };
+      } catch (error) {
+        const validationErrors: Record<string, { message: string }> = {};
+        error?.details.forEach((detail: any) => {
+          if (detail.context && detail.context.key) {
+            validationErrors[detail.context.key] = {
+              message: detail.message,
+            };
+          }
+        });
 
-     
-    console.log('Logout');
-    const formData = new FormData(event.currentTarget);
-console.log("formDataf", formData);
+        return {
+          values: {},
+          errors: validationErrors,
+        };
+      }
+    },
+  });
 
+  const onSubmit: SubmitHandler<FormInputsLogin> = async (data) => {
     const res = await signIn("credentials", {
-      login: formData.get("login"),
-      password: formData.get("password"),
+      login: data.login,
+      password: data.password,
       redirect: false,
     });
-
     if (res && !res.error) {
-      router.push("http://localhost:3000/");
-    } else {
-      console.log(res);
+      router.push("/");
     }
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto my-8" >
-       <div className="mb-4">
-       <input type="text" name="login" className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" required />
-      <input type="password" name="password" className="w-full border rounded-md py-2 px-3 focus:outline-none focus:border-blue-500" required />
-      </div>
-      <div className="flex items-center justify-between">
-       <button
-          type="submit"
-          className="bg-blue-500 text-white py-2 px-4 rounded focus:outline-none hover:bg-blue-700"
+    <form
+      autoComplete="off"
+      onSubmit={handleSubmit(onSubmit)}
+      className="w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700 bg-gray-300 px-[26px]"
+    >
+      <h1 className=" font-roboto text-xl font-medium mb-8">
+        Особистий кабінет
+      </h1>
+      <div className="flex items-center mb-8">
+        <Link
+          href="/login"
+          className="font-roboto text-base font-normal mr-[92px] active:underline"
         >
-          Log In
-        </button>
-      
-       </div>
-     
-    </form>
+          Увійти
+        </Link>
+        <Link href="/signup" className="font-roboto text-base font-normal ">
+          Реєстрація
+        </Link>
+      </div>
+      <div className="text-left w-full">
+        <label
+          htmlFor="login"
+          className="font-roboto text-base font-medium mb-2 block"
+        >
+          Логін
+        </label>
+        <input
+          id="login"
+          type="text"
+          {...register("login")}
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          required
+        />
+        {errors.login && (
+          <span className="text-red-500 block">{errors.login.message}</span>
+        )}
 
-    
+        <label
+          htmlFor="password"
+          className="font-roboto text-base font-medium mb-2  mt-8 block"
+        >
+          Пароль
+        </label>
+        <input
+          id="password"
+          type="password"
+          {...register("password")}
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          required
+        />
+        {errors.password && (
+          <span className="text-red-500 ">{errors.password.message}</span>
+        )}
+      </div>
+
+      <button
+        type="submit"
+        className="bg-[#ADA3A3] mt-8 flex items-center justify-center h-[63px] w-full  py-[18px] focus:outline-none hover:bg-blue-700 hover:text-white rounded-[18px] text-lg"
+      >
+        Увійти
+      </button>
+    </form>
   );
 };
 
