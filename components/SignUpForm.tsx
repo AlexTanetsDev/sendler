@@ -5,6 +5,7 @@ import { signIn } from "next-auth/react";
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {validationSchemaSignUp } from "@/models/users";
 import { FormInputsSignUp } from "@/globaltypes/types";
+import Link from "next/link";
 
 
 const SingUpForm = () => {
@@ -63,34 +64,130 @@ const SingUpForm = () => {
   };
 
   return (
-    <form autoComplete="off" onSubmit={handleSubmit(onSubmit)} className="max-w-md mx-auto mt-10 p-6 border border-gray-300 rounded-md shadow-md">
-    <label className="block mb-2">Login:</label>
-    <input {...register('login')} className="w-full p-2 border rounded-md" />
-    {errors.login && <span className="text-red-500">{errors.login.message}</span>}
+    <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}  className="w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700 bg-gray-300 px-[26px]">
+       <h1 className=" font-roboto text-xl font-medium mb-8">
+        Особистий кабінет
+      </h1>
+      <div className="flex items-center mb-8">
+        <Link
+          href="/login"
+          className="font-roboto text-base font-normal mr-[92px] active:underline"
+        >
+          Увійти
+        </Link>
+        <Link href="/signup" className="font-roboto text-base font-normal ">
+          Реєстрація
+        </Link>
+      </div>
+     <div className="text-left w-full">
+     <label
+          htmlFor="name"
+          className="font-roboto text-base font-medium mb-2 block"
+        >
+          Ім’я
+        </label>
+        <input
+          id="name"
+          type="text"
+          {...register("name")}
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          required
+        />
+        {errors.name && (
+          <span className="text-red-500 block">{errors.name.message}</span>
+        )}
 
-    <label className="block mt-4 mb-2">Password:</label>
-    <input type="password" {...register('password')} className="w-full p-2 border rounded-md" />
-    {errors.password && <span className="text-red-500">{errors.password.message}</span>}
+<label
+          htmlFor="phone"
+          className="font-roboto text-base font-medium mb-2  mt-8 block"
+        >
+          Телефон
+        </label>
+        <input
+          id="phone"
+          type="text"
+          {...register("phone")}
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          required
+        />
+        {errors.phone && (
+          <span className="text-red-500 block">{errors.phone.message}</span>
+        )}
 
-    <label className="block mt-4 mb-2">Repeat Password:</label>
-    <input type="password" {...register('repeatPassword')} className="w-full p-2 border rounded-md" />
-    {errors.repeatPassword && <span className="text-red-500">{errors.repeatPassword.message}</span>}
+<label
+          htmlFor="email"
+          className="font-roboto text-base font-medium mb-2  mt-8 block"
+        >
+          Пошта
+        </label>
+        <input
+          id="email"
+          type="text"
+          {...register("email")}
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          required
+        />
+        {errors.email && (
+          <span className="text-red-500 block">{errors.email.message}</span>
+        )}
 
-    <label className="block mt-4 mb-2">Phone:</label>
-    <input {...register('phone')} className="w-full p-2 border rounded-md" />
-    {errors.phone && <span className="text-red-500">{errors.phone.message}</span>}
+        <label
+          htmlFor="login"
+          className="font-roboto text-base font-medium mb-2  mt-8 block"
+        >
+          Логін
+        </label>
+        <input
+          id="login"
+          type="text"
+          {...register("login")}
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          required
+        />
+        {errors.login && (
+          <span className="text-red-500 block">{errors.login.message}</span>
+        )}
 
-    <label className="block mt-4 mb-2">Email:</label>
-    <input type="email" {...register('email')} className="w-full p-2 border rounded-md" />
-    {errors.email && <span className="text-red-500">{errors.email.message}</span>}
+        <label
+          htmlFor="password"
+          className="font-roboto text-base font-medium mb-2  mt-8 block"
+        >
+          Пароль
+        </label>
+        <input
+          id="password"
+          type="password"
+          {...register("password")}
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          required
+        />
+        {errors.password && (
+          <span className="text-red-500 ">{errors.password.message}</span>
+        )}
+               <label
+          htmlFor="repeatPassword"
+          className="font-roboto text-base font-medium mb-2  mt-8 block"
+        >
+          Підтвердіть пароль 
+        </label>
+        <input
+          id="repeatPassword"
+          type="repeatPassword"
+          {...register("repeatPassword")}
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          required
+        />
+        {errors.repeatPassword && (
+          <span className="text-red-500 ">{errors.repeatPassword.message}</span>
+        )}
+      </div>
 
-    <label className="block mt-4 mb-2">Name:</label>
-    <input {...register('name')} className="w-full p-2 border rounded-md" />
-    {errors.name && <span className="text-red-500">{errors.name.message}</span>}
-
-    <button type="submit" className=" mt-6 bg-blue-500 text-white p-2 rounded-md hover:bg-blue-600">
-      Sugn Up
-    </button>
+<button
+        type="submit"
+        className="bg-[#ADA3A3] mt-8 flex items-center justify-center h-[63px] w-full  py-[18px] focus:outline-none hover:bg-blue-700 hover:text-white rounded-[18px] text-lg"
+      >
+        Реєстрація
+      </button>
   </form>
   );
 };
