@@ -6,24 +6,24 @@ import Footer from "../components/Footer";
 import Providers from "@/components/providers/Providers";
 
 export const metadata: Metadata = {
-  title: "BSender",
-  description: "BSender sms sending application",
+	title: "BSender",
+	description: "BSender sms sending application",
 };
 
 export default function RootLayout({
-  children,
+	children,
 }: {
-  children: React.ReactNode;
+	children: React.ReactNode;
 }) {
-  return (
-    <html lang="en">
-      <body className="  h-screen flex justify-between flex-col items-center">
-      <Providers>
-        <Header />
-        {children}
-        <Footer />
-        </Providers>
-      </body>
-    </html>
-  );
+	return (
+		<html lang="en">
+			<body className="  h-screen flex flex-col items-center">
+				<Providers>
+					<Header />
+					{children}
+					<Footer />
+				</Providers>
+			</body>
+		</html>
+	);
 }
