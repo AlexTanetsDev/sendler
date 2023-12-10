@@ -25,3 +25,8 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+.container {
+  width: 1440px;
+  padding: 72px 80px;
+}
