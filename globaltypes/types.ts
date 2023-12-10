@@ -104,7 +104,7 @@ export interface FormInputsSignUp {
   login: string;
   password: string;
   repeatPassword: string;
-  phone: string;
+  phone: number;
   email: string;
   name: string;
 };
