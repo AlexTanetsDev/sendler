@@ -23,9 +23,9 @@ const publicNavigation = [
 const privateNavigation = [
   { id: 1, title: "Головна", path: "/" },
   { id: 2, title: "Розсилка", path: "/mailing-list" },
-  { id: 3, title: "Управління контактами", path: "/assignment-of-contacts" },
+  { id: 3, title: "Управління контактами", path: "/user/contacts-manage" },
   { id: 4, title: "Статистика", path: "/statistics" },
-  { id: 5, title: "Особистий кабінет", path: "/profil" },
+  { id: 5, title: "Особистий кабінет", path: "/user/account" },
 ];
 
 const Nav = () => {
@@ -41,19 +41,32 @@ const Nav = () => {
         >
           {status === "authenticated"
             ? privateNavigation.map(({ id, title, path }) => (
-                <Link key={id} href={path} className="hover:underline hover:underline-offset-4 py-6">
+                <Link
+                  key={id}
+                  href={path}
+                  className="hover:underline hover:underline-offset-4 py-6"
+                >
                   {title}
                 </Link>
               ))
             : publicNavigation.map(({ id, title, path }) => (
-                <Link key={id} href={path} className="hover:underline hover:underline-offset-4 py-6">
+                <Link
+                  key={id}
+                  href={path}
+                  className="hover:underline hover:underline-offset-4 py-6"
+                >
                   {title}
                 </Link>
               ))}
           {status === "authenticated" ? (
             <LogOutButton />
           ) : (
-            <Link href="/api/auth/signin" className="hover:underline hover:underline-offset-4 py-6">Увійти</Link>
+            <Link
+              href="/api/auth/signin"
+              className="hover:underline hover:underline-offset-4 py-6"
+            >
+              Увійти
+            </Link>
           )}
         </div>
       </nav>
