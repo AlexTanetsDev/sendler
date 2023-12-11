@@ -40,9 +40,7 @@ body {
 }
 
 .block-title {
-  font-size: 24px;
-  font-family: Roboto, sans-serif;
-  font-weight: 500;
+  @apply text-xl font-roboto font-medium;
 }
 
 .transparent-btn {
