@@ -18,7 +18,7 @@ export default async function ContactManagmentPage() {
 						Назва групи
 					</label>
 					<div className='flex items-center'>
-						<input type='text' name='groupName' autoFocus className='h-12 mr-8 grow input-style'></input>
+						<input type='text' name='groupName' className='h-12 mr-8 grow input-style'></input>
 						<button type="submit" className='transparent-btn'>Створити</button>
 					</div>
 				</form>
