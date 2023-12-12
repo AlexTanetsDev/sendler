@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -6,6 +7,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --lightGrayBorder: #737373;
 }
 /* 
 @media (prefers-color-scheme: dark) {
@@ -16,7 +18,18 @@
   }
 } */
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
 body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -25,3 +38,52 @@ body {
     )
     rgb(var(--background-start-rgb));
 }
+
+main {
+  flex: 1;
+}
+
+footer {
+  flex-shrink: 0;
+}
+
+.container {
+  width: 1440px;
+  padding: 72px 80px;
+}
+
+.page-title {
+  font-size: 40px;
+  font-family: Montserrat, sans-serif;
+  font-weight: 600;
+}
+
+.block-title {
+  @apply text-xl font-roboto font-medium;
+}
+
+.transparent-btn {
+  @apply px-14 py-4 text-lg text-center font-montserrat font-normal border border-lightGrayBorder rounded-2xl;
+}
+
+.grey-btn {
+  @apply py-4 text-lg text-center font-montserrat font-normal bg-greyButton border rounded-2xl;
+}
+
+.row-table-btn {
+  @apply px-2.5 py-0.5 text-lg text-center font-roboto font-normal border border-lightGrayBorder rounded-xl;
+}
+
+.input-style {
+  @apply border border-lightGrayBorder bg-transparent rounded-2xl;
+}
+
+/* .transparent_btn {
+  padding: 14px 58px;
+  font-size: 18px;
+  text-align: center;
+  font-family: Montserrat, sans-serif;
+  font-weight: 500;
+  border: 1px solid var(--lightGrayBorder);
+  border-radius: 18px;
+} */
