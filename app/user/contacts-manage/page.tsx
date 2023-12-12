@@ -4,8 +4,12 @@ import { options } from "@/app/api/auth/[...nextauth]/options";
 
 import UserSmsBalansInform from '@/components/UserSmsBalansInform';
 
+import { ISession } from "@/globaltypes/types";
+import GroupsList from "@/components/GroupsList";
+
 export default async function ContactManagmentPage() {
-	const session = await getServerSession(options);
+	const session: ISession | null = await getServerSession(options);
+	const userId = session?.user.user_id;
 
 	return (
 		<main className='container mx-auto'>
@@ -22,11 +26,7 @@ export default async function ContactManagmentPage() {
 						<button type="submit" className='transparent-btn'>Створити</button>
 					</div>
 				</form>
-				<div className='flex w-full px-6 pt-4 pb-3 text-xl font-roboto font-normal bg-headerTable rounded-2xl'>
-					<p className='mr-28'>Група</p>
-					<p className='mr-24'>Оновлення</p>
-					<p>Кількість</p>
-				</div>
+				<GroupsList id={userId} />
 			</div>
 		</main>
 	)

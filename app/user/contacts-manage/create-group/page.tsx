@@ -3,9 +3,10 @@ import { getServerSession } from "next-auth";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 
 import UserSmsBalansInform from '@/components/UserSmsBalansInform';
+import { ISession } from "@/globaltypes/types";
 
 export default async function CreateGroupPage() {
-	const session = await getServerSession(options);
+	const session: ISession | null = await getServerSession(options);
 
 	return (
 		<main className='container mx-auto'>

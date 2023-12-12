@@ -39,7 +39,9 @@ export default async function createGroup(groupName: string, clients: IClient[],
 			)
 		) {
 			return 2;
-		}
+		};
+
+		const numberMembers = clients.length;
 
 		const groupData: Promise<QueryResult<IGroupDatabase>> = insertNewGroup(groupName, userId);
 
