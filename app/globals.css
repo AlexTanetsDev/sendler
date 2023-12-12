@@ -18,7 +18,19 @@
   }
 } */
 
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+
 body {
+  height: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -28,9 +40,17 @@ body {
     rgb(var(--background-start-rgb));
 }
 
+main {
+  flex: 1;
+}
+
+footer {
+  flex-shrink: 0;
+}
+
 .container {
-  width: 1440px;
-  padding: 80px 72px;
+  width:  1296px;
+  padding: 0 15px;
 }
 
 .page-title {
