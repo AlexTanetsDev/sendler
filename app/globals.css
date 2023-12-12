@@ -25,7 +25,6 @@
   scroll-behavior: smooth;
 }
 
-
 body {
   height: 100%;
   margin: 0;
@@ -49,8 +48,8 @@ footer {
 }
 
 .container {
-  width:  1296px;
-  padding: 0 15px;
+  width: 1440px;
+  padding: 72px 80px;
 }
 
 .page-title {
@@ -69,6 +68,10 @@ footer {
 
 .grey-btn {
   @apply py-4 text-lg text-center font-montserrat font-normal bg-greyButton border rounded-2xl;
+}
+
+.row-table-btn {
+  @apply px-2.5 py-0.5 text-lg text-center font-roboto font-normal border border-lightGrayBorder rounded-xl;
 }
 
 .input-style {
