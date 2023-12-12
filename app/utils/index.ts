@@ -18,3 +18,4 @@ export { default as deleteClientData } from './deleteClientData';
 export { default as fetchAllClientId } from './fetchAllClientId';
 export { default as fetchUserClients } from './fetchUserClients';
 export { default as fetchAllClients } from './fetchAllClients';
+export { default as getUserGroups } from './getUserGroups';

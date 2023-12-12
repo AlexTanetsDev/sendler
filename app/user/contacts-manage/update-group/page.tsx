@@ -4,8 +4,10 @@ import { options } from "@/app/api/auth/[...nextauth]/options";
 
 import UserSmsBalansInform from '@/components/UserSmsBalansInform';
 
+import { ISession } from "@/globaltypes/types";
+
 export default async function UpdateGroupPage() {
-	const session = await getServerSession(options);
+	const session: ISession | null = await getServerSession(options);
 
 	return (
 		<main className='container mx-auto'>
