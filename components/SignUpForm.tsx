@@ -1,14 +1,22 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useForm, SubmitHandler } from 'react-hook-form';
 import {validationSchemaSignUp } from "@/models/users";
 import { FormInputsSignUp } from "@/globaltypes/types";
 import Link from "next/link";
+const authObject = [{
+  href: "/login" 
+},
+{ href: "/signup" }]
+ 
+
 
 
 const SingUpForm = () => {
+  const pathName = usePathname();
+  
   const {
     register,
     handleSubmit,
@@ -57,25 +65,26 @@ const SingUpForm = () => {
       });
       if (credentialsRes && !credentialsRes.error) {
         router.push("/");
-      } else {
-        console.log(credentialsRes);
-      }
+      } 
     }
   };
 
   return (
-    <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}  className="w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700 bg-gray-300 px-[26px]">
+    <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}  className="w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]">
        <h1 className=" font-roboto text-xl font-medium mb-8">
         Особистий кабінет
       </h1>
       <div className="flex items-center mb-8">
+        {}
         <Link
           href="/login"
-          className="font-roboto text-base font-normal mr-[92px] active:underline"
+          className="font-roboto text-base font-normal mr-[92px] hover:underline hover:underline-offset-4"
         >
           Увійти
         </Link>
-        <Link href="/signup" className="font-roboto text-base font-normal ">
+        <Link href="/signup" className={`font-roboto text-base font-normal hover:underline hover:underline-offset-4 ${
+    pathName.startsWith("/signup") ? "underline underline-offset-4" : ""
+  }`}>
           Реєстрація
         </Link>
       </div>
@@ -184,7 +193,7 @@ const SingUpForm = () => {
 
 <button
         type="submit"
-        className="bg-[#ADA3A3] mt-8 flex items-center justify-center h-[63px] w-full  py-[18px] focus:outline-none hover:bg-blue-700 hover:text-white rounded-[18px] text-lg"
+        className=" mt-8 bg-buttonForm flex items-center justify-center h-[63px] w-full  py-[18px] focus:outline-none hover:bg-blue-700 hover:text-white rounded-[18px] text-lg"
       >
         Реєстрація
       </button>

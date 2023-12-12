@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
@@ -9,6 +9,7 @@ import { schemaLogin } from "@/models/users";
 
 const LoginForm = () => {
   const router = useRouter();
+  const pathName = usePathname();
 
   const {
     register,
@@ -52,7 +53,7 @@ const LoginForm = () => {
     <form
       autoComplete="off"
       onSubmit={handleSubmit(onSubmit)}
-      className="w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700 bg-gray-300 px-[26px]"
+      className="w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700 px-[26px] bg-formBg"
     >
       <h1 className=" font-roboto text-xl font-medium mb-8">
         Особистий кабінет
@@ -60,11 +61,14 @@ const LoginForm = () => {
       <div className="flex items-center mb-8">
         <Link
           href="/login"
-          className="font-roboto text-base font-normal mr-[92px] active:underline"
+          className={`font-roboto text-base font-normal hover:underline hover:underline-offset-4 mr-[92px] ${
+            pathName.startsWith("/login") ? "underline underline-offset-4" : ""
+          }`}
+      
         >
           Увійти
         </Link>
-        <Link href="/signup" className="font-roboto text-base font-normal ">
+        <Link href="/signup" className="font-roboto text-base font-normal hover:underline hover:underline-offset-4 ">
           Реєстрація
         </Link>
       </div>
