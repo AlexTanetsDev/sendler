@@ -8,6 +8,7 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
   --lightGrayBorder: #737373;
+  --formBg: #d9d9d9;
 }
 /* 
 @media (prefers-color-scheme: dark) {
@@ -49,7 +50,7 @@ footer {
 
 .container {
   width: 1440px;
-  padding: 72px 80px;
+  padding: 60px 72px 80px 72px;
 }
 
 .page-title {
@@ -58,24 +59,44 @@ footer {
   font-weight: 600;
 }
 
-.block-title {
-  @apply text-xl font-roboto font-medium;
+.input-box {
+  width: 526px;
+  margin: 0 auto;
+  padding: 26px;
+  background-color: var(--formBg);
+  border-radius: 18px;
 }
 
-.transparent-btn {
+.content-block {
+  @apply w-full px-6 py-16 text-lg font-montserrat font-normal rounded-2xl bg-formBg;
+}
+
+.content-block__title {
+  @apply text-2xl font-roboto font-medium;
+}
+
+.action__btn {
   @apply px-14 py-4 text-lg text-center font-montserrat font-normal border border-lightGrayBorder rounded-2xl;
 }
 
-.grey-btn {
+.submit__btn {
   @apply py-4 text-lg text-center font-montserrat font-normal bg-greyButton border rounded-2xl;
 }
 
-.row-table-btn {
+.row-table__btn {
   @apply px-2.5 py-0.5 text-lg text-center font-roboto font-normal border border-lightGrayBorder rounded-xl;
 }
 
-.input-style {
+.input {
   @apply border border-lightGrayBorder bg-transparent rounded-2xl;
+}
+
+.input__title {
+  @apply text-2xl font-roboto font-normal;
+}
+
+.input__lable {
+  @apply text-xs font-roboto font-medium;
 }
 
 /* .transparent_btn {
