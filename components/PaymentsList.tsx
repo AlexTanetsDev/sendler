@@ -8,22 +8,22 @@ type Props = {
 	id: number | undefined;
 }
 
-export default async function GroupsList({ id }: Props) {
-	const userGroups: IGroupDatabase[] | undefined = await getUserGroups(id);
+export default async function PaymentsList() {
+	// const userGroups: IGroupDatabase[] | undefined = await getUserGroups(id);
 
-	if (userGroups === undefined) {
-		console.log('Unable to fetch userGroups!');
-		redirect('/')
-	};
+	// if (userGroups === undefined) {
+	// 	console.log('Unable to fetch userGroups!');
+	// 	redirect('/')
+	// };
 
 	return (
 		<>
 			<div className='flex w-full px-6 pt-4 pb-3 text-xl font-roboto font-normal bg-headerTable rounded-2xl'>
-				<p className='mr-28'>Група</p>
-				<p className='mr-24'>Оновлення</p>
+				<p className='mr-28'>Дата поповнення</p>
+				<p className='mr-24'>Сума, грн</p>
 				<p>Кількість</p>
 			</div>
-			<ul>
+			{/* <ul>
 				{userGroups.map((userGroup: IGroupDatabase) => (
 					<li key={userGroup.user_id}>
 						<div className="flex py-3.5 text-xl font-montserrat font-normal">
@@ -37,7 +37,7 @@ export default async function GroupsList({ id }: Props) {
 						<div className="border-b border-black"></div>
 					</li>
 				))}
-			</ul>
+			</ul> */}
 		</>
 	)
 }
