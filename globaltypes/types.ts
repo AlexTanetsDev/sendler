@@ -135,3 +135,12 @@ export interface ISession {
 		jti: string;
 	}
 }
+
+export interface FormInputFeedback {
+	firstName: string;
+	secondName: string;
+	phone: number;
+	email: string;
+	desc: string;
+	
+};

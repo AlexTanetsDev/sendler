@@ -53,9 +53,9 @@ const LoginForm = () => {
     <form
       autoComplete="off"
       onSubmit={handleSubmit(onSubmit)}
-      className="w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700 px-[26px] bg-formBg"
+      className=" h-full w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700 px-[26px] bg-formBg"
     >
-      <h1 className=" font-roboto text-xl font-medium mb-8">
+      <h1 className="form-title mb-8">
         Особистий кабінет
       </h1>
       <div className="flex items-center mb-8">
