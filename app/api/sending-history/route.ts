@@ -1,85 +1,72 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/db";
+
 import HttpError from "@/helpers/HttpError";
+import {
+  getUserHistory,
+  createUserHistory,
+} from "@/app/api/controllers/sending-history";
+
 import { IErrorResponse } from "@/globaltypes/types";
-import { IHistoryProps } from "@/globaltypes/historyTypes";
+import { IHistoryProps, IHistoryResponce } from "@/globaltypes/historyTypes";
 
 export async function GET(
   req: NextRequest
 ): Promise<NextResponse<IErrorResponse> | NextResponse<IHistoryProps>> {
   try {
-    const searchParams = req.nextUrl.searchParams;
+    const { searchParams }: URL = new URL(req.url);
+    const userId = Number(searchParams.get("userId"));
     const start_date = searchParams.get("start_date");
     const end_date = searchParams.get("end_date");
-    const user_id = searchParams.get("userId");
 
-    if (!user_id) {
+    const startDate = start_date ? new Date(start_date) : undefined;
+    const endDate = end_date ? new Date(end_date) : undefined;
+
+    if (!userId) {
       return HttpError(400, `ID required for getting user's history`);
     }
 
-    if (!start_date || !end_date) {
-      const query = `
-            SELECT sh.history_id, sh.sending_group_date, sg.group_name
-            FROM send_groups sg
-            INNER JOIN sending_history sh ON sg.group_id = sh.group_id
-            INNER JOIN users u ON sg.user_id = u.user_id
-            WHERE u.user_id = $1
-        `;
-
-      const result = await db.query(query, [user_id]);
-      const history = result.rows;
-
-      return NextResponse.json({ history });
-    }
-
-    const query = `
-            SELECT sh.history_id, sh.sending_group_date, sg.group_name
-            FROM send_groups sg
-            INNER JOIN sending_history sh ON sg.group_id = sh.group_id
-            INNER JOIN users u ON sg.user_id = u.user_id
-            WHERE u.user_id = $1 
-            AND sh.sending_group_date >= $2 
-            AND sh.sending_group_date <= $3
-        `;
-
-    const result = await db.query(query, [user_id, start_date, end_date]);
+    const result: null | IHistoryResponce[] = await getUserHistory(userId, {
+      startDate,
+      endDate,
+    });
 
     if (!result) {
-      return HttpError(404, `Failed to get all user's history by userID`);
+      return HttpError(
+        400,
+        `Failed to get user's history by userID = ${userId}`
+      );
     }
-
-    const history = result.rows;
-
-    return NextResponse.json({ history });
-  } catch (error) {
-    return NextResponse.json({ message: "Server error" }, { status: 500 });
+    return NextResponse.json({ history: result });
+  } catch (error: any) {
+    return NextResponse.json(
+      { message: "Server error", error: error.message },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(
   req: NextRequest
 ): Promise<NextResponse<IErrorResponse> | NextResponse<IHistoryProps>> {
-  const formData = await req.formData();
-  const group_id = formData.get("groupId");
-
   try {
-    const query = `
-        INSERT INTO sending_history (group_id) VALUES ($1) RETURNING *;
-      `;
+    const formData = await req.formData();
+    const groupId = Number(formData.get("groupId"));
 
-    const result = await db.query(query, [group_id]);
+    const result: null | IHistoryResponce = await createUserHistory(groupId);
 
     if (!result) {
-      return HttpError(404, `Failed to add data to user's history`);
+      return HttpError(400, `Failed to add data to user's history`);
     }
 
-    const addedHistory = result.rows;
-
     return NextResponse.json({
-      addedHistory,
+      addedHistory: result,
       message: "Data successfully added to history",
     });
-  } catch (error) {
-    return NextResponse.json({ message: "Server error" }, { status: 500 });
+  } catch (error: any) {
+    return NextResponse.json(
+      { message: "Server error", error: error.message },
+      { status: 500 }
+    );
   }
 }
