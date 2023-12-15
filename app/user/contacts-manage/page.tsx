@@ -8,6 +8,9 @@ import GroupsList from "@/components/GroupsList";
 
 import { ISession } from "@/globaltypes/types";
 
+import { ISession } from "@/globaltypes/types";
+import GroupsList from "@/components/GroupsList";
+
 export default async function ContactManagmentPage() {
 	const session: ISession | null = await getServerSession(options);
 	const userId = session?.user.user_id;
@@ -16,6 +19,7 @@ export default async function ContactManagmentPage() {
 		console.log("Unable fetch userId!")
 		redirect('/');
 	}
+
 
 	return (
 		<main className='container mx-auto'>

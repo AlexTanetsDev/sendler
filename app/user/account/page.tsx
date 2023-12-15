@@ -1,11 +1,12 @@
 import { getServerSession } from "next-auth";
 import Image from "next/image";
-
+import { ISession } from "@/globaltypes/types";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 
 import UserSmsBalansInform from '@/components/UserSmsBalansInform';
 import PaymentsList from "@/components/PaymentsList";
-import { ISession } from "@/globaltypes/types";
+
+
 
 export default async function UserAccountPage() {
 	const session: ISession | null = await getServerSession(options);
