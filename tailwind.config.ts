@@ -18,7 +18,8 @@ const config: Config = {
 				'lightGrayBorder': '#737373',
 				'darkGreyColor': '#B6B5B5',
 				'headerTable': '#BEBDBD',
-				'greyButton': '#A39C9C'
+				'greyButton': '#A39C9C',
+				'bg-footer': '#0E2A49'
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

@@ -54,6 +54,10 @@ export interface IClient extends ITel {
 	parameter_2?: string;
 }
 
+export interface IClientId {
+	client_id: number;
+}
+
 export interface IClientDatabase extends IClientId, IClient, IUserId { }
 
 export interface IGroup extends IGroupId, IGroupName, IUserId { }
@@ -131,3 +135,13 @@ export interface ISession {
 		jti: string;
 	}
 }
+
+export interface FormInputFeedback {
+	firstName: string;
+	secondName: string;
+	phone: number;
+	email: string;
+	desc: string;
+	
+};
+

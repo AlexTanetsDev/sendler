@@ -6,12 +6,6 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import {validationSchemaSignUp } from "@/models/users";
 import { FormInputsSignUp } from "@/globaltypes/types";
 import Link from "next/link";
-const authObject = [{
-  href: "/login" 
-},
-{ href: "/signup" }]
- 
-
 
 
 const SingUpForm = () => {
@@ -70,8 +64,8 @@ const SingUpForm = () => {
   };
 
   return (
-    <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}  className="w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]">
-       <h1 className=" font-roboto text-xl font-medium mb-8">
+    <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}  className="h-full w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]">
+       <h1 className=" form-title mb-8">
         Особистий кабінет
       </h1>
       <div className="flex items-center mb-8">

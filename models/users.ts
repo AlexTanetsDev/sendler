@@ -66,3 +66,19 @@ export const schemaLogin = Joi.object({
   login: Joi.string().required().label("Login"),
   password: Joi.string().required().label("Password").min(8).max(20),
 });
+
+export const validationSchemaFeedback = Joi.object({
+  firstName: Joi.string().required().label("first name").min(2),
+  secondName: Joi.string().required().label("second name").min(2),
+
+  phone: Joi.string()
+  .pattern(/^\+\d{10,}$/)
+  .required()
+  .messages({
+      'string.pattern.base': 'Phone number must start with "+" and have at least 10 digits',
+  }),
+  email: Joi.string()
+    .email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+    .required(),
+  desc: Joi.string().required().label("desc"),
+});
