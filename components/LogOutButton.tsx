@@ -1,18 +1,29 @@
-'use client'
-import { signOut, useSession } from 'next-auth/react'
-import React from 'react'
+"use client";
+import { signOut } from "next-auth/react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import React from "react";
 
 const LogOutButton = () => {
-    const { data: session } = useSession();
+  const router = useRouter();
   return (
     <button
-                onClick={() => signOut()}
-                className="text-gray-800 bg-gray-200 font-medium rounded-lg text-sm px-5 py-2.5 text-center inline-flex items-center"
-                type="button"
-              >
-                {session?.user?.user_name} - Logout
-              </button>
-  )
-}
+      onClick={() => {
+        return signOut({ callbackUrl: "/" });
+      }}
+      className=" flex justify-center items-center hover:underline hover:underline-offset-4 py-4 ml-11"
+      type="button"
+    >
+      Вийти
+      <Image
+        className="ml-1"
+        src="/svg/login.svg"
+        alt="icon login logout"
+        width={30}
+        height={30}
+      />
+    </button>
+  );
+};
 
-export default LogOutButton
+export default LogOutButton;

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import db from "@/db";
 import HttpError from "@/helpers/HttpError";
-import { IErrorResponse } from "@/globalTypes/types";
+import { IErrorResponse } from "@/globaltypes/types";
 import { IHistoryProps } from "@/globaltypes/historyTypes";
 
 export async function DELETE(
@@ -32,7 +32,7 @@ export async function DELETE(
     }
     const deletedHistory = result.rows;
 
-    console.log("admin/history")
+    console.log("admin/history");
 
     return NextResponse.json({
       deletedHistory,
