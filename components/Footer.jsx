@@ -1,6 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import Feedback from "./Feedback";
 
 const Footer = () => {
   return (
@@ -47,17 +47,13 @@ const Footer = () => {
               <p>Мобільний маркетинг, Масові SMS розсилки</p>
             </li>
             <li className="flex flex-col gap-[16px] justify-center">
-            <p>Зворотній зв’язок</p>
-            <button className=" bg-greyButton py-[18px] w-[219px] rounded-[18px] focus:outline-none hover:bg-blue-700 hover:text-white text-lg">Зв’язатись</button>
+              <Feedback />
             </li>
-            
           </ul>
-
         </li>
         <li className="flex gap-[16px] justify-center mt-20">
-            <p>© 2010, BSender.com.ua Всі права захищені</p>
-           
-            </li>
+          <p>© 2010, BSender.com.ua Всі права захищені</p>
+        </li>
       </ul>
     </footer>
   );

@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import Providers from "@/components/providers/Providers";
+import ToastProvider from "@/components/providers/TostifyProvider";
 
 export const metadata: Metadata = {
 	title: "BSender",
@@ -19,9 +20,12 @@ export default function RootLayout({
 		<html lang="en">
 			<body className="h-screen flex flex-col items-center">
 				<Providers>
+					<ToastProvider>
 					<Header />
 					{children}
 					<Footer />
+					</ToastProvider>
+					
 				</Providers>
 			</body>
 		</html>
