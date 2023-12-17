@@ -17,7 +17,7 @@ const Feedback = () => {
   };
   return (
     <>
-      <p>Зворотній зв’язок</p>
+      <p className=" text-base font-medium">Зворотній зв’язок</p>
       <FeedbackButton openModal={openModal} />
       <Modal isOpen={isModalOpen} onClose={closeModal} />
     </>

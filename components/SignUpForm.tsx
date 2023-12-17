@@ -2,15 +2,14 @@
 
 import { usePathname, useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import { useForm, SubmitHandler } from 'react-hook-form';
-import {validationSchemaSignUp } from "@/models/forms";
+import { useForm, SubmitHandler } from "react-hook-form";
+import { validationSchemaSignUp } from "@/models/forms";
 import { FormInputsSignUp } from "@/globaltypes/types";
 import Link from "next/link";
 
-
 const SingUpForm = () => {
   const pathName = usePathname();
-  
+
   const {
     register,
     handleSubmit,
@@ -23,14 +22,16 @@ const SingUpForm = () => {
       } catch (error: any) {
         const validationErrors: Record<string, { message: string }> = {};
         if (error.details) {
-          error.details.forEach((detail: { context: { key: string | number; }; message: any; }) => {
-            if (detail.context && detail.context.key) {
-              validationErrors[detail.context.key] = {
-                message: detail.message,
-              };
+          error.details.forEach(
+            (detail: { context: { key: string | number }; message: any }) => {
+              if (detail.context && detail.context.key) {
+                validationErrors[detail.context.key] = {
+                  message: detail.message,
+                };
+              }
             }
-        });
-      }
+          );
+        }
         return {
           values: {},
           errors: validationErrors,
@@ -60,15 +61,17 @@ const SingUpForm = () => {
       });
       if (credentialsRes && !credentialsRes.error) {
         router.push("/");
-      } 
+      }
     }
   };
 
   return (
-    <form autoComplete="off" onSubmit={handleSubmit(onSubmit)}  className="h-full w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]">
-       <h1 className=" form-title mb-8">
-        Особистий кабінет
-      </h1>
+    <form
+      autoComplete="off"
+      onSubmit={handleSubmit(onSubmit)}
+      className="h-full w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]"
+    >
+      <h1 className=" form-title mb-8">Особистий кабінет</h1>
       <div className="flex items-center mb-8">
         {}
         <Link
@@ -77,14 +80,17 @@ const SingUpForm = () => {
         >
           Увійти
         </Link>
-        <Link href="/signup" className={`font-roboto text-base font-normal hover:underline hover:underline-offset-4 ${
-    pathName.startsWith("/signup") ? "underline underline-offset-4" : ""
-  }`}>
+        <Link
+          href="/signup"
+          className={`font-roboto text-base font-normal hover:underline hover:underline-offset-4 ${
+            pathName.startsWith("/signup") ? "underline underline-offset-4" : ""
+          }`}
+        >
           Реєстрація
         </Link>
       </div>
-     <div className="text-left w-full">
-     <label
+      <div className="text-left w-full">
+        <label
           htmlFor="name"
           className="font-roboto text-base font-medium mb-2 block"
         >
@@ -101,7 +107,7 @@ const SingUpForm = () => {
           <span className="text-red-500 block">{errors.name.message}</span>
         )}
 
-<label
+        <label
           htmlFor="phone"
           className="font-roboto text-base font-medium mb-2  mt-8 block"
         >
@@ -118,7 +124,7 @@ const SingUpForm = () => {
           <span className="text-red-500 block">{errors.phone.message}</span>
         )}
 
-<label
+        <label
           htmlFor="email"
           className="font-roboto text-base font-medium mb-2  mt-8 block"
         >
@@ -168,11 +174,11 @@ const SingUpForm = () => {
         {errors.password && (
           <span className="text-red-500 ">{errors.password.message}</span>
         )}
-               <label
+        <label
           htmlFor="repeatPassword"
           className="font-roboto text-base font-medium mb-2  mt-8 block"
         >
-          Підтвердіть пароль 
+          Підтвердіть пароль
         </label>
         <input
           id="repeatPassword"
@@ -186,13 +192,13 @@ const SingUpForm = () => {
         )}
       </div>
 
-<button
+      <button
         type="submit"
         className=" mt-8 bg-buttonForm flex items-center justify-center h-[63px] w-full  py-[18px] focus:outline-none hover:bg-blue-700 hover:text-white rounded-[18px] text-lg"
       >
         Реєстрація
       </button>
-  </form>
+    </form>
   );
 };
 

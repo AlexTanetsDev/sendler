@@ -1,8 +1,11 @@
+
 import { redirect } from "next/navigation";
 
 import { getUserGroups } from "@/app/utils";
 
 import { IGroupDatabase } from "@/globaltypes/types";
+
+
 
 type Props = {
 	id: number | undefined;
@@ -41,3 +44,4 @@ export default async function GroupsList({ id }: Props) {
 		</>
 	)
 }
+

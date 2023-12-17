@@ -1,4 +1,5 @@
 -- Active: 1701100937268@@194.28.86.87@5432@bsender
+
 DROP TABLE recipients_status;
 
 DROP TABLE transactions_history;
@@ -21,7 +22,7 @@ CREATE TABLE
         user_login TEXT UNIQUE NOT NULL,
         email TEXT NOT NULL,
         user_name TEXT NOT NULL,
-         user_role text NOT NULL DEFAULT 'user'::character varying,
+        user_role text NOT NULL DEFAULT 'user':: character varying,
         user_active BOOLEAN DEFAULT true,
         tel BIGINT NOT NULL,
         user_password TEXT NOT NULL,
@@ -49,7 +50,9 @@ CREATE TABLE
         group_id SERIAL,
         group_name TEXT NOT NULL,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
-        PRIMARY KEY (group_id)
+        PRIMARY KEY (group_id),
+        number_of_group_memebers INT,
+        group_create_date TIMESTAMP DEFAULT NOW():: timestamp
     );
 
 CREATE UNIQUE INDEX send_groups_group_id_idx ON send_groups(group_id);
@@ -69,7 +72,11 @@ CREATE TABLE
         PRIMARY KEY (history_id)
     );
 
-CREATE TYPE status_type AS ENUM ('pending', 'fullfield', 'rejected');
+CREATE TYPE status_type AS ENUM (
+    'pending',
+    'fullfield',
+    'rejected'
+);
 
 CREATE UNIQUE INDEX clients_client_id_idx ON clients(client_id);
 
@@ -103,17 +110,26 @@ CREATE TABLE
         PRIMARY KEY (sms_id)
     );
 
+SELECT
+    clients.client_id,
+    clients.tel
+FROM clients
+    JOIN groups_members ON groups_members.client_id = clients.client_id AND groups_members.group_id = 90;
 
-    SELECT clients.client_id, clients.tel FROM clients JOIN groups_members ON groups_members.client_id = clients.client_id AND groups_members.group_id = 90;
+INSERT INTO
+    sms_identificators (
+        history_id,
+        client_id,
+        identificator
+    )
+VALUES (5, 174, '12345'), (5, 174, '123456') RETURNING *
 
-    INSERT INTO sms_identificators (history_id, client_id, identificator) VALUES (5, 174, '12345'),(5, 174, '123456')  RETURNING *
-
-    
-update recipients_status set 
-    recipient_status = 
-    case client_id
-       when 174 then 'rejected' when 175 then 'rejected' when 176 then 'rejected'
-       else recipient_status
+update recipients_status
+set
+    recipient_status = case client_id
+        when 174 then 'rejected'
+        when 175 then 'rejected'
+        when 176 then 'rejected'
+        else recipient_status
     end
 where history_id = 22;
-

@@ -1,18 +1,16 @@
 "use client";
 
-import { toast } from 'react-toastify';
+import { toast } from "react-toastify";
 import { usePathname, useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { validationSchemaFeedback } from "@/models/forms";
 import { FormInputFeedback } from "@/globaltypes/types";
 
-
-
 interface Props {
   onClose: () => void;
 }
 
-const FormFeedback = ({onClose}:Props) => {
+const FormFeedback = ({ onClose }: Props) => {
   const pathName = usePathname();
 
   const {
@@ -29,15 +27,17 @@ const FormFeedback = ({onClose}:Props) => {
       } catch (error: any) {
         const validationErrors: Record<string, { message: string }> = {};
         if (error.details) {
-          error.details.forEach((detail: { context: { key: string | number; }; message: any; }) => {
-            if (detail.context && detail.context.key) {
-              validationErrors[detail.context.key] = {
-                message: detail.message,
-              };
+          error.details.forEach(
+            (detail: { context: { key: string | number }; message: any }) => {
+              if (detail.context && detail.context.key) {
+                validationErrors[detail.context.key] = {
+                  message: detail.message,
+                };
+              }
             }
-          });
+          );
         }
-    
+
         return {
           values: {},
           errors: validationErrors,
@@ -47,9 +47,11 @@ const FormFeedback = ({onClose}:Props) => {
   });
 
   const onSubmit: SubmitHandler<FormInputFeedback> = async (data) => {
-    console.log("dat=",data);
+    console.log("dat=", data);
     onClose();
-    toast.success('Your submission has been received. We will respond to it as soon as possible.');
+    toast.success(
+      "Your submission has been received. We will respond to it as soon as possible."
+    );
   };
 
   return (
@@ -58,9 +60,7 @@ const FormFeedback = ({onClose}:Props) => {
       onSubmit={handleSubmit(onSubmit)}
       className="w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]"
     >
-      <h1 className="form-title mb-8">
-        Зворотній зв’язок
-      </h1>
+      <h1 className="form-title mb-8">Зворотній зв’язок</h1>
       <div className="text-left w-full">
         <label
           htmlFor="firstName"

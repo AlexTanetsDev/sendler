@@ -1,19 +1,21 @@
 "use client";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
-import LogOutButton from "./LogOutButton";
+import LogOutButton from "./buttons/LogOutButton";
 import { privateNavigation, publicNavigation } from "@/data/data";
-import Image from "next/image";
-import LoginButton from "./LoginButon";
+import LoginButton from "./buttons/LoginButon";
 
 const Nav = () => {
   const { data: session, status } = useSession();
   return (
     <>
-      <nav className="flex justify-between items-center container py-6">
+      <nav className="flex justify-between items-center container mx-auto text-white font-montserrat">
         <div>
-          <Link href={"/"}>
-            <Image src="/logo.png" alt="logo" width={133} height={99} />
+          <Link href={"/"} className="flex flex-col items-center">
+            <span className=" text-[26px] font-medium text-white ">
+              BSender
+            </span>
+            <span className=" text-xs text-white">Масові смс розсилки</span>
           </Link>
         </div>
         <ul className="flex justify-center items-center gap-10">
@@ -38,11 +40,7 @@ const Nav = () => {
                   </Link>
                 </li>
               ))}
-          {status === "authenticated" ? (
-            <LogOutButton />
-          ) : (
-            <LoginButton/>
-          )}
+          {status === "authenticated" ? <LogOutButton /> : <LoginButton />}
         </ul>
       </nav>
     </>
