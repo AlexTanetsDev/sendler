@@ -5,7 +5,7 @@ import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FormInputsLogin } from "@/globaltypes/types";
-import { schemaLogin } from "@/models/users";
+import { schemaLogin } from "@/models/forms";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -20,16 +20,17 @@ const LoginForm = () => {
       try {
         await schemaLogin.validateAsync(data, { abortEarly: false });
         return { values: data, errors: {} };
-      } catch (error) {
+      } catch (error: any) {
         const validationErrors: Record<string, { message: string }> = {};
-        error?.details.forEach((detail: any) => {
-          if (detail.context && detail.context.key) {
-            validationErrors[detail.context.key] = {
-              message: detail.message,
-            };
+        if (error.details) {
+          error.details.forEach((detail: { context: { key: string | number; }; message: any; }) => {
+            if (detail.context && detail.context.key) {
+              validationErrors[detail.context.key] = {
+                message: detail.message,
+              };
           }
         });
-
+      }
         return {
           values: {},
           errors: validationErrors,
