@@ -20,9 +20,9 @@ const FormFeedback = () => {
           abortEarly: false,
         });
         return { values: data, errors: {} };
-      } catch (error) {
+      } catch (error: any) {
         const validationErrors: Record<string, { message: string }> = {};
-        error.details.forEach((detail) => {
+        error.details.forEach((detail: any) => {
           if (detail.context && detail.context.key) {
             validationErrors[detail.context.key] = {
               message: detail.message,
@@ -46,9 +46,7 @@ const FormFeedback = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]"
     >
-      <h1 className="form-title mb-8">
-        Зворотній зв’язок
-      </h1>
+      <h1 className="form-title mb-8">Зворотній зв’язок</h1>
       <div className="text-left w-full">
         <label
           htmlFor="firstName"

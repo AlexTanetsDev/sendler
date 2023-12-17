@@ -20,7 +20,7 @@ const LoginForm = () => {
       try {
         await schemaLogin.validateAsync(data, { abortEarly: false });
         return { values: data, errors: {} };
-      } catch (error) {
+      } catch (error: any) {
         const validationErrors: Record<string, { message: string }> = {};
         error?.details.forEach((detail: any) => {
           if (detail.context && detail.context.key) {
@@ -55,20 +55,20 @@ const LoginForm = () => {
       onSubmit={handleSubmit(onSubmit)}
       className=" h-full w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700 px-[26px] bg-formBg"
     >
-      <h1 className="form-title mb-8">
-        Особистий кабінет
-      </h1>
+      <h1 className="form-title mb-8">Особистий кабінет</h1>
       <div className="flex items-center mb-8">
         <Link
           href="/login"
           className={`font-roboto text-base font-normal hover:underline hover:underline-offset-4 mr-[92px] ${
             pathName.startsWith("/login") ? "underline underline-offset-4" : ""
           }`}
-      
         >
           Увійти
         </Link>
-        <Link href="/signup" className="font-roboto text-base font-normal hover:underline hover:underline-offset-4 ">
+        <Link
+          href="/signup"
+          className="font-roboto text-base font-normal hover:underline hover:underline-offset-4 "
+        >
           Реєстрація
         </Link>
       </div>
