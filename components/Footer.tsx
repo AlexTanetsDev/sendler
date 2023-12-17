@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
+import Feedback from "./Feedback";
 
 const Footer = () => {
   return (
@@ -50,10 +51,7 @@ const Footer = () => {
             </p>
           </li>
           <li className="flex flex-col gap-[14px] justify-center">
-            <p className=" text-base">Зворотній зв’язок</p>
-            <button className=" bg-greenBtn py-[10px] w-[144px] rounded-[18px] focus:outline-none hover:bg-blue-700 hover:text-white text-base">
-              Зв’язатись
-            </button>
+            <Feedback />
           </li>
         </ul>
 

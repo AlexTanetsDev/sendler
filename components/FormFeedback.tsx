@@ -1,12 +1,16 @@
 "use client";
 
+import { toast } from "react-toastify";
 import { usePathname, useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { validationSchemaFeedback } from "@/models/users";
+import { validationSchemaFeedback } from "@/models/forms";
 import { FormInputFeedback } from "@/globaltypes/types";
-import Link from "next/link";
 
-const FormFeedback = () => {
+interface Props {
+  onClose: () => void;
+}
+
+const FormFeedback = ({ onClose }: Props) => {
   const pathName = usePathname();
 
   const {
@@ -22,13 +26,17 @@ const FormFeedback = () => {
         return { values: data, errors: {} };
       } catch (error: any) {
         const validationErrors: Record<string, { message: string }> = {};
-        error.details.forEach((detail: any) => {
-          if (detail.context && detail.context.key) {
-            validationErrors[detail.context.key] = {
-              message: detail.message,
-            };
-          }
-        });
+        if (error.details) {
+          error.details.forEach(
+            (detail: { context: { key: string | number }; message: any }) => {
+              if (detail.context && detail.context.key) {
+                validationErrors[detail.context.key] = {
+                  message: detail.message,
+                };
+              }
+            }
+          );
+        }
 
         return {
           values: {},
@@ -38,7 +46,13 @@ const FormFeedback = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<FormInputFeedback> = async (data) => {};
+  const onSubmit: SubmitHandler<FormInputFeedback> = async (data) => {
+    console.log("dat=", data);
+    onClose();
+    toast.success(
+      "Your submission has been received. We will respond to it as soon as possible."
+    );
+  };
 
   return (
     <form
@@ -58,7 +72,7 @@ const FormFeedback = () => {
           id="firstName"
           type="text"
           {...register("firstName")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          className=" input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
           required
         />
         {errors.firstName && (
@@ -67,7 +81,7 @@ const FormFeedback = () => {
 
         <label
           htmlFor="secondName"
-          className="font-roboto text-base font-medium mb-2 block"
+          className="font-roboto text-base font-medium mb-2  mt-8 block"
         >
           Призвище
         </label>
@@ -75,7 +89,7 @@ const FormFeedback = () => {
           id="secondName"
           type="text"
           {...register("secondName")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
           required
         />
         {errors.secondName && (
@@ -94,7 +108,7 @@ const FormFeedback = () => {
           id="phone"
           type="text"
           {...register("phone")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
           required
         />
         {errors.phone && (
@@ -111,7 +125,7 @@ const FormFeedback = () => {
           id="email"
           type="text"
           {...register("email")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
           required
         />
         {errors.email && (
@@ -127,7 +141,7 @@ const FormFeedback = () => {
         <textarea
           id="desc"
           {...register("desc")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input h-[150px] resize-none"
           required
         />
         {errors.desc && (

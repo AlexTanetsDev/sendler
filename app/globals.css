@@ -76,6 +76,23 @@ footer {
   border-radius: 18px;
 }
 
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal {
+  color: black;
+  border-radius: 8px;
+}
+
 .content-block {
   @apply w-full px-6 py-16 text-lg font-montserrat font-normal rounded-2xl bg-formBg;
 }
@@ -97,7 +114,7 @@ footer {
 }
 
 .input {
-  @apply border border-lightGrayBorder bg-transparent rounded-2xl;
+  @apply border border-lightGrayBorder bg-transparent rounded-[18px];
 }
 
 .input__title {

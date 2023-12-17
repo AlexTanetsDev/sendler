@@ -3,7 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import { useForm, SubmitHandler } from "react-hook-form";
-import { validationSchemaSignUp } from "@/models/users";
+import { validationSchemaSignUp } from "@/models/forms";
 import { FormInputsSignUp } from "@/globaltypes/types";
 import Link from "next/link";
 
@@ -21,14 +21,17 @@ const SingUpForm = () => {
         return { values: data, errors: {} };
       } catch (error: any) {
         const validationErrors: Record<string, { message: string }> = {};
-        error.details.forEach((detail: any) => {
-          if (detail.context && detail.context.key) {
-            validationErrors[detail.context.key] = {
-              message: detail.message,
-            };
-          }
-        });
-
+        if (error.details) {
+          error.details.forEach(
+            (detail: { context: { key: string | number }; message: any }) => {
+              if (detail.context && detail.context.key) {
+                validationErrors[detail.context.key] = {
+                  message: detail.message,
+                };
+              }
+            }
+          );
+        }
         return {
           values: {},
           errors: validationErrors,

@@ -22,9 +22,9 @@ function Swiper() {
         <div className="flex gap-3  absolute right-[15px] top-[-50px]">
           <button
             type="button"
-            className={` cursor-pointer ${isActive && "opacity-[0.3]"} `}
+            className={` cursor-pointer ${!isActive && "opacity-[0.3]"} `}
             onClick={hanleClick}
-            disabled={isActive}
+            disabled={!isActive}
           >
             <Image
               src="/svg/carbon_next-outline.svg"
@@ -36,9 +36,9 @@ function Swiper() {
 
           <button
             type="button"
-            className={` cursor-pointer ${!isActive && "opacity-[0.3]"} `}
+            className={` cursor-pointer ${isActive && "opacity-[0.3]"} `}
             onClick={hanleClick}
-            disabled={!isActive}
+            disabled={isActive}
           >
             <Image
               src="/svg/carbon_next-outline-1.svg"
