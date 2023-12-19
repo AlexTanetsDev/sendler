@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { FormFeedback } from '../FormFeedback';
+import { FormFeedback } from '../forms/FormFeedback';
 import Image from 'next/image';
 
 interface ModalProps {

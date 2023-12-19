@@ -1,4 +1,4 @@
-import { SingUpForm } from "@/components/SignUpForm";
+import { SingUpForm } from "@/components/forms/SignUpForm";
 import React from "react";
 
 

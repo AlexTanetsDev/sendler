@@ -151,7 +151,7 @@ const FormFeedback = ({ onClose }: Props) => {
 
       <button
         type="submit"
-        className="w-[209px] mt-8 bg-buttonForm flex items-center justify-center h-[63px]  py-[18px] focus:outline-none hover:bg-blue-700 hover:text-white rounded-[18px] text-lg"
+        className="w-[198px] mt-8 bg-greenBtn flex items-center justify-center   py-[18px] focus:outline-none hover:bg-green-700 hover:text-white rounded-[18px] text-lg transition-colors"
       >
         Відправити
       </button>

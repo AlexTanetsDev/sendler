@@ -1,4 +1,4 @@
-import { FormFeedback } from "@/components/FormFeedback";
+import { FormFeedback } from "@/components/forms/FormFeedback";
 import SmsServiceList from "@/components/startPageComp/SmsServicelist";
 import Title from "@/components/Title";
 import HeroBtn from "@/components/buttons/HeroBtn";
@@ -20,7 +20,7 @@ export default async function Home() {
             }
           </h2>
           <div className=" flex gap-[14px] mt-12">
-            <HeroBtn linkTo="/">
+            <HeroBtn linkTo="/login">
               Увійти{" "}
               <Image
                 className="ml-1 text-white"
@@ -30,7 +30,7 @@ export default async function Home() {
                 height={24}
               />
             </HeroBtn>
-            <HeroBtn linkTo="/">Реєстрація</HeroBtn>
+            <HeroBtn linkTo="/signup">Реєстрація</HeroBtn>
           </div>
         </div>
       </div>

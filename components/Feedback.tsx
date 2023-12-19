@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 
-import { FeedbackButton } from "./FeedbackButton";
+import { FeedbackButton } from "./buttons/FeedbackButton";
 import Modal from "./Modal/Modal";
 
 const Feedback = () => {
