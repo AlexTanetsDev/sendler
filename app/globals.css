@@ -114,7 +114,7 @@ footer {
 }
 
 .input {
-  @apply border border-lightGrayBorder bg-transparent rounded-[18px];
+  @apply border border-lightGrayBorder bg-white rounded-[18px];
 }
 
 .input__title {
@@ -176,4 +176,13 @@ footer {
   transition-property: transform;
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 800ms;
+}
+
+.page-title {
+  color: var(--white, #fff);
+  font-family: Montserrat;
+  font-size: 40px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 150%;
 }

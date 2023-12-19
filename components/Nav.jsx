@@ -1,4 +1,3 @@
-"use client";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
 import LogOutButton from "./buttons/LogOutButton";
@@ -9,7 +8,7 @@ const Nav = () => {
   const { data: session, status } = useSession();
   return (
     <>
-      <nav className="flex justify-between items-center container mx-auto text-white font-montserrat">
+      <nav className={`flex justify-between items-center container mx-auto `}>
         <div>
           <Link href={"/"} className="flex flex-col items-center">
             <span className=" text-[26px] font-medium text-white ">
@@ -24,7 +23,7 @@ const Nav = () => {
                 <li key={id}>
                   <Link
                     href={path}
-                    className="hover:underline hover:underline-offset-4 py-4"
+                    className="hover:underline hover:underline-offset-4 py-4 transition-all"
                   >
                     {title}
                   </Link>
@@ -34,7 +33,7 @@ const Nav = () => {
                 <li key={id}>
                   <Link
                     href={path}
-                    className="hover:underline hover:underline-offset-4 py-4"
+                    className="hover:underline hover:underline-offset-4 py-4 transition-all"
                   >
                     {title}
                   </Link>

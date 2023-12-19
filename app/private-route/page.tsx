@@ -1,4 +1,4 @@
-import LogOutButton from "@/components/LogOutButton";
+import LogOutButton from "@/components/buttons/LogOutButton";
 import Link from "next/link";
 import React from "react";
 
