@@ -13,7 +13,7 @@ export default async function UserAccountPage() {
 	const balance = session?.user.balance;
 
 	return (
-		<main className='container'>
+		<section className='container'>
 			<UserSmsBalansInform session={session} />
 			<h1 className='page-title mb-14'>Особистий кабінет</h1>
 			<div className='content-block mb-20'>
@@ -56,7 +56,7 @@ export default async function UserAccountPage() {
 				<h2 className="content-block__title mb-14">Історія платежів</h2>
 				<PaymentsList />
 			</div>
-			<div className="input-box">
+			<div className="inputs-box">
 				<h2 className="content-block__title text-center mb-8">Анкета користувача</h2>
 				<form className="w-full">
 					<label htmlFor="login" className="input__lable block mb-2">Логин*</label>
@@ -74,6 +74,6 @@ export default async function UserAccountPage() {
 					<button className="submit__btn block w-56 mx-auto">Зберегти</button>
 				</form>
 			</div>
-		</main>
+		</section>
 	)
 }

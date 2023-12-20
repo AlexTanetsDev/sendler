@@ -1,3 +1,5 @@
+import { DateTime } from "next-auth/providers/kakao";
+
 export type ErrorType = 400 | 401 | 403 | 404 | 409;
 
 export type ErrorCase = 1 | 2;
@@ -96,7 +98,10 @@ export interface IGroupName { group_name: string; }
 
 export interface IGroup extends IGroupId, IGroupName { };
 
-export interface IGroupDatabase extends IGroupId, IGroupName, IUserId { };
+export interface IGroupDatabase extends IGroupId, IGroupName, IUserId {
+	group_create_date?: DateTime;
+	count: number;
+};
 
 
 export interface IUserChangePassword {
@@ -142,6 +147,6 @@ export interface FormInputFeedback {
 	phone: number;
 	email: string;
 	desc: string;
-	
+
 };
 

@@ -9,7 +9,7 @@ export default async function ContactManagmentPage() {
 	const session: ISession | null = await getServerSession(options);
 
 	return (
-		<main className='container mx-auto'>
+		<section className='container mx-auto'>
 			<UserSmsBalansInform session={session} />
 			<h1 className='page-title mb-14'>Управління контактами</h1>
 			<div className='w-2/5 h-96 p-6 rounded-2xl bg-formBg'>
@@ -20,6 +20,6 @@ export default async function ContactManagmentPage() {
 				</div>
 
 			</div>
-		</main>
+		</section>
 	)
 };
