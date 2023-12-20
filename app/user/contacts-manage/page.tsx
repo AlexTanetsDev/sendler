@@ -4,12 +4,10 @@ import { redirect } from "next/navigation";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 
 import UserSmsBalansInform from '@/components/UserSmsBalansInform';
-import GroupsList from "@/components/GroupsList";
+import GroupsList from "@/components/groupsList";
 
 import { ISession } from "@/globaltypes/types";
 
-import { ISession } from "@/globaltypes/types";
-import GroupsList from "@/components/GroupsList";
 
 export default async function ContactManagmentPage() {
 	const session: ISession | null = await getServerSession(options);
@@ -22,7 +20,7 @@ export default async function ContactManagmentPage() {
 
 
 	return (
-		<main className='container mx-auto'>
+		<section className='container mx-auto'>
 			<UserSmsBalansInform session={session} />
 			<h1 className='page-title mb-14'>Управління контактами</h1>
 			<div className='content-block'>
@@ -38,6 +36,6 @@ export default async function ContactManagmentPage() {
 				</form>
 				<GroupsList id={userId} />
 			</div>
-		</main>
+		</section>
 	)
 };

@@ -4,7 +4,7 @@ import {
 } from "next/server";
 
 import {
-	getUserGroups,
+	getGroupsByUserId,
 	createGroup
 } from '@/app/api/controllers/sending-groups';
 
@@ -38,7 +38,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<{
 	//checking user_id existense
 	if (userId) {
 		try {
-			const res: null | IGroupDatabase[] = await getUserGroups(userId);
+			const res: null | IGroupDatabase[] = await getGroupsByUserId(userId);
 
 			if (res === null) {
 				return HttpError(400, `The user with id = ${userId} does not exist.`);

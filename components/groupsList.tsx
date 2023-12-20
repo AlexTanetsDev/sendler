@@ -31,8 +31,8 @@ export default async function GroupsList({ id }: Props) {
 					<li key={userGroup.user_id}>
 						<div className="flex py-3.5 text-xl font-montserrat font-normal">
 							<div className="w-32 mx-8">{userGroup.group_name}</div>
-							<div className="w-36 mr-12">{userGroup.group_id}</div>
-							<div className="w-32 mr-8">{userGroup.user_id}</div>
+							<div className="w-132 mr-12">{userGroup.group_create_date}</div>
+							<div className="w-16 mr-8">{userGroup.number_members}</div>
 							<button className="row-table__btn mr-4">Редагувати</button>
 							<button className="row-table__btn mr-4">Видалити</button>
 							<button className="row-table__btn mr-4">Експорт</button>

@@ -9,12 +9,12 @@ export default async function CreateGroupPage() {
 	const session: ISession | null = await getServerSession(options);
 
 	return (
-		<main className='container mx-auto'>
+		<section className='container mx-auto'>
 			<UserSmsBalansInform session={session} />
 			<h1 className='page-title mb-14'>Управління контактами</h1>
 			<div className='content-block'>
 				<h2 className='content-block__title'>Створення групи</h2>
 			</div>
-		</main>
+		</section>
 	)
 }

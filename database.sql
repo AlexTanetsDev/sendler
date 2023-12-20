@@ -4,6 +4,8 @@ DROP TABLE recipients_status;
 
 DROP TABLE transactions_history;
 
+DROP TABLE sms_identificators;
+
 DROP TABLE sending_history;
 
 DROP TABLE groups_members;
@@ -51,8 +53,7 @@ CREATE TABLE
         group_name TEXT NOT NULL,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
         PRIMARY KEY (group_id),
-        number_of_group_memebers INT,
-        group_create_date TIMESTAMP DEFAULT NOW():: timestamp
+        group_create_date TIMESTAMP DEFAULT NOW():: timestamp(0)
     );
 
 CREATE UNIQUE INDEX send_groups_group_id_idx ON send_groups(group_id);
@@ -98,7 +99,7 @@ CREATE TABLE
         sms_count INT NOT NULL,
         money_count MONEY NOT NULL,
         PRIMARY KEY (transaction_id),
-        transactions_date TIMESTAMP DEFAULT NOW():: timestamp
+        transactions_date TIMESTAMP DEFAULT NOW():: timestamp(0)
     );
 
 CREATE TABLE
