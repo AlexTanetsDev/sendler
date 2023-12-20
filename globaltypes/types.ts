@@ -100,7 +100,7 @@ export interface IGroup extends IGroupId, IGroupName { };
 
 export interface IGroupDatabase extends IGroupId, IGroupName, IUserId {
 	group_create_date?: DateTime;
-	count: number;
+	number_members: number;
 };
 
 
