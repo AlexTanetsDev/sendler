@@ -69,7 +69,7 @@ const SingUpForm = () => {
     <form
       autoComplete="off"
       onSubmit={handleSubmit(onSubmit)}
-      className="h-full w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]"
+      className=" w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]"
     >
       <h1 className=" form-title mb-8">Особистий кабінет</h1>
       <div className="flex items-center mb-8">
@@ -100,7 +100,7 @@ const SingUpForm = () => {
           id="name"
           type="text"
           {...register("name")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
           required
         />
         {errors.name && (
@@ -117,7 +117,7 @@ const SingUpForm = () => {
           id="phone"
           type="text"
           {...register("phone")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
           required
         />
         {errors.phone && (
@@ -134,7 +134,7 @@ const SingUpForm = () => {
           id="email"
           type="text"
           {...register("email")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
           required
         />
         {errors.email && (
@@ -151,7 +151,7 @@ const SingUpForm = () => {
           id="login"
           type="text"
           {...register("login")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
           required
         />
         {errors.login && (
@@ -168,7 +168,7 @@ const SingUpForm = () => {
           id="password"
           type="password"
           {...register("password")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
           required
         />
         {errors.password && (
@@ -184,7 +184,7 @@ const SingUpForm = () => {
           id="repeatPassword"
           type="repeatPassword"
           {...register("repeatPassword")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] border-[#737373] bg-gray-300"
+          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
           required
         />
         {errors.repeatPassword && (
@@ -194,7 +194,7 @@ const SingUpForm = () => {
 
       <button
         type="submit"
-        className=" mt-8 bg-buttonForm flex items-center justify-center h-[63px] w-full  py-[18px] focus:outline-none hover:bg-blue-700 hover:text-white rounded-[18px] text-lg"
+        className="mt-8 bg-greenBtn flex items-center justify-center h-[63px] w-[198px]  py-[18px] focus:outline-none hover:bg-blue-700 hover:text-white rounded-[18px] text-lg transition-colors"
       >
         Реєстрація
       </button>

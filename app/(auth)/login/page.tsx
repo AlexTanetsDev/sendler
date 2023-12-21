@@ -5,7 +5,7 @@ import React from "react";
 const LoginPage = () => {
 
   return (
-    <div className="h-full">
+    <div >
       <LoginForm />
     </div>
   );

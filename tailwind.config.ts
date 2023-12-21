@@ -24,6 +24,7 @@ const config: Config = {
 				lightGreen: '#CFF0E0',
 				priceTableBg: '#F7FFFB',
 				priceTableBorderColor: '#DCDCDC',
+				hederTransparent: 'rgba(15, 57, 82, 0.38)'
 			},
 			backgroundImage: {
 				"gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

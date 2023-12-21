@@ -38,7 +38,7 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
       <button className=' absolute top-4 right-4' onClick={onClose}>
             <Image className='hover:scale-105' src={'/svg/cross-circle.svg'} alt='close modal button' width={34} height={34} />
         </button>
-        <FormFeedback onClose={onClose} />
+        <FormFeedback onClose={onClose} title='Зворотній зв’язок'/>
         
       </div>
     </div>
