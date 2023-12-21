@@ -5,7 +5,7 @@ import React from "react";
 const SignUp = () => {
 
   return (
-    <div className="h-full">
+    <div >
       <SingUpForm />
     </div>
   );

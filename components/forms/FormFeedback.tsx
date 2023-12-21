@@ -1,21 +1,20 @@
 "use client";
 
 import { toast } from "react-toastify";
-import { usePathname, useRouter } from "next/navigation";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { validationSchemaFeedback } from "@/models/forms";
 import { FormInputFeedback } from "@/globaltypes/types";
 
 interface Props {
-  onClose: () => void;
+  onClose: (() => void) | undefined;
+  title? :string
 }
 
-const FormFeedback = ({ onClose }: Props) => {
-  const pathName = usePathname();
-
+const FormFeedback = ({ onClose, title }: Props) => {
   const {
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormInputFeedback>({
     resolver: async (data) => {
@@ -48,7 +47,11 @@ const FormFeedback = ({ onClose }: Props) => {
 
   const onSubmit: SubmitHandler<FormInputFeedback> = async (data) => {
     console.log("dat=", data);
-    onClose();
+    reset();
+    {
+      onClose && onClose();
+    }
+
     toast.success(
       "Your submission has been received. We will respond to it as soon as possible."
     );
@@ -58,9 +61,9 @@ const FormFeedback = ({ onClose }: Props) => {
     <form
       autoComplete="off"
       onSubmit={handleSubmit(onSubmit)}
-      className="w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]"
+      className="w-[526px] mx-auto pb-11 pt-[29px]  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]"
     >
-      <h1 className="form-title mb-8">Зворотній зв’язок</h1>
+     {title && <h1 className="form-title mb-8 mt-[15px]">{title}</h1>} 
       <div className="text-left w-full">
         <label
           htmlFor="firstName"
@@ -72,7 +75,7 @@ const FormFeedback = ({ onClose }: Props) => {
           id="firstName"
           type="text"
           {...register("firstName")}
-          className=" input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
+          className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
           required
         />
         {errors.firstName && (
@@ -83,7 +86,7 @@ const FormFeedback = ({ onClose }: Props) => {
           htmlFor="secondName"
           className="font-roboto text-base font-medium mb-2  mt-8 block"
         >
-          Призвище
+          Прiзвище
         </label>
         <input
           id="secondName"
@@ -151,7 +154,7 @@ const FormFeedback = ({ onClose }: Props) => {
 
       <button
         type="submit"
-        className="w-[198px] mt-8 bg-greenBtn flex items-center justify-center   py-[18px] focus:outline-none hover:bg-green-700 hover:text-white rounded-[18px] text-lg transition-colors"
+        className="w-[198px] mt-8 bg-greenBtn flex items-center justify-center   py-[18px] focus:outline-none hover:bg-green-700 text-white rounded-[18px] text-lg transition-colors"
       >
         Відправити
       </button>

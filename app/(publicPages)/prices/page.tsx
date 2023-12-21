@@ -8,7 +8,7 @@ type Props = {};
 const Prices = () => {
   return (
     <>
-      <section className=" bg-[url('/bg-prices.png')] bg-cover flex flex-col items-center pt-[213px] pb-[248px] h-[606px]">
+      <section className="w-full bg-[url('/bg-prices.png')] bg-cover flex flex-col items-center pt-[213px] pb-[248px] h-[606px]">
         <div className="container ">
           <h1 className="page-title">Вартість послуг на SMS розсилку</h1>
           <div className=" flex gap-[14px] mt-12">
@@ -29,7 +29,7 @@ const Prices = () => {
       <section className="pt-20 pb-[30px] flex flex-col items-center">
         <div className="container ">
           <div className="flex items-center">
-            <div>
+            <div className="w-5/12">
               <p className=" font-roboto text-xl mb-2">
                 Використання системи включає:
               </p>
@@ -38,7 +38,6 @@ const Prices = () => {
                 Вибір імені відправника (підпису). <br/>Завантажити інструкцію з
                 активації імені.
               </p>
-
               <p>
                 У Вас може бути декілька імен відправника (підписів). Ви повинні
                 мати право використовувати ці імена. Кожне ім&apos;я відправника

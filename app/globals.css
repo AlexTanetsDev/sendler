@@ -47,10 +47,13 @@ footer {
   flex-shrink: 0;
 }
 
-.container {
-  width: 1330px;
-  padding: 0 15px;
+@layer components {
+  .container {
+    width: 1330px;
+    padding: 0 15px;
+  }
 }
+
 
 .page-title {
   font-size: 40px;
