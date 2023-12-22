@@ -1,6 +1,6 @@
 import { ISession } from "@/globaltypes/types";
 
-export default async function UserSmsInform({ session }: { session: ISession | null }) {
+export default function UserSmsInform({ session }: { session: ISession | null }) {
 	const userName = session?.user.user_name;
 	const userBalance = session?.user.balance;
 	return (

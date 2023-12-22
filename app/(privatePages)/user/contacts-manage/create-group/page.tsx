@@ -3,6 +3,8 @@ import { getServerSession } from "next-auth";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 
 import UserSmsBalansInform from '@/components/UserSmsBalansInform';
+import Title from "@/components/Title";
+
 import { ISession } from "@/globaltypes/types";
 
 export default async function CreateGroupPage() {
@@ -11,9 +13,9 @@ export default async function CreateGroupPage() {
 	return (
 		<section className='container mx-auto'>
 			<UserSmsBalansInform session={session} />
-			<h1 className='page-title mb-14'>Управління контактами</h1>
-			<div className='content-block'>
-				<h2 className='content-block__title'>Створення групи</h2>
+			<Title type="h1">Управління контактами</Title>
+			<div className='content-block mt-[53px]'>
+				<Title type="h2">Створення групи</Title>
 			</div>
 		</section>
 	)

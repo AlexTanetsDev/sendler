@@ -21,11 +21,10 @@ export default function RootLayout({
 			<body className="flex flex-col items-center">
 				<Providers>
 					<ToastProvider>
-					<Header />
-					{children}
-					<Footer />
+						<Header />
+						{children}
+						<Footer />
 					</ToastProvider>
-					
 				</Providers>
 			</body>
 		</html>

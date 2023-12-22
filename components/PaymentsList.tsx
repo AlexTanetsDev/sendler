@@ -18,7 +18,7 @@ export default async function PaymentsList() {
 
 	return (
 		<>
-			<div className='flex w-full px-6 pt-4 pb-3 text-xl font-roboto font-normal bg-headerTable rounded-2xl'>
+			<div className='flex w-full mt-[60px] px-6 pt-4 pb-3 text-xl font-roboto font-normal bg-headerTable rounded-2xl'>
 				<p className='mr-28'>Дата поповнення</p>
 				<p className='mr-24'>Сума, грн</p>
 				<p>Кількість</p>
