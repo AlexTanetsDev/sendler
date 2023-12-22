@@ -6,7 +6,6 @@ import { IClientUpdateReqArray, IClentCreateReqArray } from "@/globaltypes/types
 
 export const schemaReqCreateGroup: Joi.ObjectSchema<IClentCreateReqArray> = Joi.object({
 	group_name: Joi.string().required(),
-	clients: Joi.array().items(schemaClient).required(),
 	cache: Joi.string(),
 });
 

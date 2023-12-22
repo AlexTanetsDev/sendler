@@ -77,7 +77,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<{ message
 			);
 		}
 
-		const { group_name, clients } = value;
+		const { group_name } = value;
 		const { searchParams }: URL = new URL(request.url);
 		const userId = Number(searchParams.get("userId"));
 		const method = request.method;
@@ -86,13 +86,11 @@ export async function POST(request: NextRequest): Promise<NextResponse<{ message
 			return HttpError(400, `The input does not contain the group name.`);
 		}
 
-		if (clients.length === 0) {
-			return HttpError(400, `The clients list is empty`);
-		}
+		console.log("userId in CreateGrroup=", userId)
 
 		const res: IGroupDatabase | ErrorCase | NextResponse<{
 			error: string;
-		}> = await createGroup(group_name, clients, userId, method);
+		}> = await createGroup(group_name, userId, method);
 
 		switch (res) {
 			case 1:

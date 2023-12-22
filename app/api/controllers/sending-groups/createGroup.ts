@@ -18,7 +18,7 @@ import {
 } from "@/globaltypes/types";
 
 
-export default async function createGroup(groupName: string, clients: IClient[], userId: number, method: string): Promise<IGroupDatabase | ErrorCase> {
+export default async function createGroup(groupName: string, userId: number, method: string): Promise<IGroupDatabase | ErrorCase> {
 
 	try {
 		//checking user_id existense
@@ -41,28 +41,8 @@ export default async function createGroup(groupName: string, clients: IClient[],
 			return 2;
 		};
 
-		const numberMembers = clients.length;
+		const group: QueryResult<IGroupDatabase> = await insertNewGroup(groupName, userId);
 
-		const groupData: Promise<QueryResult<IGroupDatabase>> = insertNewGroup(groupName, userId);
-
-		const userClientsResData: Promise<QueryResult<ITelRes>> = fetchUserClientsTel(userId);
-
-		const [group, userClientsRes] = await Promise.all([groupData, userClientsResData]);
-
-		const groupId: number = group.rows[0].group_id;
-
-		//checking whether a client exists in the user's client list
-		//and adding client
-		const userClientsInDtabase = userClientsRes.rows;
-
-		for (const client of clients) {
-			const tel = Number(client.tel);
-
-			if (!userClientsInDtabase.find((userClientInDtabase: ITelRes) => userClientInDtabase.tel === String(tel))) {
-				await insertNewClientInGroup(client, userId, groupId, method);
-			}
-			await insertGroupMember(tel, userId, groupId);
-		}
 		return group.rows[0];
 	} catch (error: any) {
 		throw new Error(error.message);
