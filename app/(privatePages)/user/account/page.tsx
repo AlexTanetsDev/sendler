@@ -16,7 +16,7 @@ export default async function UserAccountPage() {
 	return (
 		<section className='container'>
 			<UserSmsBalansInform session={session} />
-			<Title type='h1'>Особистий кабінет</Title>
+			<Title type='h1' color="dark">Особистий кабінет</Title>
 			<div className='content-block mb-20 mt-[53px]'>
 				<div className='flex flex-col gap-8 mb-16'>
 					<div className='flex'>
@@ -32,7 +32,7 @@ export default async function UserAccountPage() {
 						<div className='text-xl font-montserrat font-normal'>{balance} SMS</div>
 					</div>
 				</div>
-				<Title type="h3">Поповнити рахунок</Title>
+				<Title type="h3" color="dark">Поповнити рахунок</Title>
 				<p className="my-8">Введіть бажану суму для оплати або потрібну кількість SMS</p>
 				<div className="flex items-center mb-20">
 					<div className="relative">
@@ -54,11 +54,11 @@ export default async function UserAccountPage() {
 				<p className="w-3/4 text-xl font-roboto font-normal">Якщо Ви працюєте з ТОВ `&quot;`Інноваційні медіа рішення `&quot;` за договором як Юридична особа, то для виставлення рахунку Вам потрібно зв`&apos;`язатися з нами або зателефонувати нам за номером (097) 678-12-59.</p>
 			</div>
 			<div className='content-block mb-20'>
-				<Title type="h3">Історія платежів</Title>
+				<Title type="h3" color="dark">Історія платежів</Title>
 				<PaymentsList />
 			</div>
 			<div className="inputs-box text-center">
-				<Title type="h2">Анкета користувача</Title>
+				<Title type="h2" color="dark">Анкета користувача</Title>
 				<form className="w-full mt-8">
 					<label htmlFor="login" className="input__lable block mb-2">Логин*</label>
 					<input name="login" className="input block w-full h-12 mb-8" />

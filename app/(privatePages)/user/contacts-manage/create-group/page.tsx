@@ -13,9 +13,9 @@ export default async function CreateGroupPage() {
 	return (
 		<section className='container mx-auto'>
 			<UserSmsBalansInform session={session} />
-			<Title type="h1">Управління контактами</Title>
+			<Title type="h1" color="dark">Управління контактами</Title>
 			<div className='content-block mt-[53px]'>
-				<Title type="h2">Створення групи</Title>
+				<Title type="h2" color="dark">Створення групи</Title>
 			</div>
 		</section>
 	)
