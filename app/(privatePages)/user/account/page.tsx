@@ -1,12 +1,13 @@
 import { getServerSession } from "next-auth";
 import Image from "next/image";
-import { ISession } from "@/globaltypes/types";
+
 import { options } from "@/app/api/auth/[...nextauth]/options";
 
 import UserSmsBalansInform from '@/components/UserSmsBalansInform';
 import PaymentsList from "@/components/PaymentsList";
+import Title from "@/components/Title";
 
-
+import { ISession } from "@/globaltypes/types";
 
 export default async function UserAccountPage() {
 	const session: ISession | null = await getServerSession(options);
@@ -15,8 +16,8 @@ export default async function UserAccountPage() {
 	return (
 		<section className='container'>
 			<UserSmsBalansInform session={session} />
-			<h1 className='page-title mb-14'>Особистий кабінет</h1>
-			<div className='content-block mb-20'>
+			<Title type='h1'>Особистий кабінет</Title>
+			<div className='content-block mb-20 mt-[53px]'>
 				<div className='flex flex-col gap-8 mb-16'>
 					<div className='flex'>
 						<div className='w-52 mr-8'>Баланс на рахунку</div>
@@ -31,8 +32,8 @@ export default async function UserAccountPage() {
 						<div className='text-xl font-montserrat font-normal'>{balance} SMS</div>
 					</div>
 				</div>
-				<h3 className="input__title mb-8">Поповнити рахунок</h3>
-				<p className="mb-8">Введіть бажану суму для оплати або потрібну кількість SMS</p>
+				<Title type="h3">Поповнити рахунок</Title>
+				<p className="my-8">Введіть бажану суму для оплати або потрібну кількість SMS</p>
 				<div className="flex items-center mb-20">
 					<div className="relative">
 						<input className="input w-48 h-12 mr-5" />
@@ -53,12 +54,12 @@ export default async function UserAccountPage() {
 				<p className="w-3/4 text-xl font-roboto font-normal">Якщо Ви працюєте з ТОВ `&quot;`Інноваційні медіа рішення `&quot;` за договором як Юридична особа, то для виставлення рахунку Вам потрібно зв`&apos;`язатися з нами або зателефонувати нам за номером (097) 678-12-59.</p>
 			</div>
 			<div className='content-block mb-20'>
-				<h2 className="content-block__title mb-14">Історія платежів</h2>
+				<Title type="h3">Історія платежів</Title>
 				<PaymentsList />
 			</div>
-			<div className="inputs-box">
-				<h2 className="content-block__title text-center mb-8">Анкета користувача</h2>
-				<form className="w-full">
+			<div className="inputs-box text-center">
+				<Title type="h2">Анкета користувача</Title>
+				<form className="w-full mt-8">
 					<label htmlFor="login" className="input__lable block mb-2">Логин*</label>
 					<input name="login" className="input block w-full h-12 mb-8" />
 					<label htmlFor="password" className="input__lable block mb-2">Пароль*</label>

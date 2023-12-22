@@ -27,7 +27,6 @@ export default function RootLayout({
 					<Footer />
 					<BackToTopBtn />
 					</ToastProvider>
-					
 				</Providers>
 			</body>
 		</html>

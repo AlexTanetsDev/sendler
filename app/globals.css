@@ -54,7 +54,6 @@ footer {
   }
 }
 
-
 .page-title {
   font-size: 40px;
   font-family: Montserrat, sans-serif;
@@ -122,11 +121,27 @@ footer {
   @apply text-xs font-roboto font-medium;
 }
 
-.title {
+.title_h1 {
   font-size: 40px;
   line-height: 60px;
   font-weight: 600;
   font-family: Montserrat, sans-serif;
+  color: #1b1b30;
+}
+
+.title_h2 {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 500;
+  font-family: Roboto, sans-serif;
+  color: #1b1b30;
+}
+
+.title_h3 {
+  font-size: 24px;
+  line-height: 32px;
+  font-weight: 400;
+  font-family: Roboto, sans-serif;
   color: #1b1b30;
 }
 
