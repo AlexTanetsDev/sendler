@@ -10,5 +10,5 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  return <main className="w-full py-20 flex flex-col items-center">{children}</main>;
+  return <main className="w-full pt-[50px] pb-20 flex flex-col items-center">{children}</main>;
 }

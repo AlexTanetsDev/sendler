@@ -49,7 +49,7 @@ const QuestionSegment = ({ title, desc, email }: Props) => {
       >
         {desc}
         {email && (
-          <Link href={`mailto:${email}`} className="text-colorLink">
+          <Link href={`mailto:${email}`} className="text-emailColorLink">
             {email}
           </Link>
         )}

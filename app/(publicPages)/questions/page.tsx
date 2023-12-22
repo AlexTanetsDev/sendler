@@ -1,4 +1,5 @@
 import QuestionSegment from "@/components/QuestionSegment ";
+import Title from "@/components/Title";
 import { FormFeedback } from "@/components/forms/FormFeedback";
 import { ArrayQuestions } from "@/data/data";
 
@@ -26,13 +27,10 @@ const Question = () => {
       </section>
 
       <section className="container pt-20 flex flex-col items-start">
-        <h2 className="title  mb-[60px] tex">
-          Не знайшли відповідь на своє питання?
-        </h2>
-        <div className="flex">
+        <Title type="h2">Не знайшли відповідь на своє питання?</Title>
+        <div className="flex mt-[60px]">
           <ul className="mr-[138px] w-[625px] pt-[86px]">
             <li className="pb-8">
-              {" "}
               <p>
                 Шановний клієнте,
                 <br />
