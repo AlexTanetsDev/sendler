@@ -1,8 +1,5 @@
 import {
-	fetchUserClientsTel,
 	insertNewGroup,
-	insertGroupMember,
-	insertNewClientInGroup,
 	fetchUserGroupsName,
 	fetchUsersId
 } from "@/app/utils";
@@ -12,8 +9,6 @@ import {
 	IUserId,
 	IGroupDatabase,
 	IGroupName,
-	ITelRes,
-	IClient,
 	ErrorCase
 } from "@/globaltypes/types";
 

@@ -13,9 +13,7 @@ type Props = {
 	id: number | undefined;
 }
 
-export default function CreateGroupForm(userId: Props) {
-
-	console.log('userId=', userId)
+export default function CreateGroupForm({ id }: Props) {
 
 	const {
 		register,
@@ -49,6 +47,8 @@ export default function CreateGroupForm(userId: Props) {
 
 	const onSubmit: SubmitHandler<IGroupName> = async (data) => {
 
+		console.log('userId in onSubmit of CreateGroupForm=', id)
+
 		const res = await axios.post(
 			`http://localhost:3000/api/sending-groups`,
 			{
@@ -57,7 +57,7 @@ export default function CreateGroupForm(userId: Props) {
 			},
 			{
 				params: {
-					userId: userId,
+					userId: id,
 				},
 			}
 		);

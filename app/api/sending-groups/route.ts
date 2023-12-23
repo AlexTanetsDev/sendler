@@ -86,8 +86,6 @@ export async function POST(request: NextRequest): Promise<NextResponse<{ message
 			return HttpError(400, `The input does not contain the group name.`);
 		}
 
-		console.log("userId in CreateGrroup=", userId)
-
 		const res: IGroupDatabase | ErrorCase | NextResponse<{
 			error: string;
 		}> = await createGroup(group_name, userId, method);
