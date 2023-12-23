@@ -8,11 +8,10 @@ export const publicNavigation = [
 ];
 
 export const privateNavigation = [
-  { id: 1, title: "Головна", path: "/" },
-  { id: 2, title: "Розсилка", path: "/mailing-list" },
-  { id: 3, title: "Управління контактами", path: "/user/contacts-manage" },
-  { id: 4, title: "Статистика", path: "/statistics" },
-  { id: 5, title: "Особистий кабінет", path: "/user/account" },
+  { id: 1, title: "Розсилка", path: "/mailing-list" },
+  { id: 2, title: "Управління контактами", path: "/user/contacts-manage" },
+  { id: 3, title: "Статистика", path: "/statistics" },
+  { id: 4, title: "Особистий кабінет", path: "/user/account" },
 ];
 
 export const ArrayQuestions = [

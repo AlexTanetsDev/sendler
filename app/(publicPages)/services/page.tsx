@@ -1,17 +1,18 @@
+import Title from "@/components/Title";
 import Image from "next/image";
 
 const Services = () => {
   return (
     <>
-      <section className=" bg-[url('/bg-services.png')] bg-cover flex flex-col items-center pt-[193px]  h-[606px] w-full">
+      <section className=" bg-[url('/bg-services.png')] bg-cover flex flex-col items-center pt-[206px]  h-[606px] w-full">
         <div className="container ">
-          <h1 className="page-title"> Цільові SMS-Розсилки.</h1>
+        <Title type="h1" color="light"> Цільові SMS-Розсилки.</Title>
         </div>
       </section>
 
       <section className="container pt-20 flex flex-col items-start">
         <div className="flex ">
-          <ul className="mr-[174px] w-[636px] pt-[100px]">
+          <ul className="mr-[174px] w-[636px] pt-[100px]"> Цільові SMS-Розсилки.
             <li className="pb-8">
               <p>
                 Якщо Ви зацікавлені в залученні нової аудиторії до Вашого товару

@@ -1,4 +1,5 @@
 import Table from "@/components/Table";
+import Title from "@/components/Title";
 import HeroBtn from "@/components/buttons/HeroBtn";
 import Image from "next/image";
 import React from "react";
@@ -10,7 +11,7 @@ const Prices = () => {
     <>
       <section className="w-full bg-[url('/bg-prices.png')] bg-cover flex flex-col items-center pt-[213px] pb-[248px] h-[606px]">
         <div className="container ">
-          <h1 className="page-title">Вартість послуг на SMS розсилку</h1>
+        <Title type="h1" color="light"> Вартість послуг на SMS розсилку</Title>
           <div className=" flex gap-[14px] mt-12">
             <HeroBtn linkTo="/login">
               Увійти{" "}
