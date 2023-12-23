@@ -26,10 +26,7 @@
 }
 
 body {
-  height: 100%;
   margin: 0;
-  display: flex;
-  flex-direction: column;
   color: rgb(var(--foreground-rgb));
   background: linear-gradient(
       to bottom,
@@ -110,7 +107,7 @@ footer {
 }
 
 .input {
-  @apply bg-white rounded-[18px];
+  @apply bg-white rounded-[18px] ;
 }
 
 .input__title {

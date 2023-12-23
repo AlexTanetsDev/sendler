@@ -3,6 +3,7 @@ import Link from "next/link";
 import LogOutButton from "./buttons/LogOutButton";
 import { privateNavigation, publicNavigation } from "@/data/data";
 import LoginButton from "./buttons/LoginButon";
+import LogoNav from "./LogoNav";
 
 const Nav = () => {
   const { data: session, status } = useSession();
@@ -10,12 +11,7 @@ const Nav = () => {
     <>
       <nav className={`flex justify-between items-center container mx-auto `}>
         <div>
-          <Link href={"/"} className="flex flex-col items-center">
-            <span className=" text-[26px] font-medium text-white ">
-              BSender
-            </span>
-            <span className=" text-xs text-white">Масові смс розсилки</span>
-          </Link>
+          <LogoNav/>
         </div>
         <ul className="flex justify-center items-center gap-10">
           {status === "authenticated"

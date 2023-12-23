@@ -46,7 +46,7 @@ const LoginForm = () => {
       redirect: false,
     });
     if (res && !res.error) {
-      router.push("/");
+      router.push("/mailing-list");
     }
   };
 

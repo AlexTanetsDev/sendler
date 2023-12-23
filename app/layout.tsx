@@ -19,7 +19,7 @@ export default function RootLayout({
 }) {
 	return (
 		<html lang="en">
-			<body className="flex flex-col items-center">
+			<body className="flex flex-col items-center min-h-screen">
 				<Providers>
 					<ToastProvider>
 					<Header />

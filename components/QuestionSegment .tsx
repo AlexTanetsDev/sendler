@@ -43,7 +43,7 @@ const QuestionSegment = ({ title, desc, email }: Props) => {
         </span>
       </button>
       <p
-        className={` text-[16px] mt-10 pr-[196px] ${
+        className={` text-[16px] mt-10 pr-[196px] pb-5 ${
           expanded ? "hidden " : " blok"
         }`}
       >
