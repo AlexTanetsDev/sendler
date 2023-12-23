@@ -1,27 +1,14 @@
-'use client';
-
 import { redirect } from "next/navigation";
-
-import { getUserGroups } from "@/app/utils";
 
 import { IGroupDatabase } from "@/globaltypes/types";
 
 type Props = {
-	id: number | undefined;
+	groups: IGroupDatabase[] | undefined;
 }
 
-export default function GroupsList({ id }: Props) {
+export default async function GroupsList({ groups }: Props) {
 
-	const A = async () => {
-		const userGroups: IGroupDatabase[] | undefined = await getUserGroups(id);
-		return userGroups;
-	}
-
-	console.log("AAAAAAAAA=", A());
-
-
-
-	if (A === undefined) {
+	if (groups === undefined) {
 		console.log('Unable to fetch userGroups!');
 		redirect('/')
 	};
@@ -33,8 +20,8 @@ export default function GroupsList({ id }: Props) {
 				<p className='mr-24'>Оновлення</p>
 				<p>Кількість</p>
 			</div>
-			{/* <ul>
-				{.map((userGroup: IGroupDatabase) => (
+			<ul>
+				{groups.map((userGroup: IGroupDatabase) => (
 					<li key={userGroup.user_id} className="flex py-3.5 text-xl font-montserrat font-normal border-b border-black">
 						<div className="w-32 mx-8">{userGroup.group_name}</div>
 						<div className="w-132 mr-12">{userGroup.group_create_date}</div>
@@ -44,7 +31,7 @@ export default function GroupsList({ id }: Props) {
 						<button className="row-table__btn mr-4">Експорт</button>
 					</li>
 				))}
-			</ul> */}
+			</ul>
 		</>
 	)
 }
