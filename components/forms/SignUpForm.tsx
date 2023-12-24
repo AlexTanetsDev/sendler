@@ -60,7 +60,7 @@ const SingUpForm = () => {
 				redirect: false,
 			});
 			if (credentialsRes && !credentialsRes.error) {
-				router.push("/");
+				router.push("/mailing-list");
 			}
 		}
 	};
@@ -69,25 +69,9 @@ const SingUpForm = () => {
 		<form
 			autoComplete="off"
 			onSubmit={handleSubmit(onSubmit)}
-			className=" w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]"
+			className="w-[526px] flex justify-items-center  items-center flex-col leading-6 px-[26px] "
 		>
-			<h1 className=" form-title mb-8">Особистий кабінет</h1>
-			<div className="flex items-center mb-8">
-				{ }
-				<Link
-					href="/login"
-					className="font-roboto text-base font-normal mr-[92px] hover:underline hover:underline-offset-4"
-				>
-					Увійти
-				</Link>
-				<Link
-					href="/signup"
-					className={`font-roboto text-base font-normal hover:underline hover:underline-offset-4 ${pathName.startsWith("/signup") ? "underline underline-offset-4" : ""
-						}`}
-				>
-					Реєстрація
-				</Link>
-			</div>
+			
 			<div className="text-left w-full">
 				<label
 					htmlFor="name"
