@@ -35,8 +35,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose }) => {
   return (
     <div className="modal-overlay" onClick={handleOverlayClick}>
       <div className="modal relative" ref={modalRef}>
-      <button className=' absolute top-4 right-4' onClick={onClose}>
-            <Image className='hover:scale-105' src={'/svg/cross-circle.svg'} alt='close modal button' width={34} height={34} />
+      <button className=' absolute top-4 right-4 transform transition-transform hover:rotate-90 hover:scale-110' onClick={onClose}>
+            <Image src={'/svg/cross-circle.svg'} alt='close modal button' width={34} height={34} />
         </button>
         <FormFeedback onClose={onClose} title='Зворотній зв’язок'/>
         
