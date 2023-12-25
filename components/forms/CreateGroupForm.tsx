@@ -10,10 +10,10 @@ import { IGroupName } from "@/globaltypes/types";
 
 type Props = {
 	id: number | undefined;
-	controlAdd: any
+	updateListControl: any
 }
 
-export default function CreateGroupForm({ id, controlAdd }: Props) {
+export default function CreateGroupForm({ id, updateListControl }: Props) {
 
 	const {
 		register,
@@ -47,20 +47,24 @@ export default function CreateGroupForm({ id, controlAdd }: Props) {
 	})
 
 	const onSubmit: SubmitHandler<IGroupName> = async (data) => {
-
-		await axios.post(`api/sending-groups`,
-			{
-				group_name: data.group_name,
-				cache: "no-store",
-			},
-			{
-				params: {
-					userId: id,
+		try {
+			await axios.post(`api/sending-groups`,
+				{
+					group_name: data.group_name,
+					cache: "no-store",
 				},
-			}
-		);
-		controlAdd();
-		reset({ group_name: '' });
+				{
+					params: {
+						userId: id,
+					},
+				}
+			);
+			updateListControl();
+			reset({ group_name: '' });
+		} catch (error: any) {
+			console.log(error.message)
+		}
+
 	}
 
 	return (
