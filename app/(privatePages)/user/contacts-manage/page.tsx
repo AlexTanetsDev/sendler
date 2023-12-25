@@ -6,7 +6,6 @@ axios.defaults.baseURL = "http://localhost:3000/";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 
-import UserSmsBalansInform from '@/components/UserSmsBalansInform';
 import GroupsList from "@/components/groupsList";
 import CreateGroupForm from "@/components/forms/CreateGroupForm";
 
@@ -32,7 +31,7 @@ export default function ContactManagmentPage() {
 
 	const memoizedGetGroups = useCallback(getGroups, [userId]);
 
-	const controlAddGroup = () => {
+	const updateListControl = () => {
 		SetIsAddgroup(!isAddGroup);
 	};
 
@@ -42,14 +41,13 @@ export default function ContactManagmentPage() {
 
 	return (
 		<section className="container mx-auto">
-			<UserSmsBalansInform session={session} />
 			<Title type="h1" color="dark">
 				Управління контактами
 			</Title>
 			<div className="content-block mt-[60px]">
 				<p className='w-[724px] mb-[50px] ml-[26px] text-lg font-normal font-roboto'>Для початку роботи Вам потрібно створити нову Групу контактів та додати до неї номери. Ви можете додати номери телефонів контактів з файлу у форматі Excel або текстового файлу.</p>
-				<CreateGroupForm id={userId} controlAdd={controlAddGroup} />
-				<GroupsList groups={groups} />
+				<CreateGroupForm id={userId} updateListControl={updateListControl} />
+				<GroupsList groups={groups} updateListControl={updateListControl} />
 				<div className="ml-[26px]">
 					<p className="input__title mb-3">Всі контакти</p>
 					<div className="flex items-center">
