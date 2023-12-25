@@ -1,7 +1,7 @@
-import Image from "next/image";
 import Link from "next/link";
 import React from "react";
 import Feedback from "./Feedback";
+import LogoFooter from "./LogoFooter";
 
 const Footer = () => {
   return (
@@ -10,15 +10,7 @@ const Footer = () => {
       className=" w-full flex justify-center bg-bgFooter   pt-[50px] pb-[38px] text-white font-roboto text-lg font-normal"
     >
       <div className="container">
-        <Link href={"/"} className=" inline-flex flex-col items-center gap-1">
-          <span className=" text-[34px] font-medium text-white font-montserrat tracking-wide">
-            BSender
-          </span>
-          <span className=" text-sm text-white font-montserrat">
-            Масові смс розсилки
-          </span>
-        </Link>
-
+       <LogoFooter/>
         <ul className="flex justify-between items-center pt-[60px]">
           <li className="flex flex-col gap-[14px] justify-center">
             <p className=" text-base font-medium ">

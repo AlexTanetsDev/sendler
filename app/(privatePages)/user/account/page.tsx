@@ -14,8 +14,7 @@ export default async function UserAccountPage() {
 	const balance = session?.user.balance;
 
 	return (
-		<section className='container'>
-			<UserSmsBalansInform session={session} />
+		<>
 			<Title type='h1' color="dark">Особистий кабінет</Title>
 			<div className='content-block mb-20 mt-[53px]'>
 				<div className='flex flex-col gap-8 mb-16'>
@@ -75,6 +74,6 @@ export default async function UserAccountPage() {
 					<button className="submit__btn block w-56 mx-auto">Зберегти</button>
 				</form>
 			</div>
-		</section>
+</>
 	)
 }

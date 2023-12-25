@@ -46,7 +46,7 @@ const LoginForm = () => {
       redirect: false,
     });
     if (res && !res.error) {
-      router.push("/");
+      router.push("/mailing-list");
     }
   };
 
@@ -54,25 +54,9 @@ const LoginForm = () => {
     <form
       autoComplete="off"
       onSubmit={handleSubmit(onSubmit)}
-      className=" w-[526px] mx-auto py-11  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700 px-[26px] bg-formBg"
+      className="w-[526px] flex justify-items-center  items-center flex-col leading-6 px-[26px] "
     >
-      <h1 className="form-title mb-8">Особистий кабінет</h1>
-      <div className="flex items-center mb-8">
-        <Link
-          href="/login"
-          className={`font-roboto text-base font-normal hover:underline hover:underline-offset-4 mr-[92px] ${
-            pathName.startsWith("/login") ? "underline underline-offset-4" : ""
-          }`}
-        >
-          Увійти
-        </Link>
-        <Link
-          href="/signup"
-          className="font-roboto text-base font-normal hover:underline hover:underline-offset-4 "
-        >
-          Реєстрація
-        </Link>
-      </div>
+     
       <div className="text-left w-full">
         <label
           htmlFor="login"
