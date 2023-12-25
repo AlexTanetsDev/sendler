@@ -86,7 +86,7 @@ footer {
 }
 
 .content-block {
-  @apply w-full px-6 py-16 text-lg font-montserrat font-normal rounded-2xl bg-formBg;
+  @apply w-full py-[50px] text-lg font-montserrat font-normal rounded-2xl bg-formBg;
 }
 
 .content-block__title {
@@ -94,7 +94,7 @@ footer {
 }
 
 .action__btn {
-  @apply px-14 py-4 text-lg text-center font-montserrat font-normal border border-lightGrayBorder rounded-2xl;
+  @apply transition-colors bg-greenBtn py-[10px] w-[144px] rounded-[18px] focus:outline-none hover:bg-green-700 text-white text-base;
 }
 
 .submit__btn {
@@ -102,7 +102,7 @@ footer {
 }
 
 .row-table__btn {
-  @apply px-2.5 py-0.5 text-lg text-center font-roboto font-normal border border-lightGrayBorder rounded-xl;
+  @apply w-[110px] py-1 text-base  text-center font-roboto font-normal border border-lightGrayBorder rounded-xl;
 }
 
 .inputs-box {
@@ -110,11 +110,11 @@ footer {
 }
 
 .input {
-  @apply bg-white rounded-[18px];
+  @apply bg-white border border-inputBorder rounded-[18px];
 }
 
 .input__title {
-  @apply text-2xl font-roboto font-normal;
+  @apply text-xl font-roboto font-normal;
 }
 
 .input__lable {

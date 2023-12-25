@@ -2,8 +2,7 @@ import { getServerSession } from "next-auth";
 
 import { options } from "@/app/api/auth/[...nextauth]/options";
 
-import UserSmsBalansInform from '@/components/UserSmsBalansInform';
-import Title from "@/components/Title";
+import UserSmsBalansInform from "@/components/UserSmsBalansInform";
 
 import { ISession } from "@/globaltypes/types";
 
@@ -11,12 +10,12 @@ export default async function UpdateGroupPage() {
 	const session: ISession | null = await getServerSession(options);
 
 	return (
-		<section className='container mx-auto'>
+		<main className="container mx-auto">
 			<UserSmsBalansInform session={session} />
-			<Title type="h1" color="dark">Управління контактами</Title>
-			<div className='content-block mt-[53px]'>
-				<Title type="h2" color="dark">Редагування групи</Title>
+			<h1 className="page-title mb-14">Управління контактами</h1>
+			<div className="content-block">
+				<h2 className="content-block__title">Редагування групи</h2>
 			</div>
-		</section>
-	)
+		</main>
+	);
 }
