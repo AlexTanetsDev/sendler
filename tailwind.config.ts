@@ -18,7 +18,8 @@ const config: Config = {
 				buttonForm: "#ADA3A3",
 				lightGrayBorder: "#636060",
 				darkGreyColor: "#B6B5B5",
-				headerTable: "#BEBDBD",
+				headerTable: "#417D8A",
+				rowUnderLine: "#B5C9BE",
 				greenBtn: "#32BB79",
 				bgFooter: "#0F3952",
 				lightGreen: '#CFF0E0',
@@ -26,7 +27,8 @@ const config: Config = {
 				priceTableBorderColor: '#DCDCDC',
 				hederTransparent: 'rgba(15, 57, 82, 0.38)',
 				emailColorLink: '#2366E8',
-				whiteText: '#FFFFFF'
+				whiteText: '#FFFFFF',
+				inputBorder: '#E6E6E6'
 			},
 			backgroundImage: {
 				"gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
