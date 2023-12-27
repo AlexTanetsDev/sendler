@@ -4,10 +4,11 @@ import { toast } from "react-toastify";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { validationSchemaFeedback } from "@/models/forms";
 import { FormInputFeedback } from "@/globaltypes/types";
+import GreenButton from "../buttons/GreenButton";
 
 interface Props {
   onClose: (() => void) | undefined;
-  title? :string
+  title?: string;
 }
 
 const FormFeedback = ({ onClose, title }: Props) => {
@@ -63,8 +64,8 @@ const FormFeedback = ({ onClose, title }: Props) => {
       onSubmit={handleSubmit(onSubmit)}
       className="w-[526px] mx-auto pb-11 pt-[29px]  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]"
     >
-     {title && <h1 className="form-title mb-8 mt-[15px]">{title}</h1>} 
-      <div className="text-left w-full">
+      {title && <h1 className="form-title mb-8 mt-[15px]">{title}</h1>}
+      <div className="text-left w-full mb-8">
         <label
           htmlFor="firstName"
           className="font-roboto text-base font-medium mb-2 block"
@@ -151,13 +152,7 @@ const FormFeedback = ({ onClose, title }: Props) => {
           <span className="text-red-500 ">{errors.desc.message}</span>
         )}
       </div>
-
-      <button
-        type="submit"
-        className="w-[198px] mt-8 bg-greenBtn flex items-center justify-center   py-[18px] focus:outline-none hover:bg-green-700 text-white rounded-[18px] text-lg transition-colors"
-      >
-        Відправити
-      </button>
+      <GreenButton size="big">Відправити</GreenButton>
     </form>
   );
 };

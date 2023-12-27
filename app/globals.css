@@ -41,8 +41,7 @@ footer {
 
 @layer components {
   .container {
-    width: 1330px;
-    padding: 0 15px;
+    @apply lg:w-[1330px] w-[680px] py-0 px-[15px]
   }
 }
 

@@ -28,6 +28,7 @@ const config: Config = {
         headerTable: "#417D8A",
         rowUnderLine: "#B5C9BE",
         greenBtn: "#32BB79",
+        hoverGreenBtn: '#169659',
         bgFooter: "#0F3952",
         lightGreen: "#CFF0E0",
         priceTableBg: "#F7FFFB",
