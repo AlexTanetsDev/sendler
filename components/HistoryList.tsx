@@ -5,17 +5,10 @@ type Props = {
 };
 
 export default async function HistoryList({ userHistory }: Props) {
-	
   function formatDateTime(inputDate: Date): string {
     const date = new Date(inputDate);
 
-    return new Intl.DateTimeFormat("en-GB", {
-      hour: "numeric",
-      minute: "numeric",
-      day: "numeric",
-      month: "numeric",
-      year: "numeric",
-    }).format(date);
+    return new Intl.DateTimeFormat().format(date);
   }
 
   return (
@@ -26,7 +19,7 @@ export default async function HistoryList({ userHistory }: Props) {
           return (
             <li
               key={item.history_id}
-              className="flex items-center gap-[100px] h-[57px] px-[26px] pt-[18px] pb-[13px] font-roboto text-[20px] text-black border-b border-black"
+              className="flex items-center gap-[100px] h-[47px] px-[26px] font-roboto text-[20px] text-black border-b border-[#B5C9BE]"
             >
               {}
               <p className="w-[194px]">Невідомо</p>

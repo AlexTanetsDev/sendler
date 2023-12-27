@@ -1,6 +1,7 @@
 import { getServerSession } from "next-auth";
 import UserSmsBalansInform from "@/components/UserSmsBalansInform";
 import { options } from "@/app/api/auth/[...nextauth]/options";
+import Title from "@/components/Title";
 
 import HistoryTable from "@/components/HistoryTable";
 import { ISession } from "@/globaltypes/types";
@@ -10,12 +11,13 @@ export default async function SendingHistory() {
   const userId = session?.user.user_id;
 
   return (
-    <main className="container mx-auto">
-      <UserSmsBalansInform session={session} />
-      <div className="container xl mx-auto pb-20 pt-[60px]">
-        <h1 className="page-title mb-14">Статистика</h1>
+    <section className="container mx-auto">
+      <Title type="h1" color="dark">
+        Статистика
+      </Title>
+      <div className="mt-[60px]">
         <HistoryTable id={userId} />
       </div>
-    </main>
+    </section>
   );
 }
