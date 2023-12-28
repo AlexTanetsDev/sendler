@@ -1,6 +1,6 @@
 const Table = () => {
   return (
-    <table className="w-[746px] bg-priceTableBg  border border-priceTableBorderColor ml-6">
+    <table className="lg:w-[746px] w-[626px] ml-auto bg-priceTableBg  border border-priceTableBorderColor lg:ml-6">
       <thead className="bg-lightGreen">
         <tr>
           <th className="py-[10px] px-3 border   font-roboto text-xl font-normal text-left">

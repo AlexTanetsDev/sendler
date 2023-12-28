@@ -28,7 +28,7 @@
 body {
   margin: 0;
   color: rgb(var(--foreground-rgb));
-  background:#FEFEFE;
+  background: #fefefe;
 }
 
 main {
@@ -41,8 +41,7 @@ footer {
 
 @layer components {
   .container {
-    width: 1330px;
-    padding: 0 15px;
+    @apply lg:w-[1326px] w-[710px] py-0 px-[15px]
   }
 }
 
@@ -86,7 +85,11 @@ footer {
 }
 
 .action__btn {
-  @apply transition-colors bg-greenBtn py-[10px] w-[144px] rounded-[18px] focus:outline-none hover:bg-green-700 text-white text-base;
+  @apply transition-colors bg-greenBtn py-[10px] w-[144px] rounded-[18px] focus:outline-none hover:bg-green-700 text-white text-base text-center;
+}
+
+.delete__btn {
+  @apply transition-colors bg-greenBtn py-[10px] w-[198px] rounded-[18px] focus:outline-none hover:bg-green-700 text-white text-base text-center;
 }
 
 .submit__btn {
@@ -114,10 +117,7 @@ footer {
 }
 
 .title_h1 {
-  font-size: 40px;
-  line-height: 60px;
-  font-weight: 600;
-  font-family: Montserrat, sans-serif;
+  @apply lg:text-[40px] text-[36px] font-semibold font-montserrat lg:leading-[60px] leading-[54px]
 }
 
 .title_h2 {

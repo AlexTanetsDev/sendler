@@ -10,8 +10,8 @@ const config: Config = {
     screens: {
       sm: "640px",
       md: "768px",
-      lg: "1024px",
-      xl: "1300px",
+      lg: "1160px",
+      xl: "1326px",
       xxl: "1800px",
     },
     extend: {
@@ -28,6 +28,7 @@ const config: Config = {
         headerTable: "#417D8A",
         rowUnderLine: "#B5C9BE",
         greenBtn: "#32BB79",
+        hoverGreenBtn: '#169659',
         bgFooter: "#0F3952",
         lightGreen: "#CFF0E0",
         priceTableBg: "#F7FFFB",

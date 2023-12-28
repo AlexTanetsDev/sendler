@@ -2,8 +2,8 @@
 
 import React, { useState } from "react";
 
-import { FeedbackButton } from "./buttons/FeedbackButton";
 import Modal from "./Modal/Modal";
+import GreenButton from "./buttons/GreenButton";
 
 const Feedback = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -18,7 +18,7 @@ const Feedback = () => {
   return (
     <>
       <p className=" text-base font-medium">Зворотній зв’язок</p>
-      <FeedbackButton openModal={openModal} />
+      <GreenButton size="normal" onClick={openModal} >Зв’язатись</GreenButton>
       <Modal isOpen={isModalOpen} onClose={closeModal} />
     </>
   );
