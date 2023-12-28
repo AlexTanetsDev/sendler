@@ -28,7 +28,7 @@
 body {
   margin: 0;
   color: rgb(var(--foreground-rgb));
-  background:#FEFEFE;
+  background: #fefefe;
 }
 
 main {
@@ -86,7 +86,11 @@ footer {
 }
 
 .action__btn {
-  @apply transition-colors bg-greenBtn py-[10px] w-[144px] rounded-[18px] focus:outline-none hover:bg-green-700 text-white text-base;
+  @apply transition-colors bg-greenBtn py-[10px] w-[144px] rounded-[18px] focus:outline-none hover:bg-green-700 text-white text-base text-center;
+}
+
+.delete__btn {
+  @apply transition-colors bg-greenBtn py-[10px] w-[198px] rounded-[18px] focus:outline-none hover:bg-green-700 text-white text-base text-center;
 }
 
 .submit__btn {

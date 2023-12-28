@@ -2,19 +2,23 @@ import { NextResponse } from "next/server";
 
 import {
 	fetchAllGroupId,
-	fetchGroupClients
+	fetchGroupClients,
+	fetchOneUserGroupName
 } from "@/app/utils";
 
 import { QueryResult } from "pg";
 import {
 	IGroupId,
 	IClient,
+	IGroupName,
 } from "@/globaltypes/types";
 
-export default async function getGroupClients(groupId: number): Promise<IClient[] | NextResponse<{ message: string; }> | null> {
+export default async function getGroupClients(groupId: number): Promise<{ group: string, clients: IClient[] } | NextResponse<{ message: string; }> | null> {
 	try {
 		const groupsRes: QueryResult<IGroupId> = await fetchAllGroupId();
 		const groupsId: IGroupId[] = groupsRes.rows;
+		const groupNameRes: QueryResult<IGroupName> = await fetchOneUserGroupName(groupId);
+		const groupName: string = groupNameRes.rows[0].group_name;
 
 		if (
 			!groupsId.find(
@@ -26,7 +30,7 @@ export default async function getGroupClients(groupId: number): Promise<IClient[
 
 		const groupClients: QueryResult<IClient> = await fetchGroupClients(groupId);
 
-		return groupClients.rows
+		return { group: groupName, clients: groupClients.rows };
 	} catch (error: any) {
 		throw new Error(error.message);
 	}

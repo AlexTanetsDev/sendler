@@ -1,16 +1,16 @@
 import axios from "axios";
 
 type Props = {
-	groupId: number;
+	id: number;
 	updateListControl: any;
-	children: string;
+	children: React.ReactNode;
 }
 
-export default function DeleteGroupBtn({ groupId, updateListControl, children }: Props) {
+export default function DeleteGroupBtn({ id, updateListControl, children }: Props) {
 
 	const handleClick = async () => {
 		try {
-			await axios.delete(`api/sending-groups/${groupId}`);
+			await axios.delete(`api/sending-groups/${id}`);
 			updateListControl();
 		} catch (error: any) {
 			console.log(error.message)

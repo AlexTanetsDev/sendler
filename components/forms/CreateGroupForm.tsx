@@ -64,7 +64,6 @@ export default function CreateGroupForm({ id, updateListControl }: Props) {
 		} catch (error: any) {
 			console.log(error.message)
 		}
-
 	}
 
 	return (
