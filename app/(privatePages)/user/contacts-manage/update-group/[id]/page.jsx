@@ -3,7 +3,7 @@
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3000/";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import * as XLSX from "xlsx/xlsx.mjs";
 
@@ -13,12 +13,31 @@ export default function UpdateGroupPage({ params }) {
   const groupId = Number(params.id);
   const router = useRouter();
   const [file, setFile] = useState(null);
+  const [groupName, setGroupName] = useState("");
+
+  const getGroupName = async () => {
+    try {
+      if (groupId) {
+        const response = await axios.get(`api/sending-groups/${groupId}`);
+        const { group } = response.data.res;
+        setGroupName(group);
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const memoizedGetClients = useCallback(getGroupName, [groupId]);
+
+  useEffect(() => {
+    memoizedGetClients();
+  }, [memoizedGetClients]);
+
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
   };
 
   const xport = useCallback(async () => {
-    // const aa = file;
     if (file) {
       const ab = await file.arrayBuffer();
       const wb = XLSX.read(ab);
@@ -26,11 +45,10 @@ export default function UpdateGroupPage({ params }) {
       const clients = XLSX.utils.sheet_to_json(wb.Sheets[wsname]);
 
       try {
-        const response = await axios.put(`api/sending-groups/${groupId}`, {
+        await axios.put(`api/sending-groups/${groupId}`, {
           clients: clients,
           cache: "no-store",
         });
-        console.log(response.data.message);
         router.push("/user/contacts-manage");
       } catch (error) {
         console.log(error.message + " | " + error.response.data.error);
@@ -46,7 +64,8 @@ export default function UpdateGroupPage({ params }) {
       </Title>
       <div className="content-block mt-[53px] text-center">
         <Title type="h2" color="dark">
-          Створення групи
+          Редагування групи
+          <span className="ml-4 text-headerTable">{groupName}</span>
         </Title>
         <div className="flex flex-col items-center py-8">
           <input
