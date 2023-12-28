@@ -81,9 +81,6 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 		const groupId = Number(params.id);
 		const method: string = request.method;
 
-		if (clients.length === 0) {
-			return HttpError(400, `The clients list is empty`);
-		}
 
 		const res: null | NextResponse<{
 			error: string;
@@ -92,6 +89,13 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 		if (res === null) {
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
 
+		}
+
+		if (clients.length === 0) {
+			return NextResponse.json(
+				{ message: `The group is empty` },
+				{ status: 200 }
+			);
 		}
 
 		return NextResponse.json(

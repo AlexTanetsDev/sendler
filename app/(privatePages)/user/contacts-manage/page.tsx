@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 
 import GroupsList from "@/components/groupsList";
 import CreateGroupForm from "@/components/forms/CreateGroupForm";
+import ReviewClientsBtn from "@/components/buttons/ReviewClientsBtn";
 
 import Title from "@/components/Title";
 
@@ -18,15 +19,20 @@ export default function ContactManagmentPage() {
 	const userId = session?.user.user_id;
 
 	const getGroups = async () => {
-		if (userId) {
-			const response = await axios.get(`api/sending-groups`, {
-				params: {
-					userId: userId,
-				},
-			});
-			const data = response.data.groups;
-			setGroups(data);
+		try {
+			if (userId) {
+				const response = await axios.get(`api/sending-groups`, {
+					params: {
+						userId: userId,
+					},
+				});
+				const data = response.data.groups;
+				setGroups(data);
+			}
+		} catch (error: any) {
+			console.log(error.message);
 		}
+
 	};
 
 	const memoizedGetGroups = useCallback(getGroups, [userId]);
@@ -52,7 +58,7 @@ export default function ContactManagmentPage() {
 					<p className="input__title mb-3">Всі контакти</p>
 					<div className="flex items-center">
 						<p className="mr-8 text-base font-normal font-roboto">За бажанням ви можете переглянути всі свої контакти</p>
-						<button type="submit" className='action__btn'>Переглянути</button>
+						<ReviewClientsBtn id={userId}>Переглянути</ReviewClientsBtn>
 					</div>
 				</div>
 			</div>

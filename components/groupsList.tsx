@@ -4,6 +4,8 @@ import { redirect } from "next/navigation";
 
 import { IGroupDatabase } from "@/globaltypes/types";
 import DeleteGroupBtn from "./buttons/DeleteGroupBtn";
+import EditGroupBtn from "./buttons/EditGroupBtn";
+import ImportGroupBtn from "./buttons/ImportGroupBTN";
 
 type Props = {
 	groups: IGroupDatabase[] | undefined;
@@ -12,15 +14,10 @@ type Props = {
 
 export default function GroupsList({ groups, updateListControl }: Props) {
 
-
-
 	if (groups === undefined) {
 		console.log('Unable to fetch userGroups!');
 		redirect('/')
 	};
-
-	console.log('groups=', groups)
-
 
 	return (
 		<div className="mb-[80px]">
@@ -35,9 +32,9 @@ export default function GroupsList({ groups, updateListControl }: Props) {
 						<div className="w-32 mx-8 text-left">{group.group_name}</div>
 						<div className="w-[200px] mr-12 text-left">{group.group_create_date}</div>
 						<div className="w-16 mr-36 text-left">{group.number_members}</div>
-						<button className="row-table__btn mr-[15px]">Редагувати</button>
-						<DeleteGroupBtn groupId={group.group_id} updateListControl={updateListControl}>Видалити</DeleteGroupBtn>
-						<button className="row-table__btn mr-[15px]">Імпорт</button>
+						<EditGroupBtn id={group.group_id} >Редагувати</EditGroupBtn>
+						<DeleteGroupBtn id={group.group_id} updateListControl={updateListControl}>Видалити</DeleteGroupBtn>
+						<ImportGroupBtn id={group.group_id}>Імпорт</ImportGroupBtn>
 						<button className="row-table__btn mr-[15px]">Експорт</button>
 					</li>
 				))}

@@ -51,7 +51,7 @@ export interface IClient extends ITel {
 	first_name?: string;
 	middle_name?: string;
 	last_name?: string;
-	date_of_birth?: Date;
+	date_of_birth?: DateTime;
 	parameter_1?: string;
 	parameter_2?: string;
 }
@@ -60,7 +60,9 @@ export interface IClientId {
 	client_id: number;
 }
 
-export interface IClientDatabase extends IClientId, IClient, IUserId { }
+export interface IClientDatabase extends IClientId, IClient, IUserId {
+	ua_date_of_birth: string;
+}
 
 export interface IGroup extends IGroupId, IGroupName, IUserId { }
 
