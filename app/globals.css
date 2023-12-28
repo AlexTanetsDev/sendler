@@ -41,7 +41,7 @@ footer {
 
 @layer components {
   .container {
-    @apply lg:w-[1326px] w-[710px] py-0 px-[15px]
+    @apply lg:w-[1326px] w-[710px] py-0 px-[15px];
   }
 }
 
@@ -85,11 +85,11 @@ footer {
 }
 
 .action__btn {
-  @apply transition-colors bg-greenBtn py-[10px] w-[144px] rounded-[18px] focus:outline-none hover:bg-green-700 text-white text-base text-center;
+  @apply w-[144px] py-[10px] rounded-[14px] bg-greenBtn hover:bg-hoverGreenBtn text-white text-base flex items-center justify-center transition-colors;
 }
 
 .delete__btn {
-  @apply transition-colors bg-greenBtn py-[10px] w-[198px] rounded-[18px] focus:outline-none hover:bg-green-700 text-white text-base text-center;
+  @apply w-[198px] py-[10px] rounded-[14px] bg-greenBtn hover:bg-hoverGreenBtn text-white text-base flex items-center justify-center transition-colors;
 }
 
 .submit__btn {
@@ -97,7 +97,7 @@ footer {
 }
 
 .row-table__btn {
-  @apply w-[110px] py-1 text-base  text-center font-roboto font-normal border border-lightGrayBorder rounded-xl;
+  @apply w-[110px] py-[3px] hover:bg-blueHoverBtn hover:text-white hover:border-transparent text-base  text-center font-roboto font-normal border border-headerTable rounded-xl;
 }
 
 .inputs-box {
@@ -117,7 +117,7 @@ footer {
 }
 
 .title_h1 {
-  @apply lg:text-[40px] text-[36px] font-semibold font-montserrat lg:leading-[60px] leading-[54px]
+  @apply lg:text-[40px] text-[36px] font-semibold font-montserrat lg:leading-[60px] leading-[54px];
 }
 
 .title_h2 {

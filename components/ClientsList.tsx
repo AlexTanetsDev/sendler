@@ -97,16 +97,16 @@ export default function ClientsList({ clients, groupId, updateListControl
 
 	return (
 		<div className="mb-[80px]">
-			<div className='flex w-full px-[64px] pt-[18px] pb-[13px] text-xl text-white font-roboto font-normal bg-headerTable'>
-				<p className='w-[120px] mr-8'>Номер</p>
-				<p className='w-[346px] mr-8'>Ім&apos;я(П.І.Б.)</p>
-				<p className='w-[200px] mr-8'>Дата народження</p>
-				<p className='w-[120px] mr-8'>Параметр 1</p>
+			<div className='flex gap-x-8 w-full px-[26px] pt-[18px] pb-[13px] text-xl text-white font-roboto font-normal bg-headerTable'>
+				<p className='w-[158px] pl-[38px]'>Номер</p>
+				<p className='w-[346px]'>Ім&apos;я(П.І.Б.)</p>
+				<p className='w-[170px]'>Дата народження</p>
+				<p className='w-[150px]'>Параметр 1</p>
 				<p>Параметр 2</p>
 			</div>
 			<form
 				onSubmit={handleSubmit(onSubmit)}
-				className="text-right pl-[26px]">
+				className="text-right px-[26px]">
 				{clients.map((client: IClientDatabase) => (
 					<li key={client.client_id} className="flex items-center h-[48px] text-base font-montserrat font-normal border-b border-rowUnderLine">
 						<input
@@ -115,15 +115,19 @@ export default function ClientsList({ clients, groupId, updateListControl
 							type="checkbox"
 							className="mr-6"
 						/>
-						<div className="w-[120px] mr-8 text-left">{client.tel}</div>
-						<div className="w-[346px] mr-8 text-left">{client.last_name} {client.first_name} {client.middle_name}</div>
-						<div className="w-[200px] mr-8 text-left">{client.ua_date_of_birth}</div>
-						<div className="w-[120px] mr-8 text-left">{client.parameter_1}</div>
-						<div className="w-[120px] text-left">{client.parameter_2}</div>
-						<button className="row-table__btn">Редагувати</button>
+						<div className="flex items-center gap-x-8">
+							<div className="w-[120px] text-left">{client.tel}</div>
+							<div className="w-[346px] text-left">{client.last_name} {client.first_name} {client.middle_name}</div>
+							<div className="w-[170px] text-left">{client.ua_date_of_birth}</div>
+							<div className="w-[150px] text-left">{client.parameter_1}</div>
+							<div className="w-[150px] text-left">{client.parameter_2}</div>
+							<button className="row-table__btn">Редагувати</button>
+						</div>
 					</li>
 				))}
-				<button type="submit" className='mt-[50px] delete__btn'>Видалити</button>
+				<div className="flex justify-end">
+					<button type="submit" className='mt-[50px] delete__btn'>Видалити</button>
+				</div>
 			</form>
 		</div>
 	)

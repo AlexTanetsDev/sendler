@@ -1,0 +1,88 @@
+'use client';
+
+import axios from "axios";
+
+import { useForm, SubmitHandler } from "react-hook-form";
+
+import { schemaReqCreateGroup } from "@/models/sending-groups";
+
+import { IGroupName } from "@/globaltypes/types";
+
+
+
+export default function SearchClientForm() {
+
+	const {
+		register,
+		handleSubmit,
+		reset,
+		formState: { errors },
+	} = useForm<IGroupName>({
+		resolver: async (data) => {
+			try {
+				await schemaReqCreateGroup.validateAsync(data, { abortEarly: false });
+				return { values: data, errors: {} };
+			} catch (error: any) {
+				const validationErrors: Record<string, { message: string }> = {};
+				if (error.details) {
+					error.details.forEach(
+						(detail: { context: { key: string | number }; message: any }) => {
+							if (detail.context && detail.context.key) {
+								validationErrors[detail.context.key] = {
+									message: detail.message,
+								};
+							}
+						}
+					);
+				}
+				return {
+					values: {},
+					errors: validationErrors,
+				};
+			}
+		},
+	})
+
+	const onSubmit: SubmitHandler<IGroupName> = async (data) => {
+		// try {
+		// 	await axios.post(`api/sending-groups`,
+		// 		{
+		// 			group_name: data.group_name,
+		// 			cache: "no-store",
+		// 		},
+		// 		{
+		// 			params: {
+		// 				userId: id,
+		// 			},
+		// 		}
+		// 	);
+		// 	// updateListControl();
+		// 	reset({ group_name: '' });
+		// } catch (error: any) {
+		// 	console.log(error.message)
+		// }
+	}
+
+	return (
+		<form
+			autoComplete="off"
+			onSubmit={handleSubmit(onSubmit)}
+			className='mb-[50px] ml-[26px]'>
+			<label htmlFor='group_name' className='block mb-3.5 input__title'>
+				Пошук за номером телефону
+			</label>
+			<div className='flex items-center'>
+				<input id="group_name"
+					type='text'
+					{...register("group_name")}
+					className='w-[474px] h-12 mr-8 px-4 input'
+					required
+				/>
+				{errors.group_name && (
+					<span className="text-red-500 ">{errors.group_name.message}</span>
+				)}
+				<button type="submit" className='action__btn'>Створити</button>
+			</div>
+		</form>
+	);
+};
