@@ -6,7 +6,7 @@ axios.defaults.baseURL = "http://localhost:3000/";
 import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 
-import GroupsList from "@/components/groupsList";
+import GroupsList from "@/components/GroupsList";
 import CreateGroupForm from "@/components/forms/CreateGroupForm";
 import ReviewClientsBtn from "@/components/buttons/ReviewClientsBtn";
 
