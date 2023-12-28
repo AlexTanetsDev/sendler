@@ -1,11 +1,14 @@
 import Image from "next/image";
 import { AboutMarketing } from "@/data/data";
+import Title from "@/components/Title";
 
 const About = () => {
   return (
     <>
-      <div className="container">
-        <h1 className="title mb-[60px]">Про сервіс</h1>
+      <div className="container mb-[60px]">
+        <Title type="h1" color="dark">
+          Про сервіс
+        </Title>
       </div>
       <section className="bg-[url('/bg-about.png')] bg-cover flex flex-col items-center py-[116px]  h-[400px] w-full">
         <div className="container">
@@ -22,8 +25,10 @@ const About = () => {
       </section>
       <section className="pt-20 flex flex-col items-center">
         <div className="container ">
-          <h2 className="title  mb-[60px]">Можливості сервісу</h2>
-          <ul className="flex justify-between items-center flex-wrap gap-[60px]">
+          <Title type="h1" color="dark">
+            Можливості сервісу
+          </Title>
+          <ul className="flex justify-between items-center flex-wrap gap-[60px] mt-[60px]">
             {AboutMarketing.map(({ id, title, iconPath, alt }) => {
               return (
                 <li key={id} className=" w-[308px]">
@@ -38,9 +43,11 @@ const About = () => {
         </div>
       </section>
       <section className="pt-20 pb-10">
-        <h2 className="title mb-[60px] text-center">
-          Розробка та супровід сервісів
-        </h2>
+        <div className="container mb-[60px] text-center">
+          <Title type="h1" color="dark">
+            Розробка та супровід сервісів
+          </Title>
+        </div>
         <div className="container flex gap-[134px]">
           <div className="flex flex-col items-center justify-center max-w-[526px] gap-[32px]">
             <p className="font-montserrat text-base text-[#1B1B30]">
