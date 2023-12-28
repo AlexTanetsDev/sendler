@@ -41,7 +41,7 @@ footer {
 
 @layer components {
   .container {
-    @apply lg:w-[1330px] w-[680px] py-0 px-[15px]
+    @apply lg:w-[1326px] w-[710px] py-0 px-[15px]
   }
 }
 
@@ -113,10 +113,7 @@ footer {
 }
 
 .title_h1 {
-  font-size: 40px;
-  line-height: 60px;
-  font-weight: 600;
-  font-family: Montserrat, sans-serif;
+  @apply lg:text-[40px] text-[36px] font-semibold font-montserrat lg:leading-[60px] leading-[54px]
 }
 
 .title_h2 {
