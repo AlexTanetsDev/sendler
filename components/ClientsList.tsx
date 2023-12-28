@@ -1,6 +1,7 @@
 'use client';
 
 import axios from "axios";
+axios.defaults.baseURL = "http://localhost:3000/";
 
 import { useForm } from "react-hook-form";
 
@@ -10,7 +11,6 @@ import convertClientsBirthdayFormat from "@/helpers/ConvertClientsBirsdayFormat"
 
 import { IClientDatabase, IClient } from "@/globaltypes/types";
 
-
 type Props = {
 	clients: IClientDatabase[];
 	groupId?: number;
@@ -19,6 +19,8 @@ type Props = {
 
 export default function ClientsList({ clients, groupId, updateListControl
 }: Props) {
+
+	clients = convertClientsBirthdayFormat(clients);
 
 	const removeIdFromClientObject = (arrayIds: number[], arrayClints: IClientDatabase[]) => {
 		const groupClients: IClient[] = [];
@@ -46,12 +48,11 @@ export default function ClientsList({ clients, groupId, updateListControl
 		redirect('/')
 	};
 
-	clients = convertClientsBirthdayFormat(clients);
-
 	const {
 		register,
 		handleSubmit,
 	} = useForm();
+
 	const onSubmit = async (data: any) => {
 		const deletedClientsId: number[] = [];
 		const updateGroupClientsId: number[] = [];
@@ -71,7 +72,7 @@ export default function ClientsList({ clients, groupId, updateListControl
 			const updateClients: IClient[] = removeIdFromClientObject(updateGroupClientsId, clients)
 
 			try {
-				const response = await axios.put(`api/sending-groups/${groupId}`, {
+				const response = await axios.put(`http://localhost:3000/api/sending-groups/${groupId}`, {
 					clients: updateClients,
 					cache: "no-store",
 				});
@@ -83,7 +84,7 @@ export default function ClientsList({ clients, groupId, updateListControl
 		} else {
 			deletedClientsId.forEach(async (deletedClientId) => {
 				try {
-					const response = await axios.delete(`api/clients/${deletedClientId}`);
+					const response = await axios.delete(`http://localhost:3000/api/clients/${deletedClientId}`);
 					console.log(response.data.message);
 					updateListControl();
 				} catch (error: any) {
@@ -94,14 +95,12 @@ export default function ClientsList({ clients, groupId, updateListControl
 		}
 	};
 
-
-
 	return (
 		<div className="mb-[80px]">
 			<div className='flex w-full px-[64px] pt-[18px] pb-[13px] text-xl text-white font-roboto font-normal bg-headerTable'>
 				<p className='w-[120px] mr-8'>Номер</p>
 				<p className='w-[346px] mr-8'>Ім&apos;я(П.І.Б.)</p>
-				<p className='w-[200px] mr-16'>Дата народження</p>
+				<p className='w-[200px] mr-8'>Дата народження</p>
 				<p className='w-[120px] mr-8'>Параметр 1</p>
 				<p>Параметр 2</p>
 			</div>
@@ -118,7 +117,7 @@ export default function ClientsList({ clients, groupId, updateListControl
 						/>
 						<div className="w-[120px] mr-8 text-left">{client.tel}</div>
 						<div className="w-[346px] mr-8 text-left">{client.last_name} {client.first_name} {client.middle_name}</div>
-						<div className="w-[200px] mr-16 text-left">{client.ua_date_of_birth}</div>
+						<div className="w-[200px] mr-8 text-left">{client.ua_date_of_birth}</div>
 						<div className="w-[120px] mr-8 text-left">{client.parameter_1}</div>
 						<div className="w-[120px] text-left">{client.parameter_2}</div>
 						<button className="row-table__btn">Редагувати</button>

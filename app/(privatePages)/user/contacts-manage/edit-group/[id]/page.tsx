@@ -9,9 +9,9 @@ import ClientsList from "@/components/ClientsList";
 
 export default function EditGroupPage({ params }: { params: { id: string } }) {
 
-	const [clients, SetClients] = useState([]);
-	const [isAddGroup, SetIsAddgroup] = useState(false);
-	const [groupName, SetGroupName] = useState('');
+	const [clients, setClients] = useState([]);
+	const [isAddGroup, setIsAddgroup] = useState(false);
+	const [groupName, setGroupName] = useState('');
 
 	const groupId = Number(params.id);
 
@@ -21,8 +21,8 @@ export default function EditGroupPage({ params }: { params: { id: string } }) {
 				const response = await axios.get(`api/sending-groups/${groupId}`);
 				const { clients, group } = response.data.res;
 
-				SetClients(clients);
-				SetGroupName(group);
+				setClients(clients);
+				setGroupName(group);
 			}
 		} catch (error: any) {
 			console.log(error.message);
@@ -32,12 +32,12 @@ export default function EditGroupPage({ params }: { params: { id: string } }) {
 	const memoizedGetClients = useCallback(getClients, [groupId]);
 
 	const updateListControl = () => {
-		SetIsAddgroup(!isAddGroup);
+		setIsAddgroup(!isAddGroup);
 	};
 
 	useEffect(() => {
 		memoizedGetClients();
-	}, [groupId, isAddGroup, memoizedGetClients]);
+	}, [isAddGroup, memoizedGetClients]);
 
 
 	return (

@@ -81,13 +81,12 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 		const method: string = request.method;
 
 
-		const res: null | NextResponse<{
+		const resUpdate: null | NextResponse<{
 			error: string;
 		}> | undefined = await updateGroup(clients, groupId, method);
 
-		if (res === null) {
+		if (resUpdate === null) {
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
-
 		}
 
 		if (clients.length === 0) {
@@ -97,8 +96,10 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 			);
 		}
 
+		const resGet: { group: string, clients: IClient[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId);
+
 		return NextResponse.json(
-			{ message: `The group is updated` },
+			{ resGet, message: `The group is updated` },
 			{ status: 200 }
 		);
 	} catch (error: any) {
