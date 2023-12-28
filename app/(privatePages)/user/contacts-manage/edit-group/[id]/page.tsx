@@ -10,18 +10,19 @@ import ClientsList from "@/components/ClientsList";
 export default function EditGroupPage({ params }: { params: { id: string } }) {
 
 	const [clients, SetClients] = useState([]);
-	const [isAddGroup, SetIsAddgroup] = useState(false)
+	const [isAddGroup, SetIsAddgroup] = useState(false);
+	const [groupName, SetGroupName] = useState('');
 
 	const groupId = Number(params.id);
 
 	const getClients = async () => {
 		try {
 			if (groupId) {
-				const response = await axios.get(`api/sending-groups/${groupId}`, {
-				});
+				const response = await axios.get(`api/sending-groups/${groupId}`);
+				const { clients, group } = response.data.res;
 
-				const data = response.data.clients;
-				SetClients(data);
+				SetClients(clients);
+				SetGroupName(group);
 			}
 		} catch (error: any) {
 			console.log(error.message);
@@ -43,7 +44,7 @@ export default function EditGroupPage({ params }: { params: { id: string } }) {
 		<main className="container mx-auto">
 			<Title type="h1" color="dark">Управління контактами</Title>
 			<div className="flex mt-[50px]">
-				<Title type="h2" color="dark">Редагування групи:</Title>
+				<Title type="h2" color="dark">Редагування групи: {groupName}</Title>
 			</div>
 			<div className="mt-[60px]">
 				<ClientsList clients={clients} groupId={groupId} updateListControl={updateListControl} />

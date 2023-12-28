@@ -14,20 +14,19 @@ import { IQieryParamsUpdateGroup } from "./types";
 import { schemaReqUpdateGroup } from '@/models/sending-groups';
 
 // get one group with id from params
-export async function GET(_request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }> | NextResponse<{ clients: IClient[] | NextResponse<{ error: string; }> }>> {
+export async function GET(_request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }> | NextResponse<{ group: string, clients: IClient[] | NextResponse<{ error: string; }> }>> {
 
 	const groupId = Number(params.id);
 
 	try {
-		const res: IClient[] | NextResponse<{
-			message: string;
-		}> | null = await getGroupClients(groupId);
+		const res: { group: string, clients: IClient[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId);
 
 		if (res === null) {
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
 		}
+
 		return NextResponse.json(
-			{ clients: res, message: 'Group memebers' },
+			{ res, message: 'Group memebers' },
 			{ status: 200 }
 		);
 	} catch (error: any) {
