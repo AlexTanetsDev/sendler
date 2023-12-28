@@ -1,3 +1,5 @@
+import Link from "next/link";
+import formatTableDate from "@/app/utils/formatTableDate";
 import { IHistoryResponce } from "@/globaltypes/historyTypes";
 
 type Props = {
@@ -5,12 +7,6 @@ type Props = {
 };
 
 export default async function HistoryList({ userHistory }: Props) {
-  function formatDateTime(inputDate: Date): string {
-    const date = new Date(inputDate);
-
-    return new Intl.DateTimeFormat().format(date);
-  }
-
   return (
     <ul>
       {userHistory &&
@@ -23,11 +19,13 @@ export default async function HistoryList({ userHistory }: Props) {
             >
               {}
               <p className="w-[194px]">Невідомо</p>
-              <p className="w-[184px]">
-                {formatDateTime(item.sending_group_date)}
+              <p className="w-[184px] text-[#2366E8]">
+                <Link href={`/statistics/by-date/`}>
+                  {formatTableDate(item.sending_group_date)}
+                </Link>
               </p>
-              <p className="w-[150px]">{item.group_name}</p>
-              <p className="w-[150px]">{item.group_name}</p>
+              <p className="w-[150px]">{}</p>
+              <p className="w-[150px]">{}</p>
             </li>
           );
         })}
