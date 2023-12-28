@@ -52,7 +52,7 @@ export default function UpdateGroupPage({ params }) {
           <input
             type="file"
             name="file"
-            accept=".xls"
+            accept=".xls,.xlsx"
             onChange={handleFileChange}
             className="mb-8 bg-slate-300"
           />
