@@ -33,7 +33,7 @@ const BackToTopBtn = () => {
 
   return (
     <button
-      className={`fixed bottom-10 right-10 bg-transparent border-2 border-greenBtn  px-3 py-3 rounded-full hover:bg-greenBtn hover:scale-110 hover:border-transparent  transition-all ${
+      className={`fixed bottom-5 right-5 lg:bottom-10 lg:right-10 bg-transparent border-2 border-greenBtn  px-2 py-2 lg:px-3 lg:py-3 rounded-full hover:bg-greenBtn hover:scale-110 hover:border-transparent  transition-all ${
         isVisible ? "opacity-100" : "opacity-0"
       }`}
       onClick={scrollToTop}
