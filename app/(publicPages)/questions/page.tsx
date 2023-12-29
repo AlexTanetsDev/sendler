@@ -8,7 +8,9 @@ const Question = () => {
     <>
       <section className=" bg-[url('/bg-questions.png')] bg-cover flex flex-col items-center pt-[193px]  h-[606px] w-full">
         <div className="container ">
-          <Title type="h1" color="light">Питання-відповідь</Title>
+          <Title type="h1" color="light">
+            Питання-відповідь
+          </Title>
         </div>
       </section>
       <section className="pt-20 flex flex-col items-center">
@@ -27,7 +29,9 @@ const Question = () => {
       </section>
 
       <section className="container pt-20 flex flex-col items-start">
-        <Title type="h1" color="dark">Не знайшли відповідь на своє питання?</Title>
+        <Title type="h1" color="dark">
+          Не знайшли відповідь на своє питання?
+        </Title>
         <div className="flex mt-[60px]">
           <ul className="mr-[138px] w-[625px] pt-[86px]">
             <li className="pb-8">

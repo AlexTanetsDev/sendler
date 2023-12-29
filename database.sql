@@ -70,8 +70,15 @@ CREATE TABLE
         history_id SERIAL,
         group_id INT REFERENCES send_groups(group_id) ON DELETE CASCADE,
         sending_group_date TIMESTAMP DEFAULT NOW():: timestamp,
-        PRIMARY KEY (history_id)
+        PRIMARY KEY (history_id),
+        send_method send_method_type DEFAULT 'api'
     );
+
+CREATE TYPE send_method_type AS ENUM(
+    'veb',
+    'api'
+);
+
 
 CREATE TYPE status_type AS ENUM (
     'pending',

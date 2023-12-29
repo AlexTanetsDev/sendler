@@ -107,7 +107,7 @@ footer {
 }
 
 .input {
-  @apply bg-white rounded-[18px] ;
+  @apply bg-white rounded-[18px];
 }
 
 .input__title {
@@ -181,4 +181,10 @@ footer {
   font-style: normal;
   font-weight: 600;
   line-height: 150%;
+}
+
+.sms-page-box {
+  padding: 50px 26px;
+  border-radius: 14px;
+  background-color: #cdeae3;
 }
