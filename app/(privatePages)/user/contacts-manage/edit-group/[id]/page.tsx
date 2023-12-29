@@ -6,6 +6,7 @@ import { useState, useCallback, useEffect, } from "react";
 
 import Title from "@/components/Title";
 import ClientsList from "@/components/ClientsList";
+import SearchClientForm from "@/components/forms/SearchClientForm";
 
 export default function EditGroupPage({ params }: { params: { id: string } }) {
 
@@ -43,11 +44,14 @@ export default function EditGroupPage({ params }: { params: { id: string } }) {
 	return (
 		<main className="container mx-auto">
 			<Title type="h1" color="dark">Управління контактами</Title>
-			<div className="flex mt-[50px]">
-				<Title type="h2" color="dark">Редагування групи: <span className="ml-4 text-headerTable">{groupName}</span></Title>
-			</div>
-			<div className="mt-[60px]">
-				<ClientsList clients={clients} groupId={groupId} updateListControl={updateListControl} />
+			<div className="content-block mt-[50px]">
+				<div className="ml-[26px] mb-[50px]">
+					<Title type="h2" color="dark">Редагування групи: <span className="ml-4 text-headerTable">{groupName}</span></Title>
+				</div>
+				<SearchClientForm />
+				<div className="mt-[60px]">
+					<ClientsList clients={clients} groupId={groupId} updateListControl={updateListControl} />
+				</div>
 			</div>
 		</main>
 	);

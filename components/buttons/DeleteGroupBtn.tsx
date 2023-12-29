@@ -17,7 +17,7 @@ export default function DeleteGroupBtn({ id, updateListControl, children }: Prop
 		}
 	}
 	return (
-		<button onClick={handleClick} className="row-table__btn mr-[15px]">
+		<button onClick={handleClick} className="row-table__btn">
 			{children}
 		</button>
 	)
