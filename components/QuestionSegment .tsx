@@ -21,9 +21,9 @@ const QuestionSegment = ({ title, desc, email }: Props) => {
     <>
       <button
         onClick={toggleDescription}
-        className="flex justify-between items-center w-full py-[22px]"
+        className="flex justify-between  items-center text-start w-full py-[14px] lg:py-[22px]"
       >
-        <h3 className=" text-xl font-roboto block">{title}</h3>
+        <h3 className=" lg:text-xl text-lg font-roboto block">{title}</h3>
         <span className="block">
           {expanded ? (
             <Image
@@ -43,7 +43,7 @@ const QuestionSegment = ({ title, desc, email }: Props) => {
         </span>
       </button>
       <p
-        className={` text-[16px] mt-10 pr-[196px] pb-5 ${
+        className={` text-[16px] mt-3 lg:mt-10 pr-6 lg:pr-[196px] pb-5 ${
           expanded ? "hidden " : " blok"
         }`}
       >

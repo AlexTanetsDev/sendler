@@ -12,13 +12,13 @@ const Question = () => {
           <Title type="h1" color="light">Питання-відповідь</Title>
         </div>
       </section>
-      <section className="pt-20 flex flex-col items-center">
+      <section className="pt-20 flex flex-col lg:items-center">
         <ul className="container ">
           {ArrayQuestions.map(({ id, title, desc, email }) => {
             return (
               <li
                 key={id}
-                className="bg-formBg pr-3 pl-5  rounded-[18px] mb-[22px] w-[1076px]"
+                className="bg-formBg pr-3 lg:pl-5 pl-6  rounded-[18px] mb-[22px] lg:w-[1076px] w-full"
               >
                 <QuestionSegment title={title} desc={desc} email={email} />
               </li>
@@ -29,8 +29,8 @@ const Question = () => {
 
       <section className="container pt-20 flex flex-col items-start">
         <Title type="h1" color="dark">Не знайшли відповідь на своє питання?</Title>
-        <div className="flex mt-[60px]">
-          <ul className="mr-[138px] w-[625px] pt-[86px]">
+        <div className="block lg:flex mt-[60px]">
+          <ul className="mr-[138px] lg:w-[625px] w-full mb-20 lg:mb-0 lg:pt-[86px]">
             <li className="pb-8">
               <p>
                 Шановний клієнте,
