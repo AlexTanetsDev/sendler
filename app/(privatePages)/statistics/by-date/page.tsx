@@ -40,7 +40,7 @@ export default async function DayHistory() {
             <p className="mb-5 text-xl font-roboto text-[#1B1B30]">
               Розсилки за {formatTableDate(date)}
             </p>
-            <p className="mb-10 text-l font-roboto text-[#2366E8]">
+            <p className="mb-10 text-lg font-roboto text-[#2366E8]">
               <Link href={`/statistics/`}>
                 Повернутись до загальної статистики за період
               </Link>
@@ -70,7 +70,7 @@ export default async function DayHistory() {
                 return (
                   <li
                     key={item.history_id}
-                    className="flex items-center justify-between h-[47px] px-[26px] font-roboto text-l text-black border-b border-[#B5C9BE]"
+                    className="flex items-center justify-between h-[47px] px-[26px] font-roboto text-lg text-black border-b border-[#B5C9BE]"
                   >
                     <p className="w-[130px] text-[#2366E8]">
                       <Link
