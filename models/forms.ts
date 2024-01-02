@@ -1,9 +1,7 @@
 import Joi from "joi";
 
 export const validationSchemaFeedback = Joi.object({
-  firstName: Joi.string().required().label("first name").min(2),
-  secondName: Joi.string().required().label("second name").min(2),
-
+  name: Joi.string().label("name").allow(''),
   phone: Joi.string()
     .pattern(/^\+\d{10,}$/)
     .required()

@@ -67,41 +67,20 @@ const FormFeedback = ({ onClose, title }: Props) => {
       {title && <h1 className="form-title mb-8 mt-[15px]">{title}</h1>}
       <div className="text-left w-full mb-8">
         <label
-          htmlFor="firstName"
+          htmlFor="name"
           className="font-roboto text-base font-medium mb-2 block"
         >
-          ім’я
+         П.І.Б
         </label>
         <input
-          id="firstName"
+          id="name"
           type="text"
-          {...register("firstName")}
+          {...register("name")}
           className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
-          required
         />
-        {errors.firstName && (
-          <span className="text-red-500 block">{errors.firstName.message}</span>
+        {errors.name && (
+          <span className="text-red-500 block">{errors.name.message}</span>
         )}
-
-        <label
-          htmlFor="secondName"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
-        >
-          Прiзвище
-        </label>
-        <input
-          id="secondName"
-          type="text"
-          {...register("secondName")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-          required
-        />
-        {errors.secondName && (
-          <span className="text-red-500 block">
-            {errors.secondName.message}
-          </span>
-        )}
-
         <label
           htmlFor="phone"
           className="font-roboto text-base font-medium mb-2  mt-8 block"

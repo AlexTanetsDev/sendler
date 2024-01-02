@@ -7,9 +7,13 @@ import { FormInputsLogin } from "@/globaltypes/types";
 import { schemaLogin } from "@/models/forms";
 import GreenButton from "../buttons/GreenButton";
 import { toast } from "react-toastify";
+import {  useState } from "react";
+import ShowPassword from "../buttons/ShowPassword";
 
 const LoginForm = () => {
   const router = useRouter();
+  const [show, setShow] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const {
     register,
@@ -42,15 +46,22 @@ const LoginForm = () => {
   });
 
   const onSubmit: SubmitHandler<FormInputsLogin> = async (data) => {
+    setIsDisabled(true)
     const res = await signIn("credentials", {
       login: data.login,
       password: data.password,
       redirect: false,
     });
+    if (res?.ok === false) {
+      if (res.status === 401) {
+        toast.error("Неправильний логін або пароль");
+      }
+    }
     if (res && !res.error) {
       router.push("/mailing-list");
-      toast.success(`Wellcome ${data.login}`)
+      toast.success(`Ласкаво просимо ${data.login}`);
     }
+    setIsDisabled(false)
   };
 
   return (
@@ -83,18 +94,25 @@ const LoginForm = () => {
         >
           Пароль
         </label>
-        <input
-          id="password"
-          type="password"
-          {...register("password")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
-          required
-        />
+        <div className="flex relative">
+          <input
+            id="password"
+            type={show ? "text" : "password"}
+            {...register("password")}
+            className="w-full border py-2 pl-3 pr-11 focus:outline-none focus:border-blue-500 rounded-[18px] input"
+            required
+          />
+          <ShowPassword show={show} onClick={() => setShow(!show)} />
+        </div>
+
         {errors.password && (
           <span className="text-red-500 ">{errors.password.message}</span>
         )}
-      </div>
-      <GreenButton size="big">Увійти</GreenButton>
+      </div>   
+        <GreenButton size="big" isDisabled={isDisabled}>
+          Увійти
+        </GreenButton>
+
     </form>
   );
 };

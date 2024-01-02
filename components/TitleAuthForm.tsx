@@ -19,7 +19,11 @@ const TitleAuthForm = () => {
             </Link>
             <Link
               href="/signup"
-              className="font-roboto text-base font-normal hover:underline hover:underline-offset-4 "
+              className={`font-roboto text-base font-normal hover:underline hover:underline-offset-4  ${
+                pathName.startsWith("/signup")
+                  ? "underline underline-offset-4"
+                  : ""
+              }`}
             >
               Реєстрація
             </Link>

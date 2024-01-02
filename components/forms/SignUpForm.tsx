@@ -7,6 +7,8 @@ import { validationSchemaSignUp } from "@/models/forms";
 import { FormInputsSignUp } from "@/globaltypes/types";
 import GreenButton from "../buttons/GreenButton";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import ShowPassword from "../buttons/ShowPassword";
 
 const SingUpForm = () => {
   const {
@@ -40,8 +42,11 @@ const SingUpForm = () => {
   });
 
   const router = useRouter();
+  const [show, setShow] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const onSubmit: SubmitHandler<FormInputsSignUp> = async (data) => {
+    setIsDisabled(true);
     const res = await fetch("http://localhost:3000/api/users/signup", {
       method: "POST",
       body: JSON.stringify({
@@ -52,6 +57,11 @@ const SingUpForm = () => {
         user_name: data.name,
       }),
     });
+    if (!res.ok) {
+      toast.error(
+        "Користувач із таким іменем або логіном, номером телефону чи електронною адресою вже існує"
+      );
+    }
     if (res && res.ok) {
       const credentialsRes = await signIn("credentials", {
         login: data.login,
@@ -60,9 +70,10 @@ const SingUpForm = () => {
       });
       if (credentialsRes && !credentialsRes.error) {
         router.push("/mailing-list");
-        toast.success(`Wellcome ${data.login}`)
+        toast.success(`Ласкаво просимо ${data.login}`);
       }
     }
+    setIsDisabled(false);
   };
 
   return (
@@ -146,13 +157,18 @@ const SingUpForm = () => {
         >
           Пароль
         </label>
-        <input
-          id="password"
-          type="password"
-          {...register("password")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
-          required
-        />
+        <div className="flex relative">
+          {" "}
+          <input
+            id="password"
+            type={show ? "text" : "password"}
+            {...register("password")}
+            className="w-full border py-2 pl-3 pr-11 focus:outline-none focus:border-blue-500 rounded-[18px] input"
+            required
+          />
+          <ShowPassword show={show} onClick={() => setShow(!show)} />
+        </div>
+
         {errors.password && (
           <span className="text-red-500 ">{errors.password.message}</span>
         )}
@@ -162,18 +178,25 @@ const SingUpForm = () => {
         >
           Підтвердіть пароль
         </label>
-        <input
-          id="repeatPassword"
-          type="repeatPassword"
-          {...register("repeatPassword")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
-          required
-        />
+        <div className="flex relative">
+          {" "}
+          <input
+            id="repeatPassword"
+            type={show ? "text" : "password"}
+            {...register("repeatPassword")}
+            className="w-full border py-2 pl-3 pr-11 focus:outline-none focus:border-blue-500 rounded-[18px] input"
+            required
+          />
+          <ShowPassword show={show} onClick={() => setShow(!show)} />
+        </div>
+
         {errors.repeatPassword && (
           <span className="text-red-500 ">{errors.repeatPassword.message}</span>
         )}
       </div>
-      <GreenButton size="big">Реєстрація</GreenButton>
+      <GreenButton size="big" isDisabled={isDisabled}>
+        Реєстрація
+      </GreenButton>
     </form>
   );
 };
