@@ -8,7 +8,7 @@ const config: Config = {
 	],
 	theme: {
 		screens: {
-			sm: "640px",
+			sm: "340px",
 			md: "768px",
 			lg: "1160px",
 			xl: "1326px",

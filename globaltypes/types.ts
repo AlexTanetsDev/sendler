@@ -144,8 +144,7 @@ export interface ISession {
 }
 
 export interface FormInputFeedback {
-	firstName: string;
-	secondName: string;
+	name?: string;
 	phone: number;
 	email: string;
 	desc: string;

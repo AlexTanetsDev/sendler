@@ -1,15 +1,25 @@
-"use client";
-import { signOut } from "next-auth/react";
+"use client"
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import React from "react";
+import React, { MouseEvent } from "react";
 
-const LoginButton = () => {
+type LoginButtonProps = {
+  onClick: () => void;
+};
+
+const LoginButton: React.FC<LoginButtonProps> = ({ onClick }) => {
   const router = useRouter();
+
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    onClick();
+    router.push("/login");
+  };
+
   return (
     <button
-      onClick={() => router.push("/login")}
-      className=" flex justify-center items-center hover:underline hover:underline-offset-4 py-4 ml-11"
+      onClick={handleClick}
+      className="flex justify-center items-center hover:underline hover:underline-offset-4 py-4 ml-11"
       type="button"
     >
       Увійти

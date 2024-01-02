@@ -1,17 +1,26 @@
 "use client";
+
+import { useRouter } from "next/navigation";
 import { signOut } from "next-auth/react";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
 import React from "react";
 
-const LogOutButton = () => {
+type LogOutButtonProps = {
+  onClick: () => void;
+};
+
+const LogOutButton: React.FC<LogOutButtonProps> = ({ onClick }) => {
   const router = useRouter();
+
+  const handleLogOut = () => {
+    onClick();
+    signOut({ callbackUrl: "/" });
+  };
+
   return (
     <button
-      onClick={() => {
-        return signOut({ callbackUrl: "/" });
-      }}
-      className=" flex justify-center items-center hover:underline hover:underline-offset-4 py-4 ml-11"
+      onClick={handleLogOut}
+      className="flex justify-center items-center hover:underline hover:underline-offset-4 py-4 ml-11"
       type="button"
     >
       Вийти

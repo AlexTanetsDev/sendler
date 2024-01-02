@@ -177,3 +177,17 @@ footer {
   font-weight: 600;
   line-height: 150%;
 }
+
+.normal-menu {
+  @apply absolute top-0 left-0 block lg:flex lg:justify-center lg:items-center lg:gap-10 lg:relative 
+
+}
+
+.burger-menu {
+  @apply  block lg:hidden
+}
+
+.burger-menu-show {
+
+}
+
