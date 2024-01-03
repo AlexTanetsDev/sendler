@@ -3,13 +3,12 @@ import Image from "next/image";
 
 import { options } from "@/app/api/auth/[...nextauth]/options";
 
-import UserSmsBalansInform from '@/components/UserSmsBalansInform';
 import PaymentsList from "@/components/PaymentsList";
 import Title from "@/components/Title";
 
 import { ISession } from "@/globaltypes/types";
 
-export default async function UserAccountPage() {
+export default async function UserAccountPage({ params }: { params: { userId: string } }) {
 	const session: ISession | null = await getServerSession(options);
 	const balance = session?.user.balance;
 
@@ -74,6 +73,6 @@ export default async function UserAccountPage() {
 					<button className="submit__btn block w-56 mx-auto">Зберегти</button>
 				</form>
 			</div>
-</>
+		</>
 	)
 }

@@ -1,4 +1,8 @@
+'use client';
+
 import Link from "next/link";
+
+import { useSession } from "next-auth/react";
 
 type Props = {
 	id: number;
@@ -6,9 +10,11 @@ type Props = {
 }
 
 export default function ImportGroupBtn({ id, children }: Props) {
+	const { data: session } = useSession();
+	const userId = session?.user.user_id;
 
 	return (
-		<Link href={`/user/contacts-manage/update-group/${id}`} className="row-table__btn">
+		<Link href={`/user/${userId}/groups/${id}/update`} className="row-table__btn">
 			{children}
 		</Link>
 	)

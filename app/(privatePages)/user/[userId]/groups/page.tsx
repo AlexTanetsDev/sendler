@@ -3,7 +3,6 @@
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3000/";
 
-import { useSession } from "next-auth/react";
 import { useCallback, useEffect, useState } from "react";
 
 import GroupsList from "@/components/groupsList";
@@ -12,11 +11,10 @@ import ReviewClientsBtn from "@/components/buttons/ReviewClientsBtn";
 
 import Title from "@/components/Title";
 
-export default function ContactManagmentPage() {
-	const { data: session } = useSession();
+export default function ContactManagmentPage({ params }: { params: { userId: string } }) {
 	const [groups, setGroups] = useState([]);
 	const [isAddGroup, SetIsAddgroup] = useState(false);
-	const userId = session?.user.user_id;
+	const userId = Number(params.userId);
 
 	const getGroups = async () => {
 		try {
@@ -43,7 +41,7 @@ export default function ContactManagmentPage() {
 
 	useEffect(() => {
 		memoizedGetGroups();
-	}, [userId, isAddGroup, memoizedGetGroups]);
+	}, [isAddGroup, memoizedGetGroups]);
 
 	return (
 		<section className="container mx-auto">

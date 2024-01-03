@@ -81,7 +81,7 @@ export default function SearchClientForm() {
 				{errors.group_name && (
 					<span className="text-red-500 ">{errors.group_name.message}</span>
 				)}
-				<button type="submit" className='action__btn'>Створити</button>
+				<button type="submit" className='action__btn'>Пошук</button>
 			</div>
 		</form>
 	);
