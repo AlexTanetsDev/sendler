@@ -30,7 +30,10 @@
     "app/api/sending-groups/create/route.js",
     "app/api/sending-groups/[id]/route.js",
     "app/api/sending-groups/route.js",
-    "app/layout.jsx"
-, "components/UserSmsBalansInform.tsx"  ],
+    "app/layout.jsx",
+    "components/UserSmsBalansInform.tsx",
+    "app/(privatePages)/user/contacts-manage/edit-group/[id]/page.tsx",
+    "app/(privatePages)/user/contacts-manage/update-group/[id]/page.tsx"
+  ],
   "exclude": ["node_modules"]
 }

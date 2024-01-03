@@ -12,7 +12,7 @@ const Prices = () => {
       <section className="w-full bg-[url('/bg-prices.png')] bg-cover flex flex-col items-center pt-[213px] pb-[248px] h-[606px]">
         <div className="container ">
         <Title type="h1" color="light"> Вартість послуг на SMS розсилку</Title>
-          <div className=" flex gap-[14px] mt-12">
+          <div className=" flex gap-[14px] mt-11 lg:mt-12 ">
             <HeroBtn linkTo="/login">
               Увійти{" "}
               <Image
@@ -29,9 +29,9 @@ const Prices = () => {
       </section>
       <section className="pt-20 pb-[30px] flex flex-col items-center">
         <div className="container ">
-          <div className="flex items-center">
-            <div className="w-5/12">
-              <p className=" font-roboto text-xl mb-2">
+          <div className="lg:flex items-center w-full">
+            <div className="lg:w-5/12 w-[525px] mb-8 lg:mb-0">
+              <p className="font-roboto text-xl mb-2">
                 Використання системи включає:
               </p>
               <p className="mb-8">Необмежену кількість відправлених СМС.</p>
@@ -45,7 +45,8 @@ const Prices = () => {
                 проходить попередню перевірку нашої компанії.
               </p>
             </div>
-            <Table />
+            <div className="flex  w-full"><Table/></div>
+            
           </div>
           <p className="font-roboto text-xl mt-20">
             Ваша компанія несе повну відповідальність за будь-які скарги Ваших

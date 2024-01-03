@@ -7,6 +7,13 @@ const config: Config = {
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    screens: {
+      sm: "640px",
+      md: "768px",
+      lg: "1160px",
+      xl: "1326px",
+      xxl: "1800px",
+    },
     extend: {
       fontFamily: {
         roboto: ["Roboto", "sans-serif"],
@@ -18,8 +25,10 @@ const config: Config = {
         buttonForm: "#ADA3A3",
         lightGrayBorder: "#636060",
         darkGreyColor: "#B6B5B5",
-        headerTable: "#BEBDBD",
+        headerTable: "#417D8A",
+        rowUnderLine: "#B5C9BE",
         greenBtn: "#32BB79",
+        hoverGreenBtn: "#169659",
         bgFooter: "#0F3952",
         lightGreen: "#CFF0E0",
         priceTableBg: "#F7FFFB",
@@ -27,7 +36,9 @@ const config: Config = {
         hederTransparent: "rgba(15, 57, 82, 0.38)",
         emailColorLink: "#2366E8",
         whiteText: "#FFFFFF",
-        greyBasic: "#372037",
+        inputBorder: "#E6E6E6",
+        mainBgColor: "#FEFEFE;",
+        blueHoverBtn: "#41A7BE",
       },
       backgroundImage: {
         "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",

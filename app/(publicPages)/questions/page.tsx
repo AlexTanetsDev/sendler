@@ -4,9 +4,10 @@ import { FormFeedback } from "@/components/forms/FormFeedback";
 import { ArrayQuestions } from "@/data/data";
 
 const Question = () => {
+
   return (
     <>
-      <section className=" bg-[url('/bg-questions.png')] bg-cover flex flex-col items-center pt-[193px]  h-[606px] w-full">
+      <section className=" bg-[url('/bg-questions.png')] xxl:bg-[url('/bg-big-questions.png')] bg-cover flex flex-col items-center pt-[193px]  h-[606px] w-full ">
         <div className="container ">
           <Title type="h1" color="light">
             Питання-відповідь

@@ -8,16 +8,17 @@ import { schemaReqCreateGroup } from "@/models/sending-groups";
 
 import { IGroupName } from "@/globaltypes/types";
 
-
 type Props = {
 	id: number | undefined;
+	updateListControl: any
 }
 
-export default function CreateGroupForm({ id }: Props) {
+export default function CreateGroupForm({ id, updateListControl }: Props) {
 
 	const {
 		register,
 		handleSubmit,
+		reset,
 		formState: { errors },
 	} = useForm<IGroupName>({
 		resolver: async (data) => {
@@ -46,29 +47,30 @@ export default function CreateGroupForm({ id }: Props) {
 	})
 
 	const onSubmit: SubmitHandler<IGroupName> = async (data) => {
-
-		console.log('userId in onSubmit of CreateGroupForm=', id)
-
-		const res = await axios.post(
-			`http://localhost:3000/api/sending-groups`,
-			{
-				group_name: data.group_name,
-				cache: "no-store",
-			},
-			{
-				params: {
-					userId: id,
+		try {
+			await axios.post(`api/sending-groups`,
+				{
+					group_name: data.group_name,
+					cache: "no-store",
 				},
-			}
-		);
-		console.log('RES=', res)
+				{
+					params: {
+						userId: id,
+					},
+				}
+			);
+			updateListControl();
+			reset({ group_name: '' });
+		} catch (error: any) {
+			console.log(error.message)
+		}
 	}
 
 	return (
 		<form
 			autoComplete="off"
 			onSubmit={handleSubmit(onSubmit)}
-			className='w-7/12 mb-14 ml-8'>
+			className='mb-[50px] ml-[26px]'>
 			<label htmlFor='group_name' className='block mb-3.5 input__title'>
 				Назва групи
 			</label>
@@ -76,7 +78,7 @@ export default function CreateGroupForm({ id }: Props) {
 				<input id="group_name"
 					type='text'
 					{...register("group_name")}
-					className='h-12 mr-8 grow input'
+					className='w-[474px] h-12 mr-8 px-4 input'
 					required
 				/>
 				{errors.group_name && (

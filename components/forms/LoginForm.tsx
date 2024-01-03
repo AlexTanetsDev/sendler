@@ -1,15 +1,15 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
-import Link from "next/link";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FormInputsLogin } from "@/globaltypes/types";
 import { schemaLogin } from "@/models/forms";
+import GreenButton from "../buttons/GreenButton";
+import { toast } from "react-toastify";
 
 const LoginForm = () => {
   const router = useRouter();
-  const pathName = usePathname();
 
   const {
     register,
@@ -23,14 +23,16 @@ const LoginForm = () => {
       } catch (error: any) {
         const validationErrors: Record<string, { message: string }> = {};
         if (error.details) {
-          error.details.forEach((detail: { context: { key: string | number; }; message: any; }) => {
-            if (detail.context && detail.context.key) {
-              validationErrors[detail.context.key] = {
-                message: detail.message,
-              };
-          }
-        });
-      }
+          error.details.forEach(
+            (detail: { context: { key: string | number }; message: any }) => {
+              if (detail.context && detail.context.key) {
+                validationErrors[detail.context.key] = {
+                  message: detail.message,
+                };
+              }
+            }
+          );
+        }
         return {
           values: {},
           errors: validationErrors,
@@ -47,6 +49,7 @@ const LoginForm = () => {
     });
     if (res && !res.error) {
       router.push("/mailing-list");
+      toast.success(`Wellcome ${data.login}`)
     }
   };
 
@@ -56,8 +59,7 @@ const LoginForm = () => {
       onSubmit={handleSubmit(onSubmit)}
       className="w-[526px] flex justify-items-center  items-center flex-col leading-6 px-[26px] "
     >
-     
-      <div className="text-left w-full">
+      <div className="text-left w-full mb-8">
         <label
           htmlFor="login"
           className="font-roboto text-base font-medium mb-2 block"
@@ -92,13 +94,7 @@ const LoginForm = () => {
           <span className="text-red-500 ">{errors.password.message}</span>
         )}
       </div>
-
-      <button
-        type="submit"
-        className="mt-8 bg-greenBtn flex items-center justify-center h-[63px] w-[198px]  py-[18px] focus:outline-none hover:bg-blue-700 hover:text-white rounded-[18px] text-lg  transition-colors"
-      >
-        Увійти
-      </button>
+      <GreenButton size="big">Увійти</GreenButton>
     </form>
   );
 };

@@ -1,5 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -28,12 +28,7 @@
 body {
   margin: 0;
   color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  background: #fefefe;
 }
 
 main {
@@ -46,8 +41,7 @@ footer {
 
 @layer components {
   .container {
-    width: 1330px;
-    padding: 0 15px;
+    @apply lg:w-[1326px] w-[710px] py-0 px-[15px];
   }
 }
 
@@ -83,7 +77,7 @@ footer {
 }
 
 .content-block {
-  @apply w-full px-6 py-16 text-lg font-montserrat font-normal rounded-2xl bg-formBg;
+  @apply w-full py-[50px] text-lg font-montserrat font-normal rounded-2xl bg-formBg;
 }
 
 .content-block__title {
@@ -91,7 +85,11 @@ footer {
 }
 
 .action__btn {
-  @apply px-14 py-4 text-lg text-center font-montserrat font-normal border border-lightGrayBorder rounded-2xl;
+  @apply w-[144px] py-[10px] rounded-[14px] bg-greenBtn hover:bg-hoverGreenBtn text-white text-base flex items-center justify-center transition-colors;
+}
+
+.delete__btn {
+  @apply w-[198px] py-[10px] rounded-[14px] bg-greenBtn hover:bg-hoverGreenBtn text-white text-base flex items-center justify-center transition-colors;
 }
 
 .submit__btn {
@@ -99,7 +97,7 @@ footer {
 }
 
 .row-table__btn {
-  @apply px-2.5 py-0.5 text-lg text-center font-roboto font-normal border border-lightGrayBorder rounded-xl;
+  @apply w-[110px] py-[3px] hover:bg-blueHoverBtn hover:text-white hover:border-transparent text-base  text-center font-roboto font-normal border border-headerTable rounded-xl;
 }
 
 .inputs-box {
@@ -108,10 +106,11 @@ footer {
 
 .input {
   @apply bg-white rounded-[18px];
+  @apply bg-white border border-inputBorder rounded-[18px];
 }
 
 .input__title {
-  @apply text-2xl font-roboto font-normal;
+  @apply text-xl font-roboto font-normal;
 }
 
 .input__lable {
@@ -119,10 +118,7 @@ footer {
 }
 
 .title_h1 {
-  font-size: 40px;
-  line-height: 60px;
-  font-weight: 600;
-  font-family: Montserrat, sans-serif;
+  @apply lg:text-[40px] text-[36px] font-semibold font-montserrat lg:leading-[60px] leading-[54px];
 }
 
 .title_h2 {
@@ -149,18 +145,13 @@ footer {
 }
 
 .caruselBg {
-  background: linear-gradient(
-    101.12deg,
-    #0d364c 12.98%,
-    #136a83 48.23%,
-    #0d2846 79.12%
-  );
+  background: linear-gradient(101.12deg, #0d364c 12.98%, #136a83 48.23%, #0d2846 79.12%);
 }
 
 .swiperCardText {
   font-size: 16px;
   line-height: 24px;
-  font-family: "Montserrat";
+  font-family: 'Montserrat';
   color: white;
 }
 

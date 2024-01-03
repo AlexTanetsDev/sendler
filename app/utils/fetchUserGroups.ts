@@ -10,7 +10,8 @@ export default async function fetchUserGroups(id: number): Promise<QueryResult<I
 		FROM send_groups
 		LEFT JOIN groups_members ON send_groups.group_id = groups_members.group_id
 		WHERE user_id = ${id}
-		GROUP BY send_groups.group_id`
+		GROUP BY send_groups.group_id
+		ORDER BY group_create_date ASC`
 	);
 
 	return res;

@@ -22,7 +22,6 @@ export default async function updateGroup(clients: IClient[], groupId: number, m
 }> | undefined> {
 
 	try {
-
 		//checking group existense
 		const groupsIdRes: QueryResult<IGroupId> = await fetchAllGroupId();
 		const groupsIdInDatabase: IGroupId[] = groupsIdRes.rows;

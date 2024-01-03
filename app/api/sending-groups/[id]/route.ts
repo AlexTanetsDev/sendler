@@ -14,20 +14,19 @@ import { IQieryParamsUpdateGroup } from "./types";
 import { schemaReqUpdateGroup } from '@/models/sending-groups';
 
 // get one group with id from params
-export async function GET(_request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }> | NextResponse<{ clients: IClient[] | NextResponse<{ error: string; }> }>> {
+export async function GET(_request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }> | NextResponse<{ group: string, clients: IClient[] | NextResponse<{ error: string; }> }>> {
 
 	const groupId = Number(params.id);
 
 	try {
-		const res: IClient[] | NextResponse<{
-			message: string;
-		}> | null = await getGroupClients(groupId);
+		const res: { group: string, clients: IClient[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId);
 
 		if (res === null) {
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
 		}
+
 		return NextResponse.json(
-			{ clients: res, message: 'Group memebers' },
+			{ res, message: 'Group memebers' },
 			{ status: 200 }
 		);
 	} catch (error: any) {
@@ -81,21 +80,26 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 		const groupId = Number(params.id);
 		const method: string = request.method;
 
-		if (clients.length === 0) {
-			return HttpError(400, `The clients list is empty`);
-		}
 
-		const res: null | NextResponse<{
+		const resUpdate: null | NextResponse<{
 			error: string;
 		}> | undefined = await updateGroup(clients, groupId, method);
 
-		if (res === null) {
+		if (resUpdate === null) {
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
-
 		}
 
+		if (clients.length === 0) {
+			return NextResponse.json(
+				{ message: `The group is empty` },
+				{ status: 200 }
+			);
+		}
+
+		const resGet: { group: string, clients: IClient[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId);
+
 		return NextResponse.json(
-			{ message: `The group is updated` },
+			{ resGet, message: `The group is updated` },
 			{ status: 200 }
 		);
 	} catch (error: any) {
