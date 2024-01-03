@@ -8,8 +8,11 @@ import { useRouter } from "next/navigation";
 import * as XLSX from "xlsx/xlsx.mjs";
 
 import Title from "@/components/Title";
+import { useSession } from "next-auth/react";
 
 export default function UpdateGroupPage({ params }) {
+  const { data: session } = useSession();
+  const userId = session?.user.user_id;
   const groupId = Number(params.id);
   const router = useRouter();
   const [file, setFile] = useState(null);
@@ -49,7 +52,7 @@ export default function UpdateGroupPage({ params }) {
           clients: clients,
           cache: "no-store",
         });
-        router.push("/user/contacts-manage");
+        router.push(`/user/${userId}/groups`);
       } catch (error) {
         console.log(error.message + " | " + error.response.data.error);
       }

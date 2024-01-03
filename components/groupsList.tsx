@@ -9,10 +9,11 @@ import ImportGroupBtn from "./buttons/ImportGroupBTN";
 
 type Props = {
 	groups: IGroupDatabase[] | undefined;
-	updateListControl: any;
+	updateListControl: () => void;
 }
 
 export default function GroupsList({ groups, updateListControl }: Props) {
+
 
 	if (groups === undefined) {
 		console.log('Unable to fetch userGroups!');

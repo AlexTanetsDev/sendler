@@ -1,21 +1,22 @@
 import { NextResponse } from "next/server";
 
 import {
-	fetchUserClientsTel,
 	insertGroupMember,
 	insertNewClientInGroup,
 	fetchAllGroupId,
 	deleteGroupMembersData,
-	fetchGroupUserId
+	fetchGroupUserId,
+	fetchUserClients,
 } from "@/app/utils";
 
 import { QueryResult } from "pg";
 import {
 	IGroupId,
 	IUserId,
-	ITelRes,
 	IClient,
+	IClientDatabase,
 } from "@/globaltypes/types";
+import updateClientData from "@/app/utils/updateClientData";
 
 export default async function updateGroup(clients: IClient[], groupId: number, method: string): Promise<null | NextResponse<{
 	error: string;
@@ -42,20 +43,25 @@ export default async function updateGroup(clients: IClient[], groupId: number, m
 
 		const userId = userIdRes.rows[0].user_id;
 
-		const userClientsRes: QueryResult<ITelRes> = await fetchUserClientsTel(userId);
+		const userClientsRes: QueryResult<IClientDatabase> = await fetchUserClients(userId);
 
 		//checking whether a client exists in the user's client list
 		//and adding client
 		const userClients = userClientsRes.rows;
 
 		for (const client of clients) {
-			const tel = Number(client.tel);
+			const { tel } = client;
 
-			if (!userClients.find((userClient: ITelRes) => userClient.tel === String(tel))) {
+			const userClient = userClients.find(userClient => Number(userClient.tel) === tel);
+
+			if (userClient) {
+				await updateClientData(Number(userClient.client_id), client);
+			} else {
 				await insertNewClientInGroup(client, userId, groupId, method);
-			}
+			};
+
 			await insertGroupMember(tel, userId, groupId);
-		}
+		};
 	} catch (error: any) {
 		throw new Error(error.message);
 	}

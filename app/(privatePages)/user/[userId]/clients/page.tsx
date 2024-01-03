@@ -7,12 +7,12 @@ import { useState, useCallback, useEffect, } from "react";
 import Title from "@/components/Title";
 import ClientsList from "@/components/ClientsList";
 
-export default function AllContactsUserPage({ params }: { params: { id: string } }) {
+export default function AllContactsUserPage({ params }: { params: { userId: string } }) {
 
 	const [clients, SetClients] = useState([]);
 	const [isAddGroup, SetIsAddgroup] = useState(false)
 
-	const userId = Number(params.id);
+	const userId = Number(params.userId);
 
 	const getClients = async () => {
 		try {

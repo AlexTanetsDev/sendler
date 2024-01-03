@@ -8,7 +8,7 @@ type Props = {
 export default function ReviewClientsBtn({ id, children }: Props) {
 
 	return (
-		<Link href={`/user/contacts-manage/clients/${id}`} className="action__btn">
+		<Link href={`/user/${id}/clients`} className="action__btn">
 			{children}
 		</Link>
 	)

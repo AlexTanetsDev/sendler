@@ -1,15 +1,23 @@
-import Joi from "joi";
+import Joi, { number } from "joi";
 
 import { schemaClient } from "./clients";
 
-import { IClientUpdateReqArray, IClentCreateReqArray } from "@/globaltypes/types";
+import {
+	IGroupUpdateReq,
+	IGroupCreateReq,
+	IGroupEditReq,
+} from "@/globaltypes/types";
 
-export const schemaReqCreateGroup: Joi.ObjectSchema<IClentCreateReqArray> = Joi.object({
+export const schemaReqCreateGroup: Joi.ObjectSchema<IGroupCreateReq> = Joi.object({
 	group_name: Joi.string().required(),
 	cache: Joi.string(),
 });
 
-export const schemaReqUpdateGroup: Joi.ObjectSchema<IClientUpdateReqArray> = Joi.object({
+export const schemaReqUpdateGroup: Joi.ObjectSchema<IGroupUpdateReq> = Joi.object({
 	clients: Joi.array().items(schemaClient).required(),
 	cache: Joi.string(),
 });
+
+export const schemaReqEditGroup: Joi.ObjectSchema<IGroupEditReq> = Joi.object({
+	clients: Joi.array().items(Joi.number()).required()
+})

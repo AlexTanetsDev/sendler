@@ -2,7 +2,7 @@ import axios from "axios";
 
 type Props = {
 	id: number;
-	updateListControl: any;
+	updateListControl: () => void;
 	children: React.ReactNode;
 }
 

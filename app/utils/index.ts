@@ -8,6 +8,7 @@ export { default as fetchUserGroupsName } from "./fetchUserGroupsName";
 export { default as fetchUsersId } from "./fetchUsersId";
 export { default as fetchAllGroupId } from "./fetchAllGroupId";
 export { default as deleteGroupMembersData } from "./deleteGroupMembersData";
+export { default as deleteClientMemberInGroupData } from "./deleteClientMemberInGroupData";
 export { default as fetchGroupUserId } from "./fetchGroupUserId";
 export { default as fetchClientData } from "./fetchClientData";
 export { default as updateClientData } from "./updateClientData";

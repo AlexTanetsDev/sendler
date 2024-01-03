@@ -5,13 +5,15 @@ import HttpError from "@/helpers/HttpError";
 import {
 	getGroupClients,
 	deleteGroup,
-	updateGroup
+	updateGroup,
+	editGroup,
 } from '@/app/api/controllers/sending-groups';
+
 
 import { IClient } from "@/globaltypes/types";
 import { IQieryParamsUpdateGroup } from "./types";
 
-import { schemaReqUpdateGroup } from '@/models/sending-groups';
+import { schemaReqUpdateGroup, schemaReqEditGroup } from '@/models/sending-groups';
 
 // get one group with id from params
 export async function GET(_request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }> | NextResponse<{ group: string, clients: IClient[] | NextResponse<{ error: string; }> }>> {
@@ -77,6 +79,13 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
 		const { clients } = value;
 
+		if (clients.length === 0) {
+			return NextResponse.json(
+				{ message: `The group is empty` },
+				{ status: 200 }
+			);
+		};
+
 		const groupId = Number(params.id);
 		const method: string = request.method;
 
@@ -89,11 +98,50 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
 		}
 
+		const resGet: { group: string, clients: IClient[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId);
+
+		return NextResponse.json(
+			{ resGet, message: `The group is updated` },
+			{ status: 200 }
+		);
+	} catch (error: any) {
+		return NextResponse.json({ error: error.message }, { status: 500 });
+	};
+};
+
+//edit one group with id from params
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: any; }> | NextResponse<string>> {
+
+	try {
+		const body: IQieryParamsUpdateGroup = await request.json();
+		const { error, value } = schemaReqEditGroup.validate(body);
+
+		if (error) {
+			return NextResponse.json(
+				{ error: error.message },
+				{ status: 400 }
+			);
+		}
+
+		const { clients } = value;
+
 		if (clients.length === 0) {
 			return NextResponse.json(
 				{ message: `The group is empty` },
 				{ status: 200 }
 			);
+		}
+
+		const groupId = Number(params.id);
+		const method: string = request.method;
+
+
+		const resUpdate: null | NextResponse<{
+			error: string;
+		}> | undefined = await editGroup(clients, groupId, method);
+
+		if (resUpdate === null) {
+			return HttpError(400, `The group with id = ${groupId} does not exist`);
 		}
 
 		const resGet: { group: string, clients: IClient[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId);
@@ -107,3 +155,4 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
 	}
 }
+

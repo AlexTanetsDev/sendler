@@ -10,7 +10,7 @@ import { IGroupName } from "@/globaltypes/types";
 
 type Props = {
 	id: number | undefined;
-	updateListControl: any
+	updateListControl: () => void;
 }
 
 export default function CreateGroupForm({ id, updateListControl }: Props) {
