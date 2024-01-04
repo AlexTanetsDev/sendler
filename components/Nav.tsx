@@ -13,6 +13,7 @@ const Nav = () => {
   const { data: session, status } = useSession();
   const [isOpen, setIsOpen] = useState(false);
   const pathName = usePathname();
+  const userId = session?.user.user_id;
  
 
   return (
@@ -30,15 +31,15 @@ const Nav = () => {
           }  right-0 block bg-bgFooter lg:flex lg:justify-center lg:items-center lg:gap-10 lg:static lg:bg-transparent lg:w-auto  w-full text-center lg:text-lg text-2xl `}
         >
           {status === "authenticated"
-            ? privateNavigation.map(({ id, title, path }) => (
-                <li key={id} className="mb-4 lg:mb-0">
-                  <Link
-                    onClick={() => setIsOpen(false)}
-                    href={path}
-                    className={`hover:underline hover:underline-offset-4 py-4 transition-all ${pathName === path ? 'underline underline-offset-4' : 'no-underline'}`}
-                  >
-                    {title}
-                  </Link>
+            ?  privateNavigation.map(({ id, title, path }) => (
+              <li key={id} className="mb-4 lg:mb-0">
+                <Link
+                  onClick={() => setIsOpen(!isOpen)}
+                  href={`/user/${userId}${path}`}
+                  className="hover:underline hover:underline-offset-4 py-4 transition-all"
+                >
+                  {title}
+                </Link>
                 </li>
               ))
             : publicNavigation.map(({ id, title, path }) => (

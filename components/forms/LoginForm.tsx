@@ -1,19 +1,21 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FormInputsLogin } from "@/globaltypes/types";
 import { schemaLogin } from "@/models/forms";
 import GreenButton from "../buttons/GreenButton";
 import { toast } from "react-toastify";
-import {  useState } from "react";
+import { useState } from "react";
 import ShowPassword from "../buttons/ShowPassword";
 
 const LoginForm = () => {
   const router = useRouter();
   const [show, setShow] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
+  const { data: session } = useSession();
+  const userId = session?.user.user_id;
 
   const {
     register,
@@ -46,7 +48,8 @@ const LoginForm = () => {
   });
 
   const onSubmit: SubmitHandler<FormInputsLogin> = async (data) => {
-    setIsDisabled(true)
+    setIsDisabled(true);
+
     const res = await signIn("credentials", {
       login: data.login,
       password: data.password,
@@ -58,10 +61,10 @@ const LoginForm = () => {
       }
     }
     if (res && !res.error) {
-      router.push("/mailing-list");
+      router.push(`/user/${userId}/account`);
       toast.success(`Ласкаво просимо ${data.login}`);
     }
-    setIsDisabled(false)
+    setIsDisabled(false);
   };
 
   return (
@@ -108,11 +111,10 @@ const LoginForm = () => {
         {errors.password && (
           <span className="text-red-500 ">{errors.password.message}</span>
         )}
-      </div>   
-        <GreenButton size="big" isDisabled={isDisabled}>
-          Увійти
-        </GreenButton>
-
+      </div>
+      <GreenButton size="big" isDisabled={isDisabled}>
+        Увійти
+      </GreenButton>
     </form>
   );
 };
