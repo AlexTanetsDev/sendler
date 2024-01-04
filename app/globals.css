@@ -121,10 +121,7 @@ footer {
 }
 
 .title_h2 {
-  font-size: 24px;
-  line-height: 32px;
-  font-weight: 500;
-  font-family: Roboto, sans-serif;
+  @apply lg:text-[40px] text-[36px] font-semibold font-montserrat lg:leading-[60px] leading-[54px];
 }
 
 .title_h3 {

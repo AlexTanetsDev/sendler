@@ -30,7 +30,7 @@ const Prices = () => {
       <section className="pt-20 pb-[30px] flex flex-col items-center">
         <div className="container ">
           <div className="lg:flex items-center w-full">
-            <div className="lg:w-5/12 w-[525px] mb-8 lg:mb-0">
+            <div className="lg:w-5/12 w-[525px] mb-[50px] lg:mb-0">
               <p className="font-roboto text-xl mb-2">
                 Використання системи включає:
               </p>

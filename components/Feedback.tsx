@@ -10,10 +10,12 @@ const Feedback = () => {
 
   const openModal = () => {
     setIsModalOpen(true);
+    document.body.classList.add('overflow-hidden');
   };
 
   const closeModal = () => {
     setIsModalOpen(false);
+    document.body.classList.remove('overflow-hidden');
   };
   return (
     <>

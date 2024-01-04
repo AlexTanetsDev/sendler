@@ -94,6 +94,7 @@ const SingUpForm = () => {
           type="text"
           {...register("name")}
           className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
+          placeholder="Іван"
           required
         />
         {errors.name && (
@@ -111,6 +112,7 @@ const SingUpForm = () => {
           type="text"
           {...register("phone")}
           className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
+          placeholder="+3801234567"
           required
         />
         {errors.phone && (
@@ -128,6 +130,7 @@ const SingUpForm = () => {
           type="text"
           {...register("email")}
           className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
+          placeholder="Email@gmail.com"
           required
         />
         {errors.email && (
@@ -145,6 +148,7 @@ const SingUpForm = () => {
           type="text"
           {...register("login")}
           className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
+          placeholder="Іван_Ivan@"
           required
         />
         {errors.login && (
