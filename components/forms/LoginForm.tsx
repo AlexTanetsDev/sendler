@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { signIn, useSession } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import { SubmitHandler, useForm } from "react-hook-form";
 import { FormInputsLogin } from "@/globaltypes/types";
 import { schemaLogin } from "@/models/forms";
@@ -14,8 +14,6 @@ const LoginForm = () => {
   const router = useRouter();
   const [show, setShow] = useState(false);
   const [isDisabled, setIsDisabled] = useState(false);
-  const { data: session } = useSession();
-  const userId = session?.user.user_id;
 
   const {
     register,
@@ -50,19 +48,38 @@ const LoginForm = () => {
   const onSubmit: SubmitHandler<FormInputsLogin> = async (data) => {
     setIsDisabled(true);
 
-    const res = await signIn("credentials", {
-      login: data.login,
-      password: data.password,
-      redirect: false,
-    });
-    if (res?.ok === false) {
-      if (res.status === 401) {
-        toast.error("Неправильний логін або пароль");
+    try {
+      const userIdResponse = await fetch("/api/users", {
+        method: "POST",
+        body: JSON.stringify({ login: data.login }),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const userIdData = await userIdResponse.json();
+
+      const userId = userIdData.userId;
+
+      const res = await signIn("credentials", {
+        login: data.login,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (res?.ok === false) {
+        if (res.status === 401) {
+          toast.error("Неправильний логін або пароль");
+        }
       }
-    }
-    if (res && !res.error) {
-      router.push(`/user/${userId}/account`);
-      toast.success(`Ласкаво просимо ${data.login}`);
+
+      if (res && !res.error) {
+        router.push(`/user/${userId}/account`);
+        toast.success(`Ласкаво просимо ${data.login}`);
+      }
+    } catch (error) {
+      console.error("Помилка входу:", error);
+      toast.error("Під час входу сталася помилка");
     }
     setIsDisabled(false);
   };
