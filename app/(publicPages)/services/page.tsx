@@ -6,14 +6,17 @@ const Services = () => {
     <>
       <section className="bg-[url('/bg-services.png')]  bg-cover flex flex-col items-center pt-[206px]  h-[606px] w-full">
         <div className="container ">
-        <Title type="h1" color="light"> Цільові SMS-Розсилки.</Title>
+          <Title type="h1" color="light">
+            {" "}
+            Цільові SMS-Розсилки.
+          </Title>
         </div>
       </section>
 
-      <section className="container pt-20 flex flex-col items-start">
-        <div className="flex ">
-          <ul className="mr-[174px] w-[636px] pt-[100px]"> Цільові SMS-Розсилки.
-            <li className="pb-8">
+      <section className="container w-full pt-20 flex flex-col">
+        <div className=" flex  flex-col lg:flex-row ">
+          <ul className="mr-[174px] w-[636px] pt-[100px]">
+            <li className="mb-8">
               <p>
                 Якщо Ви зацікавлені в залученні нової аудиторії до Вашого товару
                 або сервісу і при цьому бажаєте використовувати один із
@@ -30,7 +33,7 @@ const Services = () => {
               </p>
             </li>
           </ul>
-          <ul className="flex flex-col  gap-[22px] font-montserrat">
+          <ul className="flex flex-col ml-auto lg:ml-0 mt-[50px] lg:mt-0 gap-[22px] font-montserrat">
             <li className="flex items-center  bg-formBg py-[10px] px-[14px] rounded-[18px] w-[486px]">
               <span>
                 <Image
@@ -40,7 +43,9 @@ const Services = () => {
                   alt="number"
                 ></Image>
               </span>
-              <p className="ml-10 text-xl">Витрати абонента на місяць</p>
+              <p className="ml-10 text-lg  lg:text-xl">
+                Витрати абонента на місяць
+              </p>
             </li>
             <li className="flex items-center  bg-formBg py-[10px] px-[14px] rounded-[18px] w-[486px]">
               <span>
@@ -51,7 +56,9 @@ const Services = () => {
                   alt="number"
                 ></Image>
               </span>
-              <p className="ml-6 text-xl">Місце розташування абонента</p>
+              <p className="ml-6 text-lg  lg:text-xl">
+                Місце розташування абонента
+              </p>
             </li>
             <li className="flex items-center  bg-formBg py-[10px] px-[14px] rounded-[18px] w-[486px]">
               <span>
@@ -62,7 +69,9 @@ const Services = () => {
                   alt="number"
                 ></Image>
               </span>
-              <p className="ml-6 text-xl">Знаходження абонента у роумінгу</p>
+              <p className="ml-6 text-lg  lg:text-xl">
+                Знаходження абонента у роумінгу
+              </p>
             </li>
             <li className="flex items-center  bg-formBg py-[10px] px-[14px] rounded-[18px] w-[486px]">
               <span>
@@ -73,7 +82,9 @@ const Services = () => {
                   alt="number"
                 ></Image>
               </span>
-              <p className="ml-6 text-xl">Тип абонента (контракт, pre-paid)</p>
+              <p className="ml-6 text-lg  lg:text-xl">
+                Тип абонента (контракт, pre-paid)
+              </p>
             </li>
             <li className="flex items-center  bg-formBg py-[10px] px-[14px] rounded-[18px] w-[486px]">
               <span>
@@ -84,14 +95,16 @@ const Services = () => {
                   alt="number"
                 ></Image>
               </span>
-              <p className="ml-6 text-xl">Використання додаткових послуг</p>
+              <p className="ml-6 text-lg  lg:text-xl">
+                Використання додаткових послуг
+              </p>
             </li>
           </ul>
         </div>
-        <p className="mt-20 font-roboto text-[20px]">
-            Зв&apos;яжіться з нами для отримання детальної інформації про
-            вартість Цільової SMS-Розсилки.
-          </p>
+        <p className="mt-20 font-roboto text-[18px] lg:text-[20px]">
+          Зв&apos;яжіться з нами для отримання детальної інформації про вартість
+          Цільової SMS-Розсилки.
+        </p>
       </section>
     </>
   );

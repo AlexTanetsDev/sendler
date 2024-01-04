@@ -70,13 +70,14 @@ const FormFeedback = ({ onClose, title }: Props) => {
           htmlFor="name"
           className="font-roboto text-base font-medium mb-2 block"
         >
-         П.І.Б
+          П.І.Б
         </label>
         <input
           id="name"
           type="text"
           {...register("name")}
           className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
+          placeholder="Іванов Іван Іванович"
         />
         {errors.name && (
           <span className="text-red-500 block">{errors.name.message}</span>
@@ -92,6 +93,7 @@ const FormFeedback = ({ onClose, title }: Props) => {
           type="text"
           {...register("phone")}
           className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+          placeholder="+3801234567"
           required
         />
         {errors.phone && (
@@ -109,6 +111,7 @@ const FormFeedback = ({ onClose, title }: Props) => {
           type="text"
           {...register("email")}
           className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+          placeholder="Email@gmail.com"
           required
         />
         {errors.email && (
@@ -125,6 +128,7 @@ const FormFeedback = ({ onClose, title }: Props) => {
           id="desc"
           {...register("desc")}
           className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input h-[150px] resize-none"
+          placeholder="Введіть текст..."
           required
         />
         {errors.desc && (

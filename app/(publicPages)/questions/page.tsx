@@ -18,7 +18,7 @@ const Question = () => {
             return (
               <li
                 key={id}
-                className="bg-formBg pr-3 lg:pl-5 pl-6  rounded-[18px] mb-[22px] lg:w-[1076px] w-full"
+                className="bg-formBg pr-3 lg:pr-7 lg:pl-5 pl-3  rounded-[18px] mb-[22px] lg:max-w-[1076px] w-full"
               >
                 <QuestionSegment title={title} desc={desc} email={email} />
               </li>
@@ -29,8 +29,8 @@ const Question = () => {
 
       <section className="container pt-20 flex flex-col items-start">
         <Title type="h1" color="dark">Не знайшли відповідь на своє питання?</Title>
-        <div className="block lg:flex mt-[60px]">
-          <ul className="mr-[138px] lg:w-[625px] w-full mb-20 lg:mb-0 lg:pt-[86px]">
+        <div className="block lg:flex mt-[60px] lg:justify-between w-full">
+          <ul className="lg:max-w-[625px] mb-20 lg:mb-0 lg:pt-[86px]">
             <li className="pb-8">
               <p>
                 Шановний клієнте,
