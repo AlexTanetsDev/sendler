@@ -1,10 +1,11 @@
-import { getServerSession } from "next-auth";
 import Link from "next/link";
 import Image from "next/image";
 import formatTableDate from "@/app/utils/formatTableDate";
 import Title from "@/components/Title";
+import BackStatisticsBtn from "@/components/buttons/BackStatisticsBtn";
 
-export default async function HistoryDetails() {
+export default function HistoryDetails() {
+
   return (
     <section className="container mx-auto">
       <Title type="h1" color="dark">
@@ -23,9 +24,9 @@ export default async function HistoryDetails() {
               />
             </Link>
           </div>
-          <p className="mb-[50px] text-lg font-roboto text-[#2366E8]">
-            <Link href={`/statistics/by-date/`}>Повернутись до статистики за день</Link>
-          </p>
+          <BackStatisticsBtn>
+            <p>Повернутись до статистики за день</p>
+          </BackStatisticsBtn>
           <div className="flex mb-10 text-xl font-roboto text-[#1B1B30]">
             <div className="mr-8">
               <p className="mb-4">Відправник</p>

@@ -20,7 +20,14 @@ export default async function HistoryList({ userHistory }: Props) {
               {}
               <p className="w-[194px]">Невідомо</p>
               <p className="w-[184px] text-[#2366E8]">
-                <Link href={`/statistics/by-date/`}>
+                <Link
+                  href={{
+                    pathname: `statistics/by-date/`,
+                    query: {
+                      date: formatTableDate(item.sending_group_date),
+                    },
+                  }}
+                >
                   {formatTableDate(item.sending_group_date)}
                 </Link>
               </p>
