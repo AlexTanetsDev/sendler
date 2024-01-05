@@ -34,8 +34,8 @@ const Nav = () => {
             ?  privateNavigation.map(({ id, title, path }) => (
               <li key={id} className="mb-4 lg:mb-0">
                 <Link
-                  onClick={() => setIsOpen(!isOpen)}
-                  href={`/user/${userId}${path}`}
+                  onClick={() => setIsOpen(false)}
+                  href={`/user/${userId}/${path}`}
                   className="hover:underline hover:underline-offset-4 py-4 transition-all"
                 >
                   {title}
