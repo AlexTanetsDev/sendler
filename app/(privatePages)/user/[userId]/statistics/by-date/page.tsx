@@ -6,8 +6,19 @@ import { getUserHistory } from "@/app/utils";
 import formatTableDate from "@/app/utils/formatTableDate";
 import Title from "@/components/Title";
 import HistoryPeriodForm from "@/components/forms/HistoryPeriodForm";
+import BackStatisticsBtn from "@/components/buttons/BackStatisticsBtn";
 import { IHistoryResponce } from "@/globaltypes/historyTypes";
 import { ISession } from "@/globaltypes/types";
+
+//testData
+const userHistory = [
+  {
+    history_id: 12345,
+    text: "Запрошуємо",
+    user: "FASONCHIKI",
+    status: "Відправлено",
+  },
+];
 
 export default async function DayHistory() {
   const session: ISession | null = await getServerSession(options);
@@ -17,15 +28,7 @@ export default async function DayHistory() {
   //     id: userId,
   //   });
 
-  //testData
-  const userHistory = [
-    {
-      history_id: 12345,
-      text: "Запрошуємо",
-      user: "FASONCHIKI",
-      status: "Відправлено",
-    },
-  ];
+
   const date = new Date();
 
   return (
@@ -40,11 +43,9 @@ export default async function DayHistory() {
             <p className="mb-5 text-xl font-roboto text-[#1B1B30]">
               Розсилки за {formatTableDate(date)}
             </p>
-            <p className="mb-10 text-lg font-roboto text-[#2366E8]">
-              <Link href={`/statistics/`}>
-                Повернутись до загальної статистики за період
-              </Link>
-            </p>
+            <BackStatisticsBtn>
+              <p>Повернутись до загальної статистики за період</p>
+            </BackStatisticsBtn>
           </div>
           <div className="flex items-center justify-between h-[58px] px-[26px] font-roboto text-[20px] text-white bg-[#417D8A]">
             <p className="w-[130px]">Текст sms</p>
@@ -73,9 +74,7 @@ export default async function DayHistory() {
                     className="flex items-center justify-between h-[47px] px-[26px] font-roboto text-lg text-black border-b border-[#B5C9BE]"
                   >
                     <p className="w-[130px] text-[#2366E8]">
-                      <Link
-                        href={`/statistics/by-date/${item.history_id}`}
-                      >
+                      <Link href={`by-date/${item.history_id}`}>
                         {item.text}
                       </Link>
                     </p>
