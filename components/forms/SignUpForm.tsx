@@ -9,6 +9,7 @@ import GreenButton from "../buttons/GreenButton";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import ShowPassword from "../buttons/ShowPassword";
+import { fetchUserId } from "@/helpers/fetchUserId";
 
 const SingUpForm = () => {
   const {
@@ -47,7 +48,10 @@ const SingUpForm = () => {
 
   const onSubmit: SubmitHandler<FormInputsSignUp> = async (data) => {
     setIsDisabled(true);
-    const res = await fetch("http://localhost:3000/api/users/signup", {
+try {
+
+ 
+  const res = await fetch("http://localhost:3000/api/users/signup", {
       method: "POST",
       body: JSON.stringify({
         email: data.email,
@@ -63,16 +67,23 @@ const SingUpForm = () => {
       );
     }
     if (res && res.ok) {
+      const userId = await fetchUserId(data.login);
+
       const credentialsRes = await signIn("credentials", {
         login: data.login,
         password: data.password,
         redirect: false,
       });
       if (credentialsRes && !credentialsRes.error) {
-        router.push("/mailing-list");
+        router.push(`/user/${userId}/account`);
         toast.success(`Ласкаво просимо ${data.login}`);
       }
     }
+} catch (error) {
+  console.error("Помилка входу:", error);
+  toast.error("Під час входу сталася помилка");
+}
+
     setIsDisabled(false);
   };
 

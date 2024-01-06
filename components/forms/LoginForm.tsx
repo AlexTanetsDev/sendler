@@ -9,6 +9,7 @@ import GreenButton from "../buttons/GreenButton";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import ShowPassword from "../buttons/ShowPassword";
+import { fetchUserId } from "@/helpers/fetchUserId";
 
 const LoginForm = () => {
   const router = useRouter();
@@ -49,17 +50,7 @@ const LoginForm = () => {
     setIsDisabled(true);
 
     try {
-      const userIdResponse = await fetch("/api/users", {
-        method: "POST",
-        body: JSON.stringify({ login: data.login }),
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      const userIdData = await userIdResponse.json();
-
-      const userId = userIdData.userId;
+      const userId = await fetchUserId(data.login);
 
       const res = await signIn("credentials", {
         login: data.login,
