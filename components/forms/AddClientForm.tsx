@@ -17,17 +17,9 @@ interface Props {
 
 const AddClientForm = ({ onClose, title, groupName, client }: Props) => {
 
-	console.log('client?.date_of_birth', client?.date_of_birth);
-
 	const day = Number(client?.date_of_birth?.split('.')[0]);
 	const month = Number(client?.date_of_birth?.split('.')[1]);
 	const year = Number(client?.date_of_birth?.split('.')[2]);
-
-	console.log('day', day);
-	console.log('month', month);
-	console.log('year', year)
-
-
 
 	const {
 		register,
