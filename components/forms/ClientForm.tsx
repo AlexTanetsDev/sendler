@@ -79,7 +79,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="phone"
-					className="font-roboto text-base font-medium mb-2  mt-8 block"
+					className="font-roboto text-sm font-medium mb-2  mt-8 block"
 				>
 					Номер телефону
 					<span className="ml-2 text-red-700">*</span>
@@ -99,7 +99,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="lastName"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					Прізвище
 				</label>
@@ -117,7 +117,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="firstName"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					Ім&apos;я
 				</label>
@@ -135,7 +135,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="midleName"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					По-батькові
 				</label>
@@ -153,7 +153,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="day"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					Дата народження
 				</label>
@@ -181,7 +181,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="parameter1"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					Параметр 1
 				</label>
@@ -198,7 +198,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="parameter2"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					Параметр 2
 				</label>
