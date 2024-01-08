@@ -95,7 +95,7 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId } }) 
 				</div>
 				<SearchClientForm getFilter={getFilter} resetFilter={resetFilter} />
 				<div className="mt-[60px]">
-					<ClientsList filteredClients={filteredClients()} groupId={groupId} deleteClients={deleteClients} />
+					<ClientsList filteredClients={filteredClients()} groupId={groupId} groupName={groupName} deleteClients={deleteClients} />
 				</div>
 			</div>
 		</section>

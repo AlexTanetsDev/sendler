@@ -3,10 +3,15 @@
 import React, { useState } from "react";
 
 import Modal from "./Modal/Modal";
-import GreenButton from "./buttons/GreenButton";
 import { AddClientForm } from "./forms/AddClientForm";
+import { IClientDatabase } from "@/globaltypes/types";
 
-const EditClient = () => {
+interface Props {
+	groupName?: string;
+	client?: IClientDatabase;
+};
+
+const EditClient = ({ groupName, client }: Props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const openModal = () => {
@@ -22,7 +27,7 @@ const EditClient = () => {
 		<>
 			<button type="button" onClick={openModal} className="row-table__btn">Редагувати</button>
 			<Modal isOpen={isModalOpen} onClose={closeModal}>
-				<AddClientForm onClose={closeModal} title='Редагування групи' />
+				{groupName ? <AddClientForm onClose={closeModal} groupName={groupName} client={client} title='Редагування групи' /> : <AddClientForm onClose={closeModal} client={client} title='Редагування контакту' />}
 			</Modal>
 		</>
 	);

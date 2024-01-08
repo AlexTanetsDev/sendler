@@ -8,7 +8,6 @@ import Link from "next/link";
 
 import GroupsList from "@/components/groupsList";
 import CreateGroupForm from "@/components/forms/CreateGroupForm";
-import ReviewClientsBtn from "@/components/buttons/ReviewClientsBtn";
 import GreenButton from "@/components/buttons/GreenButton";
 import Title from "@/components/Title";
 

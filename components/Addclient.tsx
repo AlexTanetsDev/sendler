@@ -6,7 +6,11 @@ import Modal from "./Modal/Modal";
 import GreenButton from "./buttons/GreenButton";
 import { AddClientForm } from "./forms/AddClientForm";
 
-const AddClient = () => {
+interface Props {
+	groupName?: string;
+};
+
+const AddClient = ({ groupName }: Props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const openModal = () => {
@@ -22,7 +26,7 @@ const AddClient = () => {
 		<>
 			<GreenButton size="big" type="button" onClick={openModal} >Додати контакт</GreenButton>
 			<Modal isOpen={isModalOpen} onClose={closeModal}>
-				<AddClientForm onClose={closeModal} title='Редагування групи' />
+				<AddClientForm onClose={closeModal} groupName={groupName} title='Редагування групи' />
 			</Modal>
 		</>
 	);

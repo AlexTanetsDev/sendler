@@ -4,7 +4,6 @@ import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3000/";
 
 import { useForm } from "react-hook-form";
-import { redirect } from "next/navigation";
 import { useState } from "react";
 
 import convertClientsBirthdayFormat from "@/helpers/ConvertClientsBirsdayFormat";
@@ -17,15 +16,17 @@ import EditClient from "./EditClient";
 type Props = {
 	filteredClients: IClientDatabase[];
 	groupId?: IGroupId | undefined;
+	groupName?: string;
 	deleteClients: (groupId: IGroupId | undefined, clientsId: number[]) => Promise<void>;
 }
 
 export default function ClientsList({
-
 	filteredClients,
 	groupId,
+	groupName,
 	deleteClients
 }: Props) {
+
 
 	const [isSelected, setIsSelected] = useState(0);
 
@@ -53,9 +54,6 @@ export default function ClientsList({
 		deleteClients(groupId, deletedClientsId);
 		setIsSelected(0);
 	};
-
-	console.log("isSelected", isSelected);
-	console.log('convertClients', convertClients)
 
 	return (
 		<div className="mb-[80px]">
@@ -98,8 +96,7 @@ export default function ClientsList({
 								<div className="w-[150px] text-left overflow-hidden">
 									{convertClient.parameter_2}
 								</div>
-								{/* <button className="row-table__btn">Редагувати</button> */}
-								<EditClient />
+								<EditClient groupName={groupName} client={convertClient} />
 							</div>
 						</li>
 					))
@@ -114,7 +111,7 @@ export default function ClientsList({
 					}
 				</ul>
 				<div className="flex mr-[26px] pt-[50px] justify-end">
-					<div className="flex mr-[26px] justify-end">{groupId && <AddClient />}</div>
+					<div className="flex mr-[26px] justify-end">{groupId && <AddClient groupName={groupName} />}</div>
 					<GreenButton isDisabled={convertClients[0] && isSelected ? false : true} size="big">Видалити</GreenButton>
 				</div>
 			</form>
