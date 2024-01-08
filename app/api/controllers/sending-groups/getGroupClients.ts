@@ -9,11 +9,11 @@ import {
 import { QueryResult } from "pg";
 import {
 	IGroupId,
-	IClient,
+	IClientDatabase,
 	IGroupName,
 } from "@/globaltypes/types";
 
-export default async function getGroupClients(groupId: number): Promise<{ group: string, clients: IClient[] } | NextResponse<{ message: string; }> | null> {
+export default async function getGroupClients(groupId: number): Promise<{ group: string, clients: IClientDatabase[] } | NextResponse<{ message: string; }> | null> {
 	try {
 		const groupsRes: QueryResult<IGroupId> = await fetchAllGroupId();
 		const groupsId: IGroupId[] = groupsRes.rows;
@@ -28,7 +28,7 @@ export default async function getGroupClients(groupId: number): Promise<{ group:
 			return null
 		}
 
-		const groupClients: QueryResult<IClient> = await fetchGroupClients(groupId);
+		const groupClients: QueryResult<IClientDatabase> = await fetchGroupClients(groupId);
 
 		return { group: groupName, clients: groupClients.rows };
 	} catch (error: any) {

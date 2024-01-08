@@ -4,12 +4,13 @@ import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3000/";
 
 import { useCallback, useEffect, useState } from "react";
+import Link from "next/link";
 
 import GroupsList from "@/components/groupsList";
 import CreateGroupForm from "@/components/forms/CreateGroupForm";
-import ReviewClientsBtn from "@/components/buttons/ReviewClientsBtn";
-
+import GreenButton from "@/components/buttons/GreenButton";
 import Title from "@/components/Title";
+
 
 export default function ContactManagmentPage({ params }: { params: { userId: string } }) {
 	const [groups, setGroups] = useState([]);
@@ -56,7 +57,11 @@ export default function ContactManagmentPage({ params }: { params: { userId: str
 					<p className="input__title mb-3">Всі контакти</p>
 					<div className="flex items-center">
 						<p className="mr-8 text-base font-normal font-roboto">За бажанням ви можете переглянути всі свої контакти</p>
-						<ReviewClientsBtn id={userId}>Переглянути</ReviewClientsBtn>
+						<GreenButton size="normal">
+							<Link href={`/user/${userId}/clients`}>
+								Переглянути
+							</Link>
+						</GreenButton>
 					</div>
 				</div>
 			</div>

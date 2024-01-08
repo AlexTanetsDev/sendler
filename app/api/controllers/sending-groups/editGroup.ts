@@ -21,8 +21,6 @@ export default async function editGroup(clients: IClientId[], groupId: number, m
 		const groupsIdRes: QueryResult<IGroupId> = await fetchAllGroupId();
 		const groupsIdInDatabase: IGroupId[] = groupsIdRes.rows;
 
-		console.log('groupsIdInDatabase=', groupsIdInDatabase);
-
 		if (
 			!groupsIdInDatabase.find(
 				(groupIdInDatabase: IGroupId) => groupIdInDatabase.group_id === groupId

@@ -1,0 +1,36 @@
+"use client";
+
+import React, { useState } from "react";
+
+import Modal from "./Modal/Modal";
+import { ClientForm } from "./forms/ClientForm";
+import { IClientDatabase } from "@/globaltypes/types";
+
+interface Props {
+	groupName?: string;
+	client?: IClientDatabase;
+};
+
+const EditClient = ({ groupName, client }: Props) => {
+	const [isModalOpen, setIsModalOpen] = useState(false);
+
+	const openModal = () => {
+		setIsModalOpen(true);
+		document.body.classList.add('overflow-hidden');
+	};
+
+	const closeModal = () => {
+		setIsModalOpen(false);
+		document.body.classList.remove('overflow-hidden');
+	};
+	return (
+		<>
+			<button type="button" onClick={openModal} className="row-table__btn">Редагувати</button>
+			<Modal isOpen={isModalOpen} onClose={closeModal}>
+				{groupName ? <ClientForm onClose={closeModal} groupName={groupName} client={client} title='Редагування групи' /> : <ClientForm onClose={closeModal} client={client} title='Редагування контакту' />}
+			</Modal>
+		</>
+	);
+};
+
+export default EditClient;

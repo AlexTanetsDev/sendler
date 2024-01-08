@@ -66,7 +66,7 @@ export default function UpdateGroupPage({ params }) {
         Управління контактами
       </Title>
       <div className="content-block mt-[53px] text-center">
-        <Title type="h2" color="dark">
+        <Title type="title-main_text" color="dark">
           Редагування групи
           <span className="ml-4 text-headerTable">{groupName}</span>
         </Title>

@@ -159,4 +159,16 @@ export interface FormInputFeedback {
 	desc: string;
 };
 
+export interface FormInputCreateClient {
+	lastName?: string;
+	firstName?: string;
+	midleName?: string;
+	phone: number;
+	day?: number;
+	month?: number;
+	year?: number;
+	parameter1?: string;
+	parameter2?: string;
+};
+
 

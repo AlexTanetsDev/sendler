@@ -10,7 +10,7 @@ import {
 } from '@/app/api/controllers/sending-groups';
 
 
-import { IClient } from "@/globaltypes/types";
+import { IClient, IClientDatabase } from "@/globaltypes/types";
 import { IQieryParamsUpdateGroup } from "./types";
 
 import { schemaReqUpdateGroup, schemaReqEditGroup } from '@/models/sending-groups';
@@ -21,7 +21,7 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
 	const groupId = Number(params.id);
 
 	try {
-		const res: { group: string, clients: IClient[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId);
+		const res: { group: string, clients: IClientDatabase[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId);
 
 		if (res === null) {
 			return HttpError(400, `The group with id = ${groupId} does not exist`);

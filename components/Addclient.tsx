@@ -4,9 +4,13 @@ import React, { useState } from "react";
 
 import Modal from "./Modal/Modal";
 import GreenButton from "./buttons/GreenButton";
-import { FormFeedback } from "./forms/FormFeedback";
+import { ClientForm } from "./forms/ClientForm";
 
-const Feedback = () => {
+interface Props {
+	groupName?: string;
+};
+
+const AddClient = ({ groupName }: Props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const openModal = () => {
@@ -20,13 +24,12 @@ const Feedback = () => {
 	};
 	return (
 		<>
-			<p className=" text-base font-medium">Зворотній зв’язок</p>
-			<GreenButton size="normal" onClick={openModal} >Зв’язатись</GreenButton>
+			<GreenButton size="big" type="button" onClick={openModal} >Додати контакт</GreenButton>
 			<Modal isOpen={isModalOpen} onClose={closeModal}>
-				<FormFeedback onClose={closeModal} title='Зворотній зв’язок' />
+				<ClientForm onClose={closeModal} groupName={groupName} title='Редагування групи' />
 			</Modal>
 		</>
 	);
 };
 
-export default Feedback;
+export default AddClient;
