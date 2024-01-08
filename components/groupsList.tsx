@@ -8,17 +8,11 @@ import EditGroupBtn from "./buttons/EditGroupBtn";
 import ImportGroupBtn from "./buttons/ImportGroupBTN";
 
 type Props = {
-	groups: IGroupDatabase[] | undefined;
+	groups: IGroupDatabase[];
 	updateListControl: () => void;
 }
 
 export default function GroupsList({ groups, updateListControl }: Props) {
-
-
-	if (groups === undefined) {
-		console.log('Unable to fetch userGroups!');
-		redirect('/')
-	};
 
 	return (
 		<div className="mb-[80px]">
@@ -28,8 +22,8 @@ export default function GroupsList({ groups, updateListControl }: Props) {
 				<p>Кількість</p>
 			</div>
 			<ul>
-				{groups.map((group: IGroupDatabase) => (
-					<li key={group.group_id} className="flex py-3.5 px-[26px] text-xl font-montserrat font-normal border-b border-rowUnderLine">
+				{groups[0] ? groups.map((group: IGroupDatabase) => (
+					<li key={group.group_id} className="flex  px-[26px] items-center h-[58px]  text-base font-montserrat font-normal border-b border-rowUnderLine">
 						<div className="w-[110px] mr-[60px] text-left">{group.group_name}</div>
 						<div className="w-[186px] mr-[91px] text-left">{group.group_create_date}</div>
 						<div className="w-[100px] mr-[91px] text-left">{group.number_members}</div>
@@ -40,7 +34,15 @@ export default function GroupsList({ groups, updateListControl }: Props) {
 							<button className="row-table__btn">Експорт</button>
 						</div>
 					</li>
-				))}
+				)) :
+					<>
+						<div className="flex  px-[26px] items-center h-[58px]  text-base font-montserrat font-normal border-b border-rowUnderLine">
+							<span>1</span>
+						</div>
+						<div className="h-[48px] border-b border-rowUnderLine"></div>
+						<div className="h-[48px] border-b border-rowUnderLine"></div>
+					</>
+				}
 			</ul>
 		</div>
 	)

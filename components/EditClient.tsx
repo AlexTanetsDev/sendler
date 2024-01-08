@@ -4,9 +4,9 @@ import React, { useState } from "react";
 
 import Modal from "./Modal/Modal";
 import GreenButton from "./buttons/GreenButton";
-import { FormFeedback } from "./forms/FormFeedback";
+import { AddClientForm } from "./forms/AddClientForm";
 
-const Feedback = () => {
+const EditClient = () => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const openModal = () => {
@@ -20,13 +20,12 @@ const Feedback = () => {
 	};
 	return (
 		<>
-			<p className=" text-base font-medium">Зворотній зв’язок</p>
-			<GreenButton size="normal" onClick={openModal} >Зв’язатись</GreenButton>
+			<button type="button" onClick={openModal} className="row-table__btn">Редагувати</button>
 			<Modal isOpen={isModalOpen} onClose={closeModal}>
-				<FormFeedback onClose={closeModal} title='Зворотній зв’язок' />
+				<AddClientForm onClose={closeModal} title='Редагування групи' />
 			</Modal>
 		</>
 	);
 };
 
-export default Feedback;
+export default EditClient;

@@ -1,7 +1,15 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "types": [
+      "react",
+      "react-dom"
+    ],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -19,7 +27,9 @@
       }
     ],
     "paths": {
-      "@/*": ["./*"]
+      "@/*": [
+        "./*"
+      ]
     }
   },
   "include": [
@@ -30,7 +40,13 @@
     "app/api/sending-groups/create/route.js",
     "app/api/sending-groups/[id]/route.js",
     "app/api/sending-groups/route.js",
-    "app/layout.jsx"
-, "components/UserSmsBalansInform.tsx", "app/(privatePages)/user/contacts-manage/edit-group/[id]/page.tsx", "app/(privatePages)/user/contacts-manage/update-group/[id]/page.tsx"  ],
-  "exclude": ["node_modules"]
+    "app/layout.jsx",
+    "components/UserSmsBalansInform.tsx",
+    "app/(privatePages)/user/contacts-manage/edit-group/[id]/page.tsx",
+    "app/(privatePages)/user/contacts-manage/update-group/[id]/page.tsx",
+    "components/ClientsList.tsx"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
 }

@@ -22,10 +22,10 @@ export default function RootLayout({
 			<body className="flex flex-col items-center min-h-screen">
 				<Providers>
 					<ToastProvider>
-					<Header />
-					{children}
-					<Footer />
-					<BackToTopBtn />
+						<Header />
+						{children}
+						<Footer />
+						<BackToTopBtn />
 					</ToastProvider>
 				</Providers>
 			</body>

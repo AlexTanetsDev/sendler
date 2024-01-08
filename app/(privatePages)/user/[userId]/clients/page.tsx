@@ -6,11 +6,15 @@ import { useState, useCallback, useEffect, } from "react";
 
 import Title from "@/components/Title";
 import ClientsList from "@/components/ClientsList";
+import SearchClientForm from "@/components/forms/SearchClientForm";
+import { IClientDatabase, IGroupId } from "@/globaltypes/types";
+
 
 export default function AllContactsUserPage({ params }: { params: { userId: string } }) {
 
 	const [clients, SetClients] = useState([]);
-	const [isAddGroup, SetIsAddgroup] = useState(false)
+	const [isAddGroup, SetIsAddgroup] = useState(false);
+	const [filter, setFilter] = useState('');
 
 	const userId = Number(params.userId);
 
@@ -29,7 +33,15 @@ export default function AllContactsUserPage({ params }: { params: { userId: stri
 		} catch (error: any) {
 			console.log(error.message);
 		}
-	}
+	};
+
+	const getFilter = (e: any) => {
+		setFilter(e.target.value);
+	};
+
+	const resetFilter = () => {
+		setFilter('');
+	};
 
 	const memoizedGetClients = useCallback(getClients, [userId]);
 
@@ -37,18 +49,60 @@ export default function AllContactsUserPage({ params }: { params: { userId: stri
 		SetIsAddgroup(!isAddGroup);
 	};
 
+	const filteredClients = () => {
+		const filteredArray: IClientDatabase[] = [];
+		clients.map(client => {
+			const { tel } = client;
+			if (String(tel).includes(filter)) {
+				filteredArray.push(client);
+			};
+		}
+		);
+		return filteredArray;
+	};
+
+	const deleteClients = async (groupId: IGroupId | undefined, clientsId: number[]) => {
+
+		if (groupId) {
+			try {
+				const response = await axios.patch(`api/sending-groups/${groupId}`, {
+					clients: clientsId,
+				});
+				updateListControl();
+				console.log(response.data.message);
+			} catch (error: any) {
+				console.log(error.message + " | " + error.response.data.error);
+			}
+		} else {
+			clientsId.forEach(async (clientId) => {
+				try {
+					const response = await axios.delete(`api/clients/${clientId}`);
+					console.log(response.data.message);
+					updateListControl();
+				} catch (error: any) {
+					console.log(error.message + " | " + error.response.data.error);
+				}
+			});
+		}
+	}
+
 	useEffect(() => {
 		memoizedGetClients();
 	}, [userId, isAddGroup, memoizedGetClients]);
 
 	return (
-		<section>
-			<div className="mb-[60px]">
-				<Title type="h1" color="dark">Управління контактами</Title>
+		<section className="container mx-auto">
+			<Title type="h1" color="dark">Управління контактами</Title>
+			<div className="content-block mt-[60px]">
+				<div className="ml-[26px] mb-[50px]">
+					<Title type="title-main_text" color="dark">Всі контакти</Title>
+				</div>
+				<p className="w-[684px] ml-[26px] mt-10 mb-[50px] font-montserrat text-base font-normal leading-6">У  данній  таблиці представленні всі ваші контакти. Ви можете переглянути детальну інформацію, а також  редагувати контакт.</p>
+				<SearchClientForm getFilter={getFilter} resetFilter={resetFilter} />
+				<div className="mt-[60px]">
+					<ClientsList filteredClients={filteredClients()} deleteClients={deleteClients} />
+				</div>
 			</div>
-			<Title type="h3" color="dark">Всі контакти</Title>
-			<p className="w-[684px] mt-10 mb-[50px] font-montserrat text-base font-normal leading-6">У  данній  таблиці представленні всі ваші контакти. Ви можете переглянути детальну інформацію, а також  редагувати контакт.</p>
-			<ClientsList clients={clients} updateListControl={updateListControl} />
 		</section>
 	)
 };
