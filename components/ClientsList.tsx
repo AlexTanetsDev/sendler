@@ -27,7 +27,6 @@ export default function ClientsList({
 	deleteClients
 }: Props) {
 
-
 	const [isSelected, setIsSelected] = useState(0);
 
 	const convertClients = convertClientsBirthdayFormat(filteredClients);
@@ -35,15 +34,16 @@ export default function ClientsList({
 	const { register, handleSubmit } = useForm();
 
 	const onSelect = (e: any) => {
-		const { checked } = e.target;;
+		const { checked } = e.target;
 		if (checked) {
 			setIsSelected(isSelected + 1);
-		} else { setIsSelected(isSelected - 1); }
+		} else {
+			setIsSelected(isSelected - 1);
+		}
 	}
 
 	const onSubmit = (data: any) => {
 		const deletedClientsId: number[] = [];
-
 
 		for (const key in data) {
 			if (data[key] === true) {

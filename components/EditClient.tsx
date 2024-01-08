@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 
 import Modal from "./Modal/Modal";
-import { AddClientForm } from "./forms/AddClientForm";
+import { ClientForm } from "./forms/ClientForm";
 import { IClientDatabase } from "@/globaltypes/types";
 
 interface Props {
@@ -27,7 +27,7 @@ const EditClient = ({ groupName, client }: Props) => {
 		<>
 			<button type="button" onClick={openModal} className="row-table__btn">Редагувати</button>
 			<Modal isOpen={isModalOpen} onClose={closeModal}>
-				{groupName ? <AddClientForm onClose={closeModal} groupName={groupName} client={client} title='Редагування групи' /> : <AddClientForm onClose={closeModal} client={client} title='Редагування контакту' />}
+				{groupName ? <ClientForm onClose={closeModal} groupName={groupName} client={client} title='Редагування групи' /> : <ClientForm onClose={closeModal} client={client} title='Редагування контакту' />}
 			</Modal>
 		</>
 	);

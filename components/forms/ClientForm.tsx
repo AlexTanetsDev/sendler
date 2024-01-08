@@ -15,7 +15,7 @@ interface Props {
 	client?: IClientDatabase;
 };
 
-const AddClientForm = ({ onClose, title, groupName, client }: Props) => {
+const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 	const day = Number(client?.date_of_birth?.split('.')[0]);
 	const month = Number(client?.date_of_birth?.split('.')[1]);
@@ -219,4 +219,4 @@ const AddClientForm = ({ onClose, title, groupName, client }: Props) => {
 	);
 };
 
-export { AddClientForm };
+export { ClientForm };

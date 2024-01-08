@@ -4,7 +4,7 @@ import React, { useState } from "react";
 
 import Modal from "./Modal/Modal";
 import GreenButton from "./buttons/GreenButton";
-import { AddClientForm } from "./forms/AddClientForm";
+import { ClientForm } from "./forms/ClientForm";
 
 interface Props {
 	groupName?: string;
@@ -26,7 +26,7 @@ const AddClient = ({ groupName }: Props) => {
 		<>
 			<GreenButton size="big" type="button" onClick={openModal} >Додати контакт</GreenButton>
 			<Modal isOpen={isModalOpen} onClose={closeModal}>
-				<AddClientForm onClose={closeModal} groupName={groupName} title='Редагування групи' />
+				<ClientForm onClose={closeModal} groupName={groupName} title='Редагування групи' />
 			</Modal>
 		</>
 	);
