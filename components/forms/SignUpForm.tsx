@@ -48,46 +48,44 @@ const SingUpForm = () => {
 
   const onSubmit: SubmitHandler<FormInputsSignUp> = async (data) => {
     setIsDisabled(true);
-try {
-
- 
-  const res = await fetch("http://localhost:3000/api/users/signup", {
-      method: "POST",
-      body: JSON.stringify({
-        email: data.email,
-        user_login: data.login,
-        user_password: data.password,
-        tel: data.phone,
-        user_name: data.name,
-      }),
-    });
-    if (!res.ok) {
-      toast.error(
-        "Користувач із таким іменем або логіном, номером телефону чи електронною адресою вже існує"
-      );
-    }
-    if (res && res.ok) {
-      const userId = await fetchUserId(data.login);
-
-      const credentialsRes = await signIn("credentials", {
-        login: data.login,
-        password: data.password,
-        redirect: false,
+    try {
+      const res = await fetch("http://localhost:3000/api/users/signup", {
+        method: "POST",
+        body: JSON.stringify({
+          email: data.email,
+          user_login: data.login,
+          user_password: data.password,
+          tel: data.phone,
+          user_name: data.name,
+        }),
       });
-      if (credentialsRes && !credentialsRes.error) {
-        router.push(`/user/${userId}/account`);
-        toast.success(`Ласкаво просимо ${data.login}`);
+      if (!res.ok) {
+        toast.error(
+          "Користувач із таким іменем або логіном, номером телефону чи електронною адресою вже існує"
+        );
       }
+      if (res && res.ok) {
+        const userId = await fetchUserId(data.login);
+
+        const credentialsRes = await signIn("credentials", {
+          login: data.login,
+          password: data.password,
+          redirect: false,
+        });
+        if (credentialsRes && !credentialsRes.error) {
+          router.push(`/user/${userId}/mailing-list`);
+          toast.success(`Ласкаво просимо ${data.login}`);
+        }
+      }
+    } catch (error) {
+      console.error("Помилка входу:", error);
+      toast.error("Під час входу сталася помилка");
     }
-} catch (error) {
-  console.error("Помилка входу:", error);
-  toast.error("Під час входу сталася помилка");
-}
 
     setIsDisabled(false);
   };
 
-  return (
+  return ( 
     <form
       autoComplete="off"
       onSubmit={handleSubmit(onSubmit)}
@@ -96,9 +94,9 @@ try {
       <div className="text-left w-full mb-8">
         <label
           htmlFor="name"
-          className="font-roboto text-base font-medium mb-2 block"
+          className="font-roboto text-sm font-medium mb-2 block"
         >
-          Ім’я
+          Ім’я<span className=" text-redStar">*</span>
         </label>
         <input
           id="name"
@@ -114,9 +112,9 @@ try {
 
         <label
           htmlFor="phone"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
+          className="font-roboto text-sm font-medium mb-2  mt-8 block"
         >
-          Телефон
+          Телефон<span className=" text-redStar">*</span>
         </label>
         <input
           id="phone"
@@ -132,9 +130,9 @@ try {
 
         <label
           htmlFor="email"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
+          className="font-roboto text-sm font-medium mb-2  mt-8 block"
         >
-          Пошта
+          Пошта<span className=" text-redStar">*</span>
         </label>
         <input
           id="email"
@@ -150,9 +148,9 @@ try {
 
         <label
           htmlFor="login"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
+          className="font-roboto text-sm font-medium mb-2  mt-8 block"
         >
-          Логін
+          Логін<span className=" text-redStar">*</span>
         </label>
         <input
           id="login"
@@ -168,9 +166,9 @@ try {
 
         <label
           htmlFor="password"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
+          className="font-roboto text-sm font-medium mb-2  mt-8 block"
         >
-          Пароль
+          Пароль<span className=" text-redStar">*</span>
         </label>
         <div className="flex relative">
           {" "}
@@ -189,9 +187,9 @@ try {
         )}
         <label
           htmlFor="repeatPassword"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
+          className="font-roboto text-sm font-medium mb-2  mt-8 block"
         >
-          Підтвердіть пароль
+          Підтвердіть пароль<span className=" text-redStar">*</span>
         </label>
         <div className="flex relative">
           {" "}
