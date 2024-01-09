@@ -65,7 +65,7 @@ const LoginForm = () => {
       }
 
       if (res && !res.error) {
-        router.push(`/user/${userId}/account`);
+        router.push(`/user/${userId}/mailing-list`);
         toast.success(`Ласкаво просимо ${data.login}`);
       }
     } catch (error) {
@@ -84,9 +84,9 @@ const LoginForm = () => {
       <div className="text-left w-full mb-8">
         <label
           htmlFor="login"
-          className="font-roboto text-base font-medium mb-2 block"
+          className="font-roboto text-sm font-medium mb-2 block"
         >
-          Логін
+          Логін<span className=" text-redStar">*</span>
         </label>
         <input
           id="login"
@@ -101,9 +101,9 @@ const LoginForm = () => {
 
         <label
           htmlFor="password"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
+          className="font-roboto text-sm font-medium mb-2  mt-8 block"
         >
-          Пароль
+          Пароль<span className=" text-redStar">*</span>
         </label>
         <div className="flex relative">
           <input

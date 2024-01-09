@@ -4,7 +4,7 @@ export const validationSchemaFeedback = Joi.object({
 	name: Joi.string().label("name").allow(''),
 	phone: Joi.string()
 		.pattern(/^\+\d{10,}$/)
-		.required()
+		.optional().allow("")
 		.messages({
 			"string.pattern.base":
 				'Phone number must start with "+" and have at least 10 digits',
