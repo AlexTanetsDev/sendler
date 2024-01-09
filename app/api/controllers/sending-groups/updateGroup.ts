@@ -52,7 +52,7 @@ export default async function updateGroup(clients: IClient[], groupId: number, m
 		for (const client of clients) {
 			const { tel } = client;
 
-			const userClient = userClients.find(userClient => Number(userClient.tel) === tel);
+			const userClient = userClients.find(userClient => Number(userClient.tel) === Number(tel));
 
 			if (userClient) {
 				await updateClientData(Number(userClient.client_id), client);

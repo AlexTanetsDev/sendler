@@ -79,7 +79,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="phone"
-					className="font-roboto text-base font-medium mb-2  mt-8 block"
+					className="font-roboto text-sm font-medium mb-2  mt-8 block"
 				>
 					Номер телефону
 					<span className="ml-2 text-red-700">*</span>
@@ -87,7 +87,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 				<input
 					id="phone"
 					type="text"
-					defaultValue={client?.tel && client.tel}
+					defaultValue={client?.tel && `+${client.tel}`}
 					{...register("phone")}
 					className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
 					placeholder="+3801234567"
@@ -99,7 +99,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="lastName"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					Прізвище
 				</label>
@@ -117,7 +117,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="firstName"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					Ім&apos;я
 				</label>
@@ -135,7 +135,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="midleName"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					По-батькові
 				</label>
@@ -153,7 +153,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="day"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					Дата народження
 				</label>
@@ -161,27 +161,27 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 				<select
 					id='day'
 					defaultValue={client?.date_of_birth && day}
-					className="input w-[118px] border mr-3 py-2 px-3 focus:outline-none focus:border-blue-500 ">
+					className="input w-[118px] border mr-3 py-2 px-3 text-center focus:outline-none focus:border-blue-500 ">
 					<CreateOptions min={1} max={31} />
 				</select>
 
 				<select
 					id='month'
 					defaultValue={client?.date_of_birth && month}
-					className="input w-[138px] border mr-3 py-2 px-3 focus:outline-none focus:border-blue-500 ">
+					className="input w-[138px] border mr-3 py-2 px-3 text-center focus:outline-none focus:border-blue-500 ">
 					<CreateOptions min={1} max={12} />
 				</select>
 
 				<select
 					id='year'
 					defaultValue={client?.date_of_birth && year}
-					className="input w-[194px] border py-2 px-3 focus:outline-none focus:border-blue-500 ">
+					className="input w-[194px] border py-2 px-3 text-center focus:outline-none focus:border-blue-500 ">
 					<CreateOptions min={1900} max={new Date().getFullYear()} />
 				</select>
 
 				<label
 					htmlFor="parameter1"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					Параметр 1
 				</label>
@@ -198,7 +198,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="parameter2"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					Параметр 2
 				</label>

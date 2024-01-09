@@ -53,12 +53,12 @@ export const validationSchemaCreateClient = Joi.object({
 			"string.pattern.base":
 				'Phone number must start with "+" and have at least 10 digits',
 		}),
-	lastName: Joi.string().label('Last name').min(0),
-	firstName: Joi.string().label('First name').min(0),
-	midleName: Joi.string().label('Midle name').min(0),
-	day: Joi.string().label('Day').min(0),
-	month: Joi.string().label('Month').min(0),
-	year: Joi.string().label('Year').min(0),
-	parameter1: Joi.string().label('Parameter 1').min(0),
-	parameter2: Joi.string().label('Parameter 2').min(0)
+	lastName: Joi.string().label('Last name').allow(""),
+	firstName: Joi.string().label('First name').allow(""),
+	midleName: Joi.string().label('Midle name').allow(""),
+	day: Joi.string().label('Day').allow(""),
+	month: Joi.string().label('Month').allow(""),
+	year: Joi.string().label('Year').allow(""),
+	parameter1: Joi.string().label('Parameter 1').allow(""),
+	parameter2: Joi.string().label('Parameter 2').allow("")
 });

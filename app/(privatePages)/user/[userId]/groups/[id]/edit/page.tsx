@@ -56,7 +56,8 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId } }) 
 
 	const deleteClients = async (groupId: IGroupId | undefined, clientsId: number[]) => {
 
-		if (groupId) {
+		if (groupId && clientsId.length > 0) {
+
 			try {
 				const response = await axios.patch(`api/sending-groups/${groupId}`, {
 					clients: clientsId,
@@ -66,7 +67,7 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId } }) 
 				setClients(clients);
 				console.log(response.data.message);
 			} catch (error: any) {
-				console.log(error.message + " | " + error.response.data.error);
+				console.log(error.message + " | " + error.response);
 			}
 		} else {
 			clientsId.forEach(async (clientId) => {
@@ -76,7 +77,7 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId } }) 
 					setClients(clients);
 					console.log(response.data.message);
 				} catch (error: any) {
-					console.log(error.message + " | " + error.response.data.error);
+					console.log(error.message + " | " + error.response);
 				}
 			});
 		}
