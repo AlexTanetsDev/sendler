@@ -1,4 +1,3 @@
-export { default as updateClient } from './updateClient';
 export { default as deleteClient } from './deleteClient';
 export { default as getUserClients } from './getUserClients';
 export { default as createClient } from './createClient';

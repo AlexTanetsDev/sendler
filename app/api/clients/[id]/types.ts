@@ -1,3 +1,5 @@
-import { IClient } from "@/globaltypes/types";
+import { IClient, IClientDatabase } from "@/globaltypes/types";
 
-export interface IQieryParamsUpdateClient { client: IClient };
+export interface IQieryParamsClient { client: IClient };
+
+export interface IQieryParamsUpdateClient { client: IClientDatabase };

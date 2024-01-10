@@ -1,4 +1,4 @@
 
-import { IClient } from "@/globaltypes/types";
+import { IClient, IGroupId } from "@/globaltypes/types";
 
-export interface IQieryParamsCreateClient { groupName: string, clients: IClient };
+export interface IQieryParamsCreateClient { groupId: number, clients: IClient, userId: number };

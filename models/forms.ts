@@ -55,7 +55,7 @@ export const validationSchemaCreateClient = Joi.object({
 		}),
 	lastName: Joi.string().label('Last name').allow(""),
 	firstName: Joi.string().label('First name').allow(""),
-	midleName: Joi.string().label('Midle name').allow(""),
+	middleName: Joi.string().label('Midle name').allow(""),
 	day: Joi.string().label('Day').allow(""),
 	month: Joi.string().label('Month').allow(""),
 	year: Joi.string().label('Year').allow(""),

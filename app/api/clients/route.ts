@@ -53,7 +53,11 @@ export async function GET(request: NextRequest) {
 }
 
 // create client for user with user_id from search params
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest, { params }: { params: { userId: string } }): Promise<NextResponse<{
+	message: string;
+}> | NextResponse<{
+	error: any;
+}>> {
 
 	try {
 		const body: IQieryParamsCreateClient = await request.json();
@@ -66,15 +70,14 @@ export async function POST(request: NextRequest) {
 			);
 		}
 
-		const { client } = value;
-		const { searchParams }: URL = new URL(request.url);
-		const userId = Number(searchParams.get("userId"));
+		const { client, groupId, userId } = value;
+
 
 		if (!client) {
 			return HttpError(400, `The client is empty`);
 		}
 
-		const res: ErrorCase | undefined = await createClient(client, userId);
+		const res: ErrorCase | undefined = await createClient(client, userId, groupId);
 		const { tel }: ITel = client;
 
 		switch (res) {
