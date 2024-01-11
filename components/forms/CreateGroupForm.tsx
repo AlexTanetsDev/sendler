@@ -11,10 +11,10 @@ import GreenButton from "../buttons/GreenButton";
 
 type Props = {
 	id: number | undefined;
-	updateListControl: () => void;
+	getGroups: () => void;
 }
 
-export default function CreateGroupForm({ id, updateListControl }: Props) {
+export default function CreateGroupForm({ id, getGroups }: Props) {
 
 	const {
 		register,
@@ -60,13 +60,12 @@ export default function CreateGroupForm({ id, updateListControl }: Props) {
 					},
 				}
 			);
-			updateListControl();
+			getGroups();
 			reset({ group_name: '' });
 		} catch (error: any) {
 			console.log(error.message)
 		}
 	}
-
 	return (
 		<form
 			autoComplete="off"
@@ -86,7 +85,6 @@ export default function CreateGroupForm({ id, updateListControl }: Props) {
 					<span className="text-red-500 ">{errors.group_name.message}</span>
 				)}
 				<GreenButton size="normal">Створити</GreenButton>
-				{/* <button type="submit" className='action__btn'>Створити</button> */}
 			</div>
 		</form>
 	);

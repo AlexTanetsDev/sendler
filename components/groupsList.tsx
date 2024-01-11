@@ -1,18 +1,17 @@
 'use client';
 
-import { redirect } from "next/navigation";
-
 import { IGroupDatabase } from "@/globaltypes/types";
 import DeleteGroupBtn from "./buttons/DeleteGroupBtn";
 import EditGroupBtn from "./buttons/EditGroupBtn";
 import ImportGroupBtn from "./buttons/ImportGroupBTN";
+import ExportGroupGroupBtn from "./buttons/ExportGroupBtn";
 
 type Props = {
 	groups: IGroupDatabase[];
-	updateListControl: () => void;
+	getGroups: () => void,
 }
 
-export default function GroupsList({ groups, updateListControl }: Props) {
+export default function GroupsList({ groups, getGroups }: Props) {
 
 	return (
 		<div className="mb-[80px]">
@@ -29,9 +28,10 @@ export default function GroupsList({ groups, updateListControl }: Props) {
 						<div className="w-[100px] mr-[91px] text-left">{group.number_members}</div>
 						<div className="flex gap-x-[15px]">
 							<EditGroupBtn id={group.group_id} >Редагувати</EditGroupBtn>
-							<DeleteGroupBtn id={group.group_id} updateListControl={updateListControl}>Видалити</DeleteGroupBtn>
+							<DeleteGroupBtn id={group.group_id} getGroups={getGroups}>Видалити</DeleteGroupBtn>
 							<ImportGroupBtn id={group.group_id}>Імпорт</ImportGroupBtn>
-							<button className="row-table__btn">Експорт</button>
+							<ExportGroupGroupBtn id={group.group_id}>Експорт</ExportGroupGroupBtn>
+							{/* <button className="row-table__btn">Експорт</button> */}
 						</div>
 					</li>
 				)) :

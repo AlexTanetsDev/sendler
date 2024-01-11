@@ -4,7 +4,7 @@ import React, { useState } from "react";
 
 import Modal from "./Modal/Modal";
 import { ClientForm } from "./forms/ClientForm";
-import { IClientDatabase, IGroupId } from "@/globaltypes/types";
+import { IClientDatabase } from "@/globaltypes/types";
 
 interface Props {
 	groupId?: number;
@@ -24,6 +24,7 @@ const EditClient = ({ groupId, client, getClients }: Props) => {
 		setIsModalOpen(false);
 		document.body.classList.remove('overflow-hidden');
 	};
+
 	return (
 		<>
 			<button type="button" onClick={openModal} className="row-table__btn">Редагувати</button>

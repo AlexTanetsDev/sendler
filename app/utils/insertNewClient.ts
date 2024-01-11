@@ -1,10 +1,10 @@
 import db from "@/db";
 
-import { IClient, IClientId, IGroupId } from "@/globaltypes/types";
+import { IClient, IClientId } from "@/globaltypes/types";
 
 import { QueryResult } from "pg";
 
-export default async function insertNewClient(client: IClient, user_id: number, groupId: IGroupId): Promise<void> {
+export default async function insertNewClient(client: IClient, user_id: number, groupId: number): Promise<void> {
 	const { tel, first_name, middle_name, last_name, date_of_birth, parameter_1, parameter_2, } = client;
 
 	const res: QueryResult<IClient> = await db.query(
@@ -18,6 +18,9 @@ export default async function insertNewClient(client: IClient, user_id: number, 
 		FROM clients 
 		WHERE tel = ${tel}`
 	);
+
+	console.log('resClientId.rows[0].client_id', resClientId.rows[0].client_id);
+	console.log('groupId', groupId)
 
 	if (res && resClientId) {
 		const client_id = resClientId.rows[0].client_id;

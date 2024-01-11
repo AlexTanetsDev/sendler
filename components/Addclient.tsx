@@ -5,7 +5,6 @@ import React, { useState } from "react";
 import Modal from "./Modal/Modal";
 import GreenButton from "./buttons/GreenButton";
 import { ClientForm } from "./forms/ClientForm";
-import { IGroupId } from "@/globaltypes/types";
 
 interface Props {
 	groupId?: number;

@@ -71,8 +71,6 @@ export async function POST(request: NextRequest, { params }: { params: { userId:
 		}
 
 		const { client, groupId, userId } = value;
-
-
 		if (!client) {
 			return HttpError(400, `The client is empty`);
 		}
@@ -90,7 +88,6 @@ export async function POST(request: NextRequest, { params }: { params: { userId:
 					return HttpError(400, `The client with tel ${tel} already exists`);
 				}
 		}
-
 		return NextResponse.json(
 			{ message: "New client created successfully" },
 			{ status: 201 }

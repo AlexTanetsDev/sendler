@@ -5,31 +5,23 @@ import HttpError from "@/helpers/HttpError";
 import {
 	deleteClient,
 	getClient,
-	createClient
 } from "@/app/api/controllers/clients";
 
 import {
 	IClient,
 	IClientDatabase,
-	ErrorCase,
-	IClientId
 } from "@/globaltypes/types";
 
 import {
-	IQieryParamsUpdateClient,
 	IQieryParamsClient
 } from "./types";
 
 import {
 	schemaReqClient,
-	schemaReqClientUpdate
 } from '@/models/clients';
 import updateClientData from "@/app/utils/updateClientData";
 
 import { QueryResult } from "pg";
-
-import { insertNewClient } from "@/app/utils";
-
 
 //get one client with id from params
 export async function GET(_request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{

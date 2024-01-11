@@ -62,24 +62,12 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId } }) 
 				const response = await axios.patch(`api/sending-groups/${groupId}`, {
 					clients: clientsId,
 				});
-
 				const { clients } = response.data.resGet
 				setClients(clients);
 				console.log(response.data.message);
 			} catch (error: any) {
 				console.log(error.message + " | " + error.response);
 			}
-		} else {
-			clientsId.forEach(async (clientId) => {
-				try {
-					const response = await axios.delete(`api/clients/${clientId}`);
-					const { clients } = response.data.resGet
-					setClients(clients);
-					console.log(response.data.message);
-				} catch (error: any) {
-					console.log(error.message + " | " + error.response);
-				}
-			});
 		}
 	}
 

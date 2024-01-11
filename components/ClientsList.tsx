@@ -8,7 +8,7 @@ import { useState } from "react";
 
 import convertClientsBirthdayFormat from "@/helpers/ConvertClientsBirsdayFormat";
 
-import { IClientDatabase, IGroupId } from "@/globaltypes/types";
+import { IClientDatabase } from "@/globaltypes/types";
 import GreenButton from "./buttons/GreenButton";
 import AddClient from "./Addclient";
 import EditClient from "./EditClient";
@@ -28,9 +28,7 @@ export default function ClientsList({
 }: Props) {
 
 	const [isSelected, setIsSelected] = useState(0);
-
 	const convertClients = convertClientsBirthdayFormat(filteredClients);
-
 	const { register, handleSubmit } = useForm();
 
 	const onSelect = (e: any) => {
@@ -50,7 +48,6 @@ export default function ClientsList({
 				deletedClientsId.push(Number(key));
 			}
 		}
-
 		deleteClients(groupId, deletedClientsId);
 		setIsSelected(0);
 	};
@@ -115,7 +112,6 @@ export default function ClientsList({
 					<GreenButton isDisabled={convertClients[0] && isSelected ? false : true} size="big">Видалити</GreenButton>
 				</div>
 			</form>
-
 		</div>
 	);
 }

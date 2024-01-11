@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 
 import {
 	fetchAllGroupId,
-	deleteClientData,
 	deleteClientMemberInGroupData,
 } from "@/app/utils";
 

@@ -5,7 +5,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { validationSchemaCreateClient } from "@/models/forms";
-import { FormInputCreateClient, IGroupId, IClientDatabase } from "@/globaltypes/types";
+import { FormInputCreateClient, IClientDatabase } from "@/globaltypes/types";
 import GreenButton from "../buttons/GreenButton";
 import CreateOptions from "../CreateOptions";
 import { useSession } from "next-auth/react";
@@ -22,8 +22,7 @@ interface Props {
 const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, groupId }: Props) => {
 
 	const { data: session } = useSession();
-	const userId = session?.user.user_id
-
+	const userId = session?.user.user_id;
 	const day = Number(clientCurrent?.date_of_birth?.split('.')[0]);
 	const month = Number(clientCurrent?.date_of_birth?.split('.')[1]);
 	const year = Number(clientCurrent?.date_of_birth?.split('.')[2]);
@@ -53,7 +52,6 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 						}
 					);
 				}
-
 				return {
 					values: {},
 					errors: validationErrors,
@@ -63,8 +61,6 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 	});
 
 	const onSubmit: SubmitHandler<FormInputCreateClient> = async (data) => {
-
-
 		const clientData = {
 			tel: data.phone,
 			last_name: data.lastName,
@@ -95,17 +91,14 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 			);
 			getClients();
 		}
-
 		reset();
 		{
 			onClose && onClose();
 		}
-
 		toast.success(
 			"Your submission has been received. We will respond to it as soon as possible."
 		);
 	};
-
 	return (
 		<form
 			autoComplete="off"
