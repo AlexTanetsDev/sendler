@@ -15,14 +15,14 @@ import {
 
 export default async function getGroupClients(groupId: number): Promise<{ group: string, clients: IClientDatabase[] } | NextResponse<{ message: string; }> | null> {
 	try {
-		const groupsRes: QueryResult<IGroupId> = await fetchAllGroupId();
-		const groupsId: IGroupId[] = groupsRes.rows;
+		const groupsIdDatabaseRes: QueryResult<IGroupId> = await fetchAllGroupId();
+		const groupsIdDatabase: IGroupId[] = groupsIdDatabaseRes.rows;
 		const groupNameRes: QueryResult<IGroupName> = await fetchOneUserGroupName(groupId);
 		const groupName: string = groupNameRes.rows[0].group_name;
 
 		if (
-			!groupsId.find(
-				(group: IGroupId) => group.group_id === groupId
+			!groupsIdDatabase.find(
+				(groupIdDatabase: IGroupId) => groupIdDatabase.group_id === groupId
 			)
 		) {
 			return null

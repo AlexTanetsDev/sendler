@@ -6,7 +6,6 @@ axios.defaults.baseURL = "http://localhost:3000/";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import { schemaSearchClient } from "@/models/clients";
-import { useState } from "react";
 
 interface IFormInput {
 	tel: string;

@@ -15,7 +15,7 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId } }) 
 	const [groupName, setGroupName] = useState('');
 	const [filter, setFilter] = useState('');
 
-	const groupId = params.id;
+	const groupId = Number(params.id);
 
 	const getClients = async () => {
 		try {
@@ -54,31 +54,20 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId } }) 
 		return filteredArray;
 	};
 
-	const deleteClients = async (groupId: IGroupId | undefined, clientsId: number[]) => {
+	const deleteClients = async (groupId: number | undefined, clientsId: number[]) => {
 
-		if (groupId) {
+		if (groupId && clientsId.length > 0) {
+
 			try {
 				const response = await axios.patch(`api/sending-groups/${groupId}`, {
 					clients: clientsId,
 				});
-
 				const { clients } = response.data.resGet
 				setClients(clients);
 				console.log(response.data.message);
 			} catch (error: any) {
-				console.log(error.message + " | " + error.response.data.error);
+				console.log(error.message + " | " + error.response);
 			}
-		} else {
-			clientsId.forEach(async (clientId) => {
-				try {
-					const response = await axios.delete(`api/clients/${clientId}`);
-					const { clients } = response.data.resGet
-					setClients(clients);
-					console.log(response.data.message);
-				} catch (error: any) {
-					console.log(error.message + " | " + error.response.data.error);
-				}
-			});
 		}
 	}
 
@@ -95,7 +84,7 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId } }) 
 				</div>
 				<SearchClientForm getFilter={getFilter} resetFilter={resetFilter} />
 				<div className="mt-[60px]">
-					<ClientsList filteredClients={filteredClients()} groupId={groupId} groupName={groupName} deleteClients={deleteClients} />
+					<ClientsList filteredClients={filteredClients()} groupId={groupId} deleteClients={deleteClients} getClients={getClients} />
 				</div>
 			</div>
 		</section>

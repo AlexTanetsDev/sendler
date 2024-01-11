@@ -7,11 +7,12 @@ import { ClientForm } from "./forms/ClientForm";
 import { IClientDatabase } from "@/globaltypes/types";
 
 interface Props {
-	groupName?: string;
+	groupId?: number;
 	client?: IClientDatabase;
+	getClients: () => void
 };
 
-const EditClient = ({ groupName, client }: Props) => {
+const EditClient = ({ groupId, client, getClients }: Props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const openModal = () => {
@@ -23,11 +24,12 @@ const EditClient = ({ groupName, client }: Props) => {
 		setIsModalOpen(false);
 		document.body.classList.remove('overflow-hidden');
 	};
+
 	return (
 		<>
 			<button type="button" onClick={openModal} className="row-table__btn">Редагувати</button>
 			<Modal isOpen={isModalOpen} onClose={closeModal}>
-				{groupName ? <ClientForm onClose={closeModal} groupName={groupName} client={client} title='Редагування групи' /> : <ClientForm onClose={closeModal} client={client} title='Редагування контакту' />}
+				{groupId ? <ClientForm onClose={closeModal} groupId={groupId} clientCurrent={client} getClients={getClients} title='Редагування групи' /> : <ClientForm onClose={closeModal} getClients={getClients} clientCurrent={client} title='Редагування контакту' />}
 			</Modal>
 		</>
 	);

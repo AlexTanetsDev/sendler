@@ -9,10 +9,11 @@ import {
 	IUserId,
 	ITelRes,
 	IClient,
-	ErrorCase
+	ErrorCase,
+	IGroupId
 } from "@/globaltypes/types";
 
-export default async function createClient(client: IClient, userId: number): Promise<ErrorCase | undefined> {
+export default async function createClient(client: IClient, userId: number, groupId: IGroupId): Promise<ErrorCase | undefined> {
 	try {
 		const { tel } = client;
 
@@ -35,7 +36,7 @@ export default async function createClient(client: IClient, userId: number): Pro
 			return 2;
 		}
 
-		await insertNewClient(client, userId);
+		await insertNewClient(client, userId, groupId);
 
 	} catch (error: any) {
 		throw new Error(error.message);

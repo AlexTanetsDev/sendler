@@ -7,8 +7,7 @@ import { useState, useCallback, useEffect, } from "react";
 import Title from "@/components/Title";
 import ClientsList from "@/components/ClientsList";
 import SearchClientForm from "@/components/forms/SearchClientForm";
-import { IClientDatabase, IGroupId } from "@/globaltypes/types";
-
+import { IClientDatabase } from "@/globaltypes/types";
 
 export default function AllContactsUserPage({ params }: { params: { userId: string } }) {
 
@@ -61,19 +60,9 @@ export default function AllContactsUserPage({ params }: { params: { userId: stri
 		return filteredArray;
 	};
 
-	const deleteClients = async (groupId: IGroupId | undefined, clientsId: number[]) => {
+	const deleteClients = async (groupId: number | undefined, clientsId: number[]) => {
 
-		if (groupId) {
-			try {
-				const response = await axios.patch(`api/sending-groups/${groupId}`, {
-					clients: clientsId,
-				});
-				updateListControl();
-				console.log(response.data.message);
-			} catch (error: any) {
-				console.log(error.message + " | " + error.response.data.error);
-			}
-		} else {
+		if (clientsId.length > 0) {
 			clientsId.forEach(async (clientId) => {
 				try {
 					const response = await axios.delete(`api/clients/${clientId}`);
@@ -83,7 +72,7 @@ export default function AllContactsUserPage({ params }: { params: { userId: stri
 					console.log(error.message + " | " + error.response.data.error);
 				}
 			});
-		}
+		};
 	}
 
 	useEffect(() => {
@@ -100,7 +89,7 @@ export default function AllContactsUserPage({ params }: { params: { userId: stri
 				<p className="w-[684px] ml-[26px] mt-10 mb-[50px] font-montserrat text-base font-normal leading-6">У  данній  таблиці представленні всі ваші контакти. Ви можете переглянути детальну інформацію, а також  редагувати контакт.</p>
 				<SearchClientForm getFilter={getFilter} resetFilter={resetFilter} />
 				<div className="mt-[60px]">
-					<ClientsList filteredClients={filteredClients()} deleteClients={deleteClients} />
+					<ClientsList filteredClients={filteredClients()} deleteClients={deleteClients} getClients={getClients} />
 				</div>
 			</div>
 		</section>

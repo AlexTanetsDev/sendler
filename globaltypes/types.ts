@@ -81,7 +81,13 @@ export interface IClientsIdWithTel extends IClientId, ITel { }
 export type SmsStatusEnum = "pending" | "rejected" | "fulfield";
 
 export interface IClientReq {
-	client: IClient
+	userId: number;
+	groupId: IGroupId;
+	client: IClient;
+};
+
+export interface IClientUpdateReq {
+	client: IClientDatabase;
 };
 
 export interface IClientId { client_id: number; }
@@ -162,7 +168,7 @@ export interface FormInputFeedback {
 export interface FormInputCreateClient {
 	lastName?: string;
 	firstName?: string;
-	midleName?: string;
+	middleName?: string;
 	phone: number;
 	day?: number;
 	month?: number;

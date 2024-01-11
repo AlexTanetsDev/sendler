@@ -8,29 +8,27 @@ import { useState } from "react";
 
 import convertClientsBirthdayFormat from "@/helpers/ConvertClientsBirsdayFormat";
 
-import { IClientDatabase, IGroupId } from "@/globaltypes/types";
+import { IClientDatabase } from "@/globaltypes/types";
 import GreenButton from "./buttons/GreenButton";
 import AddClient from "./Addclient";
 import EditClient from "./EditClient";
 
 type Props = {
 	filteredClients: IClientDatabase[];
-	groupId?: IGroupId | undefined;
-	groupName?: string;
-	deleteClients: (groupId: IGroupId | undefined, clientsId: number[]) => Promise<void>;
+	groupId?: number | undefined;
+	deleteClients: (groupId: number | undefined, clientsId: number[]) => Promise<void>;
+	getClients: () => void
 }
 
 export default function ClientsList({
 	filteredClients,
 	groupId,
-	groupName,
-	deleteClients
+	deleteClients,
+	getClients
 }: Props) {
 
 	const [isSelected, setIsSelected] = useState(0);
-
 	const convertClients = convertClientsBirthdayFormat(filteredClients);
-
 	const { register, handleSubmit } = useForm();
 
 	const onSelect = (e: any) => {
@@ -50,7 +48,6 @@ export default function ClientsList({
 				deletedClientsId.push(Number(key));
 			}
 		}
-
 		deleteClients(groupId, deletedClientsId);
 		setIsSelected(0);
 	};
@@ -96,7 +93,7 @@ export default function ClientsList({
 								<div className="w-[150px] text-left overflow-hidden">
 									{convertClient.parameter_2}
 								</div>
-								<EditClient groupName={groupName} client={convertClient} />
+								<EditClient groupId={groupId} client={convertClient} getClients={getClients} />
 							</div>
 						</li>
 					))
@@ -111,11 +108,10 @@ export default function ClientsList({
 					}
 				</ul>
 				<div className="flex mr-[26px] pt-[50px] justify-end">
-					<div className="flex mr-[26px] justify-end">{groupId && <AddClient groupName={groupName} />}</div>
+					<div className="flex mr-[26px] justify-end">{groupId && <AddClient groupId={groupId} getClients={getClients} />}</div>
 					<GreenButton isDisabled={convertClients[0] && isSelected ? false : true} size="big">Видалити</GreenButton>
 				</div>
 			</form>
-
 		</div>
 	);
 }

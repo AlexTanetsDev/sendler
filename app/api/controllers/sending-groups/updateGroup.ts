@@ -17,6 +17,7 @@ import {
 	IClientDatabase,
 } from "@/globaltypes/types";
 import updateClientData from "@/app/utils/updateClientData";
+import { number } from "joi";
 
 export default async function updateGroup(clients: IClient[], groupId: number, method: string): Promise<null | NextResponse<{
 	error: string;
@@ -52,15 +53,19 @@ export default async function updateGroup(clients: IClient[], groupId: number, m
 		for (const client of clients) {
 			const { tel } = client;
 
-			const userClient = userClients.find(userClient => Number(userClient.tel) === tel);
+			const userClient = userClients.find(userClient => Number(userClient.tel) === (Number(tel)));
 
 			if (userClient) {
-				await updateClientData(Number(userClient.client_id), client);
+				console.log('SECOND')
+				await updateClientData(client, userClient.client_id,);
+				await insertGroupMember(Number(tel), userId, groupId);
+				console.log('updateClientData')
 			} else {
+				console.log('FIRST')
 				await insertNewClientInGroup(client, userId, groupId, method);
+				console.log('insertNewClientInGroup')
 			};
 
-			await insertGroupMember(tel, userId, groupId);
 		};
 	} catch (error: any) {
 		throw new Error(error.message);

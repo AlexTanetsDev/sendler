@@ -89,16 +89,17 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 		const groupId = Number(params.id);
 		const method: string = request.method;
 
-
 		const resUpdate: null | NextResponse<{
 			error: string;
 		}> | undefined = await updateGroup(clients, groupId, method);
+		// console.log('updateGroup')
 
 		if (resUpdate === null) {
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
 		}
 
 		const resGet: { group: string, clients: IClient[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId);
+		// console.log('getGroupClients')
 
 		return NextResponse.json(
 			{ resGet, message: `The group is updated` },

@@ -8,11 +8,9 @@ import { useRouter } from "next/navigation";
 import * as XLSX from "xlsx/xlsx.mjs";
 
 import Title from "@/components/Title";
-import { useSession } from "next-auth/react";
 
 export default function UpdateGroupPage({ params }) {
-  const { data: session } = useSession();
-  const userId = session?.user.user_id;
+  const userId = Number(params.userId);
   const groupId = Number(params.id);
   const router = useRouter();
   const [file, setFile] = useState(null);
@@ -46,12 +44,14 @@ export default function UpdateGroupPage({ params }) {
       const wb = XLSX.read(ab);
       const wsname = wb.SheetNames[0];
       const clients = XLSX.utils.sheet_to_json(wb.Sheets[wsname]);
+      console.log("clients", clients);
 
       try {
-        await axios.put(`api/sending-groups/${groupId}`, {
+        const res = await axios.put(`api/sending-groups/${groupId}`, {
           clients: clients,
           cache: "no-store",
         });
+        console.log(res.data.message);
         router.push(`/user/${userId}/groups`);
       } catch (error) {
         console.log(error.message + " | " + error.response.data.error);

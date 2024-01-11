@@ -8,7 +8,7 @@ type Props = {
 }
 
 export default function UpdateGroupBtn({ id, children }: Props) {
-	const { data: session, status } = useSession();
+	const { data: session } = useSession();
 	const userId = session?.user.user_id;
 
 	return (

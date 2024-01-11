@@ -7,10 +7,11 @@ import GreenButton from "./buttons/GreenButton";
 import { ClientForm } from "./forms/ClientForm";
 
 interface Props {
-	groupName?: string;
+	groupId?: number;
+	getClients: () => void
 };
 
-const AddClient = ({ groupName }: Props) => {
+const AddClient = ({ groupId, getClients }: Props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const openModal = () => {
@@ -26,7 +27,7 @@ const AddClient = ({ groupName }: Props) => {
 		<>
 			<GreenButton size="big" type="button" onClick={openModal} >Додати контакт</GreenButton>
 			<Modal isOpen={isModalOpen} onClose={closeModal}>
-				<ClientForm onClose={closeModal} groupName={groupName} title='Редагування групи' />
+				<ClientForm onClose={closeModal} getClients={getClients} groupId={groupId} title='Редагування групи' />
 			</Modal>
 		</>
 	);

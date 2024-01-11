@@ -1,25 +1,31 @@
 "use client";
 
+import axios from "axios";
+
 import { toast } from "react-toastify";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { validationSchemaCreateClient } from "@/models/forms";
-import { FormInputCreateClient, IGroupId, IClientDatabase } from "@/globaltypes/types";
+import { FormInputCreateClient, IClientDatabase } from "@/globaltypes/types";
 import GreenButton from "../buttons/GreenButton";
 import CreateOptions from "../CreateOptions";
+import { useSession } from "next-auth/react";
 
 interface Props {
 	onClose: (() => void) | undefined;
+	getClients: () => void,
 	title?: string;
-	groupId?: IGroupId | undefined;
+	groupId?: number;
 	groupName?: string;
-	client?: IClientDatabase;
+	clientCurrent?: IClientDatabase;
 };
 
-const ClientForm = ({ onClose, title, groupName, client }: Props) => {
+const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, groupId }: Props) => {
 
-	const day = Number(client?.date_of_birth?.split('.')[0]);
-	const month = Number(client?.date_of_birth?.split('.')[1]);
-	const year = Number(client?.date_of_birth?.split('.')[2]);
+	const { data: session } = useSession();
+	const userId = session?.user.user_id;
+	const day = Number(clientCurrent?.date_of_birth?.split('.')[0]);
+	const month = Number(clientCurrent?.date_of_birth?.split('.')[1]);
+	const year = Number(clientCurrent?.date_of_birth?.split('.')[2]);
 
 	const {
 		register,
@@ -46,7 +52,6 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 						}
 					);
 				}
-
 				return {
 					values: {},
 					errors: validationErrors,
@@ -56,17 +61,44 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 	});
 
 	const onSubmit: SubmitHandler<FormInputCreateClient> = async (data) => {
-		console.log("dat=", data);
+		const clientData = {
+			tel: data.phone,
+			last_name: data.lastName,
+			first_name: data.firstName,
+			middle_name: data.middleName,
+			date_of_birth: `${data.day}.${data.month}.${data.year}`,
+			parameter_1: data.parameter1,
+			parameter_2: data.parameter2,
+		};
+
+		if (clientCurrent?.client_id) {
+
+			await axios.put(`api/clients/${clientCurrent?.client_id}`,
+				{
+					groupId: Number(groupId),
+					client: clientData,
+				},
+			);
+			getClients();
+		} else {
+
+			await axios.post(`api/clients`,
+				{
+					userId: userId,
+					groupId: Number(groupId),
+					client: clientData
+				},
+			);
+			getClients();
+		}
 		reset();
 		{
 			onClose && onClose();
 		}
-
 		toast.success(
 			"Your submission has been received. We will respond to it as soon as possible."
 		);
 	};
-
 	return (
 		<form
 			autoComplete="off"
@@ -79,7 +111,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="phone"
-					className="font-roboto text-base font-medium mb-2  mt-8 block"
+					className="font-roboto text-sm font-medium mb-2  mt-8 block"
 				>
 					Номер телефону
 					<span className="ml-2 text-red-700">*</span>
@@ -87,7 +119,7 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 				<input
 					id="phone"
 					type="text"
-					defaultValue={client?.tel && client.tel}
+					defaultValue={clientCurrent?.tel && `+${clientCurrent.tel}`}
 					{...register("phone")}
 					className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
 					placeholder="+3801234567"
@@ -99,14 +131,14 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="lastName"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					Прізвище
 				</label>
 				<input
 					id="lastName"
 					type="text"
-					defaultValue={client?.last_name && client.last_name}
+					defaultValue={clientCurrent?.last_name && clientCurrent.last_name}
 					{...register("lastName")}
 					className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
 					placeholder="Петренко"
@@ -117,14 +149,14 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="firstName"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					Ім&apos;я
 				</label>
 				<input
 					id="firstName"
 					type="text"
-					defaultValue={client?.first_name && client.first_name}
+					defaultValue={clientCurrent?.first_name && clientCurrent.first_name}
 					{...register("firstName")}
 					className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
 					placeholder="Петро"
@@ -135,60 +167,67 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="midleName"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					По-батькові
 				</label>
 				<input
-					id="midleName"
+					id="middleName"
 					type="text"
-					defaultValue={client?.middle_name && client.middle_name}
-					{...register("midleName")}
+					defaultValue={clientCurrent?.middle_name && clientCurrent.middle_name}
+					{...register("middleName")}
 					className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
 					placeholder="Олександрович"
 				/>
-				{errors.midleName && (
-					<span className="text-red-500 block">{errors.midleName.message}</span>
+				{errors.middleName && (
+					<span className="text-red-500 block">{errors.middleName.message}</span>
 				)}
 
 				<label
 					htmlFor="day"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					Дата народження
 				</label>
 
 				<select
 					id='day'
-					defaultValue={client?.date_of_birth && day}
-					className="input w-[118px] border mr-3 py-2 px-3 focus:outline-none focus:border-blue-500 ">
+					{...register("day")}
+					defaultValue={clientCurrent?.date_of_birth ? day : ''}
+					className="input w-[118px] border mr-3 py-2 px-3 text-center focus:outline-none focus:border-blue-500 ">
 					<CreateOptions min={1} max={31} />
 				</select>
 
+				<label htmlFor="month"></label>
+
 				<select
 					id='month'
-					defaultValue={client?.date_of_birth && month}
-					className="input w-[138px] border mr-3 py-2 px-3 focus:outline-none focus:border-blue-500 ">
+					{...register("month")}
+					defaultValue={clientCurrent?.date_of_birth ? month : ''}
+					className="input w-[138px] border mr-3 py-2 px-3 text-center focus:outline-none focus:border-blue-500 ">
 					<CreateOptions min={1} max={12} />
 				</select>
 
+				<label htmlFor="year"></label>
+
 				<select
 					id='year'
-					defaultValue={client?.date_of_birth && year}
-					className="input w-[194px] border py-2 px-3 focus:outline-none focus:border-blue-500 ">
+					{...register("year")}
+					defaultValue={clientCurrent?.date_of_birth ? year : ''}
+					className="input w-[194px] border py-2 px-3 text-center focus:outline-none focus:border-blue-500 ">
 					<CreateOptions min={1900} max={new Date().getFullYear()} />
 				</select>
 
 				<label
 					htmlFor="parameter1"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					Параметр 1
 				</label>
 				<input
 					id="parameter1"
 					type="text"
-					defaultValue={client?.parameter_1 && client.parameter_1}
+					defaultValue={clientCurrent?.parameter_1 && clientCurrent.parameter_1}
 					{...register("parameter1")}
 					className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
 				/>
@@ -198,14 +237,14 @@ const ClientForm = ({ onClose, title, groupName, client }: Props) => {
 
 				<label
 					htmlFor="parameter2"
-					className="font-roboto text-base font-medium mb-2 mt-8 block"
+					className="font-roboto text-sm font-medium mb-2 mt-8 block"
 				>
 					Параметр 2
 				</label>
 				<input
 					id="parameter2"
 					type="text"
-					defaultValue={client?.parameter_2 && client.parameter_2}
+					defaultValue={clientCurrent?.parameter_2 && clientCurrent.parameter_2}
 					{...register("parameter2")}
 					className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
 				/>

@@ -14,7 +14,6 @@ import Title from "@/components/Title";
 
 export default function ContactManagmentPage({ params }: { params: { userId: string } }) {
 	const [groups, setGroups] = useState([]);
-	const [isAddGroup, SetIsAddgroup] = useState(false);
 	const userId = Number(params.userId);
 
 	const getGroups = async () => {
@@ -31,18 +30,13 @@ export default function ContactManagmentPage({ params }: { params: { userId: str
 		} catch (error: any) {
 			console.log(error.message);
 		}
-
 	};
 
 	const memoizedGetGroups = useCallback(getGroups, [userId]);
 
-	const updateListControl = () => {
-		SetIsAddgroup(!isAddGroup);
-	};
-
 	useEffect(() => {
 		memoizedGetGroups();
-	}, [isAddGroup, memoizedGetGroups]);
+	}, [memoizedGetGroups]);
 
 	return (
 		<section className="container mx-auto">
@@ -51,8 +45,8 @@ export default function ContactManagmentPage({ params }: { params: { userId: str
 			</Title>
 			<div className="content-block mt-[60px]">
 				<p className='w-[724px] mb-[50px] ml-[26px] text-lg font-normal font-roboto'>Для початку роботи Вам потрібно створити нову Групу контактів та додати до неї номери. Ви можете додати номери телефонів контактів з файлу у форматі Excel або текстового файлу.</p>
-				<CreateGroupForm id={userId} updateListControl={updateListControl} />
-				<GroupsList groups={groups} updateListControl={updateListControl} />
+				<CreateGroupForm id={userId} getGroups={getGroups} />
+				<GroupsList groups={groups} getGroups={getGroups} />
 				<div className="ml-[26px]">
 					<p className="input__title mb-3">Всі контакти</p>
 					<div className="flex items-center">
