@@ -3,17 +3,25 @@ import { NextResponse, NextRequest } from "next/server";
 import HttpError from "@/helpers/HttpError";
 
 import {
-	updateClient,
 	deleteClient,
-	getClient
+	getClient,
 } from "@/app/api/controllers/clients";
 
 import {
-	IClientDatabase
+	IClient,
+	IClientDatabase,
 } from "@/globaltypes/types";
-import { IQieryParamsUpdateClient } from "./types";
 
-import { schemaReqClient } from '@/models/clients';
+import {
+	IQieryParamsClient
+} from "./types";
+
+import {
+	schemaReqClient,
+} from '@/models/clients';
+import updateClientData from "@/app/utils/updateClientData";
+
+import { QueryResult } from "pg";
 
 //get one client with id from params
 export async function GET(_request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{
@@ -73,14 +81,14 @@ export async function DELETE(_request: NextRequest, { params }: { params: { id: 
 
 //update one client with id from params
 export async function PUT(request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{
-	client: IClientDatabase;
+	client: IClient;
 	message: string;
 }> | NextResponse<{
 	error: any;
 }>> {
 
 	try {
-		const body: IQieryParamsUpdateClient = await request.json();
+		const body: IQieryParamsClient = await request.json();
 		const { error, value } = schemaReqClient.validate(body);
 
 		if (error) {
@@ -94,17 +102,17 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 
 		//checking the content of the entered client
 		if (!client.tel) {
-			return HttpError(400, `The clients list is empty`);
+			return HttpError(400, `The client is empty`);
 		}
 
 		const clientId = Number(params.id);
-		const res: IClientDatabase | null = await updateClient(client, clientId);
+		const res: QueryResult<IClient> = await updateClientData(client, clientId);
 
 		if (res === null) {
 			return HttpError(400, `The client with id = ${clientId} does not exist`);
 		}
 		return NextResponse.json(
-			{ client: res, message: `The client is updated` },
+			{ client: res.rows[0], message: `The client is updated` },
 			{ status: 200 }
 		);
 	} catch (error: any) {

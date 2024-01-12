@@ -1,26 +1,31 @@
 'use client';
 
 import axios from "axios";
+axios.defaults.baseURL = "http://localhost:3000/";
 
 import { useForm, SubmitHandler } from "react-hook-form";
 
-import { schemaReqCreateGroup } from "@/models/sending-groups";
+import { schemaSearchClient } from "@/models/clients";
 
-import { IGroupName } from "@/globaltypes/types";
+interface IFormInput {
+	tel: string;
+}
 
+type Props = {
+	getFilter: (e: any) => void;
+	resetFilter: () => void;
+}
 
-
-export default function SearchClientForm() {
-
+export default function SearchClientForm({ getFilter, resetFilter }: Props) {
 	const {
 		register,
 		handleSubmit,
 		reset,
 		formState: { errors },
-	} = useForm<IGroupName>({
+	} = useForm<IFormInput>({
 		resolver: async (data) => {
 			try {
-				await schemaReqCreateGroup.validateAsync(data, { abortEarly: false });
+				await schemaSearchClient.validateAsync(data, { abortEarly: false });
 				return { values: data, errors: {} };
 			} catch (error: any) {
 				const validationErrors: Record<string, { message: string }> = {};
@@ -41,48 +46,35 @@ export default function SearchClientForm() {
 				};
 			}
 		},
-	})
+	});
 
-	const onSubmit: SubmitHandler<IGroupName> = async (data) => {
-		// try {
-		// 	await axios.post(`api/sending-groups`,
-		// 		{
-		// 			group_name: data.group_name,
-		// 			cache: "no-store",
-		// 		},
-		// 		{
-		// 			params: {
-		// 				userId: id,
-		// 			},
-		// 		}
-		// 	);
-		// 	// updateListControl();
-		// 	reset({ group_name: '' });
-		// } catch (error: any) {
-		// 	console.log(error.message)
-		// }
-	}
+	const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+		reset({ tel: '' });
+		resetFilter();
+	};
 
 	return (
 		<form
 			autoComplete="off"
 			onSubmit={handleSubmit(onSubmit)}
 			className='mb-[50px] ml-[26px]'>
-			<label htmlFor='group_name' className='block mb-3.5 input__title'>
+			<label htmlFor='tel' className='block mb-3.5 label'>
 				Пошук за номером телефону
 			</label>
-			<div className='flex items-center'>
-				<input id="group_name"
-					type='text'
-					{...register("group_name")}
+			<div className="flex">
+				<input id="tel"
+					type='tel'
+					{...register("tel")}
 					className='w-[474px] h-12 mr-8 px-4 input'
+					onChange={getFilter}
 					required
 				/>
-				{errors.group_name && (
-					<span className="text-red-500 ">{errors.group_name.message}</span>
+				{errors.tel && (
+					<span className="text-red-500 ">{errors.tel.message}</span>
 				)}
-				<button type="submit" className='action__btn'>Створити</button>
+				<input type="submit" className='action__btn' value='Скинути' />
 			</div>
 		</form>
 	);
 };
+

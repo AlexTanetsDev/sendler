@@ -1,4 +1,5 @@
 import Link from "next/link";
+import GreenButton from "./GreenButton";
 
 type Props = {
 	id: number | undefined;
@@ -8,8 +9,11 @@ type Props = {
 export default function ReviewClientsBtn({ id, children }: Props) {
 
 	return (
-		<Link href={`/user/contacts-manage/clients/${id}`} className="action__btn">
-			{children}
-		</Link>
+		<GreenButton size="normal">
+			<Link href={`/user/${id}/clients`}>
+				{children}
+			</Link>
+		</GreenButton>
+
 	)
 }

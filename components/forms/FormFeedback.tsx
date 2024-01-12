@@ -47,7 +47,6 @@ const FormFeedback = ({ onClose, title }: Props) => {
   });
 
   const onSubmit: SubmitHandler<FormInputFeedback> = async (data) => {
-    console.log("dat=", data);
     reset();
     {
       onClose && onClose();
@@ -67,44 +66,24 @@ const FormFeedback = ({ onClose, title }: Props) => {
       {title && <h1 className="form-title mb-8 mt-[15px]">{title}</h1>}
       <div className="text-left w-full mb-8">
         <label
-          htmlFor="firstName"
-          className="font-roboto text-base font-medium mb-2 block"
+          htmlFor="name"
+          className="font-roboto text-sm font-medium mb-2 block"
         >
-          ім’я
+          П.І.Б
         </label>
         <input
-          id="firstName"
+          id="name"
           type="text"
-          {...register("firstName")}
+          {...register("name")}
           className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
-          required
+          placeholder="Іванов Іван Іванович"
         />
-        {errors.firstName && (
-          <span className="text-red-500 block">{errors.firstName.message}</span>
+        {errors.name && (
+          <span className="text-red-500 block">{errors.name.message}</span>
         )}
-
-        <label
-          htmlFor="secondName"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
-        >
-          Прiзвище
-        </label>
-        <input
-          id="secondName"
-          type="text"
-          {...register("secondName")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-          required
-        />
-        {errors.secondName && (
-          <span className="text-red-500 block">
-            {errors.secondName.message}
-          </span>
-        )}
-
         <label
           htmlFor="phone"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
+          className="font-roboto text-sm font-medium mb-2  mt-8 block"
         >
           Номер телефону
         </label>
@@ -113,7 +92,7 @@ const FormFeedback = ({ onClose, title }: Props) => {
           type="text"
           {...register("phone")}
           className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-          required
+          placeholder="+3801234567"
         />
         {errors.phone && (
           <span className="text-red-500 block">{errors.phone.message}</span>
@@ -121,15 +100,16 @@ const FormFeedback = ({ onClose, title }: Props) => {
 
         <label
           htmlFor="email"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
+          className="font-roboto text-sm font-medium mb-2  mt-8 block"
         >
-          Електронна пошта
+          Електронна пошта<span className=" text-redStar">*</span>
         </label>
         <input
           id="email"
           type="text"
           {...register("email")}
           className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+          placeholder="Email@gmail.com"
           required
         />
         {errors.email && (
@@ -138,14 +118,15 @@ const FormFeedback = ({ onClose, title }: Props) => {
 
         <label
           htmlFor="desc"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
+          className="font-roboto text-sm font-medium mb-2  mt-8 block"
         >
-          Текст повідомлення{" "}
+          Текст повідомлення<span className=" text-redStar">*</span>
         </label>
         <textarea
           id="desc"
           {...register("desc")}
           className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input h-[150px] resize-none"
+          placeholder="Введіть текст..."
           required
         />
         {errors.desc && (

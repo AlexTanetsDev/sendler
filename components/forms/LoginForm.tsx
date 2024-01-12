@@ -7,9 +7,14 @@ import { FormInputsLogin } from "@/globaltypes/types";
 import { schemaLogin } from "@/models/forms";
 import GreenButton from "../buttons/GreenButton";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import ShowPassword from "../buttons/ShowPassword";
+import { fetchUserId } from "@/helpers/fetchUserId";
 
 const LoginForm = () => {
   const router = useRouter();
+  const [show, setShow] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const {
     register,
@@ -42,15 +47,32 @@ const LoginForm = () => {
   });
 
   const onSubmit: SubmitHandler<FormInputsLogin> = async (data) => {
-    const res = await signIn("credentials", {
-      login: data.login,
-      password: data.password,
-      redirect: false,
-    });
-    if (res && !res.error) {
-      router.push("/mailing-list");
-      toast.success(`Wellcome ${data.login}`)
+    setIsDisabled(true);
+
+    try {
+      const userId = await fetchUserId(data.login);
+
+      const res = await signIn("credentials", {
+        login: data.login,
+        password: data.password,
+        redirect: false,
+      });
+
+      if (res?.ok === false) {
+        if (res.status === 401) {
+          toast.error("Неправильний логін або пароль");
+        }
+      }
+
+      if (res && !res.error) {
+        router.push(`/user/${userId}/mailing-list`);
+        toast.success(`Ласкаво просимо ${data.login}`);
+      }
+    } catch (error) {
+      console.error("Помилка входу:", error);
+      toast.error("Під час входу сталася помилка");
     }
+    setIsDisabled(false);
   };
 
   return (
@@ -62,9 +84,9 @@ const LoginForm = () => {
       <div className="text-left w-full mb-8">
         <label
           htmlFor="login"
-          className="font-roboto text-base font-medium mb-2 block"
+          className="font-roboto text-sm font-medium mb-2 block"
         >
-          Логін
+          Логін<span className=" text-redStar">*</span>
         </label>
         <input
           id="login"
@@ -79,22 +101,28 @@ const LoginForm = () => {
 
         <label
           htmlFor="password"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
+          className="font-roboto text-sm font-medium mb-2  mt-8 block"
         >
-          Пароль
+          Пароль<span className=" text-redStar">*</span>
         </label>
-        <input
-          id="password"
-          type="password"
-          {...register("password")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
-          required
-        />
+        <div className="flex relative">
+          <input
+            id="password"
+            type={show ? "text" : "password"}
+            {...register("password")}
+            className="w-full border py-2 pl-3 pr-11 focus:outline-none focus:border-blue-500 rounded-[18px] input"
+            required
+          />
+          <ShowPassword show={show} onClick={() => setShow(!show)} />
+        </div>
+
         {errors.password && (
           <span className="text-red-500 ">{errors.password.message}</span>
         )}
       </div>
-      <GreenButton size="big">Увійти</GreenButton>
+      <GreenButton size="big" isDisabled={isDisabled}>
+        Увійти
+      </GreenButton>
     </form>
   );
 };

@@ -56,12 +56,17 @@ export interface IClient extends ITel {
 	parameter_2?: string;
 }
 
+export interface IClientInput extends IClient {
+	client_id?: number;
+	ua_date_of_birth?: string;
+}
+
 export interface IClientId {
 	client_id: number;
 }
 
 export interface IClientDatabase extends IClientId, IClient, IUserId {
-	ua_date_of_birth: string;
+	ua_date_of_birth?: string;
 }
 
 export interface IGroup extends IGroupId, IGroupName, IUserId { }
@@ -75,15 +80,15 @@ export interface IClientsIdWithTel extends IClientId, ITel { }
 
 export type SmsStatusEnum = "pending" | "rejected" | "fulfield";
 
-export interface IClientUpdateReqArray {
-	clients: IClient[]
-};
-
 export interface IClientReq {
-	client: IClient
+	userId: number;
+	groupId: IGroupId;
+	client: IClient;
 };
 
-export interface IClentCreateReqArray extends IGroupName, IClientUpdateReqArray { };
+export interface IClientUpdateReq {
+	client: IClientDatabase;
+};
 
 export interface IClientId { client_id: number; }
 
@@ -104,6 +109,16 @@ export interface IGroupDatabase extends IGroupId, IGroupName, IUserId {
 	group_create_date?: DateTime;
 	number_members: number;
 };
+
+export interface IGroupCreateReq extends IGroupName, IGroupUpdateReq { };
+
+export interface IGroupUpdateReq {
+	clients: IClient[]
+};
+
+export interface IGroupEditReq {
+	clients: IClientId[];
+}
 
 
 export interface IUserChangePassword {
@@ -144,11 +159,22 @@ export interface ISession {
 }
 
 export interface FormInputFeedback {
-	firstName: string;
-	secondName: string;
-	phone: number;
+	name?: string;
+	phone?: number;
 	email: string;
 	desc: string;
+};
+
+export interface FormInputCreateClient {
+	lastName?: string;
+	firstName?: string;
+	middleName?: string;
+	phone: number;
+	day?: number;
+	month?: number;
+	year?: number;
+	parameter1?: string;
+	parameter2?: string;
 };
 
 

@@ -7,13 +7,14 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { schemaReqCreateGroup } from "@/models/sending-groups";
 
 import { IGroupName } from "@/globaltypes/types";
+import GreenButton from "../buttons/GreenButton";
 
 type Props = {
 	id: number | undefined;
-	updateListControl: any
+	getGroups: () => void;
 }
 
-export default function CreateGroupForm({ id, updateListControl }: Props) {
+export default function CreateGroupForm({ id, getGroups }: Props) {
 
 	const {
 		register,
@@ -59,19 +60,18 @@ export default function CreateGroupForm({ id, updateListControl }: Props) {
 					},
 				}
 			);
-			updateListControl();
+			getGroups();
 			reset({ group_name: '' });
 		} catch (error: any) {
 			console.log(error.message)
 		}
 	}
-
 	return (
 		<form
 			autoComplete="off"
 			onSubmit={handleSubmit(onSubmit)}
 			className='mb-[50px] ml-[26px]'>
-			<label htmlFor='group_name' className='block mb-3.5 input__title'>
+			<label htmlFor='group_name' className='block mb-3.5 label'>
 				Назва групи
 			</label>
 			<div className='flex items-center'>
@@ -84,7 +84,7 @@ export default function CreateGroupForm({ id, updateListControl }: Props) {
 				{errors.group_name && (
 					<span className="text-red-500 ">{errors.group_name.message}</span>
 				)}
-				<button type="submit" className='action__btn'>Створити</button>
+				<GreenButton size="normal">Створити</GreenButton>
 			</div>
 		</form>
 	);

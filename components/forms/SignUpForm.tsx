@@ -7,6 +7,9 @@ import { validationSchemaSignUp } from "@/models/forms";
 import { FormInputsSignUp } from "@/globaltypes/types";
 import GreenButton from "../buttons/GreenButton";
 import { toast } from "react-toastify";
+import { useState } from "react";
+import ShowPassword from "../buttons/ShowPassword";
+import { fetchUserId } from "@/helpers/fetchUserId";
 
 const SingUpForm = () => {
   const {
@@ -40,32 +43,49 @@ const SingUpForm = () => {
   });
 
   const router = useRouter();
+  const [show, setShow] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const onSubmit: SubmitHandler<FormInputsSignUp> = async (data) => {
-    const res = await fetch("http://localhost:3000/api/users/signup", {
-      method: "POST",
-      body: JSON.stringify({
-        email: data.email,
-        user_login: data.login,
-        user_password: data.password,
-        tel: data.phone,
-        user_name: data.name,
-      }),
-    });
-    if (res && res.ok) {
-      const credentialsRes = await signIn("credentials", {
-        login: data.login,
-        password: data.password,
-        redirect: false,
+    setIsDisabled(true);
+    try {
+      const res = await fetch("http://localhost:3000/api/users/signup", {
+        method: "POST",
+        body: JSON.stringify({
+          email: data.email,
+          user_login: data.login,
+          user_password: data.password,
+          tel: data.phone,
+          user_name: data.name,
+        }),
       });
-      if (credentialsRes && !credentialsRes.error) {
-        router.push("/mailing-list");
-        toast.success(`Wellcome ${data.login}`)
+      if (!res.ok) {
+        toast.error(
+          "Користувач із таким іменем або логіном, номером телефону чи електронною адресою вже існує"
+        );
       }
+      if (res && res.ok) {
+        const userId = await fetchUserId(data.login);
+
+        const credentialsRes = await signIn("credentials", {
+          login: data.login,
+          password: data.password,
+          redirect: false,
+        });
+        if (credentialsRes && !credentialsRes.error) {
+          router.push(`/user/${userId}/mailing-list`);
+          toast.success(`Ласкаво просимо ${data.login}`);
+        }
+      }
+    } catch (error) {
+      console.error("Помилка входу:", error);
+      toast.error("Під час входу сталася помилка");
     }
+
+    setIsDisabled(false);
   };
 
-  return (
+  return ( 
     <form
       autoComplete="off"
       onSubmit={handleSubmit(onSubmit)}
@@ -74,15 +94,16 @@ const SingUpForm = () => {
       <div className="text-left w-full mb-8">
         <label
           htmlFor="name"
-          className="font-roboto text-base font-medium mb-2 block"
+          className="font-roboto text-sm font-medium mb-2 block"
         >
-          Ім’я
+          Ім’я<span className=" text-redStar">*</span>
         </label>
         <input
           id="name"
           type="text"
           {...register("name")}
           className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
+          placeholder="Іван"
           required
         />
         {errors.name && (
@@ -91,15 +112,16 @@ const SingUpForm = () => {
 
         <label
           htmlFor="phone"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
+          className="font-roboto text-sm font-medium mb-2  mt-8 block"
         >
-          Телефон
+          Телефон<span className=" text-redStar">*</span>
         </label>
         <input
           id="phone"
           type="text"
           {...register("phone")}
           className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
+          placeholder="+3801234567"
           required
         />
         {errors.phone && (
@@ -108,15 +130,16 @@ const SingUpForm = () => {
 
         <label
           htmlFor="email"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
+          className="font-roboto text-sm font-medium mb-2  mt-8 block"
         >
-          Пошта
+          Пошта<span className=" text-redStar">*</span>
         </label>
         <input
           id="email"
           type="text"
           {...register("email")}
           className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
+          placeholder="Email@gmail.com"
           required
         />
         {errors.email && (
@@ -125,15 +148,16 @@ const SingUpForm = () => {
 
         <label
           htmlFor="login"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
+          className="font-roboto text-sm font-medium mb-2  mt-8 block"
         >
-          Логін
+          Логін<span className=" text-redStar">*</span>
         </label>
         <input
           id="login"
           type="text"
           {...register("login")}
           className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
+          placeholder="Іван_Ivan@"
           required
         />
         {errors.login && (
@@ -142,38 +166,50 @@ const SingUpForm = () => {
 
         <label
           htmlFor="password"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
+          className="font-roboto text-sm font-medium mb-2  mt-8 block"
         >
-          Пароль
+          Пароль<span className=" text-redStar">*</span>
         </label>
-        <input
-          id="password"
-          type="password"
-          {...register("password")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
-          required
-        />
+        <div className="flex relative">
+          {" "}
+          <input
+            id="password"
+            type={show ? "text" : "password"}
+            {...register("password")}
+            className="w-full border py-2 pl-3 pr-11 focus:outline-none focus:border-blue-500 rounded-[18px] input"
+            required
+          />
+          <ShowPassword show={show} onClick={() => setShow(!show)} />
+        </div>
+
         {errors.password && (
           <span className="text-red-500 ">{errors.password.message}</span>
         )}
         <label
           htmlFor="repeatPassword"
-          className="font-roboto text-base font-medium mb-2  mt-8 block"
+          className="font-roboto text-sm font-medium mb-2  mt-8 block"
         >
-          Підтвердіть пароль
+          Підтвердіть пароль<span className=" text-redStar">*</span>
         </label>
-        <input
-          id="repeatPassword"
-          type="repeatPassword"
-          {...register("repeatPassword")}
-          className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
-          required
-        />
+        <div className="flex relative">
+          {" "}
+          <input
+            id="repeatPassword"
+            type={show ? "text" : "password"}
+            {...register("repeatPassword")}
+            className="w-full border py-2 pl-3 pr-11 focus:outline-none focus:border-blue-500 rounded-[18px] input"
+            required
+          />
+          <ShowPassword show={show} onClick={() => setShow(!show)} />
+        </div>
+
         {errors.repeatPassword && (
           <span className="text-red-500 ">{errors.repeatPassword.message}</span>
         )}
       </div>
-      <GreenButton size="big">Реєстрація</GreenButton>
+      <GreenButton size="big" isDisabled={isDisabled}>
+        Реєстрація
+      </GreenButton>
     </form>
   );
 };

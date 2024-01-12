@@ -1,23 +1,17 @@
 'use client';
 
-import { redirect } from "next/navigation";
-
 import { IGroupDatabase } from "@/globaltypes/types";
 import DeleteGroupBtn from "./buttons/DeleteGroupBtn";
 import EditGroupBtn from "./buttons/EditGroupBtn";
 import ImportGroupBtn from "./buttons/ImportGroupBTN";
+import ExportGroupGroupBtn from "./buttons/ExportGroupBtn";
 
 type Props = {
-	groups: IGroupDatabase[] | undefined;
-	updateListControl: any;
+	groups: IGroupDatabase[];
+	getGroups: () => void,
 }
 
-export default function GroupsList({ groups, updateListControl }: Props) {
-
-	if (groups === undefined) {
-		console.log('Unable to fetch userGroups!');
-		redirect('/')
-	};
+export default function GroupsList({ groups, getGroups }: Props) {
 
 	return (
 		<div className="mb-[80px]">
@@ -27,19 +21,27 @@ export default function GroupsList({ groups, updateListControl }: Props) {
 				<p>Кількість</p>
 			</div>
 			<ul>
-				{groups.map((group: IGroupDatabase) => (
-					<li key={group.group_id} className="flex py-3.5 px-[26px] text-xl font-montserrat font-normal border-b border-rowUnderLine">
+				{groups[0] ? groups.map((group: IGroupDatabase) => (
+					<li key={group.group_id} className="flex  px-[26px] items-center h-[58px]  text-base font-montserrat font-normal border-b border-rowUnderLine">
 						<div className="w-[110px] mr-[60px] text-left">{group.group_name}</div>
 						<div className="w-[186px] mr-[91px] text-left">{group.group_create_date}</div>
 						<div className="w-[100px] mr-[91px] text-left">{group.number_members}</div>
 						<div className="flex gap-x-[15px]">
 							<EditGroupBtn id={group.group_id} >Редагувати</EditGroupBtn>
-							<DeleteGroupBtn id={group.group_id} updateListControl={updateListControl}>Видалити</DeleteGroupBtn>
+							<DeleteGroupBtn id={group.group_id} getGroups={getGroups}>Видалити</DeleteGroupBtn>
 							<ImportGroupBtn id={group.group_id}>Імпорт</ImportGroupBtn>
-							<button className="row-table__btn">Експорт</button>
+							<ExportGroupGroupBtn id={group.group_id}>Експорт</ExportGroupGroupBtn>
 						</div>
 					</li>
-				))}
+				)) :
+					<>
+						<div className="flex  px-[26px] items-center h-[58px]  text-base font-montserrat font-normal border-b border-rowUnderLine">
+							<span>1</span>
+						</div>
+						<div className="h-[48px] border-b border-rowUnderLine"></div>
+						<div className="h-[48px] border-b border-rowUnderLine"></div>
+					</>
+				}
 			</ul>
 		</div>
 	)
