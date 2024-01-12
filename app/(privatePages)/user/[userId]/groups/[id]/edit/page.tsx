@@ -80,7 +80,7 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId } }) 
 			<Title type="h1" color="dark">Управління контактами</Title>
 			<div className="content-block mt-[60px]">
 				<div className="ml-[26px] mb-[50px]">
-					<Title type="title-main_text" color="dark">Редагування групи: <span className="ml-4 text-headerTable">{groupName}</span></Title>
+					<Title type="title_block" color="dark">Редагування групи: <span className="ml-4 text-headerTable">{groupName}</span></Title>
 				</div>
 				<SearchClientForm getFilter={getFilter} resetFilter={resetFilter} />
 				<div className="mt-[60px]">

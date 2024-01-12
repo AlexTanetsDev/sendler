@@ -44,13 +44,13 @@ export default function ContactManagmentPage({ params }: { params: { userId: str
 				Управління контактами
 			</Title>
 			<div className="content-block mt-[60px]">
-				<p className='w-[724px] mb-[50px] ml-[26px] text-lg font-normal font-roboto'>Для початку роботи Вам потрібно створити нову Групу контактів та додати до неї номери. Ви можете додати номери телефонів контактів з файлу у форматі Excel або текстового файлу.</p>
+				<p className='w-[724px] mb-[50px] ml-[26px] main-text'>Для початку роботи Вам потрібно створити нову Групу контактів та додати до неї номери. Ви можете додати номери телефонів контактів з файлу у форматі Excel або текстового файлу.</p>
 				<CreateGroupForm id={userId} getGroups={getGroups} />
 				<GroupsList groups={groups} getGroups={getGroups} />
 				<div className="ml-[26px]">
-					<p className="input__title mb-3">Всі контакти</p>
+					<p className="accent-main_text mb-3">Всі контакти</p>
 					<div className="flex items-center">
-						<p className="mr-8 text-base font-normal font-roboto">За бажанням ви можете переглянути всі свої контакти</p>
+						<p className="mr-8 main-text">За бажанням ви можете переглянути всі свої контакти</p>
 						<GreenButton size="normal">
 							<Link href={`/user/${userId}/clients`}>
 								Переглянути

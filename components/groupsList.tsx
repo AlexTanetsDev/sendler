@@ -31,7 +31,6 @@ export default function GroupsList({ groups, getGroups }: Props) {
 							<DeleteGroupBtn id={group.group_id} getGroups={getGroups}>Видалити</DeleteGroupBtn>
 							<ImportGroupBtn id={group.group_id}>Імпорт</ImportGroupBtn>
 							<ExportGroupGroupBtn id={group.group_id}>Експорт</ExportGroupGroupBtn>
-							{/* <button className="row-table__btn">Експорт</button> */}
 						</div>
 					</li>
 				)) :

@@ -58,7 +58,7 @@ export default function SearchClientForm({ getFilter, resetFilter }: Props) {
 			autoComplete="off"
 			onSubmit={handleSubmit(onSubmit)}
 			className='mb-[50px] ml-[26px]'>
-			<label htmlFor='tel' className='block mb-3.5 title-main_text'>
+			<label htmlFor='tel' className='block mb-3.5 label'>
 				Пошук за номером телефону
 			</label>
 			<div className="flex">

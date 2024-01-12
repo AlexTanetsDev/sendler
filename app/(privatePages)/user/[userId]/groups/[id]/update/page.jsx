@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import * as XLSX from "xlsx/xlsx.mjs";
 
 import Title from "@/components/Title";
+import GreenButton from "@/components/buttons/GreenButton";
 
 export default function UpdateGroupPage({ params }) {
   const userId = Number(params.userId);
@@ -15,13 +16,16 @@ export default function UpdateGroupPage({ params }) {
   const router = useRouter();
   const [file, setFile] = useState(null);
   const [groupName, setGroupName] = useState("");
+  const [numberClients, setNumberClients] = useState(0);
 
   const getGroupName = async () => {
     try {
       if (groupId) {
         const response = await axios.get(`api/sending-groups/${groupId}`);
-        const { group } = response.data.res;
+        const group = response.data.res.group;
+        const clientsGroup = response.data.res.clients;
         setGroupName(group);
+        setNumberClients(clientsGroup.length);
       }
     } catch (error) {
       console.log(error.message);
@@ -44,7 +48,6 @@ export default function UpdateGroupPage({ params }) {
       const wb = XLSX.read(ab);
       const wsname = wb.SheetNames[0];
       const clients = XLSX.utils.sheet_to_json(wb.Sheets[wsname]);
-      console.log("clients", clients);
 
       try {
         const res = await axios.put(`api/sending-groups/${groupId}`, {
@@ -59,28 +62,39 @@ export default function UpdateGroupPage({ params }) {
     } else {
       console.log("Please, select a file!");
     }
-  }, [file, groupId, router]);
+  }, [file, groupId, router, userId]);
+
   return (
     <section className="container mx-auto">
       <Title type="h1" color="dark">
         Управління контактами
       </Title>
-      <div className="content-block mt-[53px] text-center">
-        <Title type="title-main_text" color="dark">
-          Редагування групи
-          <span className="ml-4 text-headerTable">{groupName}</span>
-        </Title>
-        <div className="flex flex-col items-center py-8">
+      <div className="content-block mt-[53px]">
+        <div className=" ml-[26px]">
+          <Title type="title_block" color="dark">
+            Редагування групи:
+            <span className="ml-4 text-headerTable">{`${groupName} (${numberClients})`}</span>
+          </Title>
+        </div>
+        <p className="w-[724px] mb-[50px] mt-10 ml-[26px] text-left main_text">
+          Ви можете додати номери телефонів контактів з файлу у форматі Excel
+          або текстового файлу. Виберіть файл, який містить Ваші контакти:
+        </p>
+        <label htmlFor="file" className="block ml-[26px] mb-3 label">
+          Додати контакт з файлу
+        </label>
+        <div className="flex flex-row text-base flex items-center justify-start ml-[26px]">
           <input
             type="file"
+            id="file"
             name="file"
             accept=".xls,.xlsx"
             onChange={handleFileChange}
-            className="mb-8 bg-slate-300"
+            className="input h-[48px] mr-8 bg-slate-300"
           />
-          <button type="submit" onClick={xport}>
-            <b>Enter</b>
-          </button>
+          <GreenButton size="normal" onClick={xport}>
+            Додати
+          </GreenButton>
         </div>
       </div>
     </section>

@@ -116,23 +116,32 @@ footer {
   @apply text-xs font-roboto font-medium;
 }
 
+.title_hero {
+  @apply lg:text-[72px] text-[68px] font-bold font-montserrat lg:leading-[108px] leading-[102px];
+}
+
 .title_h1 {
-  @apply lg:text-[40px] text-[36px] font-semibold font-montserrat lg:leading-[60px] leading-[54px];
+  @apply text-[40px] font-semibold font-montserrat leading-[60px];
 }
 
 .title_h2 {
-  @apply lg:text-[40px] text-[36px] font-semibold font-montserrat lg:leading-[60px] leading-[54px];
+  @apply lg:text-[40px] text-[32px] font-semibold font-montserrat lg:leading-[60px] leading-[48px];
 }
 
-.title-main_text {
-  @apply lg:text-xl font-normal font-roboto lg:leading-[30px];
+.title_block {
+  @apply text-[22px] font-normal font-roboto leading-[33px];
 }
 
-.title_h3 {
-  font-size: 24px;
-  line-height: 32px;
-  font-weight: 400;
-  font-family: Roboto, sans-serif;
+.accent-main_text {
+  @apply text-xl font-normal font-roboto leading-[30px];
+}
+
+.main_text {
+  @apply text-base font-normal font-montserrat leading-[30px];
+}
+
+.label {
+  @apply lg:text-[20px] text-[18px] font-normal font-roboto lg:leading-[30px] leading-[27px];
 }
 
 .smsServiseCard {
@@ -188,4 +197,86 @@ footer {
 }
 
 .burger-menu-show {
+}
+
+select {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+select::-ms-expand {
+  display: none; /* удалите стрелку по умолчанию в IE 10 и 11 */
+}
+
+.select_arrow {
+  position: absolute;
+  top: 50%;
+  right: 0;
+  width: 23px;
+  transform: translate(-50%, -50%);
+}
+
+input[type="checkbox"]:checked,
+input[type="checkbox"]:not(:checked) {
+  position: absolute;
+  left: -9999px;
+}
+
+input[type="checkbox"]:checked + label,
+input[type="checkbox"]:not(:checked) + label {
+  display: inline-block;
+  position: relative;
+  padding-left: 28px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+input[type="checkbox"]:checked + label:before,
+input[type="checkbox"]:not(:checked) + label:before {
+  content: "";
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  width: 23px;
+  height: 23px;
+  border: 1px solid black;
+  background-color: transparent;
+  border-radius: 4px;
+  transform: translateY(-50%);
+}
+
+input[type="checkbox"]:checked + label:after,
+input[type="checkbox"]:not(:checked) + label:after,
+input[type="radio"]:checked + label:after,
+input[type="radio"]:not(:checked) + label:after {
+  content: "";
+  position: absolute;
+  -webkit-transition: all 0.2s ease;
+  -moz-transition: all 0.2s ease;
+  -o-transition: all 0.2s ease;
+  transition: all 0.2s ease;
+}
+
+input[type="checkbox"]:checked + label:after,
+input[type="checkbox"]:not(:checked) + label:after {
+  left: 5px;
+  bottom: -2px;
+  width: 15px;
+  height: 8px;
+  border-radius: 1px;
+  border-left: 3px solid black;
+  border-bottom: 3px solid black;
+  -webkit-transform: rotate(-45deg);
+  -moz-transform: rotate(-45deg);
+  -o-transform: rotate(-45deg);
+  -ms-transform: rotate(-45deg);
+  transform: rotate(-45deg);
+}
+
+input[type="checkbox"]:not(:checked) + label:after {
+  opacity: 0;
+}
+
+input[type="checkbox"]:checked + label:after {
+  opacity: 1;
 }
