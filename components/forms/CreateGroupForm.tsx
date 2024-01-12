@@ -71,7 +71,7 @@ export default function CreateGroupForm({ id, getGroups }: Props) {
 			autoComplete="off"
 			onSubmit={handleSubmit(onSubmit)}
 			className='mb-[50px] ml-[26px]'>
-			<label htmlFor='group_name' className='block mb-3.5 title-main_text'>
+			<label htmlFor='group_name' className='block mb-3.5 label'>
 				Назва групи
 			</label>
 			<div className='flex items-center'>

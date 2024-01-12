@@ -4,6 +4,8 @@ import axios from "axios";
 
 import { toast } from "react-toastify";
 import { useForm, SubmitHandler } from "react-hook-form";
+import Image from "next/image";
+
 import { validationSchemaCreateClient } from "@/models/forms";
 import { FormInputCreateClient, IClientDatabase } from "@/globaltypes/types";
 import GreenButton from "../buttons/GreenButton";
@@ -190,33 +192,66 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 					Дата народження
 				</label>
 
-				<select
-					id='day'
-					{...register("day")}
-					defaultValue={clientCurrent?.date_of_birth ? day : ''}
-					className="input w-[118px] border mr-3 py-2 px-3 text-center focus:outline-none focus:border-blue-500 ">
-					<CreateOptions min={1} max={31} />
-				</select>
+				<div className="flex gap-x-3">
+					<div className="relative flex">
+						<select
+							id='day'
+							{...register("day")}
+							defaultValue={clientCurrent?.date_of_birth ? day : ''}
+							className="input w-[118px] border py-2 text-center focus:outline-none focus:border-blue-500 ">
+							<CreateOptions min={1} max={31} />
+						</select>
+						<div className="select_arrow">
+							<Image
+								src="/svg/select-arrow.svg"
+								alt="down arrow"
+								width={32}
+								height={32}
+							/>
+						</div>
+					</div>
 
-				<label htmlFor="month"></label>
+					<div className="relative flex">
+						<select
+							id='month'
+							{...register("month")}
+							defaultValue={clientCurrent?.date_of_birth ? month : ''}
+							className="input w-[138px] border py-2 text-center focus:outline-none focus:border-blue-500 ">
+							<CreateOptions min={1} max={12} />
+						</select>
+						<div className="select_arrow">
+							<Image
+								src="/svg/select-arrow.svg"
+								alt="down arrow"
+								width={32}
+								height={32}
+							/>
+						</div>
+					</div>
 
-				<select
-					id='month'
-					{...register("month")}
-					defaultValue={clientCurrent?.date_of_birth ? month : ''}
-					className="input w-[138px] border mr-3 py-2 px-3 text-center focus:outline-none focus:border-blue-500 ">
-					<CreateOptions min={1} max={12} />
-				</select>
+					<div className="relative flex">
+						<select
+							id='year'
+							{...register("year")}
+							defaultValue={clientCurrent?.date_of_birth ? year : ''}
+							className="input w-[194px] border py-2 text-center focus:outline-none focus:border-blue-500">
+							<CreateOptions min={1900} max={new Date().getFullYear()} />
+						</select>
+						<div className="select_arrow">
+							<Image
+								src="/svg/select-arrow.svg"
+								alt="down arrow"
+								width={32}
+								height={32}
+							/>
+						</div>
+					</div>
+				</div>
 
-				<label htmlFor="year"></label>
 
-				<select
-					id='year'
-					{...register("year")}
-					defaultValue={clientCurrent?.date_of_birth ? year : ''}
-					className="input w-[194px] border py-2 px-3 text-center focus:outline-none focus:border-blue-500 ">
-					<CreateOptions min={1900} max={new Date().getFullYear()} />
-				</select>
+
+
+
 
 				<label
 					htmlFor="parameter1"

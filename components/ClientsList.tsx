@@ -69,12 +69,13 @@ export default function ClientsList({
 							className="flex  px-[26px] items-center h-[48px] text-base font-montserrat font-normal border-b border-rowUnderLine"
 						>
 							<input
+								id={String(convertClient.client_id)}
 								{...register(`${convertClient.client_id}`)}
 								placeholder="bluebill1049@hotmail.com"
 								type="checkbox"
 								onChange={onSelect}
-								className="mr-6"
 							/>
+							<label htmlFor={String(convertClient.client_id)} className="mr-[15px]"></label>
 							<div className="flex items-center gap-x-8">
 								<div className="w-[120px] text-left overflow-hidden">
 									{convertClient.tel}
