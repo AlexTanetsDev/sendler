@@ -75,7 +75,7 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 
 			await axios.put(`api/clients/${clientCurrent?.client_id}`,
 				{
-					groupId: Number(groupId),
+					// groupId: Number(groupId),
 					client: clientData,
 				},
 			);

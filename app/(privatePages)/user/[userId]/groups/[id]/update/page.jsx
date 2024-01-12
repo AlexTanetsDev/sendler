@@ -44,7 +44,6 @@ export default function UpdateGroupPage({ params }) {
       const wb = XLSX.read(ab);
       const wsname = wb.SheetNames[0];
       const clients = XLSX.utils.sheet_to_json(wb.Sheets[wsname]);
-      console.log("clients", clients);
 
       try {
         const res = await axios.put(`api/sending-groups/${groupId}`, {

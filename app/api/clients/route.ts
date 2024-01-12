@@ -17,7 +17,7 @@ import {
 	IClient
 } from "@/globaltypes/types";
 
-import { schemaReqClient } from "@/models/clients";
+import { schemaReqAddClient } from "@/models/clients";
 
 // get all clients for one user with user_id from search params
 export async function GET(request: NextRequest) {
@@ -61,7 +61,7 @@ export async function POST(request: NextRequest, { params }: { params: { userId:
 
 	try {
 		const body: IQieryParamsCreateClient = await request.json();
-		const { error, value } = schemaReqClient.validate(body);
+		const { error, value } = schemaReqAddClient.validate(body);
 
 		if (error) {
 			return NextResponse.json(

@@ -37,6 +37,11 @@ export const schemaClientDataBase: Joi.ObjectSchema<IClient> = Joi.object({
 
 export const schemaReqClient: Joi.ObjectSchema<IClientReq> = Joi.object({
 	userId: Joi.number(),
+	client: schemaClient.required(),
+});
+
+export const schemaReqAddClient: Joi.ObjectSchema<IClientReq> = Joi.object({
+	userId: Joi.number(),
 	groupId: Joi.number().required(),
 	client: schemaClient.required(),
 });
