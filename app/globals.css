@@ -1,5 +1,5 @@
-@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -105,6 +105,7 @@ footer {
 }
 
 .input {
+  @apply bg-white rounded-[18px];
   @apply bg-white border border-inputBorder rounded-[18px];
 }
 
@@ -154,18 +155,13 @@ footer {
 }
 
 .caruselBg {
-  background: linear-gradient(
-    101.12deg,
-    #0d364c 12.98%,
-    #136a83 48.23%,
-    #0d2846 79.12%
-  );
+  background: linear-gradient(101.12deg, #0d364c 12.98%, #136a83 48.23%, #0d2846 79.12%);
 }
 
 .swiperCardText {
   font-size: 16px;
   line-height: 24px;
-  font-family: "Montserrat";
+  font-family: 'Montserrat';
   color: white;
 }
 
@@ -216,14 +212,14 @@ select::-ms-expand {
   transform: translate(-50%, -50%);
 }
 
-input[type="checkbox"]:checked,
-input[type="checkbox"]:not(:checked) {
+input[type='checkbox']:checked,
+input[type='checkbox']:not(:checked) {
   position: absolute;
   left: -9999px;
 }
 
-input[type="checkbox"]:checked + label,
-input[type="checkbox"]:not(:checked) + label {
+input[type='checkbox']:checked + label,
+input[type='checkbox']:not(:checked) + label {
   display: inline-block;
   position: relative;
   padding-left: 28px;
@@ -231,9 +227,9 @@ input[type="checkbox"]:not(:checked) + label {
   cursor: pointer;
 }
 
-input[type="checkbox"]:checked + label:before,
-input[type="checkbox"]:not(:checked) + label:before {
-  content: "";
+input[type='checkbox']:checked + label:before,
+input[type='checkbox']:not(:checked) + label:before {
+  content: '';
   position: absolute;
   left: 0px;
   top: 50%;
@@ -245,11 +241,11 @@ input[type="checkbox"]:not(:checked) + label:before {
   transform: translateY(-50%);
 }
 
-input[type="checkbox"]:checked + label:after,
-input[type="checkbox"]:not(:checked) + label:after,
-input[type="radio"]:checked + label:after,
-input[type="radio"]:not(:checked) + label:after {
-  content: "";
+input[type='checkbox']:checked + label:after,
+input[type='checkbox']:not(:checked) + label:after,
+input[type='radio']:checked + label:after,
+input[type='radio']:not(:checked) + label:after {
+  content: '';
   position: absolute;
   -webkit-transition: all 0.2s ease;
   -moz-transition: all 0.2s ease;
@@ -257,8 +253,8 @@ input[type="radio"]:not(:checked) + label:after {
   transition: all 0.2s ease;
 }
 
-input[type="checkbox"]:checked + label:after,
-input[type="checkbox"]:not(:checked) + label:after {
+input[type='checkbox']:checked + label:after,
+input[type='checkbox']:not(:checked) + label:after {
   left: 5px;
   bottom: -2px;
   width: 15px;
@@ -273,10 +269,16 @@ input[type="checkbox"]:not(:checked) + label:after {
   transform: rotate(-45deg);
 }
 
-input[type="checkbox"]:not(:checked) + label:after {
+input[type='checkbox']:not(:checked) + label:after {
   opacity: 0;
 }
 
-input[type="checkbox"]:checked + label:after {
+input[type='checkbox']:checked + label:after {
   opacity: 1;
+}
+
+.sms-page-box {
+  padding: 50px 26px;
+  border-radius: 14px;
+  background-color: #cdeae3;
 }

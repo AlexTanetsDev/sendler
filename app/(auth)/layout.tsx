@@ -1,10 +1,10 @@
 import TitleAuthForm from "@/components/TitleAuthForm";
 import type { Metadata } from "next";
 
-export const metadata: Metadata = {
-  title: "Authorization",
-  description: "BSender sms sending application",
-};
+// export const metadata: Metadata = {
+//   title: "Authorization",
+//   description: "BSender sms sending application",
+// };
 
 export default function RootLayout({
   children,

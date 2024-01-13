@@ -1,15 +1,8 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "types": [
-      "react",
-      "react-dom"
-    ],
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "types": ["react", "react-dom"],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -27,9 +20,7 @@
       }
     ],
     "paths": {
-      "@/*": [
-        "./*"
-      ]
+      "@/*": ["./*"]
     }
   },
   "include": [
@@ -43,10 +34,7 @@
     "app/layout.jsx",
     "components/UserSmsBalansInform.tsx",
     "app/(privatePages)/user/contacts-manage/edit-group/[id]/page.tsx",
-    "app/(privatePages)/user/contacts-manage/update-group/[id]/page.tsx",
-    "components/ClientsList.tsx"
-, "components/buttons/ExportGroupBtn.jsx"  ],
-  "exclude": [
-    "node_modules"
-  ]
+    "app/(privatePages)/user/contacts-manage/update-group/[id]/page.tsx"
+  ],
+  "exclude": ["node_modules"]
 }
