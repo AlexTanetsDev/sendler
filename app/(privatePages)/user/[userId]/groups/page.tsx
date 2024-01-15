@@ -19,12 +19,12 @@ export default function ContactManagmentPage({ params }: { params: { userId: str
 	const getGroups = async () => {
 		try {
 			if (userId) {
-				const response = await axios.get(`api/sending-groups`, {
+				const res = await axios.get(`api/sending-groups`, {
 					params: {
 						userId: userId,
 					},
 				});
-				const data = response.data.groups;
+				const data = res.data.groups;
 				setGroups(data);
 			}
 		} catch (error: any) {

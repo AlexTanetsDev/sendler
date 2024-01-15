@@ -198,16 +198,10 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 							id='day'
 							{...register("day")}
 							defaultValue={clientCurrent?.date_of_birth ? day : ''}
-							className="input w-[118px] border py-2 text-center focus:outline-none focus:border-blue-500 ">
+							className="input w-[118px] border py-2 pl-4 pr-10 focus:outline-none focus:border-blue-500 ">
 							<CreateOptions min={1} max={31} />
 						</select>
 						<div className="select_arrow">
-							<Image
-								src="/svg/select-arrow.svg"
-								alt="down arrow"
-								width={32}
-								height={32}
-							/>
 						</div>
 					</div>
 
@@ -216,16 +210,10 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 							id='month'
 							{...register("month")}
 							defaultValue={clientCurrent?.date_of_birth ? month : ''}
-							className="input w-[138px] border py-2 text-center focus:outline-none focus:border-blue-500 ">
+							className="input w-[138px] border py-2 pl-4 pr-10 focus:outline-none focus:border-blue-500 ">
 							<CreateOptions min={1} max={12} />
 						</select>
 						<div className="select_arrow">
-							<Image
-								src="/svg/select-arrow.svg"
-								alt="down arrow"
-								width={32}
-								height={32}
-							/>
 						</div>
 					</div>
 
@@ -234,16 +222,10 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 							id='year'
 							{...register("year")}
 							defaultValue={clientCurrent?.date_of_birth ? year : ''}
-							className="input w-[194px] border py-2 text-center focus:outline-none focus:border-blue-500">
+							className="input w-[194px] border py-2 pl-4 pr-10 focus:outline-none focus:border-blue-500">
 							<CreateOptions min={1900} max={new Date().getFullYear()} />
 						</select>
 						<div className="select_arrow">
-							<Image
-								src="/svg/select-arrow.svg"
-								alt="down arrow"
-								width={32}
-								height={32}
-							/>
 						</div>
 					</div>
 				</div>

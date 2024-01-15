@@ -13,7 +13,7 @@ import {
 	IGroupName,
 } from "@/globaltypes/types";
 
-export default async function getGroupClients(groupId: number): Promise<{ group: string, clients: IClientDatabase[] } | NextResponse<{ message: string; }> | null> {
+export default async function getGroupClients(groupId: number): Promise<{ group: string, clients: IClientDatabase[] } | null> {
 	try {
 		const groupsIdDatabaseRes: QueryResult<IGroupId> = await fetchAllGroupId();
 		const groupsIdDatabase: IGroupId[] = groupsIdDatabaseRes.rows;

@@ -20,13 +20,13 @@ export default function AllContactsUserPage({ params }: { params: { userId: stri
 	const getClients = async () => {
 		try {
 			if (userId) {
-				const response = await axios.get(`api/clients`, {
+				const res = await axios.get(`api/clients`, {
 					params: {
 						userId: userId,
 					},
 				});
 
-				const data = response.data.clients;
+				const data = res.data.clients;
 				SetClients(data);
 			}
 		} catch (error: any) {

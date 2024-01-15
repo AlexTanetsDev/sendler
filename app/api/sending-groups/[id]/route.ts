@@ -145,7 +145,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
 		}
 
-		const resGet: { group: string, clients: IClient[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId);
+		const resGet: { group: string, clients: IClient[] } | null = await getGroupClients(groupId);
 
 		return NextResponse.json(
 			{ resGet, message: `The group is updated` },

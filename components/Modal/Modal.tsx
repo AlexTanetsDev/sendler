@@ -1,6 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { ReactDOM } from 'react';
-import { ReactPortal } from 'react';
 import { createPortal } from "react-dom";
 import React from 'react';
 import Image from 'next/image';
