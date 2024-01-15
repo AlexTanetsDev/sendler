@@ -1,29 +1,30 @@
-"use client";
+'use client';
 
-import axios from "axios";
-axios.defaults.baseURL = "http://localhost:3000/";
+import axios from 'axios';
+axios.defaults.baseURL = 'http://localhost:3000/';
 
-import { useState, useCallback, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import * as XLSX from "xlsx/xlsx.mjs";
+import { useState, useCallback, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import * as XLSX from 'xlsx/xlsx.mjs';
 
-import Title from "@/components/Title";
-import GreenButton from "@/components/buttons/GreenButton";
+import Title from '@/components/Title';
+import GreenButton from '@/components/buttons/GreenButton';
+import Image from 'next/image';
 
 export default function UpdateGroupPage({ params }) {
   const userId = Number(params.userId);
   const groupId = Number(params.id);
   const router = useRouter();
-  const [file, setFile] = useState(null);
-  const [groupName, setGroupName] = useState("");
+  const [file, setFile] = useState('');
+  const [groupName, setGroupName] = useState('');
   const [numberClients, setNumberClients] = useState(0);
 
   const getGroupName = async () => {
     try {
       if (groupId) {
-        const response = await axios.get(`api/sending-groups/${groupId}`);
-        const group = response.data.res.group;
-        const clientsGroup = response.data.res.clients;
+        const res = await axios.get(`api/sending-groups/${groupId}`);
+        const group = res.data.res.group;
+        const clientsGroup = res.data.res.clients;
         setGroupName(group);
         setNumberClients(clientsGroup.length);
       }
@@ -38,7 +39,7 @@ export default function UpdateGroupPage({ params }) {
     memoizedGetClients();
   }, [memoizedGetClients]);
 
-  const handleFileChange = (e) => {
+  const handleFileChange = e => {
     setFile(e.target.files[0]);
   };
 
@@ -52,15 +53,15 @@ export default function UpdateGroupPage({ params }) {
       try {
         const res = await axios.put(`api/sending-groups/${groupId}`, {
           clients: clients,
-          cache: "no-store",
+          cache: 'no-store',
         });
         console.log(res.data.message);
         router.push(`/user/${userId}/groups`);
       } catch (error) {
-        console.log(error.message + " | " + error.response.data.error);
+        console.log(error.message + ' | ' + error.response.data.error);
       }
     } else {
-      console.log("Please, select a file!");
+      console.log('Please, select a file!');
     }
   }, [file, groupId, router, userId]);
 
@@ -77,20 +78,25 @@ export default function UpdateGroupPage({ params }) {
           </Title>
         </div>
         <p className="w-[724px] mb-[50px] mt-10 ml-[26px] text-left main_text">
-          Ви можете додати номери телефонів контактів з файлу у форматі Excel
-          або текстового файлу. Виберіть файл, який містить Ваші контакти:
+          Ви можете додати номери телефонів контактів з файлу у форматі Excel або текстового файлу.
+          Виберіть файл, який містить Ваші контакти:
         </p>
-        <label htmlFor="file" className="block ml-[26px] mb-3 label">
-          Додати контакт з файлу
-        </label>
-        <div className="flex flex-row text-base flex items-center justify-start ml-[26px]">
+        <p className="block ml-[26px] mb-3 label"> Додати контакт з файлу</p>
+        <div className="relative flex flex-row text-base flex items-center justify-start ml-[26px]">
+          <label
+            htmlFor="file"
+            className="flex items-center justify-between w-[474px] block input w-8 h-[48px] mr-8 pr-[28px] bg-slate-300"
+          >
+            <div className="grow pl-[28px] main_text">{file.name}</div>
+            <Image src="/svg/paper-clip.svg" alt="paper clip" width={32} height={32} className="" />
+          </label>
           <input
             type="file"
             id="file"
             name="file"
             accept=".xls,.xlsx"
             onChange={handleFileChange}
-            className="input h-[48px] mr-8 bg-slate-300"
+            className="absolute input_file h-[48px] mr-8 bg-slate-300"
           />
           <GreenButton size="normal" onClick={xport}>
             Додати

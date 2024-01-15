@@ -59,12 +59,12 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId } }) 
 		if (groupId && clientsId.length > 0) {
 
 			try {
-				const response = await axios.patch(`api/sending-groups/${groupId}`, {
+				const res = await axios.patch(`api/sending-groups/${groupId}`, {
 					clients: clientsId,
 				});
-				const { clients } = response.data.resGet
+				const { clients } = res.data.resGet
 				setClients(clients);
-				console.log(response.data.message);
+				console.log(res.data.message);
 			} catch (error: any) {
 				console.log(error.message + " | " + error.response);
 			}
