@@ -36,7 +36,7 @@ CREATE TABLE
 CREATE TABLE
     clients (
         client_id SERIAL,
-        tel BIGINT NOT NULL,
+        tel TEXT NOT NULL,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
         first_name TEXT,
         middle_name TEXT,
@@ -74,11 +74,7 @@ CREATE TABLE
         send_method send_method_type DEFAULT 'api'
     );
 
-CREATE TYPE send_method_type AS ENUM(
-    'veb',
-    'api'
-);
-
+CREATE TYPE send_method_type AS ENUM('veb', 'api');
 
 CREATE TYPE status_type AS ENUM (
     'pending',

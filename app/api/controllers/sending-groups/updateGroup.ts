@@ -53,17 +53,20 @@ export default async function updateGroup(clients: IClient[], groupId: number, m
 		for (const client of clients) {
 			const { tel } = client;
 
-			const userClient = userClients.find(userClient => Number(userClient.tel) === (Number(tel)));
+			const userClient = userClients.find(userClient => userClient.tel === tel);
+
+
 
 			if (userClient) {
-				console.log('SECOND')
-				await updateClientData(client, userClient.client_id,);
-				await insertGroupMember(Number(tel), userId, groupId);
-				console.log('updateClientData')
+				const res = await updateClientData(client, userClient.client_id,);
+				if (res) {
+					await insertGroupMember(tel, userId, groupId);
+				}
 			} else {
-				console.log('FIRST')
-				await insertNewClientInGroup(client, userId, groupId, method);
-				console.log('insertNewClientInGroup')
+				const res = await insertNewClientInGroup(client, userId, groupId, method);
+				if (res) {
+					await insertGroupMember(tel, userId, groupId);
+				}
 			};
 
 		};

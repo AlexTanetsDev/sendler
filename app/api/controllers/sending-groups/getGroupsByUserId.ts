@@ -11,6 +11,7 @@ import {
 
 // get all groups for one user by user ID
 export default async function getGroupsByUserId(userId: number): Promise<IGroupDatabase[] | null> {
+
 	try {
 		const usersIdRes: QueryResult<IUserId> = await fetchUsersId();
 		const usersIdInDatabase = usersIdRes.rows;

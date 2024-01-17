@@ -77,7 +77,6 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 
 			await axios.put(`api/clients/${clientCurrent?.client_id}`,
 				{
-					// groupId: Number(groupId),
 					client: clientData,
 				},
 			);
@@ -107,8 +106,8 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 			onSubmit={handleSubmit(onSubmit)}
 			className="w-[526px] mx-auto pb-11 pt-[29px]  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]"
 		>
-			{title && !groupName && <h1 className="form-title mb-8 mt-[15px]">{title}</h1>}
-			{title && groupName && <h1 className="form-title mb-8 mt-[15px]">{`${title} - ${groupName}`}</h1>}
+			{title && !groupName && <p className="form-title mb-8 mt-[15px]">{title}</p>}
+			{title && groupName && <p className="form-title mb-8 mt-[15px]">{`${title} - ${groupName}`}</p>}
 			<div className="text-left w-full mb-8">
 
 				<label
@@ -116,12 +115,12 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 					className="font-roboto text-sm font-medium mb-2  mt-8 block"
 				>
 					Номер телефону
-					<span className="ml-2 text-red-700">*</span>
+					<span className="ml-1 text-red-700">*</span>
 				</label>
 				<input
 					id="phone"
 					type="text"
-					defaultValue={clientCurrent?.tel && `+${clientCurrent.tel}`}
+					defaultValue={clientCurrent?.tel && clientCurrent.tel}
 					{...register("phone")}
 					className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
 					placeholder="+3801234567"
@@ -230,11 +229,6 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 					</div>
 				</div>
 
-
-
-
-
-
 				<label
 					htmlFor="parameter1"
 					className="font-roboto text-sm font-medium mb-2 mt-8 block"
@@ -268,7 +262,6 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 				{errors.parameter2 && (
 					<span className="text-red-500 block">{errors.parameter2.message}</span>
 				)}
-
 			</div>
 			<GreenButton size="big">Відправити</GreenButton>
 		</form>

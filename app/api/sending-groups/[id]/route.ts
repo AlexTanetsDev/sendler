@@ -92,7 +92,6 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 		const resUpdate: null | NextResponse<{
 			error: string;
 		}> | undefined = await updateGroup(clients, groupId, method);
-		// console.log('updateGroup')
 
 		if (resUpdate === null) {
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
