@@ -10,7 +10,7 @@ export interface IErrorResponse {
 }
 
 export interface ITel {
-	tel: number;
+	tel: string;
 }
 
 export interface ITelRes {
@@ -47,7 +47,8 @@ export interface INewDataUser {
 	user_fild: string;
 }
 
-export interface IClient extends ITel {
+export interface IClient {
+	tel: string;
 	first_name?: string;
 	middle_name?: string;
 	last_name?: string;
@@ -175,6 +176,15 @@ export interface FormInputCreateClient {
 	year?: number;
 	parameter1?: string;
 	parameter2?: string;
+};
+
+export interface FormInputUpdateUser {
+	login: string;
+	password: string;
+	newPassword: string;
+	contactPerson: string;
+	phone: number;
+	email: string;
 };
 
 

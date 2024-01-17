@@ -63,7 +63,7 @@ export default function CreateGroupForm({ id, getGroups }: Props) {
 			getGroups();
 			reset({ group_name: '' });
 		} catch (error: any) {
-			console.log(error.message)
+			console.log(error.message + " | " + error.response)
 		}
 	}
 	return (

@@ -1,7 +1,8 @@
 import {
 	fetchUserClientsTel,
 	insertNewClient,
-	fetchUsersId
+	fetchUsersId,
+	insertGroupMember
 } from "@/app/utils";
 
 import { QueryResult } from "pg";
@@ -36,7 +37,8 @@ export default async function createClient(client: IClient, userId: number, grou
 			return 2;
 		}
 
-		await insertNewClient(client, userId, groupId);
+		await insertNewClient(client, userId);
+		await insertGroupMember(client.tel, userId, groupId);
 
 	} catch (error: any) {
 		throw new Error(error.message);

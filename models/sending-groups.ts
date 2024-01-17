@@ -1,4 +1,4 @@
-import Joi, { number } from "joi";
+import Joi from "joi";
 
 import { schemaClient } from "./clients";
 

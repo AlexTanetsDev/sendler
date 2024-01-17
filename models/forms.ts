@@ -62,3 +62,20 @@ export const validationSchemaCreateClient = Joi.object({
 	parameter1: Joi.string().label('Parameter 1').allow(""),
 	parameter2: Joi.string().label('Parameter 2').allow("")
 });
+
+export const validationSchemaUpdateUser = Joi.object({
+	login: Joi.string().required().label("Login"),
+	password: Joi.string().required().label("Password").min(8).max(20),
+	newPassword: Joi.string().required().label("Password").min(8).max(20),
+	contactPerson: Joi.string().required().label("Name"),
+	phone: Joi.string()
+		.pattern(/^\+\d{10,}$/)
+		.required()
+		.messages({
+			"string.pattern.base":
+				'Phone number must start with "+" and have at least 10 digits',
+		}),
+	email: Joi.string()
+		.email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+		.required(),
+});

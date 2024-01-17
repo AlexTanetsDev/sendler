@@ -17,6 +17,7 @@ export default function ContactManagmentPage({ params }: { params: { userId: str
 	const userId = Number(params.userId);
 
 	const getGroups = async () => {
+
 		try {
 			if (userId) {
 				const res = await axios.get(`api/sending-groups`, {
@@ -28,7 +29,7 @@ export default function ContactManagmentPage({ params }: { params: { userId: str
 				setGroups(data);
 			}
 		} catch (error: any) {
-			console.log(error.message);
+			console.log(error.message + " | " + error.response);
 		}
 	};
 

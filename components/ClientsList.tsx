@@ -55,7 +55,7 @@ export default function ClientsList({
 	return (
 		<div className="mb-[80px]">
 			<div className="flex gap-x-8 w-full px-[26px] pt-[18px] pb-[13px] text-xl text-white font-roboto font-normal bg-headerTable">
-				<p className="w-[158px] pl-[38px]">Номер</p>
+				<p className="w-[168px] pl-[38px]">Номер</p>
 				<p className="w-[346px]">Ім&apos;я(П.І.Б.)</p>
 				<p className="w-[170px]">Дата народження</p>
 				<p className="w-[150px]">Параметр 1</p>
