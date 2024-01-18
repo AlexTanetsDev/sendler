@@ -13,8 +13,8 @@ const Services = () => {
         </div>
       </section>
 
-      <section className="container w-full pt-20 flex flex-col">
-        <div className=" flex  flex-col lg:flex-row ">
+      <section className="container pt-20 flex flex-col">
+        <div className=" flex  flex-col lg:flex-row w-full  ">
           <ul className="mr-[174px] w-[636px] pt-[100px]">
             <li className="mb-8">
               <p>

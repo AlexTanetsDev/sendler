@@ -23,7 +23,7 @@ const Feedback = () => {
 			<p className=" text-base font-medium">Зворотній зв’язок</p>
 			<GreenButton size="normal" onClick={openModal} >Зв’язатись</GreenButton>
 			<Modal isOpen={isModalOpen} onClose={closeModal}>
-				<FormFeedback onClose={closeModal} title='Зворотній зв’язок' />
+				<FormFeedback onClose={closeModal} title='Зворотній зв’язок' cross={true}/>
 			</Modal>
 		</>
 	);

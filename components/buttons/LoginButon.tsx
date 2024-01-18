@@ -19,7 +19,7 @@ const LoginButton: React.FC<LoginButtonProps> = ({ onClick }) => {
   return (
     <button
       onClick={handleClick}
-      className="flex justify-center items-center hover:underline hover:underline-offset-4 py-4 ml-11"
+      className="flex justify-center items-center hover:underline hover:underline-offset-4 lg:py-4 lg:ml-11"
       type="button"
     >
       Увійти

@@ -1,7 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import React from 'react';
-import Image from 'next/image';
 
 interface ModalProps {
   isOpen: boolean;
@@ -9,7 +8,7 @@ interface ModalProps {
   children: React.ReactNode;
 }
 
-const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
+const ModalBurgerMenu: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   const modalRef = useRef<HTMLDivElement | null>(null);
   const [isBrowser, setIsBrowser] = useState(false);
 
@@ -38,8 +37,8 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   }, [handleKeyDown]);
 
   const modalContent = isOpen ? (
-    <div className="modal-overlay" onClick={handleOverlayClick}>
-      <div className="modal relative" ref={modalRef}>
+    <div className="modal-overlay-burger relative" onClick={handleOverlayClick}>
+      <div className="modal-burger" ref={modalRef}>
         {children}
       </div>
     </div>
@@ -50,4 +49,4 @@ const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children }) => {
   }
 };
 
-export default Modal;
+export default ModalBurgerMenu;

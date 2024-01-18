@@ -59,6 +59,23 @@ footer {
   line-height: 150%;
 }
 
+.modal-overlay-burger {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow-y: scroll;
+}
+
+.modal {
+  color: black;
+  border-radius: 8px;
+}
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -71,10 +88,27 @@ footer {
   justify-content: center;
 }
 
-.modal {
+.modal-burger {
   color: black;
   border-radius: 8px;
+  overflow-y: scroll;
 }
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+
+.burger-menu-overlay {
+  animation: slideInLeft 0.5s ease-out;
+
+}
+
 
 .content-block {
   @apply w-full py-[50px] text-lg font-montserrat font-normal rounded-2xl bg-formBg;

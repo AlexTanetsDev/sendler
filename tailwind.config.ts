@@ -39,6 +39,8 @@ const config: Config = {
         inputBorder: '#E6E6E6',
         mainBgColor: '#FEFEFE;',
         blueHoverBtn: '#41A7BE',
+        redStar: '#EC2C2C',
+        bgBurgerMenu: '#194954'
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
