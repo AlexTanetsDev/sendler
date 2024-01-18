@@ -6,6 +6,7 @@ import Footer from "../components/Footer";
 import Providers from "@/components/providers/Providers";
 import ToastProvider from "@/components/providers/TostifyProvider";
 import BackToTopBtn from "@/components/buttons/BackToTopBtn";
+import { Toaster } from "react-hot-toast";
 
 export const metadata: Metadata = {
 	title: "BSender",
@@ -23,6 +24,7 @@ export default function RootLayout({
 				<Providers>
 					<ToastProvider>
 						<Header />
+						<Toaster />
 						{children}
 						<Footer />
 						<BackToTopBtn />

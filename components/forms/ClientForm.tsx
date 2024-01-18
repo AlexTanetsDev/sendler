@@ -117,18 +117,21 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 					Номер телефону
 					<span className="ml-1 text-red-700">*</span>
 				</label>
-				<input
-					id="phone"
-					type="text"
-					defaultValue={clientCurrent?.tel && clientCurrent.tel}
-					{...register("phone")}
-					className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-					placeholder="+3801234567"
-					required
-				/>
-				{errors.phone && (
-					<span className="text-red-500 block">{errors.phone.message}</span>
-				)}
+				<div className="relative">
+					<input
+						id="phone"
+						type="text"
+						defaultValue={clientCurrent?.tel && clientCurrent.tel}
+						{...register("phone")}
+						className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+						placeholder="+3801234567"
+						required
+					/>
+					{errors.phone && (
+						<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.phone.message}</span>
+					)}
+				</div>
+
 
 				<label
 					htmlFor="lastName"
@@ -136,17 +139,19 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 				>
 					Прізвище
 				</label>
-				<input
-					id="lastName"
-					type="text"
-					defaultValue={clientCurrent?.last_name && clientCurrent.last_name}
-					{...register("lastName")}
-					className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
-					placeholder="Петренко"
-				/>
-				{errors.lastName && (
-					<span className="text-red-500 block">{errors.lastName.message}</span>
-				)}
+				<div className="relative">
+					<input
+						id="lastName"
+						type="text"
+						defaultValue={clientCurrent?.last_name && clientCurrent.last_name}
+						{...register("lastName")}
+						className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
+						placeholder="Петренко"
+					/>
+					{errors.lastName && (
+						<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.lastName.message}</span>
+					)}
+				</div>
 
 				<label
 					htmlFor="firstName"
@@ -154,17 +159,19 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 				>
 					Ім&apos;я
 				</label>
-				<input
-					id="firstName"
-					type="text"
-					defaultValue={clientCurrent?.first_name && clientCurrent.first_name}
-					{...register("firstName")}
-					className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
-					placeholder="Петро"
-				/>
-				{errors.firstName && (
-					<span className="text-red-500 block">{errors.firstName.message}</span>
-				)}
+				<div className="relative">
+					<input
+						id="firstName"
+						type="text"
+						defaultValue={clientCurrent?.first_name && clientCurrent.first_name}
+						{...register("firstName")}
+						className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
+						placeholder="Петро"
+					/>
+					{errors.firstName && (
+						<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.firstName.message}</span>
+					)}
+				</div>
 
 				<label
 					htmlFor="midleName"
@@ -172,17 +179,19 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 				>
 					По-батькові
 				</label>
-				<input
-					id="middleName"
-					type="text"
-					defaultValue={clientCurrent?.middle_name && clientCurrent.middle_name}
-					{...register("middleName")}
-					className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
-					placeholder="Олександрович"
-				/>
-				{errors.middleName && (
-					<span className="text-red-500 block">{errors.middleName.message}</span>
-				)}
+				<div className="relative">
+					<input
+						id="middleName"
+						type="text"
+						defaultValue={clientCurrent?.middle_name && clientCurrent.middle_name}
+						{...register("middleName")}
+						className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
+						placeholder="Олександрович"
+					/>
+					{errors.middleName && (
+						<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.middleName.message}</span>
+					)}
+				</div>
 
 				<label
 					htmlFor="day"
@@ -190,7 +199,6 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 				>
 					Дата народження
 				</label>
-
 				<div className="flex gap-x-3">
 					<div className="relative flex">
 						<select
@@ -235,16 +243,18 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 				>
 					Параметр 1
 				</label>
-				<input
-					id="parameter1"
-					type="text"
-					defaultValue={clientCurrent?.parameter_1 && clientCurrent.parameter_1}
-					{...register("parameter1")}
-					className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
-				/>
-				{errors.parameter1 && (
-					<span className="text-red-500 block">{errors.parameter1.message}</span>
-				)}
+				<div className="relative">
+					<input
+						id="parameter1"
+						type="text"
+						defaultValue={clientCurrent?.parameter_1 && clientCurrent.parameter_1}
+						{...register("parameter1")}
+						className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
+					/>
+					{errors.parameter1 && (
+						<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.parameter1.message}</span>
+					)}
+				</div>
 
 				<label
 					htmlFor="parameter2"
@@ -252,16 +262,18 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 				>
 					Параметр 2
 				</label>
-				<input
-					id="parameter2"
-					type="text"
-					defaultValue={clientCurrent?.parameter_2 && clientCurrent.parameter_2}
-					{...register("parameter2")}
-					className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
-				/>
-				{errors.parameter2 && (
-					<span className="text-red-500 block">{errors.parameter2.message}</span>
-				)}
+				<div className="relative">
+					<input
+						id="parameter2"
+						type="text"
+						defaultValue={clientCurrent?.parameter_2 && clientCurrent.parameter_2}
+						{...register("parameter2")}
+						className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
+					/>
+					{errors.parameter2 && (
+						<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.parameter2.message}</span>
+					)}
+				</div>
 			</div>
 			<GreenButton size="big">Відправити</GreenButton>
 		</form>

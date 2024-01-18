@@ -43,8 +43,7 @@ export interface INewDataUser {
 	email: string;
 	user_login: string;
 	tel: string;
-	user_name: string;
-	user_fild: string;
+	user_password: string;
 }
 
 export interface IClient {

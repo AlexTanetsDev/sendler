@@ -1,30 +1,32 @@
 "use client";
 
 import axios from "axios";
-// import bcrypt from "bcrypt";
+axios.defaults.baseURL = "http://localhost:3000/";
 
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import { validationSchemaUpdateUser } from "@/models/forms";
 import { FormInputUpdateUser } from "@/globaltypes/types";
 import GreenButton from "../buttons/GreenButton";
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 
 interface Props {
-	user: {
-		user_id: number | undefined;
-		user_login: string | undefined;
-		user_token: string | undefined;
-		tel: number | undefined;
-		email: string | undefined;
-	}
+	userId: number | undefined
 };
 
-const UpdateUserForm = ({ user }: Props) => {
-	const { user_id, user_login, user_token, tel, email } = user;
+const UpdateUserForm = ({ userId }: Props) => {
 	const [isOpen, setIsOpen] = useState(false);
+	const [userState, setUserState] = useState({
+		user_login: '',
+		email: '',
+		tel: '',
+	});
+
+	const { user_login, tel, email } = userState;
+	const user_id = userId;
 
 	const onClick = () => {
 		setIsOpen(isOpen => !isOpen);
@@ -63,53 +65,88 @@ const UpdateUserForm = ({ user }: Props) => {
 		},
 	});
 
+	const getUser = async () => {
+		try {
+			const res = await axios.get(`/api/users/${user_id}`);
+			setUserState(res.data.user);
+		} catch (error: any) {
+			toast.error(error.message + " | " + error.response.data.message, {
+				duration: 3000,
+				position: 'top-center',
+				style: {
+					width: '280px',
+					height: '120px',
+					backgroundColor: '#ee3b3b',
+					color: 'white',
+					fontSize: '18px',
+				},
+				iconTheme: {
+					primary: 'white',
+					secondary: 'red',
+				},
+			})
+			console.log(error.message + " | " + error.response.data.message);
+		}
+	};
+
+	const memoizedGetUser = useCallback(getUser, [user_id]);
+
+	useEffect(() => {
+		memoizedGetUser();
+	}, [memoizedGetUser]);
+
 	const onSubmit: SubmitHandler<FormInputUpdateUser> = async (data) => {
-		const userData = {
-			user_login: data.login,
-			password: data.password,
-			newPassword: data.newPassword,
-			contacPerson: data.contactPerson,
-			tel: data.phone,
-			email: data.email,
-		};
+		try {
+			const res = await axios.put(`api/users/${user_id}`,
+				{
+					userLogin: data.login,
+					password: data.password,
+					newPassword: data.newPassword,
+					// contactPerson: data.contactPerson,
+					tel: data.phone,
+					email: data.email,
+				}
+			);
+			getUser();
+			reset();
+			setIsOpen(false);
+			console.log(res.data.message);
+			if (res) {
+				toast.success(res.data.message, {
+					duration: 3000,
+					position: 'top-center',
+					style: {
+						width: '280px',
+						height: '120px',
+						backgroundColor: '#47a447',
+						color: 'white',
+						fontSize: '18px',
+					},
+					iconTheme: {
+						primary: 'white',
+						secondary: 'green',
+					},
+				})
+			}
+		} catch (error: any) {
+			toast.error(error.message + " | " + error.response.data.message, {
+				duration: 3000,
+				position: 'top-center',
+				style: {
+					width: '280px',
+					height: '120px',
+					backgroundColor: '#ee3b3b',
+					color: 'white',
+					fontSize: '18px',
+				},
+				iconTheme: {
+					primary: 'white',
+					secondary: 'red',
+				},
+			})
+			console.log(error.message + " | " + error.response.data.message);
+		}
 
-		console.log('user_token', user_token)
-
-		console.log('userData', userData);
-		if (user_token) {
-			// const what = bcrypt.compare(userData.password, user_token);
-			// console.log('WHAT=', what)
-		};
-
-
-
-
-		// if (userData?.client_id) {
-
-		// 	await axios.put(`api/clients/${clientCurrent?.client_id}`,
-		// 		{
-		// 			client: clientData,
-		// 		},
-		// 	);
-
-		// } else {
-
-		// 	await axios.post(`api/clients`,
-		// 		{
-		// 			userId: userId,
-		// 			groupId: Number(groupId),
-		// 			client: clientData
-		// 		},
-		// 	);
-		// 	getClients();
-		// }
-		// reset();
-		// {
-		// 	onClose && onClose();
-		// }
-		// toast.success(
-		// 	"Your submission has been received. We will respond to it as soon as possible."
-		// );
 	};
 	return (
 		<form
@@ -144,18 +181,20 @@ const UpdateUserForm = ({ user }: Props) => {
 							Логін
 							<span className="ml-1 text-red-700">*</span>
 						</label>
-						<input
-							id="login"
-							type="text"
-							defaultValue={user_login && user_login}
-							{...register("login")}
-							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-							placeholder="+3801234567"
-							required
-						/>
-						{errors.login && (
-							<span className="text-red-500 block">{errors.login.message}</span>
-						)}
+						<div className="relative">
+							<input
+								id="login"
+								type="text"
+								defaultValue={user_login && user_login}
+								{...register("login")}
+								className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+								placeholder="Your login"
+								required
+							/>
+							{errors.login && (
+								<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.login.message}</span>
+							)}
+						</div>
 
 						<label
 							htmlFor="password"
@@ -164,16 +203,18 @@ const UpdateUserForm = ({ user }: Props) => {
 							Пароль
 							<span className="ml-1 text-red-700">*</span>
 						</label>
-						<input
-							id="password"
-							type="password"
-							{...register("password")}
-							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-							required
-						/>
-						{errors.password && (
-							<span className="text-red-500 block">{errors.password.message}</span>
-						)}
+						<div className="relative">
+							<input
+								id="password"
+								type="password"
+								{...register("password")}
+								className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+								required
+							/>
+							{errors.password && (
+								<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.password.message}</span>
+							)}
+						</div>
 
 						<label
 							htmlFor="newPassword"
@@ -182,16 +223,18 @@ const UpdateUserForm = ({ user }: Props) => {
 							Новий пароль
 							<span className="ml-1 text-red-700">*</span>
 						</label>
-						<input
-							id="newPassword"
-							type="password"
-							{...register("newPassword")}
-							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-							required
-						/>
-						{errors.newPassword && (
-							<span className="text-red-500 block">{errors.newPassword.message}</span>
-						)}
+						<div className="relative">
+							<input
+								id="newPassword"
+								type="password"
+								{...register("newPassword")}
+								className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+								required
+							/>
+							{errors.newPassword && (
+								<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.newPassword.message}</span>
+							)}
+						</div>
 
 						<label
 							htmlFor="contactPerson"
@@ -200,17 +243,19 @@ const UpdateUserForm = ({ user }: Props) => {
 							Контактна особа
 							<span className="ml-1 text-red-700">*</span>
 						</label>
-						<input
-							id="contactPerson"
-							type="text"
-							{...register("contactPerson")}
-							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-							placeholder="Менеджер Петренко"
-							required
-						/>
-						{errors.contactPerson && (
-							<span className="text-red-500 block">{errors.contactPerson.message}</span>
-						)}
+						<div className="relative">
+							<input
+								id="contactPerson"
+								type="text"
+								{...register("contactPerson")}
+								className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+								placeholder="Менеджер Петренко"
+								required
+							/>
+							{errors.contactPerson && (
+								<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.contactPerson.message}</span>
+							)}
+						</div>
 
 						<label
 							htmlFor="phone"
@@ -219,38 +264,42 @@ const UpdateUserForm = ({ user }: Props) => {
 							Телефон для зв&apos;зку
 							<span className="ml-1 text-red-700">*</span>
 						</label>
-						<input
-							id="phone"
-							type="text"
-							defaultValue={tel && tel}
-							{...register("phone")}
-							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-							placeholder="+3801234567"
-							required
-						/>
-						{errors.phone && (
-							<span className="text-red-500 block">{errors.phone.message}</span>
-						)}
+						<div className="relative">
+							<input
+								id="phone"
+								type="text"
+								defaultValue={tel && tel}
+								{...register("phone")}
+								className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+								placeholder="+380675555544"
+								required
+							/>
+							{errors.phone && (
+								<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.phone.message}</span>
+							)}
+						</div>
 
 						<label
 							htmlFor="email"
 							className="font-roboto text-sm font-medium mb-2  mt-8 block"
 						>
-							Телефон для зв&apos;зку
+							Електронна пошта
 							<span className="ml-1 text-red-700">*</span>
 						</label>
-						<input
-							id="email"
-							type="email"
-							defaultValue={email && email}
-							{...register("email")}
-							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-							placeholder="example@mail.com"
-							required
-						/>
-						{errors.email && (
-							<span className="text-red-500 block">{errors.email.message}</span>
-						)}
+						<div className="relative">
+							<input
+								id="email"
+								type="email"
+								defaultValue={email && email}
+								{...register("email")}
+								className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+								placeholder="example@mail.com"
+								required
+							/>
+							{errors.email && (
+								<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.email.message}</span>
+							)}
+						</div>
 					</div>
 					<GreenButton size="big">Зберегти</GreenButton>
 				</div>}
