@@ -33,19 +33,20 @@ const BackToTopBtn = () => {
 
   return (
     <button
-      className={`fixed bottom-5 right-5 lg:bottom-10 lg:right-10 bg-transparent border-2 border-greenBtn  px-2 py-2 lg:px-3 lg:py-3 rounded-full hover:bg-greenBtn hover:scale-110 hover:border-transparent  transition-all ${
-        isVisible ? "opacity-100" : "opacity-0"
-      }`}
+    className={`fixed flex items-center bottom-5  right-5 bg-transparent border-2 border-greenBtn text-greenBtn hover:text-white rounded-full hover:bg-greenBtn hover:scale-105 hover:border-transparent transition-all text-center w-12 h-12 pl-[8px] text-3xl ${
+      isVisible ? "opacity-100" : "opacity-0"
+    } ${
+      "sm:w-16 sm:h-16 sm:pl-[12px] sm:text-4xl"
+    } ${
+      "md:w-20 md:h-20 md:pl-[14px] md:text-5xl"
+    } ${
+      "lg:w-24 lg:h-24 lg:pl-[18px] lg:text-6xl"
+    }`}
       onClick={scrollToTop}
     >
-      <Image
-        src="/svg/arrow-up.svg"
-        alt="buton detailes"
-        width={48}
-        height={48}
-      />
+      <span className="text-center block rotate-[-90deg]">&gt;</span>
     </button>
   );
 };
-
+ 
 export default BackToTopBtn;
