@@ -47,11 +47,11 @@ export const schemaLogin = Joi.object({
 
 export const validationSchemaCreateClient = Joi.object({
 	phone: Joi.string()
-		.pattern(/^\+\d{10,}$/)
+		.pattern(/^\d{10,}$/)
 		.required()
 		.messages({
 			"string.pattern.base":
-				'Phone number must start with "+" and have at least 10 digits',
+				'Phone number must have at least 10 digits',
 		}),
 	lastName: Joi.string().label('Last name').allow(""),
 	firstName: Joi.string().label('First name').allow(""),
@@ -64,18 +64,33 @@ export const validationSchemaCreateClient = Joi.object({
 });
 
 export const validationSchemaUpdateUser = Joi.object({
-	login: Joi.string().required().label("Login"),
-	password: Joi.string().required().label("Password").min(8).max(20),
-	newPassword: Joi.string().required().label("Password").min(8).max(20),
-	contactPerson: Joi.string().required().label("Name"),
+	login: Joi.string().required().min(3),
+	password: Joi.string()
+		.required()
+		.min(8)
+		.max(20)
+		.pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).messages({
+			"string.pattern.base":
+				'Password must have numbers and letter',
+		}),
+	newPassword: Joi.string()
+		.required()
+		.min(8)
+		.max(20)
+		.pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")).messages({
+			"string.pattern.base":
+				'Password must have numbers and letter',
+		}),
+	// contactPerson: Joi.string().required().label("Name"),
 	phone: Joi.string()
-		.pattern(/^\+\d{10,}$/)
+		.pattern(/^\d{10,}$/)
 		.required()
 		.messages({
 			"string.pattern.base":
-				'Phone number must start with "+" and have at least 10 digits',
+				'Phone number must have at least 10 digits',
 		}),
 	email: Joi.string()
 		.email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
 		.required(),
+	contactPerson: Joi.string().required(),
 });

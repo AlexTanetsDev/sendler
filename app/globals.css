@@ -9,6 +9,7 @@
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
 }
+
 /* 
 @media (prefers-color-scheme: dark) {
   :root {
@@ -247,7 +248,7 @@ input[type='checkbox']:checked + label,
 input[type='checkbox']:not(:checked) + label {
   display: inline-block;
   position: relative;
-  padding-left: 28px;
+  padding-left: 23px;
   line-height: 20px;
   cursor: pointer;
 }
@@ -304,4 +305,8 @@ input[type='checkbox']:checked + label:after {
   padding: 50px 26px;
   border-radius: 14px;
   background-color: #cdeae3;
+}
+
+.toast-success {
+  background-color: green;
 }

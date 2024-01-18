@@ -4,7 +4,7 @@ import { IClient, IClientReq, IClientUpdateReq, ITel } from "@/globaltypes/types
 
 export const schemaClient: Joi.ObjectSchema<IClient> = Joi.object({
 	tel: Joi.string()
-		.pattern(/^\+\d{10,}$/)
+		.pattern(/^\d{10,}$/)
 		.required()
 		.messages({
 			"string.pattern.base":

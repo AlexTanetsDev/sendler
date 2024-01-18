@@ -55,13 +55,13 @@ export default function ClientsList({
 	return (
 		<div className="mb-[80px]">
 			<div className="flex gap-x-8 w-full px-[26px] pt-[18px] pb-[13px] text-xl text-white font-roboto font-normal bg-headerTable">
-				<p className="w-[168px] pl-[38px]">Номер</p>
+				<p className="w-[158px] pl-[38px]">Номер</p>
 				<p className="w-[346px]">Ім&apos;я(П.І.Б.)</p>
 				<p className="w-[170px]">Дата народження</p>
 				<p className="w-[150px]">Параметр 1</p>
 				<p>Параметр 2</p>
 			</div>
-			<form onSubmit={handleSubmit(onSubmit)} className="text-right">
+			<form onSubmit={handleSubmit(onSubmit)}>
 				<ul>
 					{convertClients[0] ? convertClients.map((convertClient) => (
 						<li
@@ -75,20 +75,20 @@ export default function ClientsList({
 								type="checkbox"
 								onChange={onSelect}
 							/>
-							<label htmlFor={String(convertClient.client_id)} className="mr-[15px]"></label>
-							<div className="flex items-center gap-x-8">
-								<div className="w-[120px] text-left overflow-hidden">
+							<label htmlFor={String(convertClient.client_id)} className=""></label>
+							<div className="flex items-center gap-x-6 ml-[15px]">
+								<div className="w-[128px] text-left overflow-hidden">
 									{convertClient.tel}
 								</div>
-								<div className="flex gap-x-2 flex-nowrap w-[346px] text-left overflow-hidden">
+								<div className="flex gap-x-2 flex-nowrap w-[354px] text-left overflow-hidden">
 									<div>{convertClient.last_name}</div>
 									<div>{convertClient.first_name}</div>
 									<div>{convertClient.middle_name}</div>
 								</div>
-								<div className="w-[170px] text-left overflow-hidden">
+								<div className="w-[178px] text-left overflow-hidden">
 									{convertClient.ua_date_of_birth}
 								</div>
-								<div className="w-[150px] text-left overflow-hidden">
+								<div className="w-[158px] text-left overflow-hidden">
 									{convertClient.parameter_1}
 								</div>
 								<div className="w-[150px] text-left overflow-hidden">

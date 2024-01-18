@@ -12,15 +12,7 @@ import { UpdateUserForm } from "@/components/forms/UpdateUserForm";
 export default async function UserAccountPage({ params }: { params: { userId: string } }) {
 	const session: ISession | null = await getServerSession(options);
 	const balance = session?.user.balance;
-
-
-	const userData = {
-		user_id: session?.user.user_id,
-		user_login: session?.user.user_login,
-		user_token: session?.user.user_token,
-		tel: Number(session?.user.tel),
-		email: session?.user.email,
-	}
+	const userId = session?.user.user_id
 
 	return (
 		<>
@@ -72,7 +64,7 @@ export default async function UserAccountPage({ params }: { params: { userId: st
 				</div>
 				<PaymentsList />
 			</div>
-			<UpdateUserForm user={userData} />
+			<UpdateUserForm userId={userId} />
 		</>
 	)
 }
