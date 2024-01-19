@@ -5,14 +5,17 @@ import { useRouter } from "next/navigation";
 import React, { MouseEvent } from "react";
 
 type LoginButtonProps = {
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 const LoginButton: React.FC<LoginButtonProps> = ({ onClick }) => {
   const router = useRouter();
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
-    onClick();
+
+     if (onClick) {
+      onClick();
+    }
     router.push("/login");
   };
 

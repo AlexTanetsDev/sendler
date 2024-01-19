@@ -6,9 +6,7 @@ import { privateNavigation, publicNavigation } from '@/data/data';
 import LoginButton from './buttons/LoginButon';
 import LogoNav from './LogoNav';
 import { useState } from 'react';
-import BurgerMenu from './BurgerMenu';
 import { usePathname } from 'next/navigation';
-import Modal from './Modal/Modal';
 import ModalBurgerMenu from './Modal/ModalBurgerMenu';
 
 const Nav = () => {
@@ -88,11 +86,7 @@ const Nav = () => {
                   </Link>
                 </li>
               ))}
-          {status === 'authenticated' ? (
-            <LogOutButton onClick={() => {}} />
-          ) : (
-            <LoginButton onClick={() => {}} />
-          )}
+          {status === 'authenticated' ? <LogOutButton /> : <LoginButton />}
         </ul>
       </nav>
 
