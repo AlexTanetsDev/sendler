@@ -344,3 +344,18 @@ input[type='checkbox']:checked + label:after {
 .toast-success {
   background-color: green;
 }
+
+
+.form-errors{
+color: #E74A3B;
+text-align: center;
+font-family: Roboto;
+font-size: 14px;
+font-style: normal;
+font-weight: 400;
+line-height: normal;
+display: block;
+position: absolute;
+bottom: -26px;
+right: 0;
+}
