@@ -1,9 +1,9 @@
-import { redirect } from "next/navigation";
+import { redirect } from 'next/navigation';
 
-import { getUserHistory } from "@/app/utils";
-import { IHistoryResponce } from "@/globaltypes/historyTypes";
-import HistoryList from "./HistoryList";
-import HistoryPeriodForm from "./forms/HistoryPeriodForm";
+import { getUserHistory } from '@/app/utils';
+import { IHistoryResponce } from '@/globaltypes/historyTypes';
+import HistoryList from './HistoryList';
+import HistoryPeriodForm from './forms/HistoryPeriodForm';
 
 type Props = {
   id: number | undefined;
@@ -14,15 +14,38 @@ export default async function HistoryTable({ id }: Props) {
     id,
   });
 
-  if (userHistory === undefined) {
-    redirect("/");
-  }
+  // if (userHistory === undefined) {
+  //   redirect('/');
+  // }
 
   userHistory = [
     {
       sending_group_date: new Date(),
+      history_id: 123457676,
+      group_name: 'Group name',
+      send_method: 'API',
+      recipient_status: ['fulfield', 'fulfield', 'fulfield'],
+    },
+    {
+      sending_group_date: new Date(),
       history_id: 12345,
-      group_name: "Group name",
+      group_name: 'Group name',
+      send_method: 'API',
+      recipient_status: ['fulfield', 'rejected'],
+    },
+    {
+      sending_group_date: new Date(2021, 1, 10),
+      history_id: 1256345,
+      group_name: 'Group name',
+      send_method: 'API',
+      recipient_status: ['pending', 'fulfield'],
+    },
+    {
+      sending_group_date: new Date(2021, 12, 20),
+      history_id: 12336545,
+      group_name: 'Group name',
+      send_method: 'API',
+      recipient_status: ['fulfield', 'fulfield', 'fulfield', 'fulfield'],
     },
   ];
 

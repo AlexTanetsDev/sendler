@@ -1,11 +1,33 @@
-import Link from "next/link";
-import Image from "next/image";
-import formatTableDate from "@/app/utils/formatTableDate";
-import Title from "@/components/Title";
-import BackStatisticsBtn from "@/components/buttons/BackStatisticsBtn";
+'use client';
 
-export default function HistoryDetails() {
+import { useState, useCallback, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import formatTableDate from '@/app/utils/formatTableDate';
+import Title from '@/components/Title';
+import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
+import getUserHistoryDetails from '@/app/utils/getUserHistoryDetails';
+import { IHistoryResponce } from '@/globaltypes/historyTypes';
 
+export default function HistoryDetails({
+  params,
+}: {
+  params: { userId: string; historyId: string };
+}) {
+  const [userHistoryDetails, setUserHistoryDetails] = useState<IHistoryResponce[]>([]);
+
+  const userId = Number(params.userId);
+  const historyId = String(params.historyId);
+
+  const memoizedUserHistoryDetails = useCallback(async () => {
+    const userHistory: IHistoryResponce[] | undefined = await getUserHistoryDetails(historyId);
+
+    if (userHistory) setUserHistoryDetails(userHistory);
+  }, [historyId]);
+
+  useEffect(() => {
+    memoizedUserHistoryDetails();
+  }, [memoizedUserHistoryDetails]);
   return (
     <section className="container mx-auto">
       <Title type="h1" color="dark">
@@ -16,12 +38,7 @@ export default function HistoryDetails() {
           <div className="flex items-center gap-3 mb-5">
             <p className="text-xl font-roboto text-[#1B1B30]">Розсилки за</p>
             <Link href={`/statistics/`}>
-              <Image
-                src="/svg/excel.svg"
-                alt="Excel icon"
-                width={42}
-                height={42}
-              />
+              <Image src="/svg/excel.svg" alt="Excel icon" width={42} height={42} />
             </Link>
           </div>
           <BackStatisticsBtn>

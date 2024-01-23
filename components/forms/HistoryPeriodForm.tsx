@@ -2,12 +2,10 @@ type Props = {
   id: number | undefined;
 };
 
-export default async function HistoryPeriodForm() {
+export default function HistoryPeriodForm() {
   return (
     <div className="ml-[26px]">
-      <p className="mb-10 text-xl font-roboto text-[#1B1B30]">
-        Пріод відправки SMS
-      </p>
+      <p className="mb-10 text-xl font-roboto text-[#1B1B30]">Пріод відправки SMS</p>
       <form className="flex items-center gap-8 w-full mb-10">
         <input
           type="date"

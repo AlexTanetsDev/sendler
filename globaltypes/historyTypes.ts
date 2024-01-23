@@ -1,4 +1,4 @@
-import { IUserId, IGroupName } from "@/globaltypes/types";
+import { IUserId, IGroupName } from '@/globaltypes/types';
 
 export interface IHistoryId {
   history_id: number;
@@ -6,6 +6,10 @@ export interface IHistoryId {
 
 export interface IHistoryResponce extends IHistoryId, IGroupName {
   sending_group_date: Date;
+  send_method: string;
+  recipient_status: any;
+  text_sms?: string;
+  user_name?: string;
 }
 
 export interface IHistoryProps {
