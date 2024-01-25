@@ -5,13 +5,15 @@ import Image from "next/image";
 import React from "react";
 
 type LogOutButtonProps = {
-  onClick: () => void;
+  onClick?: () => void;
 };
 
 const LogOutButton: React.FC<LogOutButtonProps> = ({ onClick }) => {
 
   const handleLogOut = () => {
-    onClick();
+    if (onClick) {
+      onClick();
+    }
     signOut({ callbackUrl: "/" });
   };
 
