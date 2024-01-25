@@ -1,10 +1,11 @@
 'use client';
 
-import axios from 'axios';
-axios.defaults.baseURL = 'http://localhost:3000/';
-
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import axios from 'axios';
+axios.defaults.baseURL = 'http://localhost:3000/';
+import { toast } from 'react-toastify';
+
 import * as XLSX from 'xlsx/xlsx.mjs';
 
 import Title from '@/components/Title';
@@ -29,6 +30,15 @@ export default function UpdateGroupPage({ params }) {
         setNumberClients(clientsGroup.length);
       }
     } catch (error) {
+      toast.error(error.message + ' | ' + error.response.data.error, {
+        position: 'top-center',
+        style: {
+          width: '380px',
+          height: '220px',
+          fontSize: '24px',
+        },
+        theme: 'colored',
+      });
       console.log(error.message);
     }
   };

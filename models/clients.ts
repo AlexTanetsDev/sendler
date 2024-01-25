@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-import { IClient, IClientReq, IClientUpdateReq, ITel } from "@/globaltypes/types";
+import { IClient, IClientReq, IClientUpdateReq } from "@/globaltypes/types";
 
 export const schemaClient: Joi.ObjectSchema<IClient> = Joi.object({
 	tel: Joi.string()

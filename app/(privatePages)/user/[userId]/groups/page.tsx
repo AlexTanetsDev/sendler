@@ -5,6 +5,7 @@ axios.defaults.baseURL = "http://localhost:3000/";
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
+import { toast } from "react-toastify";
 
 import GroupsList from "@/components/groupsList";
 import CreateGroupForm from "@/components/forms/CreateGroupForm";
@@ -28,7 +29,17 @@ export default function ContactManagmentPage({ params }: { params: { userId: str
 				setGroups(data);
 			}
 		} catch (error: any) {
-			console.log(error.message + " | " + error.response);
+			toast.error(error.message + " | " + error.response.data.error,
+				{
+					position: 'top-center',
+					style: {
+						width: '380px',
+						height: '220px',
+						fontSize: '24px',
+					},
+					theme: 'colored'
+				})
+			console.log(error.message + " | " + error.response.data.error);
 		}
 	};
 

@@ -67,9 +67,12 @@ export interface IClientId {
 
 export interface IClientDatabase extends IClientId, IClient, IUserId {
 	ua_date_of_birth?: string;
+	total_count?: number;
 }
 
 export interface IGroup extends IGroupId, IGroupName, IUserId { }
+
+export interface IGroupData extends IClientDatabase, IGroupName { }
 
 export interface IUserChangePassword {
 	oldPassword: string;
@@ -130,7 +133,8 @@ export interface FormInputsSignUp {
 	login: string;
 	password: string;
 	repeatPassword: string;
-	phone: number;
+	contactPerson: string;
+	phone: string;
 	email: string;
 	name: string;
 };

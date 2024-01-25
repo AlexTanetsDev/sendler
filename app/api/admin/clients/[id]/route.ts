@@ -3,7 +3,6 @@ import { NextResponse, NextRequest } from "next/server";
 import HttpError from "@/helpers/HttpError";
 
 import {
-	updateClient,
 	deleteClient,
 	getClient
 } from "@/app/api/controllers/clients";

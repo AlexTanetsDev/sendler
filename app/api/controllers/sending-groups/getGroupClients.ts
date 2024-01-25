@@ -13,7 +13,7 @@ import {
 	IGroupName,
 } from "@/globaltypes/types";
 
-export default async function getGroupClients(groupId: number): Promise<{ group: string, clients: IClientDatabase[] } | null> {
+export default async function getGroupClients(groupId: number, limit: number | null, visible: number, filter?: string): Promise<{ groupName: string, clients: IClientDatabase[] } | null> {
 	try {
 		const groupsIdDatabaseRes: QueryResult<IGroupId> = await fetchAllGroupId();
 		const groupsIdDatabase: IGroupId[] = groupsIdDatabaseRes.rows;
@@ -28,9 +28,9 @@ export default async function getGroupClients(groupId: number): Promise<{ group:
 			return null
 		}
 
-		const groupClients: QueryResult<IClientDatabase> = await fetchGroupClients(groupId);
+		const groupClients: QueryResult<IClientDatabase> = await fetchGroupClients(groupId, limit, visible, filter);
 
-		return { group: groupName, clients: groupClients.rows };
+		return { groupName: groupName, clients: groupClients.rows };
 	} catch (error: any) {
 		throw new Error(error.message);
 	}

@@ -6,8 +6,9 @@ export const schemaCreateNewUser = Joi.object({
 		.email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
 		.required(),
 	user_name: Joi.string().required().min(3),
+	contact_person: Joi.string().required().min(3),
 	tel: Joi.string()
-		.pattern(/^\+\d{10,}$/)
+		.pattern(/^\d{10,}$/)
 		.required()
 		.messages({
 			"string.pattern.base":
