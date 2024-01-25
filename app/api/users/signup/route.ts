@@ -18,7 +18,7 @@ export async function POST(req: Request) {
 			);
 		}
 
-		const { user_login, tel, user_password, email, user_name } = value;
+		const { user_login, tel, user_password, email, user_name, contact_person } = value;
 
 		const hashedPassword = await hash(user_password, 10);
 
@@ -86,8 +86,8 @@ export async function POST(req: Request) {
 
 		//create new user
 		const newUser = await db.query(
-			"INSERT INTO users (user_login, tel, user_password, email, user_name, user_token) VALUES ($1, $2, $3, $4, $5,$6) RETURNING *",
-			[user_login, tel, hashedPassword, email, user_name, token]
+			"INSERT INTO users (user_login, tel, user_password, email, user_name, user_token, contact_person) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *",
+			[user_login, tel, hashedPassword, email, user_name, token, contact_person]
 		);
 
 		const userCreate = newUser.rows[0];

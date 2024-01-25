@@ -4,14 +4,15 @@ import React, { useState } from "react";
 
 import Modal from "./Modal/Modal";
 import GreenButton from "./buttons/GreenButton";
-import { ClientForm } from "./forms/ClientForm";
+import { CreateClientForm } from "./forms/CreateClientForm";
 
 interface Props {
 	groupId?: number;
-	getClients: () => void
+	updateClients: () => void;
+	getUpdate: () => void;
 };
 
-const AddClient = ({ groupId, getClients }: Props) => {
+const AddClient = ({ groupId, updateClients, getUpdate }: Props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const openModal = () => {
@@ -25,9 +26,18 @@ const AddClient = ({ groupId, getClients }: Props) => {
 	};
 	return (
 		<>
-			<GreenButton size="big" type="button" onClick={openModal} >Додати контакт</GreenButton>
+			<GreenButton
+				size="big"
+				type="button"
+				onClick={openModal} >
+				Додати контакт
+			</GreenButton>
 			<Modal isOpen={isModalOpen} onClose={closeModal}>
-				<ClientForm onClose={closeModal} getClients={getClients} groupId={groupId} title='Редагування групи' />
+				<CreateClientForm
+					onClose={closeModal}
+					updateClients={updateClients}
+					groupId={groupId}
+					getUpdate={getUpdate} title='Редагування групи' />
 			</Modal>
 		</>
 	);

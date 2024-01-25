@@ -45,7 +45,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 		);
 	}
 
-	const { userLogin, tel, email, password, newPassword } = value;
+	const { userLogin, tel, email, password, newPassword, contactPerson } = value;
 
 	const isUserActive = await userActive(id);
 
@@ -101,11 +101,12 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
 	const newHashedPassword = await bcrypt.hash(newPassword, 10);
 
-	await db.query("UPDATE users SET user_login = $1,  user_password = $2, tel = $3, email = $4 where user_id = $5", [
+	await db.query("UPDATE users SET user_login = $1,  user_password = $2, tel = $3, email = $4, contact_person = $5 where user_id = $6", [
 		userLogin,
 		newHashedPassword,
 		tel,
 		email,
+		contactPerson,
 		id,
 	]);
 

@@ -1,8 +1,8 @@
 'use client';
 
 import axios from "axios";
-
 import { useForm, SubmitHandler } from "react-hook-form";
+import { toast } from "react-toastify";
 
 import { schemaReqCreateGroup } from "@/models/sending-groups";
 
@@ -63,6 +63,16 @@ export default function CreateGroupForm({ id, getGroups }: Props) {
 			getGroups();
 			reset({ group_name: '' });
 		} catch (error: any) {
+			toast.error(error.message + " | " + error.response,
+				{
+					position: 'top-center',
+					style: {
+						width: '280px',
+						height: '120px',
+						fontSize: '18px',
+					},
+					theme: 'colored'
+				});
 			console.log(error.message + " | " + error.response)
 		}
 	}

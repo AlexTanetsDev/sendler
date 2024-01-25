@@ -20,15 +20,26 @@ import {
 import { schemaReqAddClient } from "@/models/clients";
 
 // get all clients for one user with user_id from search params
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest): Promise<NextResponse<{
+	error: string;
+}> | NextResponse<{
+	clients: IClient[];
+	message: string;
+}> | NextResponse<{
+	message: string;
+	error: any;
+}>> {
 
 	const { searchParams }: URL = new URL(request.url);
 	const userId = Number(searchParams.get("userId"));
+	const filter = String(searchParams.get("filter"));
+	const visible = Number(searchParams.get("visible"));
+	const limit = searchParams.get("limit") === null ? null : Number(searchParams.get("limit"));
 
 	//checking user_id existense
 	if (userId) {
 		try {
-			const res: null | IClient[] = await getUserClients(userId);
+			const res: null | IClient[] = await getUserClients(userId, filter, limit, visible);
 
 			if (res === null) {
 				return HttpError(400, `The user with id = ${userId} does not exist.`);
@@ -62,6 +73,7 @@ export async function POST(request: NextRequest, { params }: { params: { userId:
 	try {
 		const body: IQieryParamsCreateClient = await request.json();
 		const { error, value } = schemaReqAddClient.validate(body);
+		const { client, groupId, userId } = value;
 
 		if (error) {
 			return NextResponse.json(
@@ -70,7 +82,6 @@ export async function POST(request: NextRequest, { params }: { params: { userId:
 			);
 		}
 
-		const { client, groupId, userId } = value;
 		if (!client) {
 			return HttpError(400, `The client is empty`);
 		}

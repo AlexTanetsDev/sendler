@@ -16,36 +16,28 @@ DROP TABLE clients;
 
 DROP TABLE users;
 
-CREATE TYPE user_role AS ENUM ('admin', 'user', 'superAdmin');
+CREATE TYPE user_role AS ENUM('admin', 'user', 'superAdmin');
 
 CREATE TABLE
     users (
         user_id SERIAL PRIMARY KEY,
         user_login TEXT UNIQUE NOT NULL,
+				user_alfa_name TEXT UNIQUE NOT NULL,
         email TEXT NOT NULL,
         user_name TEXT NOT NULL,
         user_role text NOT NULL DEFAULT 'user':: character varying,
         user_active BOOLEAN DEFAULT true,
-        tel BIGINT NOT NULL,
+        tel TEXT UNIQUE NOT NULL,
         user_password TEXT NOT NULL,
+				contact_person TEXT UNIQUE NOT NULL,
         balance INT NOT NULL DEFAULT 0,
         user_token TEXT,
         user_create_date TIMESTAMP DEFAULT NOW():: timestamp
     );
 
-CREATE TABLE
-    clients (
-        client_id SERIAL,
-        tel TEXT NOT NULL,
-        user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
-        first_name TEXT,
-        middle_name TEXT,
-        last_name TEXT,
-        date_of_birth DATE,
-        parameter_1 TEXT,
-        parameter_2 TEXT,
-        PRIMARY KEY (client_id)
-    );
+CREATE TABLE clients (
+    client_id SERIAL, tel TEXT NOT NULL, user_id INT REFERENCES users (user_id) ON DELETE CASCADE, first_name TEXT, middle_name TEXT, last_name TEXT, date_of_birth DATE, parameter_1 TEXT, parameter_2 TEXT, PRIMARY KEY (client_id)
+);
 
 CREATE TABLE
     send_groups (
@@ -56,14 +48,11 @@ CREATE TABLE
         group_create_date TIMESTAMP DEFAULT NOW():: timestamp(0)
     );
 
-CREATE UNIQUE INDEX send_groups_group_id_idx ON send_groups(group_id);
+CREATE UNIQUE INDEX send_groups_group_id_idx ON send_groups (group_id);
 
-CREATE TABLE
-    groups_members(
-        group_id INT REFERENCES send_groups(group_id) ON DELETE CASCADE,
-        client_id INT REFERENCES clients(client_id) ON DELETE CASCADE,
-        PRIMARY KEY (group_id, client_id)
-    );
+CREATE TABLE groups_members (
+    group_id INT REFERENCES send_groups (group_id) ON DELETE CASCADE, client_id INT REFERENCES clients (client_id) ON DELETE CASCADE, PRIMARY KEY (group_id, client_id)
+);
 
 CREATE TABLE
     sending_history(
@@ -76,13 +65,11 @@ CREATE TABLE
 
 CREATE TYPE send_method_type AS ENUM('veb', 'api');
 
-CREATE TYPE status_type AS ENUM (
-    'pending',
-    'fullfield',
-    'rejected'
+CREATE TYPE status_type AS ENUM(
+    'pending', 'fullfield', 'rejected'
 );
 
-CREATE UNIQUE INDEX clients_client_id_idx ON clients(client_id);
+CREATE UNIQUE INDEX clients_client_id_idx ON clients (client_id);
 
 CREATE TABLE
     recipients_status(
@@ -105,28 +92,21 @@ CREATE TABLE
         transactions_date TIMESTAMP DEFAULT NOW():: timestamp(0)
     );
 
-CREATE TABLE
-    sms_identificators(
-        sms_id SERIAL,
-        history_id INT REFERENCES sending_history(history_id) ON DELETE CASCADE,
-        client_id INT REFERENCES clients(client_id),
-        identificator TEXT NOT NULL,
-        PRIMARY KEY (sms_id)
-    );
+CREATE TABLE sms_identificators (
+    sms_id SERIAL, history_id INT REFERENCES sending_history (history_id) ON DELETE CASCADE, client_id INT REFERENCES clients (client_id), identificator TEXT NOT NULL, PRIMARY KEY (sms_id)
+);
 
-SELECT
-    clients.client_id,
-    clients.tel
+SELECT clients.client_id, clients.tel
 FROM clients
-    JOIN groups_members ON groups_members.client_id = clients.client_id AND groups_members.group_id = 90;
+    JOIN groups_members ON groups_members.client_id = clients.client_id
+    AND groups_members.group_id = 90;
 
 INSERT INTO
     sms_identificators (
-        history_id,
-        client_id,
-        identificator
+        history_id, client_id, identificator
     )
-VALUES (5, 174, '12345'), (5, 174, '123456') RETURNING *
+VALUES (5, 174, '12345'),
+    (5, 174, '123456') RETURNING *
 
 update recipients_status
 set
@@ -136,4 +116,5 @@ set
         when 176 then 'rejected'
         else recipient_status
     end
-where history_id = 22;
+where
+    history_id = 22;

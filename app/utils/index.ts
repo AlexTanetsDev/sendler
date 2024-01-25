@@ -1,4 +1,5 @@
 export { default as fetchUserClientsTel } from "./fetchUserClientsTel";
+export { default as fetchAllUserClients } from "./fetchAllUserClients";
 export { default as insertNewGroup } from "./insertNewGroup";
 export { default as insertNewClient } from "./insertNewClient";
 export { default as insertNewClientInGroup } from "./insertNewClientInGroup";

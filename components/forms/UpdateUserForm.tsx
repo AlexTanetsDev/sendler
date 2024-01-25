@@ -1,17 +1,18 @@
 "use client";
 
+import { useState, useEffect, useCallback } from "react";
+import Image from "next/image";
+import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3000/";
+import { toast } from "react-toastify";
 
-// import { toast } from "react-toastify";
-import toast from "react-hot-toast";
-import { useForm, SubmitHandler } from "react-hook-form";
 
 import { validationSchemaUpdateUser } from "@/models/forms";
 import { FormInputUpdateUser } from "@/globaltypes/types";
 import GreenButton from "../buttons/GreenButton";
-import { useState, useEffect, useCallback } from "react";
-import Image from "next/image";
+
+
 
 interface Props {
 	userId: number | undefined
@@ -70,21 +71,16 @@ const UpdateUserForm = ({ userId }: Props) => {
 			const res = await axios.get(`/api/users/${user_id}`);
 			setUserState(res.data.user);
 		} catch (error: any) {
-			toast.error(error.message + " | " + error.response.data.message, {
-				duration: 3000,
-				position: 'top-center',
-				style: {
-					width: '280px',
-					height: '120px',
-					backgroundColor: '#ee3b3b',
-					color: 'white',
-					fontSize: '18px',
-				},
-				iconTheme: {
-					primary: 'white',
-					secondary: 'red',
-				},
-			})
+			toast.error(error.message + " | " + error.response.data.message,
+				{
+					position: 'bottom-center',
+					style: {
+						width: '380px',
+						height: '220px',
+						fontSize: '24px',
+					},
+					theme: 'colored'
+				});
 			console.log(error.message + " | " + error.response.data.message);
 		}
 	};
@@ -102,7 +98,7 @@ const UpdateUserForm = ({ userId }: Props) => {
 					userLogin: data.login,
 					password: data.password,
 					newPassword: data.newPassword,
-					// contactPerson: data.contactPerson,
+					contactPerson: data.contactPerson,
 					tel: data.phone,
 					email: data.email,
 				}
@@ -113,37 +109,27 @@ const UpdateUserForm = ({ userId }: Props) => {
 			console.log(res.data.message);
 			if (res) {
 				toast.success(res.data.message, {
-					duration: 3000,
-					position: 'top-center',
+					position: 'bottom-center',
+					autoClose: 3000,
 					style: {
-						width: '280px',
-						height: '120px',
-						backgroundColor: '#47a447',
-						color: 'white',
-						fontSize: '18px',
+						width: '380px',
+						height: '220px',
+						fontSize: '24px',
 					},
-					iconTheme: {
-						primary: 'white',
-						secondary: 'green',
-					},
+					theme: 'colored'
 				})
 			}
 		} catch (error: any) {
-			toast.error(error.message + " | " + error.response.data.message, {
-				duration: 3000,
-				position: 'top-center',
-				style: {
-					width: '280px',
-					height: '120px',
-					backgroundColor: '#ee3b3b',
-					color: 'white',
-					fontSize: '18px',
-				},
-				iconTheme: {
-					primary: 'white',
-					secondary: 'red',
-				},
-			})
+			toast.error(error.message + " | " + error.response.data.message,
+				{
+					position: 'bottom-center',
+					style: {
+						width: '380px',
+						height: '220px',
+						fontSize: '24px',
+					},
+					theme: 'colored'
+				})
 			console.log(error.message + " | " + error.response.data.message);
 		}
 

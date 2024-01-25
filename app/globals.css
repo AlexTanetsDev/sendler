@@ -104,12 +104,9 @@ footer {
   }
 }
 
-
 .burger-menu-overlay {
   animation: slideInLeft 0.5s ease-out;
-
 }
-
 
 .content-block {
   @apply w-full py-[50px] text-lg font-montserrat font-normal rounded-2xl bg-formBg;
@@ -141,7 +138,7 @@ footer {
 
 .input {
   @apply bg-white rounded-[18px];
-  @apply bg-white border border-inputBorder rounded-[18px];
+  @apply bg-white border border-inputBorder rounded-[18px] cursor-pointer;
 }
 
 .input:focus {
@@ -151,6 +148,7 @@ footer {
 
 .input_file {
   opacity: 0;
+  cursor: pointer;
 }
 
 .input__title {

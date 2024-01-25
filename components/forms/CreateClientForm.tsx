@@ -14,14 +14,22 @@ import { useSession } from "next-auth/react";
 
 interface Props {
 	onClose: (() => void) | undefined;
-	getClients: () => void,
+	updateClients: () => void,
+	getUpdate: () => void,
 	title?: string;
 	groupId?: number;
 	groupName?: string;
 	clientCurrent?: IClientDatabase;
 };
 
-const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, groupId }: Props) => {
+const CreateClientForm = ({
+	onClose,
+	updateClients,
+	getUpdate,
+	title,
+	groupName,
+	clientCurrent,
+	groupId }: Props) => {
 
 	const { data: session } = useSession();
 	const userId = session?.user.user_id;
@@ -63,42 +71,75 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 	});
 
 	const onSubmit: SubmitHandler<FormInputCreateClient> = async (data) => {
-		const clientData = {
-			tel: data.phone,
-			last_name: data.lastName,
-			first_name: data.firstName,
-			middle_name: data.middleName,
-			date_of_birth: `${data.day}.${data.month}.${data.year}`,
-			parameter_1: data.parameter1,
-			parameter_2: data.parameter2,
-		};
 
-		if (clientCurrent?.client_id) {
+		try {
+			const clientData = {
+				tel: data.phone,
+				last_name: data.lastName,
+				first_name: data.firstName,
+				middle_name: data.middleName,
+				date_of_birth: `${data.year}.${data.month}.${data.day}`,
+				parameter_1: data.parameter1,
+				parameter_2: data.parameter2,
+			};
 
-			await axios.put(`api/clients/${clientCurrent?.client_id}`,
+			if (clientCurrent?.client_id) {
+				const res = await axios.put(`api/clients/${clientCurrent?.client_id}`,
+					{
+						client: clientData,
+					},
+				);
+				toast.success(res.data.message, {
+					position: 'top-center',
+					autoClose: 3000,
+					style: {
+						width: '380px',
+						height: '220px',
+						fontSize: '24px',
+					},
+					theme: 'colored'
+				})
+				updateClients();
+				getUpdate();
+			} else {
+				const res = await axios.post(`api/clients`,
+					{
+						userId: userId,
+						groupId: Number(groupId),
+						client: clientData
+					},
+				);
+				toast.success(res.data.message, {
+					position: 'top-center',
+					autoClose: 3000,
+					style: {
+						width: '380px',
+						height: '220px',
+						fontSize: '24px',
+					},
+					theme: 'colored'
+				})
+				updateClients();
+				getUpdate();
+			}
+			reset();
+			{
+				onClose && onClose();
+			}
+		} catch (error: any) {
+			toast.error(error.message + " | " + error.response,
 				{
-					client: clientData,
-				},
-			);
-			getClients();
-		} else {
+					position: 'top-center',
+					style: {
+						width: '380px',
+						height: '220px',
+						fontSize: '24px',
+					},
+					theme: 'colored'
+				})
+			console.log(error.message + " | " + error.response);
+		}
 
-			await axios.post(`api/clients`,
-				{
-					userId: userId,
-					groupId: Number(groupId),
-					client: clientData
-				},
-			);
-			getClients();
-		}
-		reset();
-		{
-			onClose && onClose();
-		}
-		toast.success(
-			"Your submission has been received. We will respond to it as soon as possible."
-		);
 	};
 	return (
 		<form
@@ -280,4 +321,4 @@ const ClientForm = ({ onClose, getClients, title, groupName, clientCurrent, grou
 	);
 };
 
-export { ClientForm };
+export { CreateClientForm };

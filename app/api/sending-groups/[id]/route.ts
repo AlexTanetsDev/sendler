@@ -16,12 +16,16 @@ import { IQieryParamsUpdateGroup } from "./types";
 import { schemaReqUpdateGroup, schemaReqEditGroup } from '@/models/sending-groups';
 
 // get one group with id from params
-export async function GET(_request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }> | NextResponse<{ group: string, clients: IClient[] | NextResponse<{ error: string; }> }>> {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }> | NextResponse<{ group: string, clients: IClient[] | NextResponse<{ error: string; }> }>> {
 
+	const { searchParams }: URL = new URL(request.url);
 	const groupId = Number(params.id);
+	const filter = String(searchParams.get("filter"));
+	const visible = Number(searchParams.get("visible"));
+	const limit = searchParams.get("limit") === null ? null : Number(searchParams.get("limit"));
 
 	try {
-		const res: { group: string, clients: IClientDatabase[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId);
+		const res: { groupName: string, clients: IClientDatabase[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId, limit, visible, filter);
 
 		if (res === null) {
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
@@ -64,7 +68,11 @@ export async function DELETE(_request: NextRequest, { params }: { params: { id: 
 }
 
 //update one group with id from params
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: any; }> | NextResponse<string>> {
+export async function PUT(request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{
+	message: string;
+}> | NextResponse<{
+	error: any;
+}>> {
 
 	try {
 		const body: IQieryParamsUpdateGroup = await request.json();
@@ -97,7 +105,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
 		}
 
-		const resGet: { group: string, clients: IClient[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId);
+		const resGet: { groupName: string, clients: IClient[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId, null, 0);
 		// console.log('getGroupClients')
 
 		return NextResponse.json(
@@ -110,7 +118,11 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 };
 
 //edit one group with id from params
-export async function PATCH(request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: any; }> | NextResponse<string>> {
+export async function PATCH(request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{
+	message: string;
+}> | NextResponse<{
+	error: any;
+}>> {
 
 	try {
 		const body: IQieryParamsUpdateGroup = await request.json();
@@ -144,7 +156,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
 		}
 
-		const resGet: { group: string, clients: IClient[] } | null = await getGroupClients(groupId);
+		const resGet: { groupName: string, clients: IClient[] } | null = await getGroupClients(groupId, null, 0);
 
 		return NextResponse.json(
 			{ resGet, message: `The group is updated` },

@@ -106,7 +106,9 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 		}
 
 		const clientId = Number(params.id);
+
 		const res: QueryResult<IClient> = await updateClientData(client, clientId);
+
 
 		if (res === null) {
 			return HttpError(400, `The client with id = ${clientId} does not exist`);

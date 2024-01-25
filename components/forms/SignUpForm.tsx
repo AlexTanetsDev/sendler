@@ -12,6 +12,7 @@ import ShowPassword from '../buttons/ShowPassword';
 import { fetchUserId } from '@/helpers/fetchUserId';
 
 const SingUpForm = () => {
+
   const {
     register,
     handleSubmit,
@@ -40,9 +41,10 @@ const SingUpForm = () => {
     },
   });
 
-  const router = useRouter();
-  const [show, setShow] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
+	const router = useRouter();
+	const [show, setShow] = useState(false);
+	const [isDisabled, setIsDisabled] = useState(false);
+
 
   const onSubmit: SubmitHandler<FormInputsSignUp> = async data => {
     setIsDisabled(true);
@@ -80,8 +82,9 @@ const SingUpForm = () => {
       toast.error('Під час входу сталася помилка');
     }
 
-    setIsDisabled(false);
-  };
+
+		setIsDisabled(false);
+	};
 
   return (
     <form
@@ -191,6 +194,7 @@ const SingUpForm = () => {
       </GreenButton>
     </form>
   );
+
 };
 
 export { SingUpForm };

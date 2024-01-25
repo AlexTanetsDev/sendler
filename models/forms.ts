@@ -28,7 +28,7 @@ export const validationSchemaSignUp = Joi.object({
 			"any.only": "{{#label}} does not match",
 		}),
 	phone: Joi.string()
-		.pattern(/^\+\d{10,}$/)
+		.pattern(/^\d{10,}$/)
 		.required()
 		.messages({
 			"string.pattern.base":
@@ -38,6 +38,7 @@ export const validationSchemaSignUp = Joi.object({
 		.email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
 		.required(),
 	name: Joi.string().required().label("Name"),
+	contactPerson: Joi.string().required().label("Contact person"),
 });
 
 export const schemaLogin = Joi.object({
