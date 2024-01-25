@@ -40,7 +40,8 @@ export default function LoadMore({
 
 		if (visible <= clients.length + LIMIT)
 			if (groupId) {
-				const newContacts = (await getClients(userId, filter, LIMIT, visible, groupId)) ?? [];
+				const { clients } = (await getClients(userId, filter, LIMIT, visible, groupId)) ?? [];
+				const newContacts = clients;
 				setClients((prevClients: IClientDatabase[]) => [...prevClients, ...newContacts]);
 				setVisible(visible + LIMIT);
 			} else {
