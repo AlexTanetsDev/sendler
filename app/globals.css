@@ -343,17 +343,20 @@ input[type='checkbox']:checked + label:after {
   background-color: green;
 }
 
+.form-errors {
+  color: #e74a3b;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  display: block;
+  position: absolute;
+  bottom: -26px;
+  right: 0;
+}
 
-.form-errors{
-color: #E74A3B;
-text-align: center;
-font-family: Roboto;
-font-size: 14px;
-font-style: normal;
-font-weight: 400;
-line-height: normal;
-display: block;
-position: absolute;
-bottom: -26px;
-right: 0;
+.tHuMbY {
+  background-color: red;
 }
