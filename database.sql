@@ -60,7 +60,8 @@ CREATE TABLE
         group_id INT REFERENCES send_groups(group_id) ON DELETE CASCADE,
         sending_group_date TIMESTAMP DEFAULT NOW():: timestamp,
         PRIMARY KEY (history_id),
-        send_method send_method_type DEFAULT 'api'
+        send_method send_method_type DEFAULT 'api',
+				text_sms TEXT NOT NULL
     );
 
 CREATE TYPE send_method_type AS ENUM('veb', 'api');
@@ -94,6 +95,10 @@ CREATE TABLE
 
 CREATE TABLE sms_identificators (
     sms_id SERIAL, history_id INT REFERENCES sending_history (history_id) ON DELETE CASCADE, client_id INT REFERENCES clients (client_id), identificator TEXT NOT NULL, PRIMARY KEY (sms_id)
+);
+
+CREATE TABLE sendler_name (
+    alfa_name_id SERIAL, alfa_name TEXT NOT NULL, user_id INT REFERENCES users (user_id) ON DELETE CASCADE, PRIMARY KEY (alfa_name_id)
 );
 
 SELECT clients.client_id, clients.tel

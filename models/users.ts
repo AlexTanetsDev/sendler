@@ -43,7 +43,7 @@ export const schemaNewDateUser = Joi.object({
 		.min(8)
 		.max(20)
 		.pattern(new RegExp("^[a-zA-Z0-9]{3,30}$")),
-	// contactPerson: Joi.string().required(),
+	contactPerson: Joi.string().required(),
 });
 
 export const schemaUpdateUserPassword = Joi.object({

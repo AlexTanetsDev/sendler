@@ -2,6 +2,7 @@
 
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
+import RSC from "react-scrollbars-custom";
 
 import GreenButton from './buttons/GreenButton';
 import AddClient from './Addclient';
@@ -77,10 +78,10 @@ export default function ClientsList({
 				<p className="w-[150px]">Параметр 1</p>
 				<p>Параметр 2</p>
 			</div>
-			<form onSubmit={handleSubmit(onSubmit)}>
+			<form onSubmit={handleSubmit(onSubmit)} className='scroll-bar'>
 				<ul className='h-[400px] overflow-auto'>
 					{convertClients?.length ? (
-						<>
+						<RSC style={{ height: "100%" }}>
 							{convertClients.map(convertClient => (
 								<Client
 									key={convertClient.client_id}
@@ -101,7 +102,7 @@ export default function ClientsList({
 								LIMIT={LIMIT}
 								getUpdate={getUpdate}
 							/>
-						</>
+						</RSC>
 
 					) : (
 						<>
