@@ -38,7 +38,6 @@ export const validationSchemaSignUp = Joi.object({
 		.email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
 		.required(),
 	name: Joi.string().required().label("Name"),
-	contactPerson: Joi.string().required().label("Contact person"),
 });
 
 export const schemaLogin = Joi.object({

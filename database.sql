@@ -1,5 +1,6 @@
--- Active: 1701100937268@@194.28.86.87@5432@bsender
+-- Active: 1699360075140@@194.28.86.87@5432@bsender
 
+DROP TABLE sendler_name;
 DROP TABLE recipients_status;
 
 DROP TABLE transactions_history;
@@ -22,14 +23,12 @@ CREATE TABLE
     users (
         user_id SERIAL PRIMARY KEY,
         user_login TEXT UNIQUE NOT NULL,
-				user_alfa_name TEXT UNIQUE NOT NULL,
         email TEXT NOT NULL,
         user_name TEXT NOT NULL,
         user_role text NOT NULL DEFAULT 'user':: character varying,
         user_active BOOLEAN DEFAULT true,
         tel TEXT UNIQUE NOT NULL,
         user_password TEXT NOT NULL,
-				contact_person TEXT UNIQUE NOT NULL,
         balance INT NOT NULL DEFAULT 0,
         user_token TEXT,
         user_create_date TIMESTAMP DEFAULT NOW():: timestamp
@@ -98,7 +97,7 @@ CREATE TABLE sms_identificators (
 );
 
 CREATE TABLE sendler_name (
-    alfa_name_id SERIAL, alfa_name TEXT NOT NULL, user_id INT REFERENCES users (user_id) ON DELETE CASCADE, PRIMARY KEY (alfa_name_id)
+    alfa_name_id SERIAL, alfa_name TEXT NOT NULL DEFAULT 'Outlet', user_id INT REFERENCES users (user_id) ON DELETE CASCADE, PRIMARY KEY (alfa_name_id)
 );
 
 SELECT clients.client_id, clients.tel
