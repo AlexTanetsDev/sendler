@@ -5,7 +5,7 @@ import { useState, useCallback, useEffect } from 'react';
 import Title from '@/components/Title';
 import ClientsList from '@/components/ClientsList';
 import SearchClientForm from '@/components/forms/SearchClientForm';
-import getClients from '@/app/utils/getClients';
+import { getUserClients } from '@/fetch-actions/clientsActions';
 import convertClientsBirthdayFormat from '@/helpers/ConvertClientsBirsdayFormat';
 import { IClientDatabase } from '@/globaltypes/types';
 
@@ -19,7 +19,6 @@ export default function AllContactsUserPage({ params }: { params: { id: string, 
 	const convertClients = convertClientsBirthdayFormat(clients);
 
 	const userId = Number(params.userId);
-	const groupId = Number(params.id);
 
 	const getUpdate = () => {
 		setIsUpdated(!isUpdated)
@@ -33,21 +32,18 @@ export default function AllContactsUserPage({ params }: { params: { id: string, 
 		setFilter('');
 	};
 
-	const updateClients = async () => {
-		if (groupId) {
-			const res = await getClients(userId, filter, LIMIT, 0, groupId);
-			setClients(res);
-		} else {
-			const res = await getClients(userId, filter, LIMIT, 0);
+	const updateData = async () => {
+		const res = await getUserClients(userId, filter, LIMIT, 0);
+		if (res) {
 			setClients(res);
 		}
 	};
 
-	const memoizedUpdateStartClients = useCallback(updateClients, [filter, userId, groupId]);
+	const memoizedupdateData = useCallback(updateData, [filter, userId]);
 
 	useEffect(() => {
-		memoizedUpdateStartClients();
-	}, [memoizedUpdateStartClients, isUpdated])
+		memoizedupdateData();
+	}, [memoizedupdateData, isUpdated])
 
 	return (
 		<section className="container mx-auto">
@@ -69,7 +65,7 @@ export default function AllContactsUserPage({ params }: { params: { id: string, 
 					<ClientsList
 						filter={filter}
 						userId={userId}
-						updateClients={updateClients}
+						updateClients={updateData}
 						getUpdate={getUpdate}
 						convertClients={convertClients}
 						isUpdated={isUpdated}

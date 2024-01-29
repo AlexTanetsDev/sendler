@@ -5,14 +5,11 @@ import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
 import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3000/";
-import { toast } from "react-toastify";
-
 
 import { validationSchemaUpdateUser } from "@/models/forms";
 import { FormInputUpdateUser } from "@/globaltypes/types";
 import GreenButton from "../buttons/GreenButton";
-
-
+import { getUser, updateUser } from '@/fetch-actions/usersActions';
 
 interface Props {
 	userId: number | undefined
@@ -24,10 +21,10 @@ const UpdateUserForm = ({ userId }: Props) => {
 		user_login: '',
 		email: '',
 		tel: '',
+		user_name: ''
 	});
 
-	const { user_login, tel, email } = userState;
-	const user_id = userId;
+	const { user_login, tel, email, user_name } = userState;
 
 	const onClick = () => {
 		setIsOpen(isOpen => !isOpen);
@@ -66,72 +63,23 @@ const UpdateUserForm = ({ userId }: Props) => {
 		},
 	});
 
-	const getUser = async () => {
-		try {
-			const res = await axios.get(`/api/users/${user_id}`);
-			setUserState(res.data.user);
-		} catch (error: any) {
-			toast.error(error.message + " | " + error.response.data.message,
-				{
-					position: 'bottom-center',
-					style: {
-						width: '380px',
-						height: '220px',
-						fontSize: '24px',
-					},
-					theme: 'colored'
-				});
-			console.log(error.message + " | " + error.response.data.message);
-		}
-	};
+	const getData = async () => {
+		const res = await getUser(userId);
+		if (res) { setUserState(res.data.user); }
+	}
 
-	const memoizedGetUser = useCallback(getUser, [user_id]);
+	const memoizedgetData = useCallback(getData, [userId]);
 
 	useEffect(() => {
-		memoizedGetUser();
-	}, [memoizedGetUser]);
+		memoizedgetData();
+	}, [memoizedgetData]);
 
 	const onSubmit: SubmitHandler<FormInputUpdateUser> = async (data) => {
-		try {
-			const res = await axios.put(`api/users/${user_id}`,
-				{
-					userLogin: data.login,
-					password: data.password,
-					newPassword: data.newPassword,
-					contactPerson: data.contactPerson,
-					tel: data.phone,
-					email: data.email,
-				}
-			);
-			getUser();
-			reset();
-			setIsOpen(false);
-			console.log(res.data.message);
-			if (res) {
-				toast.success(res.data.message, {
-					position: 'bottom-center',
-					autoClose: 3000,
-					style: {
-						width: '380px',
-						height: '220px',
-						fontSize: '24px',
-					},
-					theme: 'colored'
-				})
-			}
-		} catch (error: any) {
-			toast.error(error.message + " | " + error.response.data.message,
-				{
-					position: 'bottom-center',
-					style: {
-						width: '380px',
-						height: '220px',
-						fontSize: '24px',
-					},
-					theme: 'colored'
-				})
-			console.log(error.message + " | " + error.response.data.message);
-		}
+
+		await updateUser(userId, data.login, data.password, data.newPassword, data.userName, data.phone, data.email);
+		getData();
+		reset();
+		setIsOpen(false);
 
 	};
 	return (
@@ -223,7 +171,7 @@ const UpdateUserForm = ({ userId }: Props) => {
 						</div>
 
 						<label
-							htmlFor="contactPerson"
+							htmlFor="userName"
 							className="font-roboto text-sm font-medium mb-2  mt-8 block"
 						>
 							Контактна особа
@@ -231,15 +179,16 @@ const UpdateUserForm = ({ userId }: Props) => {
 						</label>
 						<div className="relative">
 							<input
-								id="contactPerson"
+								id="userName"
 								type="text"
-								{...register("contactPerson")}
+								defaultValue={user_name && user_name}
+								{...register("userName")}
 								className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
 								placeholder="Менеджер Петренко"
 								required
 							/>
-							{errors.contactPerson && (
-								<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.contactPerson.message}</span>
+							{errors.userName && (
+								<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.userName.message}</span>
 							)}
 						</div>
 

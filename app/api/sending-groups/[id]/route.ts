@@ -16,7 +16,18 @@ import { IQieryParamsUpdateGroup } from "./types";
 import { schemaReqUpdateGroup, schemaReqEditGroup } from '@/models/sending-groups';
 
 // get one group with id from params
-export async function GET(request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }> | NextResponse<{ group: string, clients: IClient[] | NextResponse<{ error: string; }> }>> {
+export async function GET(request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{
+	error: string;
+}> | NextResponse<{
+	res: {
+		groupName: string;
+		clients: IClientDatabase[];
+	};
+	message: string;
+}> | NextResponse<{
+	message: string;
+	error: any;
+}>> {
 
 	const { searchParams }: URL = new URL(request.url);
 	const groupId = Number(params.id);
@@ -26,7 +37,6 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 
 	try {
 		const res: { groupName: string, clients: IClientDatabase[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId, limit, visible, filter);
-
 		if (res === null) {
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
 		}
@@ -159,7 +169,7 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 		const resGet: { groupName: string, clients: IClient[] } | null = await getGroupClients(groupId, null, 0);
 
 		return NextResponse.json(
-			{ resGet, message: `The group is updated` },
+			{ resGet, message: `Clients were deleted` },
 			{ status: 200 }
 		);
 	} catch (error: any) {

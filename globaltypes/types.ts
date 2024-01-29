@@ -185,7 +185,7 @@ export interface FormInputUpdateUser {
 	login: string;
 	password: string;
 	newPassword: string;
-	contactPerson: string;
+	userName: string;
 	phone: number;
 	email: string;
 };

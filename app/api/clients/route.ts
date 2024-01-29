@@ -14,7 +14,7 @@ import { IQieryParamsCreateClient } from "./types";
 import {
 	ITel,
 	ErrorCase,
-	IClient
+	IClientDatabase
 } from "@/globaltypes/types";
 
 import { schemaReqAddClient } from "@/models/clients";
@@ -23,7 +23,7 @@ import { schemaReqAddClient } from "@/models/clients";
 export async function GET(request: NextRequest): Promise<NextResponse<{
 	error: string;
 }> | NextResponse<{
-	clients: IClient[];
+	clients: IClientDatabase[];
 	message: string;
 }> | NextResponse<{
 	message: string;
@@ -39,7 +39,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<{
 	//checking user_id existense
 	if (userId) {
 		try {
-			const res: null | IClient[] = await getUserClients(userId, filter, limit, visible);
+			const res: null | IClientDatabase[] = await getUserClients(userId, filter, limit, visible);
 
 			if (res === null) {
 				return HttpError(400, `The user with id = ${userId} does not exist.`);

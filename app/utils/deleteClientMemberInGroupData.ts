@@ -1,5 +1,5 @@
 import db from "@/db";
-import { IClientId, IGroupId } from "@/globaltypes/types";
+import { IClientId } from "@/globaltypes/types";
 
 export default async function deleteGroupMembersData(clientId: IClientId, groupId: number): Promise<void> {
 

@@ -3,12 +3,13 @@
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import RSC from "react-scrollbars-custom";
+import toast from "react-hot-toast";
 
 import GreenButton from './buttons/GreenButton';
 import AddClient from './Addclient';
 import Client from './Client';
-import deleteClients from '@/app/utils/deleteClients';
-import deleteGroupClients from '@/app/utils/deleteGroupClients';
+import { deleteClients } from '@/fetch-actions/clientsActions';
+import { deleteGroupClients } from '@/fetch-actions/clientsActions';
 import { IClientDatabase } from '@/globaltypes/types';
 import LoadMore from './LoadMore';
 
@@ -55,6 +56,7 @@ export default function ClientsList({
 		}
 
 		if (groupId) {
+
 			await deleteGroupClients(groupId, deletedClientsId);
 			setIsSelected(0);
 			updateClients();
@@ -66,7 +68,6 @@ export default function ClientsList({
 			getUpdate();
 		}
 		reset();
-
 	};
 
 	return (
