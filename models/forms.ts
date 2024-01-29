@@ -92,5 +92,5 @@ export const validationSchemaUpdateUser = Joi.object({
 	email: Joi.string()
 		.email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
 		.required(),
-	contactPerson: Joi.string().required(),
+	userName: Joi.string().required(),
 });

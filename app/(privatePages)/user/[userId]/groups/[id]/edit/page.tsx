@@ -5,7 +5,7 @@ import { useState, useCallback, useEffect, } from "react";
 import Title from "@/components/Title";
 import ClientsList from "@/components/ClientsList";
 import SearchClientForm from "@/components/forms/SearchClientForm";
-import getClients from '@/app/utils/getClients';
+import { getGroupClientsAndGroupName } from "@/fetch-actions/clientsActions";
 import convertClientsBirthdayFormat from '@/helpers/ConvertClientsBirsdayFormat';
 import { IGroupId, IUserId, IClientDatabase } from "@/globaltypes/types";
 
@@ -34,23 +34,20 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId, user
 		setFilter('');
 	};
 
-	const updateClients = async () => {
-		if (groupId) {
-			const res = await getClients(userId, filter, LIMIT, 0, groupId);
+	const updateData = async () => {
+		const res = await getGroupClientsAndGroupName(groupId, filter, LIMIT, 0);
+		if (res) {
 			const { clients, groupName } = res;
 			setClients(clients);
 			setGroupName(groupName);
-		} else {
-			const res = await getClients(userId, filter, LIMIT, 0);
-			setClients(res);
 		}
 	};
 
-	const memoizedUpdateStartClients = useCallback(updateClients, [filter, userId, groupId]);
+	const memoizedupdateData = useCallback(updateData, [filter, groupId]);
 
 	useEffect(() => {
-		memoizedUpdateStartClients();
-	}, [memoizedUpdateStartClients, isUpdated])
+		memoizedupdateData();
+	}, [memoizedupdateData, isUpdated])
 
 	return (
 		<section className="container mx-auto">
@@ -65,7 +62,7 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId, user
 						groupId={groupId}
 						filter={filter}
 						userId={userId}
-						updateClients={updateClients}
+						updateClients={updateData}
 						getUpdate={getUpdate}
 						convertClients={convertClients}
 						isUpdated={isUpdated}

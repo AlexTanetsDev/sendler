@@ -4,7 +4,8 @@ import { useCallback, useEffect, useState } from "react";
 import { useInView } from "react-intersection-observer";
 
 import Client from './Client';
-import getClients from "@/app/utils/getClients";
+import { getGroupClientsAndGroupName } from "@/fetch-actions/clientsActions";
+import { getUserClients } from '@/fetch-actions/clientsActions';
 import convertClientsBirthdayFormat from '@/helpers/ConvertClientsBirsdayFormat';
 
 import { IClientDatabase } from "@/globaltypes/types";
@@ -40,12 +41,12 @@ export default function LoadMore({
 
 		if (visible <= clients.length + LIMIT)
 			if (groupId) {
-				const { clients } = (await getClients(userId, filter, LIMIT, visible, groupId)) ?? [];
+				const { clients } = (await getGroupClientsAndGroupName(groupId, filter, LIMIT, visible)) ?? [];
 				const newContacts = clients;
 				setClients((prevClients: IClientDatabase[]) => [...prevClients, ...newContacts]);
 				setVisible(visible + LIMIT);
 			} else {
-				const newContacts = (await getClients(userId, filter, LIMIT, visible)) ?? [];
+				const newContacts = (await getUserClients(userId, filter, LIMIT, visible)) ?? [];
 				setClients((prevClients: IClientDatabase[]) => [...prevClients, ...newContacts]);
 				setVisible(visible + LIMIT);
 			}

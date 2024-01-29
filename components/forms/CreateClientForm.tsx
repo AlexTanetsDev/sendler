@@ -2,9 +2,8 @@
 
 import axios from "axios";
 
-import { toast } from "react-toastify";
+import toast from "react-hot-toast";
 import { useForm, SubmitHandler } from "react-hook-form";
-import Image from "next/image";
 
 import { validationSchemaCreateClient } from "@/models/forms";
 import { FormInputCreateClient, IClientDatabase } from "@/globaltypes/types";
@@ -90,14 +89,16 @@ const CreateClientForm = ({
 					},
 				);
 				toast.success(res.data.message, {
-					position: 'top-center',
-					autoClose: 3000,
+					duration: 3000,
+					position: 'bottom-center',
+					className: 'toast_success',
 					style: {
-						width: '380px',
-						height: '220px',
+						backgroundColor: '#0F3952',
+						color: "lightgreen",
 						fontSize: '24px',
-					},
-					theme: 'colored'
+						borderColor: 'green',
+						marginBottom: '20%'
+					}
 				})
 				updateClients();
 				getUpdate();
@@ -110,14 +111,16 @@ const CreateClientForm = ({
 					},
 				);
 				toast.success(res.data.message, {
-					position: 'top-center',
-					autoClose: 3000,
+					duration: 3000,
+					position: 'bottom-center',
+					className: 'toast_success',
 					style: {
-						width: '380px',
-						height: '220px',
+						backgroundColor: '#0F3952',
+						color: "lightgreen",
 						fontSize: '24px',
-					},
-					theme: 'colored'
+						borderColor: 'green',
+						marginTop: '20%'
+					}
 				})
 				updateClients();
 				getUpdate();
@@ -127,16 +130,17 @@ const CreateClientForm = ({
 				onClose && onClose();
 			}
 		} catch (error: any) {
-			toast.error(error.message + " | " + error.response,
+			toast.error(error.message + " | " + error.response.data.error,
 				{
-					position: 'top-center',
+					position: 'bottom-center',
+					className: 'toast_error',
 					style: {
-						width: '380px',
-						height: '220px',
+						backgroundColor: '#0F3952',
+						color: "#fa9c9c",
 						fontSize: '24px',
-					},
-					theme: 'colored'
-				})
+						marginBottom: '20%'
+					}
+				});
 			console.log(error.message + " | " + error.response);
 		}
 
