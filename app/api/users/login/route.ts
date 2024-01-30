@@ -7,6 +7,7 @@ import { compare } from "bcrypt";
 
 import { generateToken } from "@/helpers/Users";
 
+
 // login User
 
 export async function POST(req: Request) {
@@ -58,7 +59,8 @@ export async function POST(req: Request) {
 					[user_id]
 				);
 
-				const { user_password: disible, ...rest } = userWithToken.rows[0];
+				const { user_password: disible, email: hiddenEmail, tel: hiddenTel, user_token:hiddenTokenclear,  ...rest } = userWithToken.rows[0];
+				
 				const cookie = serialize("token", token, {
 					httpOnly: true,
 					maxAge: 60 * 60 * 24, // Термін життя, наприклад, 24 години

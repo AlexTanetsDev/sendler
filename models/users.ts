@@ -3,11 +3,11 @@ import Joi from "joi";
 export const schemaCreateNewUser = Joi.object({
 	user_login: Joi.string().required().min(3),
 	email: Joi.string()
-		.email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })
+		.email({ tlds: { allow: false } })
 		.required(),
 	user_name: Joi.string().required().min(3),
 	tel: Joi.string()
-		.pattern(/^\d{10,}$/)
+		.pattern(/^\d{13,}$/)
 		.required()
 		.messages({
 			"string.pattern.base":

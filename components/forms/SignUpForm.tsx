@@ -10,9 +10,10 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 import ShowPassword from '../buttons/ShowPassword';
 import { fetchUserId } from '@/helpers/fetchUserId';
+import { handleKeyPress } from '@/helpers/EnterOnlyFigures';
+import axios from 'axios';
 
 const SingUpForm = () => {
-
   const {
     register,
     handleSubmit,
@@ -41,30 +42,23 @@ const SingUpForm = () => {
     },
   });
 
-	const router = useRouter();
-	const [show, setShow] = useState(false);
-	const [isDisabled, setIsDisabled] = useState(false);
-
+  const router = useRouter();
+  const [show, setShow] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(false);
 
   const onSubmit: SubmitHandler<FormInputsSignUp> = async data => {
     setIsDisabled(true);
+
     try {
-      const res = await fetch('http://localhost:3000/api/users/signup', {
-        method: 'POST',
-        body: JSON.stringify({
-          email: data.email,
-          user_login: data.login,
-          user_password: data.password,
-          tel: data.phone,
-          user_name: data.name,
-        }),
+      const res = await axios.post('/api/users/signup', {
+        email: data.email,
+        user_login: data.login,
+        user_password: data.password,
+        tel: `380${data.phone}`,
+        user_name: data.name,
       });
-      if (!res.ok) {
-        toast.error(
-          'Користувач із таким іменем або логіном, номером телефону чи електронною адресою вже існує'
-        );
-      }
-      if (res && res.ok) {
+
+      if (res.data.users.length !== 0) {
         const userId = await fetchUserId(data.login);
 
         const credentialsRes = await signIn('credentials', {
@@ -72,20 +66,18 @@ const SingUpForm = () => {
           password: data.password,
           redirect: false,
         });
+
         if (credentialsRes && !credentialsRes.error) {
           router.push(`/user/${userId}/mailing-list`);
           toast.success(`Ласкаво просимо ${data.login}`);
         }
       }
-    } catch (error) {
-      console.error('Помилка входу:', error);
-      toast.error('Під час входу сталася помилка');
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message);
     }
 
-
-		setIsDisabled(false);
-	};
-
+    setIsDisabled(false);
+  };
   return (
     <form
       autoComplete="off"
@@ -113,12 +105,13 @@ const SingUpForm = () => {
           Телефон<span className=" text-redStar">*</span>
         </label>
         <div className="flex relative">
+          <span className="absolute left-3 top-[9px]">+380</span>
           <input
             id="phone"
-            type="text"
+            type="tel"
+            onKeyPress={handleKeyPress}
             {...register('phone')}
-            className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 rounded-[18px] input"
-            placeholder="+3801234567"
+            className="w-full border py-2 pr-11 pl-[50px] focus:outline-none focus:border-blue-500 rounded-[18px] input"
             required
           />
           {errors.phone && <span className="form-errors block">{errors.phone.message}</span>}
@@ -194,7 +187,6 @@ const SingUpForm = () => {
       </GreenButton>
     </form>
   );
-
 };
 
 export { SingUpForm };
