@@ -1,15 +1,14 @@
 'use client';
 
-import axios from 'axios';
-axios.defaults.baseURL = 'http://localhost:3000/';
-
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import * as XLSX from 'xlsx/xlsx.mjs';
+import Image from 'next/image';
 
 import Title from '@/components/Title';
 import GreenButton from '@/components/buttons/GreenButton';
-import Image from 'next/image';
+import { getGroupClientsAndGroupName } from '@/fetch-actions/clientsActions';
+import updateGroup from '@/fetch-actions/updateGroup';
 
 export default function UpdateGroupPage({ params }) {
   const userId = Number(params.userId);
@@ -19,25 +18,22 @@ export default function UpdateGroupPage({ params }) {
   const [groupName, setGroupName] = useState('');
   const [numberClients, setNumberClients] = useState(0);
 
-  const getGroupName = async () => {
-    try {
-      if (groupId) {
-        const res = await axios.get(`api/sending-groups/${groupId}`);
-        const group = res.data.res.group;
-        const clientsGroup = res.data.res.clients;
-        setGroupName(group);
-        setNumberClients(clientsGroup.length);
+  const getData = async () => {
+    if (groupId) {
+      const res = await getGroupClientsAndGroupName(groupId, '', null, 0);
+      if (res) {
+        const { groupName, clients } = res;
+        setGroupName(groupName);
+        setNumberClients(clients.length);
       }
-    } catch (error) {
-      console.log(error.message);
     }
   };
 
-  const memoizedGetClients = useCallback(getGroupName, [groupId]);
+  const memoizedgetgetData = useCallback(getData, [groupId]);
 
   useEffect(() => {
-    memoizedGetClients();
-  }, [memoizedGetClients]);
+    memoizedgetgetData();
+  }, [memoizedgetgetData]);
 
   const handleFileChange = e => {
     setFile(e.target.files[0]);
@@ -50,16 +46,8 @@ export default function UpdateGroupPage({ params }) {
       const wsname = wb.SheetNames[0];
       const clients = XLSX.utils.sheet_to_json(wb.Sheets[wsname]);
 
-      try {
-        const res = await axios.put(`api/sending-groups/${groupId}`, {
-          clients: clients,
-          cache: 'no-store',
-        });
-        console.log(res.data.message);
-        router.push(`/user/${userId}/groups`);
-      } catch (error) {
-        console.log(error.message + ' | ' + error.response.data.error);
-      }
+      await updateGroup(clients, groupId);
+      router.push(`/user/${userId}/groups`);
     } else {
       console.log('Please, select a file!');
     }

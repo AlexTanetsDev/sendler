@@ -7,10 +7,11 @@ import { QueryResult } from "pg";
 import {
 	IUserId,
 	IClient,
+	IClientDatabase,
 } from "@/globaltypes/types";
 
 // get all groups for one user by user ID
-export default async function getUserClients(userId: number): Promise<IClient[] | null> {
+export default async function getUserClients(userId: number, filter: string, limit: number | null, visible: number): Promise<IClientDatabase[] | null> {
 	try {
 		const usersIdRes: QueryResult<IUserId> = await fetchUsersId();
 		const usersIdInDatabase = usersIdRes.rows;
@@ -19,7 +20,7 @@ export default async function getUserClients(userId: number): Promise<IClient[] 
 			return null;
 		};
 
-		const clients: QueryResult<IClient> = await fetchUserClients(userId);
+		const clients: QueryResult<IClientDatabase> = await fetchUserClients(userId, filter, limit, visible);
 
 		return clients.rows;
 	} catch (error: any) {

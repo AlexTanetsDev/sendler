@@ -4,30 +4,45 @@ import React, { useState } from "react";
 
 import Modal from "./Modal/Modal";
 import GreenButton from "./buttons/GreenButton";
-import { ClientForm } from "./forms/ClientForm";
+import { CreateClientForm } from "./forms/CreateClientForm";
 
 interface Props {
 	groupId?: number;
-	getClients: () => void
+	updateClients: () => void;
+	getUpdate: () => void;
 };
 
-const AddClient = ({ groupId, getClients }: Props) => {
+const AddClient = ({ groupId, updateClients, getUpdate }: Props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isDisabled, setIsDisabled] = useState(false);
 
 	const openModal = () => {
 		setIsModalOpen(true);
+		setIsDisabled(true);
 		document.body.classList.add('overflow-hidden');
 	};
 
 	const closeModal = () => {
 		setIsModalOpen(false);
+		setIsDisabled(false);
 		document.body.classList.remove('overflow-hidden');
 	};
 	return (
 		<>
-			<GreenButton size="big" type="button" onClick={openModal} >Додати контакт</GreenButton>
+			<GreenButton
+				size="big"
+				type="button"
+				onClick={openModal}
+				isDisabled={isDisabled}
+			>
+				Додати контакт
+			</GreenButton>
 			<Modal isOpen={isModalOpen} onClose={closeModal}>
-				<ClientForm onClose={closeModal} getClients={getClients} groupId={groupId} title='Редагування групи' />
+				<CreateClientForm
+					onClose={closeModal}
+					updateClients={updateClients}
+					groupId={groupId}
+					getUpdate={getUpdate} title='Редагування групи' />
 			</Modal>
 		</>
 	);

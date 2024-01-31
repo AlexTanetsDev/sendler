@@ -6,7 +6,7 @@ import {
 	fetchAllGroupId,
 	deleteGroupMembersData,
 	fetchGroupUserId,
-	fetchUserClients,
+	fetchAllUserClients,
 } from "@/app/utils";
 
 import { QueryResult } from "pg";
@@ -17,7 +17,6 @@ import {
 	IClientDatabase,
 } from "@/globaltypes/types";
 import updateClientData from "@/app/utils/updateClientData";
-import { number } from "joi";
 
 export default async function updateGroup(clients: IClient[], groupId: number, method: string): Promise<null | NextResponse<{
 	error: string;
@@ -44,7 +43,7 @@ export default async function updateGroup(clients: IClient[], groupId: number, m
 
 		const userId = userIdRes.rows[0].user_id;
 
-		const userClientsRes: QueryResult<IClientDatabase> = await fetchUserClients(userId);
+		const userClientsRes: QueryResult<IClientDatabase> = await fetchAllUserClients(userId, '');
 
 		//checking whether a client exists in the user's client list
 		//and adding client
@@ -54,8 +53,6 @@ export default async function updateGroup(clients: IClient[], groupId: number, m
 			const { tel } = client;
 
 			const userClient = userClients.find(userClient => userClient.tel === tel);
-
-
 
 			if (userClient) {
 				const res = await updateClientData(client, userClient.client_id,);

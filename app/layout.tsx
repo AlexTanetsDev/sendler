@@ -18,13 +18,14 @@ export default function RootLayout({
 }: {
 	children: React.ReactNode;
 }) {
+
 	return (
 		<html lang="en">
 			<body className="flex flex-col items-center min-h-screen">
 				<Providers>
+					<Toaster />
 					<ToastProvider>
 						<Header />
-						<Toaster />
 						{children}
 						<Footer />
 						<BackToTopBtn />

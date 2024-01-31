@@ -104,12 +104,9 @@ footer {
   }
 }
 
-
 .burger-menu-overlay {
   animation: slideInLeft 0.5s ease-out;
-
 }
-
 
 .content-block {
   @apply w-full py-[50px] text-lg font-montserrat font-normal rounded-2xl bg-formBg;
@@ -135,6 +132,10 @@ footer {
   @apply w-[110px] py-[3px] hover:bg-blueHoverBtn hover:text-white hover:border-transparent text-base  text-center font-roboto font-normal border border-headerTable rounded-xl;
 }
 
+.row-table-disable__btn {
+  @apply w-[110px] py-[3px]  text-base  text-center text-rowBtnDisableText font-roboto font-normal border border-rowBtnDisableBorder rounded-xl;
+}
+
 .inputs-box {
   @apply w-[526px] mx-auto p-[26px] bg-formBg rounded-[18px];
 }
@@ -151,6 +152,7 @@ footer {
 
 .input_file {
   opacity: 0;
+  cursor: pointer;
 }
 
 .input__title {
@@ -159,6 +161,36 @@ footer {
 
 .input__lable {
   @apply text-xs font-roboto font-medium;
+}
+
+.input-visible {
+  transform: translateY(0);
+  -webkit-transition: -webkit-transform 200ms;
+  transition: transform 200ms;
+}
+
+.input-hidden {
+  transform: translateY(120%);
+  -webkit-transition: -webkit-transform 400ms;
+  transition: transform 400ms;
+}
+
+.form-hidden {
+  height: 85px;
+  -webkit-transition: height 1s;
+  transition: height;
+  transition-duration: 150ms;
+  transition-delay: 150ms;
+  transition-timing-function: linear;
+}
+
+.form-visible {
+  height: 815px;
+  -webkit-transition: height 1s;
+  transition: height;
+  transition-duration: 200ms;
+  transition-delay: 200ms;
+  transition-timing-function: linear;
 }
 
 .title_hero {
@@ -343,4 +375,22 @@ input[type='checkbox']:checked + label:after {
 
 .toast-success {
   background-color: green;
+}
+
+.form-errors {
+  color: #e74a3b;
+  text-align: center;
+  font-family: Roboto;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: normal;
+  display: block;
+  position: absolute;
+  bottom: -26px;
+  right: 0;
+}
+
+.tHuMbY {
+  background-color: red;
 }

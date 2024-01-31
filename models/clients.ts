@@ -1,6 +1,6 @@
 import Joi from "joi";
 
-import { IClient, IClientReq, IClientUpdateReq, ITel } from "@/globaltypes/types";
+import { IClient, IClientReq, IClientUpdateReq } from "@/globaltypes/types";
 
 export const schemaClient: Joi.ObjectSchema<IClient> = Joi.object({
 	tel: Joi.string()
@@ -51,5 +51,8 @@ export const schemaReqClientUpdate: Joi.ObjectSchema<IClientUpdateReq> = Joi.obj
 });
 
 export const schemaSearchClient: Joi.ObjectSchema<number> = Joi.object({
-	tel: Joi.string()
+	tel: Joi.string().pattern(/^\d{12,}$/).messages({
+		"string.pattern.base":
+			'Phone number must start with "+" and have at least 10 digits',
+	})
 })

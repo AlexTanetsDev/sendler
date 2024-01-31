@@ -1,35 +1,29 @@
 "use client";
 
-import axios from "axios";
-
 import { useState, useCallback, useEffect, } from "react";
 
 import Title from "@/components/Title";
 import ClientsList from "@/components/ClientsList";
 import SearchClientForm from "@/components/forms/SearchClientForm";
-import { IClientDatabase, IGroupId } from "@/globaltypes/types";
+import { getGroupClientsAndGroupName } from "@/fetch-actions/clientsActions";
+import convertClientsBirthdayFormat from '@/helpers/ConvertClientsBirsdayFormat';
+import { IGroupId, IUserId, IClientDatabase } from "@/globaltypes/types";
 
-export default function EditGroupPage({ params }: { params: { id: IGroupId } }) {
+const LIMIT = 10;
 
-	const [clients, setClients] = useState([]);
+export default function EditGroupPage({ params }: { params: { id: IGroupId, userId: IUserId } }) {
+
 	const [groupName, setGroupName] = useState('');
 	const [filter, setFilter] = useState('');
+	const [isUpdated, setIsUpdated] = useState(false);
+	const [clients, setClients] = useState<IClientDatabase[] | undefined>([]);
+	const convertClients = convertClientsBirthdayFormat(clients);
 
 	const groupId = Number(params.id);
+	const userId = Number(params.userId);
 
-	const getClients = async () => {
-		try {
-			if (groupId) {
-				const response = await axios.get(`api/sending-groups/${groupId}`);
-				const group: string = response.data.res.group;
-				const clientsGroup = response.data.res.clients;
-
-				setClients(clientsGroup);
-				setGroupName(group);
-			}
-		} catch (error: any) {
-			console.log(error.message);
-		}
+	const getUpdate = () => {
+		setIsUpdated(!isUpdated);
 	};
 
 	const getFilter = (e: any) => {
@@ -40,40 +34,20 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId } }) 
 		setFilter('');
 	};
 
-	const memoizedGetClients = useCallback(getClients, [groupId]);
-
-	const filteredClients = () => {
-		const filteredArray: IClientDatabase[] = [];
-		clients.map(client => {
-			const { tel } = client;
-			if (String(tel).includes(filter)) {
-				filteredArray.push(client);
-			};
+	const updateData = async () => {
+		const res = await getGroupClientsAndGroupName(groupId, filter, LIMIT, 0);
+		if (res) {
+			const { clients, groupName } = res;
+			setClients(clients);
+			setGroupName(groupName);
 		}
-		);
-		return filteredArray;
 	};
 
-	const deleteClients = async (groupId: number | undefined, clientsId: number[]) => {
-
-		if (groupId && clientsId.length > 0) {
-
-			try {
-				const res = await axios.patch(`api/sending-groups/${groupId}`, {
-					clients: clientsId,
-				});
-				const { clients } = res.data.resGet
-				setClients(clients);
-				console.log(res.data.message);
-			} catch (error: any) {
-				console.log(error.message + " | " + error.response);
-			}
-		}
-	}
+	const memoizedupdateData = useCallback(updateData, [filter, groupId]);
 
 	useEffect(() => {
-		memoizedGetClients();
-	}, [memoizedGetClients]);
+		memoizedupdateData();
+	}, [memoizedupdateData, isUpdated])
 
 	return (
 		<section className="container mx-auto">
@@ -84,7 +58,16 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId } }) 
 				</div>
 				<SearchClientForm getFilter={getFilter} resetFilter={resetFilter} />
 				<div className="mt-[60px]">
-					<ClientsList filteredClients={filteredClients()} groupId={groupId} deleteClients={deleteClients} getClients={getClients} />
+					<ClientsList
+						groupId={groupId}
+						filter={filter}
+						userId={userId}
+						updateClients={updateData}
+						getUpdate={getUpdate}
+						convertClients={convertClients}
+						isUpdated={isUpdated}
+						LIMIT={LIMIT}
+					/>
 				</div>
 			</div>
 		</section>

@@ -4,7 +4,7 @@ import { IGroupDatabase } from "@/globaltypes/types";
 import DeleteGroupBtn from "./buttons/DeleteGroupBtn";
 import EditGroupBtn from "./buttons/EditGroupBtn";
 import ImportGroupBtn from "./buttons/ImportGroupBTN";
-import ExportGroupGroupBtn from "./buttons/ExportGroupBtn";
+import ExportGroupBtn from "./buttons/ExportGroupBtn";
 
 type Props = {
 	groups: IGroupDatabase[];
@@ -30,7 +30,7 @@ export default function GroupsList({ groups, getGroups }: Props) {
 							<EditGroupBtn id={group.group_id} >Редагувати</EditGroupBtn>
 							<DeleteGroupBtn id={group.group_id} getGroups={getGroups}>Видалити</DeleteGroupBtn>
 							<ImportGroupBtn id={group.group_id}>Імпорт</ImportGroupBtn>
-							<ExportGroupGroupBtn id={group.group_id}>Експорт</ExportGroupGroupBtn>
+							<ExportGroupBtn id={group.group_id} group={group}>Експорт</ExportGroupBtn>
 						</div>
 					</li>
 				)) :

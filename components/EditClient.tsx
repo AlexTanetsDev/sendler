@@ -3,16 +3,21 @@
 import React, { useState } from "react";
 
 import Modal from "./Modal/Modal";
-import { ClientForm } from "./forms/ClientForm";
+import { CreateClientForm } from "./forms/CreateClientForm";
 import { IClientDatabase } from "@/globaltypes/types";
 
 interface Props {
 	groupId?: number;
 	client?: IClientDatabase;
-	getClients: () => void
+	updateClients: () => void;
+	getUpdate: () => void;
 };
 
-const EditClient = ({ groupId, client, getClients }: Props) => {
+const EditClient = ({ groupId,
+	client,
+	updateClients,
+	getUpdate }: Props) => {
+
 	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const openModal = () => {
@@ -29,7 +34,21 @@ const EditClient = ({ groupId, client, getClients }: Props) => {
 		<>
 			<button type="button" onClick={openModal} className="row-table__btn">Редагувати</button>
 			<Modal isOpen={isModalOpen} onClose={closeModal}>
-				{groupId ? <ClientForm onClose={closeModal} groupId={groupId} clientCurrent={client} getClients={getClients} title='Редагування групи' /> : <ClientForm onClose={closeModal} getClients={getClients} clientCurrent={client} title='Редагування контакту' />}
+				{groupId ?
+					<CreateClientForm
+						onClose={closeModal}
+						groupId={groupId}
+						currentClient={client}
+						updateClients={updateClients}
+						getUpdate={getUpdate}
+						title='Редагування групи'
+					/> :
+					<CreateClientForm
+						onClose={closeModal}
+						updateClients={updateClients}
+						currentClient={client}
+						getUpdate={getUpdate}
+						title='Редагування контакту' />}
 			</Modal>
 		</>
 	);

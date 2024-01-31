@@ -14,7 +14,7 @@ import {
 	IGroupId
 } from "@/globaltypes/types";
 
-export default async function createClient(client: IClient, userId: number, groupId: IGroupId): Promise<ErrorCase | undefined> {
+export default async function createClient(client: IClient, userId: number, groupId: number): Promise<ErrorCase | undefined> {
 	try {
 		const { tel } = client;
 

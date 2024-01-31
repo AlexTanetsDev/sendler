@@ -56,6 +56,16 @@ export interface IClient {
 	parameter_2?: string;
 }
 
+export interface IClientData {
+	tel: number;
+	last_name: string | undefined;
+	first_name: string | undefined;
+	middle_name: string | undefined;
+	date_of_birth: string;
+	parameter_1: string | undefined;
+	parameter_2: string | undefined;
+}
+
 export interface IClientInput extends IClient {
 	client_id?: number;
 	ua_date_of_birth?: string;
@@ -67,9 +77,12 @@ export interface IClientId {
 
 export interface IClientDatabase extends IClientId, IClient, IUserId {
 	ua_date_of_birth?: string;
+	total_count?: number;
 }
 
 export interface IGroup extends IGroupId, IGroupName, IUserId { }
+
+export interface IGroupData extends IClientDatabase, IGroupName { }
 
 export interface IUserChangePassword {
 	oldPassword: string;
@@ -130,7 +143,8 @@ export interface FormInputsSignUp {
 	login: string;
 	password: string;
 	repeatPassword: string;
-	phone: number;
+	contactPerson: string;
+	phone: string;
 	email: string;
 	name: string;
 };
@@ -181,7 +195,7 @@ export interface FormInputUpdateUser {
 	login: string;
 	password: string;
 	newPassword: string;
-	contactPerson: string;
+	userName: string;
 	phone: number;
 	email: string;
 };

@@ -1,37 +1,27 @@
 'use client';
 
-import axios from "axios";
+import { useState, useCallback, useEffect } from 'react';
 
-import { useState, useCallback, useEffect, } from "react";
+import Title from '@/components/Title';
+import ClientsList from '@/components/ClientsList';
+import SearchClientForm from '@/components/forms/SearchClientForm';
+import { getUserClients } from '@/fetch-actions/clientsActions';
+import convertClientsBirthdayFormat from '@/helpers/ConvertClientsBirsdayFormat';
+import { IClientDatabase } from '@/globaltypes/types';
 
-import Title from "@/components/Title";
-import ClientsList from "@/components/ClientsList";
-import SearchClientForm from "@/components/forms/SearchClientForm";
-import { IClientDatabase } from "@/globaltypes/types";
+const LIMIT = 10;
 
-export default function AllContactsUserPage({ params }: { params: { userId: string } }) {
+export default function AllContactsUserPage({ params }: { params: { id: string, userId: string } }) {
 
-	const [clients, SetClients] = useState([]);
-	const [isAddGroup, SetIsAddgroup] = useState(false);
 	const [filter, setFilter] = useState('');
+	const [isUpdated, setIsUpdated] = useState(false);
+	const [clients, setClients] = useState<IClientDatabase[] | undefined>([]);
+	const convertClients = convertClientsBirthdayFormat(clients);
 
 	const userId = Number(params.userId);
 
-	const getClients = async () => {
-		try {
-			if (userId) {
-				const res = await axios.get(`api/clients`, {
-					params: {
-						userId: userId,
-					},
-				});
-
-				const data = res.data.clients;
-				SetClients(data);
-			}
-		} catch (error: any) {
-			console.log(error.message);
-		}
+	const getUpdate = () => {
+		setIsUpdated(!isUpdated);
 	};
 
 	const getFilter = (e: any) => {
@@ -42,56 +32,49 @@ export default function AllContactsUserPage({ params }: { params: { userId: stri
 		setFilter('');
 	};
 
-	const memoizedGetClients = useCallback(getClients, [userId]);
-
-	const updateListControl = () => {
-		SetIsAddgroup(!isAddGroup);
-	};
-
-	const filteredClients = () => {
-		const filteredArray: IClientDatabase[] = [];
-		clients.map(client => {
-			const { tel } = client;
-			if (String(tel).includes(filter)) {
-				filteredArray.push(client);
-			};
+	const updateData = async () => {
+		const res = await getUserClients(userId, filter, LIMIT, 0);
+		if (res) {
+			setClients(res);
 		}
-		);
-		return filteredArray;
 	};
 
-	const deleteClients = async (groupId: number | undefined, clientsId: number[]) => {
-
-		if (clientsId.length > 0) {
-			clientsId.forEach(async (clientId) => {
-				try {
-					const response = await axios.delete(`api/clients/${clientId}`);
-					console.log(response.data.message);
-					updateListControl();
-				} catch (error: any) {
-					console.log(error.message + " | " + error.response.data.error);
-				}
-			});
-		};
-	}
+	const memoizedupdateData = useCallback(updateData, [filter, userId]);
 
 	useEffect(() => {
-		memoizedGetClients();
-	}, [userId, isAddGroup, memoizedGetClients]);
+		memoizedupdateData();
+	}, [memoizedupdateData, isUpdated]);
 
 	return (
 		<section className="container mx-auto">
-			<Title type="h1" color="dark">Управління контактами</Title>
+			<Title type="h1" color="dark">
+				Управління контактами
+			</Title>
 			<div className="content-block mt-[60px]">
 				<div className="ml-[26px] mb-[50px]">
-					<Title type="accent-main_text" color="dark">Всі контакти</Title>
+					<Title type="accent-main_text" color="dark">
+						Всі контакти
+					</Title>
 				</div>
-				<p className="w-[684px] ml-[26px] mt-10 mb-[50px] font-montserrat text-base font-normal leading-6">У  данній  таблиці представленні всі ваші контакти. Ви можете переглянути детальну інформацію, а також  редагувати контакт.</p>
+				<p className="w-[684px] ml-[26px] mt-10 mb-[50px] font-montserrat text-base font-normal leading-6">
+					У данній таблиці представленні всі ваші контакти. Ви можете переглянути детальну
+					інформацію, а також редагувати контакт.
+				</p>
 				<SearchClientForm getFilter={getFilter} resetFilter={resetFilter} />
 				<div className="mt-[60px]">
-					<ClientsList filteredClients={filteredClients()} deleteClients={deleteClients} getClients={getClients} />
+					<ClientsList
+						filter={filter}
+						userId={userId}
+						updateClients={updateData}
+						getUpdate={getUpdate}
+						convertClients={convertClients}
+						isUpdated={isUpdated}
+						LIMIT={LIMIT}
+					/>
 				</div>
 			</div>
 		</section>
-	)
-};
+	);
+}
+
+

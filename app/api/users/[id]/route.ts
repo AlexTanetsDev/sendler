@@ -2,15 +2,15 @@ import { NextResponse } from "next/server";
 import db from "@/db";
 import { hash, compare } from "bcrypt";
 import bcrypt from 'bcrypt';
-import { IUser } from "@/globaltypes/types";
 import { schemaNewDateUser, schemaUpdateUserPassword } from "@/models/users";
-import { AllUserWithFild, userActive } from "@/helpers/Users";
+import { userActive } from "@/helpers/Users";
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
 	const id = params.id;
 
 	const res = await db.query(
-		`SELECT * FROM users
+		`SELECT balance, email, user_active, user_create_date, user_id, user_login, user_name, 		user_role, tel
+  	FROM users
 		WHERE user_id = ${id}`
 	);
 
@@ -45,7 +45,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 		);
 	}
 
-	const { userLogin, tel, email, password, newPassword } = value;
+	const { userLogin, tel, email, password, newPassword, userName } = value;
 
 	const isUserActive = await userActive(id);
 
@@ -101,96 +101,17 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
 	const newHashedPassword = await bcrypt.hash(newPassword, 10);
 
-	await db.query("UPDATE users SET user_login = $1,  user_password = $2, tel = $3, email = $4 where user_id = $5", [
+	const res = await db.query("UPDATE users SET user_login = $1,  user_password = $2, tel = $3, email = $4, user_name = $5 where user_id = $6 RETURNING balance, email, user_active, user_create_date, user_id, user_login, user_name, user_role, tel", [
 		userLogin,
 		newHashedPassword,
 		tel,
 		email,
+		userName,
 		id,
 	]);
 
-
-
-	// const userName = await AllUserWithFild(
-	// 	id,
-	// 	"user_login",
-	// 	userLogin,
-	// 	newDataUser
-	// );
-
-	// const {
-	// 	isUniqueUserFild: isUniqueUserName,
-	// 	updateUserColumnName: updateUserName,
-	// } = userName;
-
-	// if (isUniqueUserName) {
-	// 	return NextResponse.json(
-	// 		{ message: `User name already exists` },
-	// 		{ status: 409 }
-	// 	);
-	// }
-
-	// const userLogin = await AllUserWithFild(
-	// 	id,
-	// 	"user_login",
-	// 	user_login,
-	// 	newDataUser
-	// );
-
-	// const {
-	// 	isUniqueUserFild: isUniqueUserLogin,
-	// 	updateUserColumnName: updateUserLogin,
-	// } = userLogin;
-
-	// if (isUniqueUserLogin) {
-	// 	return NextResponse.json(
-	// 		{ message: `User login already exists` },
-	// 		{ status: 409 }
-	// 	);
-	// }
-
-	// const userTel = await AllUserWithFild(id, "tel", tel, newDataUser);
-
-	// const {
-	// 	isUniqueUserFild: isUniqueUserTel,
-	// 	updateUserColumnName: updateUserTel,
-	// } = userTel;
-
-	// if (isUniqueUserTel) {
-	// 	return NextResponse.json(
-	// 		{ message: `User phone already exists` },
-	// 		{ status: 409 }
-	// 	);
-	// }
-
-	// const userEmail = await AllUserWithFild(id, "email", email, newDataUser);
-
-	// const {
-	// 	isUniqueUserFild: isUniqueUserEmail,
-	// 	updateUserColumnName: updateUserEmail,
-	// } = userEmail;
-
-	// if (isUniqueUserEmail) {
-	// 	return NextResponse.json(
-	// 		{ message: `User email already exists` },
-	// 		{ status: 409 }
-	// 	);
-	// }
-
-	// const userData = await db.query(
-	// 	"UPDATE users SET user_login = $1, tel = $2, email = $3, user_name = $4  WHERE user_id = $5 RETURNING *",
-	// 	[updateUserLogin, updateUserTel, updateUserEmail, updateUserName, id]
-	// );
-
-	// const user = userData.rows[0];
-	// const { user_password: NewUserPassword, ...rest } = user;
-
-	// return NextResponse.json(
-	// 	{ user: rest, message: `User with id ${id} apdated` },
-	// 	{ status: 200 }
-	// );
 	return NextResponse.json(
-		{ message: `User is apdated` },
+		{ res: res, message: `User is apdated` },
 		{ status: 200 }
 	);
 }
