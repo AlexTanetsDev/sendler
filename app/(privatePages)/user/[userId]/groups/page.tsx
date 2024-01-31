@@ -1,8 +1,5 @@
 "use client";
 
-import axios from "axios";
-axios.defaults.baseURL = "http://localhost:3000/";
-
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 

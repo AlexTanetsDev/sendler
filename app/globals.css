@@ -132,6 +132,10 @@ footer {
   @apply w-[110px] py-[3px] hover:bg-blueHoverBtn hover:text-white hover:border-transparent text-base  text-center font-roboto font-normal border border-headerTable rounded-xl;
 }
 
+.row-table-disable__btn {
+  @apply w-[110px] py-[3px]  text-base  text-center text-rowBtnDisableText font-roboto font-normal border border-rowBtnDisableBorder rounded-xl;
+}
+
 .inputs-box {
   @apply w-[526px] mx-auto p-[26px] bg-formBg rounded-[18px];
 }
@@ -157,6 +161,36 @@ footer {
 
 .input__lable {
   @apply text-xs font-roboto font-medium;
+}
+
+.input-visible {
+  transform: translateY(0);
+  -webkit-transition: -webkit-transform 200ms;
+  transition: transform 200ms;
+}
+
+.input-hidden {
+  transform: translateY(120%);
+  -webkit-transition: -webkit-transform 400ms;
+  transition: transform 400ms;
+}
+
+.form-hidden {
+  height: 85px;
+  -webkit-transition: height 1s;
+  transition: height;
+  transition-duration: 150ms;
+  transition-delay: 150ms;
+  transition-timing-function: linear;
+}
+
+.form-visible {
+  height: 815px;
+  -webkit-transition: height 1s;
+  transition: height;
+  transition-duration: 200ms;
+  transition-delay: 200ms;
+  transition-timing-function: linear;
 }
 
 .title_hero {

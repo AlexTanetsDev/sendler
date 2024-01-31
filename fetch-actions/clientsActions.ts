@@ -1,7 +1,8 @@
-import axios from "axios";
-import toast from "react-hot-toast";
+import { axiosInstance } from '@/helpers/AxiosInstance';
 
-import { IClientDatabase } from "@/globaltypes/types";
+import { IClientData, IClientDatabase } from "@/globaltypes/types";
+
+const api = axiosInstance;
 
 export async function getGroupClientsAndGroupName(
 	groupId: number,
@@ -10,7 +11,7 @@ export async function getGroupClientsAndGroupName(
 	visible: number) {
 	try {
 		if (groupId) {
-			const res = await axios.get(`api/sending-groups/${groupId}`, {
+			const res = await api.get(`api/sending-groups/${groupId}`, {
 				params: {
 					filter: filter,
 					limit: limit,
@@ -19,19 +20,7 @@ export async function getGroupClientsAndGroupName(
 			});
 			return res.data.res;
 		}
-	} catch (error: any) {
-		toast.error(error.message + ' | ' + error.response.data.error, {
-			position: 'bottom-center',
-			className: 'toast_error',
-			style: {
-				backgroundColor: '#0F3952',
-				color: '#fa9c9c',
-				fontSize: '24px',
-				marginBottom: '20%',
-			},
-		});
-		console.log(error.message);
-	}
+	} catch (error: any) { };
 };
 
 export async function getUserClients(
@@ -40,7 +29,7 @@ export async function getUserClients(
 	limit: number | null,
 	visible: number) {
 	try {
-		const res = await axios.get(`api/clients`, {
+		const res = await api.get(`api/clients`, {
 			params: {
 				userId: userId,
 				filter: filter,
@@ -50,53 +39,16 @@ export async function getUserClients(
 		});
 		const clients = res.data.clients;
 		return clients as IClientDatabase[];
-	} catch (error: any) {
-		toast.error(error.message + " | " + error.response.data.error,
-			{
-				position: 'bottom-center',
-				className: 'toast_error',
-				style: {
-					backgroundColor: '#0F3952',
-					color: "#fa9c9c",
-					fontSize: '24px',
-					marginBottom: '20%'
-				}
-			});
-		console.log(error.message + " | " + error.response.data.error);
-	}
+	} catch (error: any) { };
 };
 
 export async function deleteGroupClients(groupId: number | undefined, clientsId: number[]) {
 	if (groupId && clientsId.length > 0) {
 		try {
-			const res = await axios.patch(`api/sending-groups/${groupId}`, {
+			const res = await api.patch(`api/sending-groups/${groupId}`, {
 				clients: clientsId,
 			});
-			toast.success(res.data.message, {
-				duration: 3000,
-				position: 'bottom-center',
-				className: 'toast_success',
-				style: {
-					backgroundColor: '#0F3952',
-					color: "lightgreen",
-					fontSize: '24px',
-					borderColor: 'green',
-					marginBottom: '20%'
-				}
-			})
-		} catch (error: any) {
-			toast.error(error.message + " | " + error.response.data.error,
-				{
-					position: 'bottom-center',
-					className: 'toast_error',
-					style: {
-						backgroundColor: '#0F3952',
-						color: "#fa9c9c",
-						fontSize: '24px',
-						marginBottom: '20%'
-					}
-				});
-		}
+		} catch (error: any) { };
 	}
 };
 
@@ -104,20 +56,33 @@ export async function deleteClients(clientsId: number[]) {
 	if (clientsId.length > 0) {
 		clientsId.forEach(async clientId => {
 			try {
-				await axios.delete(`api/clients/${clientId}`);
-			} catch (error: any) {
-				toast.error(error.message + " | " + error.response.data.error,
-					{
-						position: 'bottom-center',
-						className: 'toast_error',
-						style: {
-							backgroundColor: '#0F3952',
-							color: "#fa9c9c",
-							fontSize: '24px',
-							marginBottom: '20%'
-						}
-					});
-			}
+				await api.delete(`api/clients/${clientId}`);
+			} catch (error: any) { };
 		});
 	}
+};
+
+export async function updateUserClient(id: number | undefined, clientData: IClientData) {
+	try {
+		const res = await api.put(`api/clients/${id}`,
+			{
+				client: clientData,
+			},
+		);
+		return res;
+	} catch (error: any) { };
+
+};
+
+export async function createGroupClient(userId: number | undefined, groupId: number | undefined, clientData: IClientData) {
+	try {
+		const res = await api.post(`api/clients`,
+			{
+				userId: userId,
+				groupId: Number(groupId),
+				client: clientData
+			},
+		);
+		return res;
+	} catch (error: any) { };
 };

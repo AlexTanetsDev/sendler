@@ -43,6 +43,8 @@ const config: Config = {
 				bgBurgerMenu: '#194954',
 				disable: '#908F8F',
 				textDisable: '#6C6C6C',
+				rowBtnDisableText: '#858585',
+				rowBtnDisableBorder: '#6C6C6C'
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
