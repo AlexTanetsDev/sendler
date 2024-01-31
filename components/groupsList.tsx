@@ -30,7 +30,7 @@ export default function GroupsList({ groups, getGroups }: Props) {
 							<EditGroupBtn id={group.group_id} >Редагувати</EditGroupBtn>
 							<DeleteGroupBtn id={group.group_id} getGroups={getGroups}>Видалити</DeleteGroupBtn>
 							<ImportGroupBtn id={group.group_id}>Імпорт</ImportGroupBtn>
-							<ExportGroupBtn id={group.group_id}>Експорт</ExportGroupBtn>
+							<ExportGroupBtn id={group.group_id} group={group}>Експорт</ExportGroupBtn>
 						</div>
 					</li>
 				)) :

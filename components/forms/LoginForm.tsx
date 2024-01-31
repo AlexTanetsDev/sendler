@@ -55,6 +55,7 @@ const LoginForm = () => {
         password: data.password,
         redirect: false,
       });
+console.log("res in login=", res);
 
       if (res?.ok === false) {
         if (res.status === 401) {

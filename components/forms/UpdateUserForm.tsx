@@ -17,6 +17,7 @@ interface Props {
 
 const UpdateUserForm = ({ userId }: Props) => {
 	const [isOpen, setIsOpen] = useState(false);
+	const [isDisabled, setIsDisabled] = useState(false);
 	const [userState, setUserState] = useState({
 		user_login: '',
 		email: '',
@@ -76,17 +77,19 @@ const UpdateUserForm = ({ userId }: Props) => {
 
 	const onSubmit: SubmitHandler<FormInputUpdateUser> = async (data) => {
 
+		setIsDisabled(true);
 		await updateUser(userId, data.login, data.password, data.newPassword, data.userName, data.phone, data.email);
 		getData();
 		reset();
 		setIsOpen(false);
+		setIsDisabled(false);
 
 	};
 	return (
 		<form
 			autoComplete="off"
 			onSubmit={handleSubmit(onSubmit)}
-			className="w-[526px] mx-auto py-[26px]  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]"
+			className={`max-w-[526px] mx-auto py-[26px] ${isOpen ? "form-visible" : "form-hidden"} justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px] overflow-hidden`}
 		>
 			<div className="relative w-full text-center">
 				<p color="dark" className="form-title">Анкета користувача</p>
@@ -105,139 +108,138 @@ const UpdateUserForm = ({ userId }: Props) => {
 						/>}
 				</button>
 			</div>
-			{isOpen &&
-				<div className="w-full flex justify-items-center  items-center flex-col mt-8">
-					<div className="text-left w-full mb-8">
-						<label
-							htmlFor="login"
-							className="font-roboto text-sm font-medium mb-2 block"
-						>
-							Логін
-							<span className="ml-1 text-red-700">*</span>
-						</label>
-						<div className="relative">
-							<input
-								id="login"
-								type="text"
-								defaultValue={user_login && user_login}
-								{...register("login")}
-								className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-								placeholder="Your login"
-								required
-							/>
-							{errors.login && (
-								<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.login.message}</span>
-							)}
-						</div>
-
-						<label
-							htmlFor="password"
-							className="font-roboto text-sm font-medium mb-2  mt-8 block"
-						>
-							Пароль
-							<span className="ml-1 text-red-700">*</span>
-						</label>
-						<div className="relative">
-							<input
-								id="password"
-								type="password"
-								{...register("password")}
-								className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-								required
-							/>
-							{errors.password && (
-								<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.password.message}</span>
-							)}
-						</div>
-
-						<label
-							htmlFor="newPassword"
-							className="font-roboto text-sm font-medium mb-2  mt-8 block"
-						>
-							Новий пароль
-							<span className="ml-1 text-red-700">*</span>
-						</label>
-						<div className="relative">
-							<input
-								id="newPassword"
-								type="password"
-								{...register("newPassword")}
-								className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-								required
-							/>
-							{errors.newPassword && (
-								<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.newPassword.message}</span>
-							)}
-						</div>
-
-						<label
-							htmlFor="userName"
-							className="font-roboto text-sm font-medium mb-2  mt-8 block"
-						>
-							Контактна особа
-							<span className="ml-1 text-red-700">*</span>
-						</label>
-						<div className="relative">
-							<input
-								id="userName"
-								type="text"
-								defaultValue={user_name && user_name}
-								{...register("userName")}
-								className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-								placeholder="Менеджер Петренко"
-								required
-							/>
-							{errors.userName && (
-								<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.userName.message}</span>
-							)}
-						</div>
-
-						<label
-							htmlFor="phone"
-							className="font-roboto text-sm font-medium mb-2  mt-8 block"
-						>
-							Телефон для зв&apos;зку
-							<span className="ml-1 text-red-700">*</span>
-						</label>
-						<div className="relative">
-							<input
-								id="phone"
-								type="text"
-								defaultValue={tel && tel}
-								{...register("phone")}
-								className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-								placeholder="380675555544"
-								required
-							/>
-							{errors.phone && (
-								<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.phone.message}</span>
-							)}
-						</div>
-
-						<label
-							htmlFor="email"
-							className="font-roboto text-sm font-medium mb-2  mt-8 block"
-						>
-							Електронна пошта
-							<span className="ml-1 text-red-700">*</span>
-						</label>
-						<div className="relative">
-							<input
-								id="email"
-								type="email"
-								defaultValue={email && email}
-								{...register("email")}
-								className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-								placeholder="example@mail.com"
-								required
-							/>
-							{errors.email && (
-								<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.email.message}</span>
-							)}
-						</div>
+			<div className={`w-full flex justify-items-center items-center flex-col ${isOpen ? "input-visible" : "input-hidden"}`}>
+				<div className="text-left w-full mb-8">
+					<label
+						htmlFor="login"
+						className="font-roboto text-sm font-medium mb-2 block"
+					>
+						Логін
+						<span className="ml-1 text-red-700">*</span>
+					</label>
+					<div className="flex relative">
+						<input
+							id="login"
+							type="text"
+							defaultValue={user_login && user_login}
+							{...register("login")}
+							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+							placeholder="Your login"
+							required
+						/>
+						{errors.login && (
+							<span className="form-errors">{errors.login.message}</span>
+						)}
 					</div>
-					<GreenButton size="big">Зберегти</GreenButton>
-				</div>}
+
+					<label
+						htmlFor="password"
+						className="font-roboto text-sm font-medium mb-2  mt-8 block"
+					>
+						Пароль
+						<span className="ml-1 text-red-700">*</span>
+					</label>
+					<div className="flex relative">
+						<input
+							id="password"
+							type="password"
+							{...register("password")}
+							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+							required
+						/>
+						{errors.password && (
+							<span className="form-errors">{errors.password.message}</span>
+						)}
+					</div>
+
+					<label
+						htmlFor="newPassword"
+						className="font-roboto text-sm font-medium mb-2  mt-8 block"
+					>
+						Новий пароль
+						<span className="ml-1 text-red-700">*</span>
+					</label>
+					<div className="flex relative">
+						<input
+							id="newPassword"
+							type="password"
+							{...register("newPassword")}
+							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+							required
+						/>
+						{errors.newPassword && (
+							<span className="form-errors">{errors.newPassword.message}</span>
+						)}
+					</div>
+
+					<label
+						htmlFor="userName"
+						className="font-roboto text-sm font-medium mb-2  mt-8 block"
+					>
+						Контактна особа
+						<span className="ml-1 text-red-700">*</span>
+					</label>
+					<div className="flex relative">
+						<input
+							id="userName"
+							type="text"
+							defaultValue={user_name && user_name}
+							{...register("userName")}
+							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+							placeholder="Менеджер Петренко"
+							required
+						/>
+						{errors.userName && (
+							<span className="form-errors">{errors.userName.message}</span>
+						)}
+					</div>
+
+					<label
+						htmlFor="phone"
+						className="font-roboto text-sm font-medium mb-2  mt-8 block"
+					>
+						Телефон для зв&apos;зку
+						<span className="ml-1 text-red-700">*</span>
+					</label>
+					<div className="flex relative">
+						<input
+							id="phone"
+							type="text"
+							defaultValue={tel && tel}
+							{...register("phone")}
+							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+							placeholder="380675555544"
+							required
+						/>
+						{errors.phone && (
+							<span className="form-errors">{errors.phone.message}</span>
+						)}
+					</div>
+
+					<label
+						htmlFor="email"
+						className="font-roboto text-sm font-medium mb-2  mt-8 block"
+					>
+						Електронна пошта
+						<span className="ml-1 text-red-700">*</span>
+					</label>
+					<div className="flex relative">
+						<input
+							id="email"
+							type="email"
+							defaultValue={email && email}
+							{...register("email")}
+							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
+							placeholder="example@mail.com"
+							required
+						/>
+						{errors.email && (
+							<span className="form-errors">{errors.email.message}</span>
+						)}
+					</div>
+				</div>
+				<GreenButton size="big" isDisabled={isDisabled}>Зберегти</GreenButton>
+			</div>
 		</form>
 	);
 };

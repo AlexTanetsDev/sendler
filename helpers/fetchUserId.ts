@@ -1,3 +1,4 @@
+import axios from "axios";
 
 type FetchUserIdResponse = {
     userId: string;
@@ -5,17 +6,13 @@ type FetchUserIdResponse = {
   
   export const fetchUserId = async (login: string): Promise<string> => {
     try {
-      const response = await fetch("/api/users", {
-        method: "POST",
-        body: JSON.stringify({ login }),
+      const response = await axios.post("/api/users", { login }, {
         headers: {
           "Content-Type": "application/json",
         },
       });
   
-      const data: FetchUserIdResponse = await response.json();
-  
-      return data.userId;
+      return response.data.userId;
     } catch (error) {
       throw new Error("Сталася помилка під час отримання User Id");
     }

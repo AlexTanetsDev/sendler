@@ -21,7 +21,7 @@ export default function AllContactsUserPage({ params }: { params: { id: string, 
 	const userId = Number(params.userId);
 
 	const getUpdate = () => {
-		setIsUpdated(!isUpdated)
+		setIsUpdated(!isUpdated);
 	};
 
 	const getFilter = (e: any) => {
@@ -43,7 +43,7 @@ export default function AllContactsUserPage({ params }: { params: { id: string, 
 
 	useEffect(() => {
 		memoizedupdateData();
-	}, [memoizedupdateData, isUpdated])
+	}, [memoizedupdateData, isUpdated]);
 
 	return (
 		<section className="container mx-auto">

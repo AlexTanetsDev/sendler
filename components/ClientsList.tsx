@@ -3,7 +3,6 @@
 import { useForm } from 'react-hook-form';
 import { useState } from 'react';
 import RSC from "react-scrollbars-custom";
-import toast from "react-hot-toast";
 
 import GreenButton from './buttons/GreenButton';
 import AddClient from './Addclient';
@@ -35,6 +34,9 @@ export default function ClientsList({
 	LIMIT }: Props) {
 	const [isSelected, setIsSelected] = useState(0);
 	const { register, handleSubmit, reset } = useForm();
+	const [isDisabled, setIsDisabled] = useState(false);
+
+
 
 
 	const onSelect = (e: any) => {
@@ -47,8 +49,9 @@ export default function ClientsList({
 	};
 
 	const onSubmit = async (data: any) => {
-		const deletedClientsId: number[] = [];
 
+		setIsDisabled(true);
+		const deletedClientsId: number[] = [];
 		for (const key in data) {
 			if (data[key] === true) {
 				deletedClientsId.push(Number(key));
@@ -56,7 +59,6 @@ export default function ClientsList({
 		}
 
 		if (groupId) {
-
 			await deleteGroupClients(groupId, deletedClientsId);
 			setIsSelected(0);
 			updateClients();
@@ -68,6 +70,7 @@ export default function ClientsList({
 			getUpdate();
 		}
 		reset();
+		setIsDisabled(false);
 	};
 
 	return (
@@ -124,7 +127,7 @@ export default function ClientsList({
 								getUpdate={getUpdate} />}
 					</div>
 					<GreenButton
-						isDisabled={convertClients?.length && isSelected ? false : true} size="big">
+						isDisabled={convertClients?.length && isSelected ? false : true || isDisabled} size="big">
 						Видалити
 					</GreenButton>
 				</div>

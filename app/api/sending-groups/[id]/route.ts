@@ -23,7 +23,6 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 		groupName: string;
 		clients: IClientDatabase[];
 	};
-	message: string;
 }> | NextResponse<{
 	message: string;
 	error: any;
@@ -42,7 +41,7 @@ export async function GET(request: NextRequest, { params }: { params: { id: stri
 		}
 
 		return NextResponse.json(
-			{ res, message: 'Group memebers' },
+			{ res },
 			{ status: 200 }
 		);
 	} catch (error: any) {

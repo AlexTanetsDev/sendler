@@ -1,7 +1,10 @@
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx/xlsx.mjs';
 
-export default function ExportGroupBtn({ id, children }) {
+export default function ExportGroupBtn({ id, group, children }) {
+  const [isDisabled, setIsDisabled] = useState(false);
+
   const handleClick = async () => {
     try {
       const res = await axios.get(`api/sending-groups/${id}`, {
@@ -25,8 +28,20 @@ export default function ExportGroupBtn({ id, children }) {
       console.log(error.message);
     }
   };
+
+  useEffect(() => {
+    if (Number(group.number_members) === 0) {
+      setIsDisabled(true);
+    }
+  }, [group.number_members]);
+
   return (
-    <button type="button" onClick={handleClick} className="row-table__btn">
+    <button
+      type="button"
+      onClick={handleClick}
+      disabled={isDisabled}
+      className={Number(group.number_members) ? 'row-table__btn' : 'row-table-disable__btn'}
+    >
       {children}
     </button>
   );

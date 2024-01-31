@@ -26,7 +26,6 @@ export async function GET(request: NextRequest): Promise<NextResponse<{
 	error: string;
 }> | NextResponse<{
 	groups: IGroupDatabase[];
-	message: string;
 }> | NextResponse<{
 	message: string;
 	error: any;
@@ -49,7 +48,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<{
 			}
 
 			return NextResponse.json(
-				{ groups: res, message: 'Get a groups.' },
+				{ groups: res},
 				{ status: 200 }
 			);
 		} catch (error: any) {
