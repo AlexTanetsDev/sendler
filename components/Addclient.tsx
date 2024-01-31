@@ -14,14 +14,17 @@ interface Props {
 
 const AddClient = ({ groupId, updateClients, getUpdate }: Props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isDisabled, setIsDisabled] = useState(false);
 
 	const openModal = () => {
 		setIsModalOpen(true);
+		setIsDisabled(true);
 		document.body.classList.add('overflow-hidden');
 	};
 
 	const closeModal = () => {
 		setIsModalOpen(false);
+		setIsDisabled(false);
 		document.body.classList.remove('overflow-hidden');
 	};
 	return (
@@ -29,7 +32,9 @@ const AddClient = ({ groupId, updateClients, getUpdate }: Props) => {
 			<GreenButton
 				size="big"
 				type="button"
-				onClick={openModal} >
+				onClick={openModal}
+				isDisabled={isDisabled}
+			>
 				Додати контакт
 			</GreenButton>
 			<Modal isOpen={isModalOpen} onClose={closeModal}>

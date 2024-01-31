@@ -56,6 +56,16 @@ export interface IClient {
 	parameter_2?: string;
 }
 
+export interface IClientData {
+	tel: number;
+	last_name: string | undefined;
+	first_name: string | undefined;
+	middle_name: string | undefined;
+	date_of_birth: string;
+	parameter_1: string | undefined;
+	parameter_2: string | undefined;
+}
+
 export interface IClientInput extends IClient {
 	client_id?: number;
 	ua_date_of_birth?: string;

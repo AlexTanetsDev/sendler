@@ -1,24 +1,12 @@
-import axios from "axios";
-import toast from "react-hot-toast";
+import { axiosInstance } from '@/helpers/AxiosInstance';
+
+const api = axiosInstance;
 
 export async function getUser(userId: number | undefined) {
 	try {
-		const res = await axios.get(`/api/users/${userId}`);
+		const res = await api.get(`/api/users/${userId}`);
 		return res;
-	} catch (error: any) {
-		toast.error(error.message + " | " + error.response.data.message,
-			{
-				position: 'bottom-center',
-				className: 'toast_error',
-				style: {
-					backgroundColor: '#0F3952',
-					color: "#fa9c9c",
-					fontSize: '24px',
-					borderBlockColor: 'red',
-					marginBottom: '20%'
-				}
-			});
-	}
+	} catch (error: any) { };
 };
 
 export async function updateUser(
@@ -30,7 +18,7 @@ export async function updateUser(
 	phone: number,
 	email: string) {
 	try {
-		const res = await axios.put(`api/users/${userId}`,
+		const res = await api.put(`api/users/${userId}`,
 			{
 				userLogin: login,
 				password: password,
@@ -40,30 +28,6 @@ export async function updateUser(
 				email: email,
 			}
 		);
-		toast.success(res.data.message, {
-			duration: 3000,
-			position: 'bottom-center',
-			className: 'toast_success',
-			style: {
-				backgroundColor: '#0F3952',
-				color: "lightgreen",
-				fontSize: '24px',
-				borderColor: 'green',
-				marginBottom: '20%'
-			}
-		});
 		return res;
-	} catch (error: any) {
-		toast.error(error.message + " | " + error.response.data.message,
-			{
-				position: 'bottom-center',
-				className: 'toast_error',
-				style: {
-					backgroundColor: '#0F3952',
-					color: "#fa9c9c",
-					fontSize: '24px',
-					marginBottom: '20%'
-				}
-			});
-	}
-}
+	} catch (error: any) { };
+};

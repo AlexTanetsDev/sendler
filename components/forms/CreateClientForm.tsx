@@ -1,15 +1,14 @@
 "use client";
 
-import axios from "axios";
-
-import toast from "react-hot-toast";
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useSession } from "next-auth/react";
+import { useState } from "react";
 
 import { validationSchemaCreateClient } from "@/models/forms";
 import { FormInputCreateClient, IClientDatabase } from "@/globaltypes/types";
 import GreenButton from "../buttons/GreenButton";
 import CreateOptions from "../CreateOptions";
-import { useSession } from "next-auth/react";
+import { createGroupClient, updateUserClient } from "@/fetch-actions/clientsActions";
 
 interface Props {
 	onClose: (() => void) | undefined;
@@ -18,7 +17,7 @@ interface Props {
 	title?: string;
 	groupId?: number;
 	groupName?: string;
-	clientCurrent?: IClientDatabase;
+	currentClient?: IClientDatabase;
 };
 
 const CreateClientForm = ({
@@ -27,14 +26,16 @@ const CreateClientForm = ({
 	getUpdate,
 	title,
 	groupName,
-	clientCurrent,
+	currentClient,
 	groupId }: Props) => {
 
 	const { data: session } = useSession();
 	const userId = session?.user.user_id;
-	const day = Number(clientCurrent?.date_of_birth?.split('.')[0]);
-	const month = Number(clientCurrent?.date_of_birth?.split('.')[1]);
-	const year = Number(clientCurrent?.date_of_birth?.split('.')[2]);
+	const [isDisabled, setIsDisabled] = useState(false);
+
+	const day = Number(currentClient?.date_of_birth?.split('.')[0]);
+	const month = Number(currentClient?.date_of_birth?.split('.')[1]);
+	const year = Number(currentClient?.date_of_birth?.split('.')[2]);
 
 	const {
 		register,
@@ -70,81 +71,36 @@ const CreateClientForm = ({
 	});
 
 	const onSubmit: SubmitHandler<FormInputCreateClient> = async (data) => {
+		setIsDisabled(true);
 
-		try {
-			const clientData = {
-				tel: data.phone,
-				last_name: data.lastName,
-				first_name: data.firstName,
-				middle_name: data.middleName,
-				date_of_birth: `${data.year}.${data.month}.${data.day}`,
-				parameter_1: data.parameter1,
-				parameter_2: data.parameter2,
-			};
+		// try {
+		const clientData = {
+			tel: data.phone,
+			last_name: data.lastName,
+			first_name: data.firstName,
+			middle_name: data.middleName,
+			date_of_birth: `${data.year}.${data.month}.${data.day}`,
+			parameter_1: data.parameter1,
+			parameter_2: data.parameter2,
+		};
 
-			if (clientCurrent?.client_id) {
-				const res = await axios.put(`api/clients/${clientCurrent?.client_id}`,
-					{
-						client: clientData,
-					},
-				);
-				toast.success(res.data.message, {
-					duration: 3000,
-					position: 'bottom-center',
-					className: 'toast_success',
-					style: {
-						backgroundColor: '#0F3952',
-						color: "lightgreen",
-						fontSize: '24px',
-						borderColor: 'green',
-						marginBottom: '20%'
-					}
-				})
-				updateClients();
-				getUpdate();
-			} else {
-				const res = await axios.post(`api/clients`,
-					{
-						userId: userId,
-						groupId: Number(groupId),
-						client: clientData
-					},
-				);
-				toast.success(res.data.message, {
-					duration: 3000,
-					position: 'bottom-center',
-					className: 'toast_success',
-					style: {
-						backgroundColor: '#0F3952',
-						color: "lightgreen",
-						fontSize: '24px',
-						borderColor: 'green',
-						marginTop: '20%'
-					}
-				})
-				updateClients();
-				getUpdate();
-			}
-			reset();
-			{
-				onClose && onClose();
-			}
-		} catch (error: any) {
-			toast.error(error.message + " | " + error.response.data.error,
-				{
-					position: 'bottom-center',
-					className: 'toast_error',
-					style: {
-						backgroundColor: '#0F3952',
-						color: "#fa9c9c",
-						fontSize: '24px',
-						marginBottom: '20%'
-					}
-				});
-			console.log(error.message + " | " + error.response);
+
+		if (currentClient?.client_id) {
+			updateUserClient(currentClient.client_id, clientData);
+			updateClients();
+			getUpdate();
+		} else {
+			createGroupClient(userId, groupId, clientData);
+			updateClients();
+			getUpdate();
 		}
-
+		reset();
+		{
+			onClose && onClose();
+		}
+		setIsDisabled(false);
 	};
+
 	return (
 		<form
 			autoComplete="off"
@@ -162,18 +118,18 @@ const CreateClientForm = ({
 					Номер телефону
 					<span className="ml-1 text-red-700">*</span>
 				</label>
-				<div className="relative">
+				<div className="flex relative">
 					<input
 						id="phone"
 						type="text"
-						defaultValue={clientCurrent?.tel && clientCurrent.tel}
+						defaultValue={currentClient?.tel && currentClient.tel}
 						{...register("phone")}
 						className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
 						placeholder="+3801234567"
 						required
 					/>
 					{errors.phone && (
-						<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.phone.message}</span>
+						<span className="form-errors">{errors.phone.message}</span>
 					)}
 				</div>
 
@@ -184,17 +140,17 @@ const CreateClientForm = ({
 				>
 					Прізвище
 				</label>
-				<div className="relative">
+				<div className="flex relative">
 					<input
 						id="lastName"
 						type="text"
-						defaultValue={clientCurrent?.last_name && clientCurrent.last_name}
+						defaultValue={currentClient?.last_name && currentClient.last_name}
 						{...register("lastName")}
 						className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
 						placeholder="Петренко"
 					/>
 					{errors.lastName && (
-						<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.lastName.message}</span>
+						<span className="form-errors">{errors.lastName.message}</span>
 					)}
 				</div>
 
@@ -204,17 +160,17 @@ const CreateClientForm = ({
 				>
 					Ім&apos;я
 				</label>
-				<div className="relative">
+				<div className="flex relative">
 					<input
 						id="firstName"
 						type="text"
-						defaultValue={clientCurrent?.first_name && clientCurrent.first_name}
+						defaultValue={currentClient?.first_name && currentClient.first_name}
 						{...register("firstName")}
 						className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
 						placeholder="Петро"
 					/>
 					{errors.firstName && (
-						<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.firstName.message}</span>
+						<span className="form-errors">{errors.firstName.message}</span>
 					)}
 				</div>
 
@@ -224,17 +180,17 @@ const CreateClientForm = ({
 				>
 					По-батькові
 				</label>
-				<div className="relative">
+				<div className="flex relative">
 					<input
 						id="middleName"
 						type="text"
-						defaultValue={clientCurrent?.middle_name && clientCurrent.middle_name}
+						defaultValue={currentClient?.middle_name && currentClient.middle_name}
 						{...register("middleName")}
 						className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
 						placeholder="Олександрович"
 					/>
 					{errors.middleName && (
-						<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.middleName.message}</span>
+						<span className="form-errors">{errors.middleName.message}</span>
 					)}
 				</div>
 
@@ -249,7 +205,7 @@ const CreateClientForm = ({
 						<select
 							id='day'
 							{...register("day")}
-							defaultValue={clientCurrent?.date_of_birth ? day : ''}
+							defaultValue={currentClient?.date_of_birth ? day : ''}
 							className="input w-[118px] border py-2 pl-4 pr-10 focus:outline-none focus:border-blue-500 ">
 							<CreateOptions min={1} max={31} />
 						</select>
@@ -261,7 +217,7 @@ const CreateClientForm = ({
 						<select
 							id='month'
 							{...register("month")}
-							defaultValue={clientCurrent?.date_of_birth ? month : ''}
+							defaultValue={currentClient?.date_of_birth ? month : ''}
 							className="input w-[138px] border py-2 pl-4 pr-10 focus:outline-none focus:border-blue-500 ">
 							<CreateOptions min={1} max={12} />
 						</select>
@@ -273,7 +229,7 @@ const CreateClientForm = ({
 						<select
 							id='year'
 							{...register("year")}
-							defaultValue={clientCurrent?.date_of_birth ? year : ''}
+							defaultValue={currentClient?.date_of_birth ? year : ''}
 							className="input w-[194px] border py-2 pl-4 pr-10 focus:outline-none focus:border-blue-500">
 							<CreateOptions min={1900} max={new Date().getFullYear()} />
 						</select>
@@ -288,16 +244,16 @@ const CreateClientForm = ({
 				>
 					Параметр 1
 				</label>
-				<div className="relative">
+				<div className="flex relative">
 					<input
 						id="parameter1"
 						type="text"
-						defaultValue={clientCurrent?.parameter_1 && clientCurrent.parameter_1}
+						defaultValue={currentClient?.parameter_1 && currentClient.parameter_1}
 						{...register("parameter1")}
 						className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
 					/>
 					{errors.parameter1 && (
-						<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.parameter1.message}</span>
+						<span className="form-errors">{errors.parameter1.message}</span>
 					)}
 				</div>
 
@@ -307,20 +263,20 @@ const CreateClientForm = ({
 				>
 					Параметр 2
 				</label>
-				<div className="relative">
+				<div className="flex relative">
 					<input
 						id="parameter2"
 						type="text"
-						defaultValue={clientCurrent?.parameter_2 && clientCurrent.parameter_2}
+						defaultValue={currentClient?.parameter_2 && currentClient.parameter_2}
 						{...register("parameter2")}
 						className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
 					/>
 					{errors.parameter2 && (
-						<span className="text-red-500 block absolute bottom-[-22px] left-0">{errors.parameter2.message}</span>
+						<span className="form-errors">{errors.parameter2.message}</span>
 					)}
 				</div>
 			</div>
-			<GreenButton size="big">Відправити</GreenButton>
+			<GreenButton size="big" isDisabled={isDisabled}>Відправити</GreenButton>
 		</form>
 	);
 };

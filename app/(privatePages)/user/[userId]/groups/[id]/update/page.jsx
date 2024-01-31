@@ -2,10 +2,8 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import axios from 'axios';
 import * as XLSX from 'xlsx/xlsx.mjs';
 import Image from 'next/image';
-axios.defaults.baseURL = 'http://localhost:3000/';
 
 import Title from '@/components/Title';
 import GreenButton from '@/components/buttons/GreenButton';

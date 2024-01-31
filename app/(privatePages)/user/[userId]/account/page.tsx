@@ -9,10 +9,10 @@ import Title from "@/components/Title";
 import { ISession } from "@/globaltypes/types";
 import { UpdateUserForm } from "@/components/forms/UpdateUserForm";
 
-export default async function UserAccountPage({ params }: { params: { userId: string } }) {
+export default async function UserAccountPage() {
 	const session: ISession | null = await getServerSession(options);
 	const balance = session?.user.balance;
-	const userId = session?.user.user_id
+	const userId = session?.user.user_id;
 
 	return (
 		<>

@@ -1,22 +1,23 @@
 'use client';
 
-import axios from "axios";
-axios.defaults.baseURL = "http://localhost:3000/";
-
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import { schemaSearchClient } from "@/models/clients";
+import { useState } from "react";
+import GreenButton from "../buttons/GreenButton";
 
 interface IFormInput {
 	tel: string;
 }
 
-type Props = {
+interface Props {
 	getFilter: (e: any) => void;
 	resetFilter: () => void;
 }
 
 export default function SearchClientForm({ getFilter, resetFilter }: Props) {
+	const [isDisabled, setIsDisabled] = useState(true);
+	const [filter, setFilter] = useState('');
 	const {
 		register,
 		handleSubmit,
@@ -48,9 +49,22 @@ export default function SearchClientForm({ getFilter, resetFilter }: Props) {
 		},
 	});
 
+	const onChange = (e: any) => {
+		getFilter(e);
+		setFilter(e.target.value);
+		if (e.target.value) {
+			setIsDisabled(false);
+		} else {
+			setIsDisabled(true);
+		}
+	}
+
 	const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+
+		setIsDisabled(true);
 		reset({ tel: '' });
 		resetFilter();
+		setIsDisabled(false);
 	};
 
 	return (
@@ -64,15 +78,16 @@ export default function SearchClientForm({ getFilter, resetFilter }: Props) {
 			<div className="flex">
 				<input id="tel"
 					type='tel'
+					value={filter}
 					{...register("tel")}
 					className='w-[474px] h-12 mr-8 px-4 input'
-					onChange={getFilter}
+					onChange={onChange}
 					required
 				/>
 				{errors.tel && (
 					<span className="text-red-500 ">{errors.tel.message}</span>
 				)}
-				<input type="submit" className='action__btn' value='Скинути' />
+				<GreenButton size="normal" isDisabled={isDisabled}>Скинути</GreenButton>
 			</div>
 		</form>
 	);
