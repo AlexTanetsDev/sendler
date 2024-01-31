@@ -6,9 +6,8 @@ import { generateToken } from '@/helpers/Users';
 
 // create User
 export async function POST(req: Request) {
-  // try {
+  try {
   const body = await req.json();
-  console.log(body);
 
   const { error, value } = schemaCreateNewUser.validate(body);
 
@@ -23,11 +22,10 @@ export async function POST(req: Request) {
   //existing user by email
   const userEmail = await db.query('SELECT * FROM users WHERE email = $1', [email]);
   const existingUserByEmail = userEmail.rows[0];
-  console.log('existingUserByEmail', existingUserByEmail);
 
   if (existingUserByEmail) {
     return NextResponse.json(
-      { users: null, message: 'User with this email already exists' },
+      { users: null, message: 'Користувач із цією електронною адресою вже існує.' },
       { status: 409 }
     );
   }
@@ -35,10 +33,9 @@ export async function POST(req: Request) {
   //existing user by login
   const userLogin = await db.query('SELECT * FROM users WHERE user_login = $1', [user_login]);
   const existingUserByLogin = userLogin.rows[0];
-  console.log('existingUserByLogin', existingUserByLogin);
   if (existingUserByLogin) {
     return NextResponse.json(
-      { users: null, message: 'User with this login already exists' },
+      { users: null, message: 'Користувач із цим логіном вже існує.' },
       { status: 409 }
     );
   }
@@ -46,10 +43,9 @@ export async function POST(req: Request) {
   //existing user by phone
   const userTel = await db.query('SELECT * FROM users WHERE tel = $1', [tel]);
   const existingUserByName = userTel.rows[0];
-  console.log('existingUserByName', existingUserByName);
   if (existingUserByName) {
     return NextResponse.json(
-      { users: null, message: 'User with this phone already exists' },
+      { users: null, message: 'Користувач із цим номером телефону вже існує' },
       { status: 409 }
     );
   }
@@ -57,10 +53,9 @@ export async function POST(req: Request) {
   //existing user by user name
   const userName = await db.query('SELECT * FROM users WHERE user_name = $1', [user_name]);
   const existingUserByTel = userName.rows[0];
-  console.log('existingUserByTel', existingUserByTel);
   if (existingUserByTel) {
     return NextResponse.json(
-      { users: null, message: 'User with this name already exists' },
+      { users: null, message: 'Користувач із цим ім"ям вже існує.' },
       { status: 409 }
     );
   }
@@ -71,20 +66,17 @@ export async function POST(req: Request) {
   if (!token) {
     return NextResponse.json({ message: 'Token generation failed' }, { status: 500 });
   }
-  console.log('token', token);
   //create new user
   const newUser = await db.query(
     'INSERT INTO users (user_login, tel, user_password, email, user_name, user_token ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *',
     [user_login, tel, hashedPassword, email, user_name, token]
   );
-  console.log('newUser', newUser);
 
   const userCreate = newUser.rows[0];
-  console.log('userCreate', userCreate);
   const { user_password: NewUserPassword, ...rest } = userCreate;
 
   return NextResponse.json({ users: rest, message: 'User Created successfully' }, { status: 201 });
-  // } catch (error) {
-  //   return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
-  // }
+  } catch (error) {
+    return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
+  }
 }

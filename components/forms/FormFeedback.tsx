@@ -6,6 +6,7 @@ import { validationSchemaFeedback } from '@/models/forms';
 import { FormInputFeedback } from '@/globaltypes/types';
 import GreenButton from '../buttons/GreenButton';
 import Image from 'next/image';
+import { handleKeyPress } from '@/helpers/EnterOnlyFigures';
 
 interface Props {
   onClose: (() => void) | undefined;
@@ -52,7 +53,7 @@ const FormFeedback = ({ onClose, title, cross }: Props) => {
       onClose && onClose();
     }
 
-    toast.success('Your submission has been received. We will respond to it as soon as possible.');
+    toast.success('Вашу заявку отримано. Ми відповімо на неї якнайшвидше.');
   };
 
   return (
@@ -90,12 +91,13 @@ const FormFeedback = ({ onClose, title, cross }: Props) => {
           Номер телефону
         </label>
         <div className="flex relative">
+        <span className="absolute left-3 top-[9px]">+380</span>
           <input
             id="phone"
-            type="text"
+            type="tel"
+            onKeyPress={handleKeyPress}
             {...register('phone')}
-            className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-            placeholder="+3801234567"
+            className="w-full border py-2 pr-11 pl-[50px] focus:outline-none focus:border-blue-500 rounded-[18px] input"
           />
           {errors.phone && <span className="form-errors">{errors.phone.message}</span>}
         </div>
