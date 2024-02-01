@@ -1,24 +1,19 @@
 'use client';
 
-import axios from 'axios';
-
 import { useState, useCallback, useEffect } from 'react';
-import { getServerSession } from 'next-auth';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
-import { options } from '@/app/api/auth/[...nextauth]/options';
+
 import getUserHistory from '@/app/utils/getUserHistory';
 import formatTableDate from '@/app/utils/formatTableDate';
 import Title from '@/components/Title';
 import HistoryPeriodForm from '@/components/forms/HistoryPeriodForm';
 import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
 import { IHistoryPeriod, IHistoryResponce } from '@/globaltypes/historyTypes';
-import { ISession } from '@/globaltypes/types';
-import { SmsStatusEnum } from '@/globaltypes/types';
 
 //testData
-const userHistoryTest = [
+const userHistoryTest: IHistoryResponce[] = [
   {
     sending_group_date: new Date(),
     history_id: 123457676,
@@ -34,6 +29,15 @@ const userHistoryTest = [
     group_name: 'Group name',
     send_method: 'API',
     recipient_status: ['fulfield', 'rejected'],
+    text_sms: 'Запрошуємо',
+    user_name: 'FASONCHIKI',
+  },
+  {
+    sending_group_date: new Date(),
+    history_id: 1234512,
+    group_name: 'Group name',
+    send_method: 'Site',
+    recipient_status: ['fulfield', 'rejected', 'fulfield', 'fulfield'],
     text_sms: 'Запрошуємо',
     user_name: 'FASONCHIKI',
   },
@@ -58,8 +62,6 @@ const userHistoryTest = [
 ];
 
 export default function DayHistory({ params }: { params: { userId: string } }) {
-  // const session: ISession | null = await getServerSession(options);
-  // const userId = session?.user.user_id;
   const [userHistory, setUserHistory] = useState<IHistoryResponce[]>([]);
 
   const userId = Number(params.userId);
@@ -112,17 +114,16 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
           </div>
 
           <ul>
-            {userHistoryTest &&
-              userHistoryTest.length !== 0 &&
-              userHistoryTest.map(item => {
+            {userHistory &&
+              userHistory.length !== 0 &&
+              userHistory.map(item => {
                 return (
                   <li
                     key={item.history_id}
                     className="flex items-center justify-between h-[47px] px-[26px] font-roboto text-lg text-black border-b border-[#B5C9BE]"
                   >
                     <p className="w-[130px] text-[#2366E8]">
-                      <Link
-                        href={`by-date/${item.history_id}`}>{item.text_sms}</Link>
+                      <Link href={`by-date/${item.history_id}`}>{item.text_sms}</Link>
                     </p>
                     <p className="w-[118px]">{item.user_name}</p>
                     <p className="w-[126px]">Доставлено</p>
@@ -137,6 +138,15 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
                     <p className="w-[77px] text-[#2366E8]">Export</p>
                     <p className="w-[73px]">&#8212;</p>
                   </li>
+                );
+              })}
+            {(!userHistory || userHistory.length < 3) &&
+              Array.from({ length: 3 - userHistory.length }).map((_, index: number) => {
+                return (
+                  <li
+                    key={index}
+                    className="flex items-center justify-between h-[47px] px-[26px] font-roboto text-lg text-black border-b border-[#B5C9BE]"
+                  ></li>
                 );
               })}
           </ul>

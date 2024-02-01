@@ -1,53 +1,55 @@
-import { redirect } from 'next/navigation';
-
 import { getUserHistory } from '@/app/utils';
 import { IHistoryResponce } from '@/globaltypes/historyTypes';
 import HistoryList from './HistoryList';
 import HistoryPeriodForm from './forms/HistoryPeriodForm';
+
+//Test
+const userHistoryTest: IHistoryResponce[] = [
+  {
+    sending_group_date: new Date(),
+    history_id: 123457676,
+    group_name: 'Group name',
+    send_method: 'API',
+    recipient_status: ['fulfield', 'fulfield', 'fulfield'],
+  },
+  {
+    sending_group_date: new Date(),
+    history_id: 12345767236,
+    group_name: 'Group name',
+    send_method: 'Site',
+    recipient_status: ['fulfield', 'fulfield', 'fulfield', 'fulfield'],
+  },
+  {
+    sending_group_date: new Date(),
+    history_id: 12345,
+    group_name: 'Group name',
+    send_method: 'API',
+    recipient_status: ['fulfield', 'rejected'],
+  },
+  {
+    sending_group_date: new Date(2021, 1, 10),
+    history_id: 1256345,
+    group_name: 'Group name',
+    send_method: 'API',
+    recipient_status: ['pending', 'fulfield'],
+  },
+  {
+    sending_group_date: new Date(2021, 12, 20),
+    history_id: 12336545,
+    group_name: 'Group name',
+    send_method: 'API',
+    recipient_status: ['fulfield', 'fulfield', 'fulfield', 'fulfield'],
+  },
+];
 
 type Props = {
   id: number | undefined;
 };
 
 export default async function HistoryTable({ id }: Props) {
-  let userHistory: IHistoryResponce[] | undefined = await getUserHistory({
+  const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
     id,
   });
-
-  // if (userHistory === undefined) {
-  //   redirect('/');
-  // }
-
-  userHistory = [
-    {
-      sending_group_date: new Date(),
-      history_id: 123457676,
-      group_name: 'Group name',
-      send_method: 'API',
-      recipient_status: ['fulfield', 'fulfield', 'fulfield'],
-    },
-    {
-      sending_group_date: new Date(),
-      history_id: 12345,
-      group_name: 'Group name',
-      send_method: 'API',
-      recipient_status: ['fulfield', 'rejected'],
-    },
-    {
-      sending_group_date: new Date(2021, 1, 10),
-      history_id: 1256345,
-      group_name: 'Group name',
-      send_method: 'API',
-      recipient_status: ['pending', 'fulfield'],
-    },
-    {
-      sending_group_date: new Date(2021, 12, 20),
-      history_id: 12336545,
-      group_name: 'Group name',
-      send_method: 'API',
-      recipient_status: ['fulfield', 'fulfield', 'fulfield', 'fulfield'],
-    },
-  ];
 
   return (
     <>

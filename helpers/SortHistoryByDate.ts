@@ -1,11 +1,11 @@
-import { IHistoryResponce } from "@/globaltypes/historyTypes";
+import { IHistoryResponce } from '@/globaltypes/historyTypes';
 
 export function summarizeHistoryByDate(userHistory: IHistoryResponce[]) {
   const mergedData: Record<string, IHistoryResponce> = {};
 
   userHistory.forEach(entry => {
-		const dateKey: string = entry.sending_group_date.toISOString().split('T')[0];
-		
+    const dateKey: string = entry.sending_group_date.toISOString().split('T')[0];
+
     if (!mergedData[dateKey]) {
       mergedData[dateKey] = {
         sending_group_date: entry.sending_group_date,
@@ -15,8 +15,11 @@ export function summarizeHistoryByDate(userHistory: IHistoryResponce[]) {
         recipient_status: entry.recipient_status,
       };
     } else {
-      mergedData[dateKey].recipient_status = [...mergedData[dateKey].recipient_status, ...entry.recipient_status];
-      // mergedData[dateKey].send_method += `, ${entry.send_method}`;
+      mergedData[dateKey].recipient_status = [
+        ...mergedData[dateKey].recipient_status,
+        ...entry.recipient_status,
+      ];
+      mergedData[dateKey].send_method = mergedData[dateKey].send_method.includes(entry.send_method) ? mergedData[dateKey].send_method : `${mergedData[dateKey].send_method},  ${entry.send_method}`
     }
   });
 

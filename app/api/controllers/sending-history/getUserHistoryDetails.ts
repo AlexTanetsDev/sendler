@@ -1,11 +1,12 @@
-import { fetchUserHistory, fetchUserHistoryDetails } from '@/app/utils';
-
+import { fetchUserHistoryDetails } from '@/app/utils';
 import { QueryResult } from 'pg';
-import { IHistoryResponce, IHistoryPeriod } from '@/globaltypes/historyTypes';
+import { IHistoryDetailsResponce } from '@/globaltypes/historyTypes';
 
-export default async function getUserHistoryDetails(historyId: string): Promise<IHistoryResponce[] | null> {
+export default async function getUserHistoryDetails(
+  historyId: string
+): Promise<IHistoryDetailsResponce[] | null> {
   try {
-    const history: QueryResult<IHistoryResponce> = await fetchUserHistoryDetails(historyId);
+    const history: QueryResult<IHistoryDetailsResponce> = await fetchUserHistoryDetails(historyId);
 
     return history.rows;
   } catch (error: any) {

@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
-import db from '@/db';
 
 import HttpError from '@/helpers/HttpError';
 import { getUserHistory, createUserHistory } from '@/app/api/controllers/sending-history';
-
 import { IErrorResponse } from '@/globaltypes/types';
 import { IHistoryProps, IHistoryResponce } from '@/globaltypes/historyTypes';
 

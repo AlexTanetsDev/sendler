@@ -1,20 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server';
-import db from '@/db';
 
 import HttpError from '@/helpers/HttpError';
-import {
-  getUserHistory,
-  createUserHistory,
-  getUserHistoryDetails,
-} from '@/app/api/controllers/sending-history';
+import { getUserHistoryDetails } from '@/app/api/controllers/sending-history';
 
 import { IErrorResponse } from '@/globaltypes/types';
-import { IHistoryProps, IHistoryResponce } from '@/globaltypes/historyTypes';
+import { IHistoryDetailsProps, IHistoryDetailsResponce } from '@/globaltypes/historyTypes';
 
 export async function GET(
   req: NextRequest,
   { params }: { params: { historyId: string } }
-): Promise<NextResponse<IErrorResponse> | NextResponse<IHistoryProps>> {
+): Promise<NextResponse<IErrorResponse> | NextResponse<IHistoryDetailsProps>> {
   try {
     const historyId = params.historyId;
 
@@ -22,7 +17,7 @@ export async function GET(
       return HttpError(400, `HistoryId required for getting user's history`);
     }
 
-    const result: null | IHistoryResponce[] = await getUserHistoryDetails(historyId);
+    const result: null | IHistoryDetailsResponce[] = await getUserHistoryDetails(historyId);
 
     if (!result) {
       return HttpError(400, `Failed to get user's history by historyId = ${historyId}`);
@@ -33,4 +28,3 @@ export async function GET(
     return NextResponse.json({ message: 'Server error', error: error.message }, { status: 500 });
   }
 }
-

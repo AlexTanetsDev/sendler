@@ -1,19 +1,19 @@
 import axios from 'axios';
 axios.defaults.baseURL = 'http://localhost:3000/';
 
-import { IHistoryResponce, IGetHistoryProps } from '@/globaltypes/historyTypes';
+import { IHistoryDetailsResponce } from '@/globaltypes/historyTypes';
 
 export default async function getUserHistoryDetails(historyId: string) {
   try {
-    const response = await axios.get(`api/sending-history`, {
+    const response = await axios.get(`api/sending-history/${historyId}`, {
       params: {
         historyId,
       },
     });
 
-    const history: IHistoryResponce[] = response.data.history;
+    const historyDetails: IHistoryDetailsResponce[] = response.data.history;
 
-    return history;
+    return historyDetails;
   } catch (error: any) {
     console.log(error.message + ' | ' + error.response.data.error);
   }
