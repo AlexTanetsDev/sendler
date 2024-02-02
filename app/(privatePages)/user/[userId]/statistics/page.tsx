@@ -1,4 +1,5 @@
 import { getServerSession } from "next-auth";
+
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import Title from "@/components/Title";
 import HistoryTable from "@/components/HistoryTable";
