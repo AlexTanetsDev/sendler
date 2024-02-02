@@ -1,10 +1,34 @@
-import Link from "next/link";
-import Image from "next/image";
-import formatTableDate from "@/app/utils/formatTableDate";
-import Title from "@/components/Title";
-import BackStatisticsBtn from "@/components/buttons/BackStatisticsBtn";
+'use client';
 
-export default function HistoryDetails() {
+import { useState, useCallback, useEffect } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import Title from '@/components/Title';
+import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
+import getUserHistoryDetails from '@/app/utils/getUserHistoryDetails';
+import { IHistoryDetailsResponce } from '@/globaltypes/historyTypes';
+
+export default function HistoryDetails({
+  params,
+}: {
+  params: { userId: string; historyId: string };
+}) {
+  const [userHistoryDetails, setUserHistoryDetails] = useState<IHistoryDetailsResponce[]>([]);
+
+  const userId = Number(params.userId);
+  const historyId = String(params.historyId);
+
+  const memoizedUserHistoryDetails = useCallback(async () => {
+    const userHistory: IHistoryDetailsResponce[] | undefined = await getUserHistoryDetails(
+      historyId
+    );
+
+    if (userHistory) setUserHistoryDetails(userHistory);
+  }, [historyId]);
+
+  useEffect(() => {
+    memoizedUserHistoryDetails();
+  }, [memoizedUserHistoryDetails]);
 
   return (
     <section className="container mx-auto">
@@ -16,12 +40,7 @@ export default function HistoryDetails() {
           <div className="flex items-center gap-3 mb-5">
             <p className="text-xl font-roboto text-[#1B1B30]">Розсилки за</p>
             <Link href={`/statistics/`}>
-              <Image
-                src="/svg/excel.svg"
-                alt="Excel icon"
-                width={42}
-                height={42}
-              />
+              <Image src="/svg/excel.svg" alt="Excel icon" width={42} height={42} />
             </Link>
           </div>
           <BackStatisticsBtn>
@@ -53,12 +72,47 @@ export default function HistoryDetails() {
           <p className="w-[130px]">Статус</p>
         </div>
 
-        <div className="flex items-center gap-[100px] h-[47px] px-[26px] font-roboto text-l text-black border-b border-[#B5C9BE]">
-          <p className="w-[166px]">1234567890</p>
-          <p className="w-[196px]"></p>
-          <p className="w-[130px]">1</p>
-          <p className="w-[130px]">Доставлено</p>
-        </div>
+        <ul>
+          {userHistoryDetails &&
+            userHistoryDetails.length !== 0 &&
+            userHistoryDetails.map(item => {
+              return (
+                <li
+                  key={item.client_id}
+                  className="flex items-center gap-[100px] h-[47px] px-[26px] font-roboto text-l text-black border-b border-[#B5C9BE]"
+                >
+                  <p className="w-[166px]">{item.tel}</p>
+                  <p className="w-[196px]">
+                    {new Date(item.sending_group_date).toLocaleString('uk-UA', {
+                      day: '2-digit',
+                      month: '2-digit',
+                      year: 'numeric',
+                      hour: '2-digit',
+                      minute: '2-digit',
+                      second: '2-digit',
+                    })}
+                  </p>
+                  <p className="w-[130px]">{item.recipient_status.length}</p>
+                  <p className="w-[130px]">
+                    {item.recipient_status.every(item => item === 'fulfield')
+                      ? 'Доставлено'
+                      : 'Недоставлено'}
+                    /{item.recipient_status.length}
+                  </p>
+                </li>
+              );
+            })}
+
+          {(!userHistoryDetails || userHistoryDetails.length < 3) &&
+            Array.from({ length: 3 - userHistoryDetails.length }).map((_, index: number) => {
+              return (
+                <li
+                  key={index}
+                  className="flex items-center justify-between h-[47px] px-[26px] font-roboto text-lg text-black border-b border-[#B5C9BE]"
+                ></li>
+              );
+            })}
+        </ul>
       </div>
     </section>
   );
