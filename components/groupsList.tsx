@@ -7,7 +7,7 @@ import ImportGroupBtn from "./buttons/ImportGroupBTN";
 import ExportGroupBtn from "./buttons/ExportGroupBtn";
 
 type Props = {
-	groups: IGroupDatabase[];
+	groups?: IGroupDatabase[];
 	getGroups: () => void,
 }
 
@@ -21,7 +21,7 @@ export default function GroupsList({ groups, getGroups }: Props) {
 				<p>Кількість</p>
 			</div>
 			<ul>
-				{groups[0] ? groups.map((group: IGroupDatabase) => (
+				{groups?.length ? groups?.map((group: IGroupDatabase) => (
 					<li key={group.group_id} className="flex  px-[26px] items-center h-[58px]  text-base font-montserrat font-normal border-b border-rowUnderLine">
 						<div className="w-[110px] mr-[60px] text-left">{group.group_name}</div>
 						<div className="w-[186px] mr-[91px] text-left">{group.group_create_date}</div>

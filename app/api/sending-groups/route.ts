@@ -48,7 +48,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<{
 			}
 
 			return NextResponse.json(
-				{ groups: res},
+				{ groups: res },
 				{ status: 200 }
 			);
 		} catch (error: any) {
@@ -101,7 +101,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<{ message
 		}
 
 		return NextResponse.json(
-			{ group: res, message: "New group created successfully" },
+			{ group: res, message: "New group has been created successfully" },
 			{ status: 201 }
 		);
 	} catch (error: any) {

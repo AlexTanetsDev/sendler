@@ -1,23 +1,20 @@
-import { NextResponse } from "next/server";
-
-import {
-	fetchAllGroupId,
-	fetchGroupClients,
-	fetchOneUserGroupName
-} from "@/app/utils";
-
 import { QueryResult } from "pg";
 import {
 	IGroupId,
 	IClientDatabase,
 	IGroupName,
 } from "@/globaltypes/types";
+import {
+	fetchAllGroupsId,
+	fetchGroupName,
+	fetchGroupClients
+} from "@/api-actions";
 
 export default async function getGroupClients(groupId: number, limit: number | null, visible: number, filter?: string): Promise<{ groupName: string, clients: IClientDatabase[] } | null> {
 	try {
-		const groupsIdDatabaseRes: QueryResult<IGroupId> = await fetchAllGroupId();
+		const groupsIdDatabaseRes: QueryResult<IGroupId> = await fetchAllGroupsId();
 		const groupsIdDatabase: IGroupId[] = groupsIdDatabaseRes.rows;
-		const groupNameRes: QueryResult<IGroupName> = await fetchOneUserGroupName(groupId);
+		const groupNameRes: QueryResult<IGroupName> = await fetchGroupName(groupId);
 		const groupName: string = groupNameRes.rows[0].group_name;
 
 		if (

@@ -1,9 +1,3 @@
-import {
-	insertNewGroup,
-	fetchUserGroupsName,
-	fetchUsersId
-} from "@/app/utils";
-
 import { QueryResult } from "pg";
 import {
 	IUserId,
@@ -11,6 +5,11 @@ import {
 	IGroupName,
 	ErrorCase
 } from "@/globaltypes/types";
+import {
+	insertNewGroup,
+	fetchUsersId,
+	fetchUserGroupsName,
+} from "@/api-actions";
 
 
 export default async function createGroup(groupName: string, userId: number, method: string): Promise<IGroupDatabase | ErrorCase> {

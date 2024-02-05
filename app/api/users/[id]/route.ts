@@ -2,13 +2,20 @@ import { NextResponse } from "next/server";
 import db from "@/db";
 import { hash, compare } from "bcrypt";
 import bcrypt from 'bcrypt';
+import { QueryResult } from "pg";
 import { schemaNewDateUser, schemaUpdateUserPassword } from "@/models/users";
 import { userActive } from "@/helpers/Users";
+import { IUser } from "@/globaltypes/types";
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: { id: string } }): Promise<NextResponse<{
+	user: null;
+	message: string;
+}> | NextResponse<{
+	user: IUser;
+}> | undefined> {
 	const id = params.id;
 
-	const res = await db.query(
+	const res: QueryResult<IUser> = await db.query(
 		`SELECT balance, email, user_active, user_create_date, user_id, user_login, user_name, 		user_role, tel
   	FROM users
 		WHERE user_id = ${id}`
@@ -28,11 +35,13 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 			{ user },
 			{ status: 200 }
 		);
-	}
-}
+	};
+};
 
 // update user
-export async function PUT(req: Request, { params }: { params: { id: string } }) {
+export async function PUT(req: Request, { params }: { params: { id: string } }): Promise<NextResponse<{
+	message: string;
+}>> {
 	const body = await req.json();
 	const id = params.id;
 
@@ -43,7 +52,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 			{ message: error.details[0].message },
 			{ status: 400 }
 		);
-	}
+	};
 
 	const { userLogin, tel, email, password, newPassword, userName } = value;
 
@@ -54,9 +63,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 			{ user: null, message: `User not active` },
 			{ status: 404 }
 		);
-	} else {
-
-	}
+	};
 
 	const resUserData = await db.query(
 		"SELECT email, user_login, tel, user_password FROM users WHERE user_id = $1",
@@ -101,7 +108,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 
 	const newHashedPassword = await bcrypt.hash(newPassword, 10);
 
-	const res = await db.query("UPDATE users SET user_login = $1,  user_password = $2, tel = $3, email = $4, user_name = $5 where user_id = $6 RETURNING balance, email, user_active, user_create_date, user_id, user_login, user_name, user_role, tel", [
+	const res: QueryResult<IUser> = await db.query("UPDATE users SET user_login = $1,  user_password = $2, tel = $3, email = $4, user_name = $5 where user_id = $6 RETURNING balance, email, user_active, user_create_date, user_id, user_login, user_name, user_role, tel", [
 		userLogin,
 		newHashedPassword,
 		tel,
@@ -111,7 +118,7 @@ export async function PUT(req: Request, { params }: { params: { id: string } }) 
 	]);
 
 	return NextResponse.json(
-		{ res: res, message: `User is apdated` },
+		{ res: res, message: `User has been apdated` },
 		{ status: 200 }
 	);
 }
@@ -133,7 +140,7 @@ export async function PATCH(
 				{ message: error.details[0].message },
 				{ status: 400 }
 			);
-		}
+		};
 
 		const { oldPassword, newPassword } = value;
 
@@ -144,7 +151,7 @@ export async function PATCH(
 				{ message: " This the same password " },
 				{ status: 400 }
 			);
-		}
+		};
 
 		const isUserActive = await userActive(id);
 
@@ -167,7 +174,7 @@ export async function PATCH(
 				{ user: null, message: `User with id ${id} not found` },
 				{ status: 404 }
 			);
-		}
+		};
 
 		const isPasswordMatched = await compare(oldPassword, userPassword);
 
@@ -176,7 +183,7 @@ export async function PATCH(
 				{ user: null, message: `Old password is incorrect` },
 				{ status: 400 }
 			);
-		}
+		};
 
 		const newHashPassword = await hash(newPassword, 10);
 
@@ -191,5 +198,5 @@ export async function PATCH(
 			{ message: "Something went wrong!" },
 			{ status: 500 }
 		);
-	}
+	};
 }

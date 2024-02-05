@@ -1,15 +1,14 @@
 import { NextResponse } from "next/server";
 
-import {
-	fetchAllGroupId,
-	deleteClientMemberInGroupData,
-} from "@/app/utils";
-
 import { QueryResult } from "pg";
 import {
 	IGroupId,
 	IClientId
 } from "@/globaltypes/types";
+import {
+	deleteClientMemberInGroupData,
+	fetchAllGroupsId
+} from "@/api-actions";
 
 export default async function editGroup(clients: IClientId[], groupId: number, method: string): Promise<null | NextResponse<{
 	error: string;
@@ -17,7 +16,7 @@ export default async function editGroup(clients: IClientId[], groupId: number, m
 
 	try {
 		//checking group existense
-		const groupsIdRes: QueryResult<IGroupId> = await fetchAllGroupId();
+		const groupsIdRes: QueryResult<IGroupId> = await fetchAllGroupsId();
 		const groupsIdInDatabase: IGroupId[] = groupsIdRes.rows;
 
 		if (

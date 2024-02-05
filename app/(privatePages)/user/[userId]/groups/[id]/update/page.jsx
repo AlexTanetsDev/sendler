@@ -7,7 +7,7 @@ import Image from 'next/image';
 
 import Title from '@/components/Title';
 import GreenButton from '@/components/buttons/GreenButton';
-import { getGroupClientsAndGroupName } from '@/fetch-actions/clientsActions';
+import { getGroupClientsAndGroupName } from '@/fetch-actions/clientsFetchActions';
 import updateGroup from '@/fetch-actions/updateGroup';
 
 export default function UpdateGroupPage({ params }) {
@@ -73,9 +73,9 @@ export default function UpdateGroupPage({ params }) {
         <div className="relative flex flex-row text-base flex items-center justify-start ml-[26px]">
           <label
             htmlFor="file"
-            className="flex items-center justify-between w-[474px] block input w-8 h-[48px] mr-8 pr-[28px] bg-slate-300"
+            className="flex items-center justify-between w-[474px] block input w-8 h-[48px] mr-8 pr-[28px]  pl-[28px] bg-slate-300 hover:cursor-pointer"
           >
-            <div className="grow pl-[28px] main_text">{file.name}</div>
+            <div className="grow main_text">{file.name}</div>
             <Image src="/svg/paper-clip.svg" alt="paper clip" width={32} height={32} className="" />
           </label>
           <input
@@ -84,7 +84,7 @@ export default function UpdateGroupPage({ params }) {
             name="file"
             accept=".xls,.xlsx"
             onChange={handleFileChange}
-            className="absolute input_file h-[48px] mr-8 bg-slate-300"
+            className="absolute input_file h-[48px]bg-slate-300"
           />
           <GreenButton size="normal" onClick={xport}>
             Додати

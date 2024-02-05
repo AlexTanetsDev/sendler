@@ -5,8 +5,7 @@ import { useState, useCallback, useEffect, } from "react";
 import Title from "@/components/Title";
 import ClientsList from "@/components/ClientsList";
 import SearchClientForm from "@/components/forms/SearchClientForm";
-import { getGroupClientsAndGroupName } from "@/fetch-actions/clientsActions";
-import convertClientsBirthdayFormat from '@/helpers/ConvertClientsBirsdayFormat';
+import { getGroupClientsAndGroupName } from "@/fetch-actions/clientsFetchActions";
 import { IGroupId, IUserId, IClientDatabase } from "@/globaltypes/types";
 
 const LIMIT = 10;
@@ -17,7 +16,6 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId, user
 	const [filter, setFilter] = useState('');
 	const [isUpdated, setIsUpdated] = useState(false);
 	const [clients, setClients] = useState<IClientDatabase[] | undefined>([]);
-	const convertClients = convertClientsBirthdayFormat(clients);
 
 	const groupId = Number(params.id);
 	const userId = Number(params.userId);
@@ -64,7 +62,7 @@ export default function EditGroupPage({ params }: { params: { id: IGroupId, user
 						userId={userId}
 						updateClients={updateData}
 						getUpdate={getUpdate}
-						convertClients={convertClients}
+						clients={clients}
 						isUpdated={isUpdated}
 						LIMIT={LIMIT}
 					/>

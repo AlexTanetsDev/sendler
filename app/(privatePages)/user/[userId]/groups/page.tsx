@@ -7,15 +7,15 @@ import GroupsList from "@/components/groupsList";
 import CreateGroupForm from "@/components/forms/CreateGroupForm";
 import GreenButton from "@/components/buttons/GreenButton";
 import Title from "@/components/Title";
-import { getGroups } from '@/fetch-actions/groupsActions'
-
+import { getUserGroups } from '@/fetch-actions/groupsFetchActions';
+import { IGroupDatabase } from '@/globaltypes/types';
 
 export default function ContactManagmentPage({ params }: { params: { userId: string } }) {
-	const [groups, setGroups] = useState([]);
+	const [groups, setGroups] = useState<IGroupDatabase[] | undefined>([]);
 	const userId = Number(params.userId);
 
 	const getData = async () => {
-		const res = await getGroups(userId);
+		const res = await getUserGroups(userId);
 		if (res) {
 			setGroups(res);
 		}

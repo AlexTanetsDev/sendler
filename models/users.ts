@@ -23,11 +23,11 @@ export const schemaCreateNewUser = Joi.object({
 export const schemaNewDateUser = Joi.object({
 	userLogin: Joi.string().required().min(3),
 	tel: Joi.string()
-		.pattern(/^\d{10,}$/)
+		.pattern(/^\d{12,}$/)
 		.required()
 		.messages({
 			"string.pattern.base":
-				'Phone number must have at least 10 digits',
+				'Phone number must have at least 13 digits',
 		}),
 	email: Joi.string()
 		.email({ minDomainSegments: 2, tlds: { allow: ["com", "net"] } })

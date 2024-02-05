@@ -7,9 +7,9 @@ import axios from "axios";
 axios.defaults.baseURL = "http://localhost:3000/";
 
 import { validationSchemaUpdateUser } from "@/models/forms";
-import { FormInputUpdateUser } from "@/globaltypes/types";
+import { FormInputUpdateUser, IUser } from "@/globaltypes/types";
 import GreenButton from "../buttons/GreenButton";
-import { getUser, updateUser } from '@/fetch-actions/usersActions';
+import { getUser, updateUser } from '@/fetch-actions/usersFetchActions';
 
 interface Props {
 	userId: number | undefined
@@ -25,10 +25,12 @@ const UpdateUserForm = ({ userId }: Props) => {
 		user_name: ''
 	});
 
+
 	const { user_login, tel, email, user_name } = userState;
 
 	const onClick = () => {
 		setIsOpen(isOpen => !isOpen);
+		reset();
 	}
 
 	const {
@@ -66,7 +68,10 @@ const UpdateUserForm = ({ userId }: Props) => {
 
 	const getData = async () => {
 		const res = await getUser(userId);
-		if (res) { setUserState(res.data.user); }
+
+		if (res) {
+			setUserState(res.data.user);
+		}
 	}
 
 	const memoizedgetData = useCallback(getData, [userId]);
@@ -78,12 +83,11 @@ const UpdateUserForm = ({ userId }: Props) => {
 	const onSubmit: SubmitHandler<FormInputUpdateUser> = async (data) => {
 
 		setIsDisabled(true);
-		await updateUser(userId, data.login, data.password, data.newPassword, data.userName, data.phone, data.email);
+		await updateUser(userId, data.login, data.password, data.newPassword, data.userName, `380${data.phone}`, data.email);
 		getData();
 		reset();
 		setIsOpen(false);
 		setIsDisabled(false);
-
 	};
 	return (
 		<form
@@ -121,7 +125,7 @@ const UpdateUserForm = ({ userId }: Props) => {
 						<input
 							id="login"
 							type="text"
-							defaultValue={user_login && user_login}
+							defaultValue={user_login}
 							{...register("login")}
 							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
 							placeholder="Your login"
@@ -183,7 +187,7 @@ const UpdateUserForm = ({ userId }: Props) => {
 						<input
 							id="userName"
 							type="text"
-							defaultValue={user_name && user_name}
+							defaultValue={user_name}
 							{...register("userName")}
 							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
 							placeholder="Менеджер Петренко"
@@ -202,13 +206,14 @@ const UpdateUserForm = ({ userId }: Props) => {
 						<span className="ml-1 text-red-700">*</span>
 					</label>
 					<div className="flex relative">
+						<span className="absolute left-3 top-[9px]">+380</span>
 						<input
 							id="phone"
 							type="text"
-							defaultValue={tel && tel}
+							defaultValue={(tel).slice(3, (tel).length)}
 							{...register("phone")}
-							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-							placeholder="380675555544"
+							className="w-full border py-2 pr-11 pl-[50px] focus:outline-none focus:border-blue-500 input"
+							placeholder="675555544"
 							required
 						/>
 						{errors.phone && (
@@ -227,7 +232,7 @@ const UpdateUserForm = ({ userId }: Props) => {
 						<input
 							id="email"
 							type="email"
-							defaultValue={email && email}
+							defaultValue={email}
 							{...register("email")}
 							className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
 							placeholder="example@mail.com"

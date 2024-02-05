@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 
-import { getUserGroups } from "@/app/utils";
+// import { getUserGroups } from '@/api-actions/getUserGroups';
 
 import { IGroupDatabase } from "@/globaltypes/types";
 
