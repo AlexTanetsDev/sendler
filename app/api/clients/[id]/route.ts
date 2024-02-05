@@ -19,7 +19,7 @@ import {
 import {
 	schemaReqClient,
 } from '@/models/clients';
-import updateClientData from "@/app/utils/updateClientData";
+import { updateClientData } from "@/api-actions";
 
 import { QueryResult } from "pg";
 
@@ -56,7 +56,14 @@ export async function GET(_request: NextRequest, { params }: { params: { id: str
 }
 
 // delete one client with id from params
-export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{ message: string; }> | NextResponse<{ error: string; }>> {
+export async function DELETE(_request: NextRequest, { params }: { params: { id: string } }): Promise<NextResponse<{
+	error: string;
+}> | NextResponse<{
+	status: number;
+}> | NextResponse<{
+	message: string;
+	error: any;
+}>> {
 	const clientId = Number(params.id);
 
 	try {
@@ -68,7 +75,6 @@ export async function DELETE(_request: NextRequest, { params }: { params: { id: 
 			return HttpError(400, `The client with id = ${clientId} does not exist`);
 		}
 		return NextResponse.json(
-			{ message: `Client with id = ${clientId} is deleted` },
 			{ status: 200 }
 		);
 	} catch (error: any) {

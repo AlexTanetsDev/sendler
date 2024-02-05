@@ -1,14 +1,5 @@
 import { NextResponse } from "next/server";
 
-import {
-	insertGroupMember,
-	insertNewClientInGroup,
-	fetchAllGroupId,
-	deleteGroupMembersData,
-	fetchGroupUserId,
-	fetchAllUserClients,
-} from "@/app/utils";
-
 import { QueryResult } from "pg";
 import {
 	IGroupId,
@@ -16,7 +7,15 @@ import {
 	IClient,
 	IClientDatabase,
 } from "@/globaltypes/types";
-import updateClientData from "@/app/utils/updateClientData";
+import {
+	fetchAllGroupsId,
+	deleteGroupMembersData,
+	fetchUserIdGroup,
+	fetchUserClients,
+	updateClientData,
+	insertGroupMember,
+	insertNewClientInGroup,
+} from "@/api-actions";
 
 export default async function updateGroup(clients: IClient[], groupId: number, method: string): Promise<null | NextResponse<{
 	error: string;
@@ -24,7 +23,7 @@ export default async function updateGroup(clients: IClient[], groupId: number, m
 
 	try {
 		//checking group existense
-		const groupsIdRes: QueryResult<IGroupId> = await fetchAllGroupId();
+		const groupsIdRes: QueryResult<IGroupId> = await fetchAllGroupsId();
 		const groupsIdInDatabase: IGroupId[] = groupsIdRes.rows;
 
 		if (
@@ -37,13 +36,13 @@ export default async function updateGroup(clients: IClient[], groupId: number, m
 
 		const deleteFunction = deleteGroupMembersData(groupId);
 
-		const userIdResData = fetchGroupUserId(groupId);
+		const userIdResData = fetchUserIdGroup(groupId);
 
 		const [userIdRes]: [QueryResult<IUserId>, void] = await Promise.all([userIdResData, deleteFunction]);
 
 		const userId = userIdRes.rows[0].user_id;
 
-		const userClientsRes: QueryResult<IClientDatabase> = await fetchAllUserClients(userId, '');
+		const userClientsRes: QueryResult<IClientDatabase> = await fetchUserClients(userId, '', null, 0);
 
 		//checking whether a client exists in the user's client list
 		//and adding client

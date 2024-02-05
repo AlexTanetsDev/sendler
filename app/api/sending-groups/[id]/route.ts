@@ -10,7 +10,7 @@ import {
 } from '@/app/api/controllers/sending-groups';
 
 
-import { IClient, IClientDatabase } from "@/globaltypes/types";
+import { IClientDatabase } from "@/globaltypes/types";
 import { IQieryParamsUpdateGroup } from "./types";
 
 import { schemaReqUpdateGroup, schemaReqEditGroup } from '@/models/sending-groups';
@@ -65,7 +65,7 @@ export async function DELETE(_request: NextRequest, { params }: { params: { id: 
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
 		}
 		return NextResponse.json(
-			{ message: `Group with id = ${groupId} is deleted` },
+			{ message: `Group with id = ${groupId} has been  deleted` },
 			{ status: 200 }
 		);
 	} catch (error: any) {
@@ -114,11 +114,8 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
 		}
 
-		const resGet: { groupName: string, clients: IClient[] } | NextResponse<{ message: string; }> | null = await getGroupClients(groupId, null, 0);
-		// console.log('getGroupClients')
-
 		return NextResponse.json(
-			{ resGet, message: `The group is updated` },
+			{ message: `The group has been updated` },
 			{ status: 200 }
 		);
 	} catch (error: any) {
@@ -165,10 +162,8 @@ export async function PATCH(request: NextRequest, { params }: { params: { id: st
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
 		}
 
-		const resGet: { groupName: string, clients: IClient[] } | null = await getGroupClients(groupId, null, 0);
-
 		return NextResponse.json(
-			{ resGet, message: `Clients were deleted` },
+			{ message: `Clients have been deleted` },
 			{ status: 200 }
 		);
 	} catch (error: any) {

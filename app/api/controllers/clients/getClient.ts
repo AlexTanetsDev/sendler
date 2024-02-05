@@ -1,17 +1,16 @@
-import {
-	fetchClientData,
-	fetchAllClientId
-} from "@/app/utils";
-
 import { QueryResult } from "pg";
 import {
 	IClientId,
 	IClientDatabase,
 } from "@/globaltypes/types";
+import {
+	fetchClientData,
+	fetchAllClientsId
+} from "@/api-actions";
 
 export default async function getClient(id: number): Promise<IClientDatabase | null> {
 	try {
-		const clientsIdRes: QueryResult<IClientId> = await fetchAllClientId();
+		const clientsIdRes: QueryResult<IClientId> = await fetchAllClientsId();
 		const clientsIdInDatabase = clientsIdRes.rows;
 
 		if (

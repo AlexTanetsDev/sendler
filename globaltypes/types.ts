@@ -30,7 +30,7 @@ export interface IUserId { user_id: number; }
 
 export interface IUser extends ITel, IUserId {
 	user_login: string;
-	emai: string;
+	email: string;
 	user_name: string;
 	user_active?: boolean;
 	user_password: string;
@@ -57,7 +57,7 @@ export interface IClient {
 }
 
 export interface IClientData {
-	tel: number;
+	tel: string;
 	last_name: string | undefined;
 	first_name: string | undefined;
 	middle_name: string | undefined;
@@ -103,11 +103,11 @@ export interface IClientUpdateReq {
 	client: IClientDatabase;
 };
 
-export interface IClientId { client_id: number; }
-
-export interface IClientId {
-	client_id: number;
+export interface IClientsDeleteReq {
+	clientsId: IClientId[];
 }
+
+export interface IClientId { client_id: number; }
 
 export interface IClientDatabase extends IClientId, IClient, IUserId { }
 
@@ -183,7 +183,7 @@ export interface FormInputCreateClient {
 	lastName?: string;
 	firstName?: string;
 	middleName?: string;
-	phone: number;
+	phone: string;
 	day?: number;
 	month?: number;
 	year?: number;
@@ -196,7 +196,7 @@ export interface FormInputUpdateUser {
 	password: string;
 	newPassword: string;
 	userName: string;
-	phone: number;
+	phone: string;
 	email: string;
 };
 

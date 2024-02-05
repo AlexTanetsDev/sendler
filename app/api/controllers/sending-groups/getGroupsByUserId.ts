@@ -1,13 +1,12 @@
-import {
-	fetchUserGroups,
-	fetchUsersId
-} from "@/app/utils";
-
 import { QueryResult } from "pg";
 import {
 	IUserId,
 	IGroupDatabase,
 } from "@/globaltypes/types";
+import {
+	fetchUserGroups,
+	fetchUsersId
+} from "@/api-actions";
 
 // get all groups for one user by user ID
 export default async function getGroupsByUserId(userId: number): Promise<IGroupDatabase[] | null> {

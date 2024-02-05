@@ -7,16 +7,17 @@ import RSC from "react-scrollbars-custom";
 import GreenButton from './buttons/GreenButton';
 import AddClient from './Addclient';
 import Client from './Client';
-import { deleteClients } from '@/fetch-actions/clientsActions';
-import { deleteGroupClients } from '@/fetch-actions/clientsActions';
+import { deleteClients } from '@/fetch-actions/clientsFetchActions';
+import { deleteGroupClients } from '@/fetch-actions/clientsFetchActions';
 import { IClientDatabase } from '@/globaltypes/types';
 import LoadMore from './LoadMore';
+import convertClientsBirthdayFormat from '@/helpers/ConvertClientsBirsdayFormat';
 
 type Props = {
 	groupId?: number | undefined;
 	filter: string;
 	userId: number;
-	convertClients: IClientDatabase[] | undefined;
+	clients: IClientDatabase[] | undefined;
 	getUpdate: () => void;
 	updateClients: () => Promise<void>;
 	isUpdated: boolean;
@@ -29,15 +30,13 @@ export default function ClientsList({
 	userId,
 	getUpdate,
 	updateClients,
-	convertClients,
+	clients,
 	isUpdated,
 	LIMIT }: Props) {
 	const [isSelected, setIsSelected] = useState(0);
 	const { register, handleSubmit, reset } = useForm();
 	const [isDisabled, setIsDisabled] = useState(false);
-
-
-
+	const convertClients = convertClientsBirthdayFormat(clients);
 
 	const onSelect = (e: any) => {
 		const { checked } = e.target;

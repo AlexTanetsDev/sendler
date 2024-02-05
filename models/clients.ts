@@ -1,14 +1,20 @@
 import Joi from "joi";
 
-import { IClient, IClientReq, IClientUpdateReq } from "@/globaltypes/types";
+import {
+	IClient,
+	IClientReq,
+	IClientUpdateReq,
+	IClientsDeleteReq,
+	ITel
+} from "@/globaltypes/types";
 
 export const schemaClient: Joi.ObjectSchema<IClient> = Joi.object({
 	tel: Joi.string()
-		.pattern(/^\d{10,}$/)
+		.pattern(/^\d{12,}$/)
 		.required()
 		.messages({
 			"string.pattern.base":
-				'Phone number must start with "+" and have at least 10 digits',
+				'Phone number must  have at least 13 digits',
 		}),
 	first_name: Joi.string().allow(""),
 	middle_name: Joi.string().allow(""),
@@ -21,11 +27,11 @@ export const schemaClient: Joi.ObjectSchema<IClient> = Joi.object({
 export const schemaClientDataBase: Joi.ObjectSchema<IClient> = Joi.object({
 	client_id: Joi.number().required(),
 	tel: Joi.string()
-		.pattern(/^\+\d{10,}$/)
+		.pattern(/^\d{12,}$/)
 		.required()
 		.messages({
 			"string.pattern.base":
-				'Phone number must start with "+" and have at least 10 digits',
+				'Phone number must have at least 13 digits',
 		}),
 	first_name: Joi.string().allow(""),
 	middle_name: Joi.string().allow(""),
@@ -46,13 +52,14 @@ export const schemaReqAddClient: Joi.ObjectSchema<IClientReq> = Joi.object({
 	client: schemaClient.required(),
 });
 
+export const schemaReqDeleteClients: Joi.ObjectSchema<IClientsDeleteReq> = Joi.object({
+	clientsId: Joi.array().items(Joi.number())
+});
+
 export const schemaReqClientUpdate: Joi.ObjectSchema<IClientUpdateReq> = Joi.object({
 	client: schemaClientDataBase.required(),
 });
 
-export const schemaSearchClient: Joi.ObjectSchema<number> = Joi.object({
-	tel: Joi.string().pattern(/^\d{12,}$/).messages({
-		"string.pattern.base":
-			'Phone number must start with "+" and have at least 10 digits',
-	})
+export const schemaSearchClient: Joi.ObjectSchema<ITel> = Joi.object({
+	tel: Joi.string()
 })
