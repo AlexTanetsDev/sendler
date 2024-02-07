@@ -8,7 +8,7 @@ import { validationSchemaCreateClient } from "@/models/forms";
 import { FormInputCreateClient, IClientDatabase } from "@/globaltypes/types";
 import GreenButton from "../buttons/GreenButton";
 import CreateOptions from "../CreateOptions";
-import { createGroupClient, updateUserClient } from "@/fetch-actions/clientsActions";
+import { createGroupClient, updateUserClient } from "@/fetch-actions/clientsFetchActions";
 
 interface Props {
 	onClose: (() => void) | undefined;
@@ -73,9 +73,8 @@ const CreateClientForm = ({
 	const onSubmit: SubmitHandler<FormInputCreateClient> = async (data) => {
 		setIsDisabled(true);
 
-		// try {
 		const clientData = {
-			tel: data.phone,
+			tel: `380${data.phone}`,
 			last_name: data.lastName,
 			first_name: data.firstName,
 			middle_name: data.middleName,
@@ -119,13 +118,14 @@ const CreateClientForm = ({
 					<span className="ml-1 text-red-700">*</span>
 				</label>
 				<div className="flex relative">
+					<span className="absolute left-3 top-[9px]">+380</span>
 					<input
 						id="phone"
 						type="text"
-						defaultValue={currentClient?.tel && currentClient.tel}
+						defaultValue={currentClient?.tel && (currentClient.tel).slice(3, (currentClient.tel).length)}
 						{...register("phone")}
-						className="w-full border py-2 px-3 focus:outline-none focus:border-blue-500 input"
-						placeholder="+3801234567"
+						className="w-full border py-2 pr-11 pl-[50px] focus:outline-none focus:border-blue-500 input"
+						placeholder="675555544"
 						required
 					/>
 					{errors.phone && (
@@ -206,7 +206,7 @@ const CreateClientForm = ({
 							id='day'
 							{...register("day")}
 							defaultValue={currentClient?.date_of_birth ? day : ''}
-							className="input w-[118px] border py-2 pl-4 pr-10 focus:outline-none focus:border-blue-500 ">
+							className="input w-[118px] border py-2 pl-4 pr-10 focus:outline-none focus:border-blue-500  hover:cursor-pointer">
 							<CreateOptions min={1} max={31} />
 						</select>
 						<div className="select_arrow">
@@ -218,7 +218,7 @@ const CreateClientForm = ({
 							id='month'
 							{...register("month")}
 							defaultValue={currentClient?.date_of_birth ? month : ''}
-							className="input w-[138px] border py-2 pl-4 pr-10 focus:outline-none focus:border-blue-500 ">
+							className="input w-[138px] border py-2 pl-4 pr-10 focus:outline-none focus:border-blue-500  hover:cursor-pointer">
 							<CreateOptions min={1} max={12} />
 						</select>
 						<div className="select_arrow">
@@ -230,7 +230,7 @@ const CreateClientForm = ({
 							id='year'
 							{...register("year")}
 							defaultValue={currentClient?.date_of_birth ? year : ''}
-							className="input w-[194px] border py-2 pl-4 pr-10 focus:outline-none focus:border-blue-500">
+							className="input w-[194px] border py-2 pl-4 pr-10 focus:outline-none focus:border-blue-500 hover:cursor-pointer">
 							<CreateOptions min={1900} max={new Date().getFullYear()} />
 						</select>
 						<div className="select_arrow">

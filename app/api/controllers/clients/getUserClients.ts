@@ -1,14 +1,12 @@
-import {
-	fetchUserClients,
-	fetchUsersId
-} from "@/app/utils";
-
 import { QueryResult } from "pg";
 import {
 	IUserId,
-	IClient,
 	IClientDatabase,
 } from "@/globaltypes/types";
+import {
+	fetchUserClients,
+	fetchUsersId
+} from "@/api-actions";
 
 // get all groups for one user by user ID
 export default async function getUserClients(userId: number, filter: string, limit: number | null, visible: number): Promise<IClientDatabase[] | null> {

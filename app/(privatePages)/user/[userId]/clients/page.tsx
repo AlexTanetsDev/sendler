@@ -5,8 +5,7 @@ import { useState, useCallback, useEffect } from 'react';
 import Title from '@/components/Title';
 import ClientsList from '@/components/ClientsList';
 import SearchClientForm from '@/components/forms/SearchClientForm';
-import { getUserClients } from '@/fetch-actions/clientsActions';
-import convertClientsBirthdayFormat from '@/helpers/ConvertClientsBirsdayFormat';
+import { getUserClients } from '@/fetch-actions/clientsFetchActions';
 import { IClientDatabase } from '@/globaltypes/types';
 
 const LIMIT = 10;
@@ -16,7 +15,6 @@ export default function AllContactsUserPage({ params }: { params: { id: string, 
 	const [filter, setFilter] = useState('');
 	const [isUpdated, setIsUpdated] = useState(false);
 	const [clients, setClients] = useState<IClientDatabase[] | undefined>([]);
-	const convertClients = convertClientsBirthdayFormat(clients);
 
 	const userId = Number(params.userId);
 
@@ -67,7 +65,7 @@ export default function AllContactsUserPage({ params }: { params: { id: string, 
 						userId={userId}
 						updateClients={updateData}
 						getUpdate={getUpdate}
-						convertClients={convertClients}
+						clients={clients}
 						isUpdated={isUpdated}
 						LIMIT={LIMIT}
 					/>

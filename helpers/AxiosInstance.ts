@@ -25,7 +25,6 @@ axiosInstance.interceptors.response.use(
 	},
 	(error) => {
 		if (axios.isAxiosError(error)) {
-			console.log(error.response?.data.message)
 			if (error.response?.data.message) {
 				toast.error(error.response.status + ' | ' + error.response?.data.message, {
 					position: 'bottom-center',
@@ -50,7 +49,6 @@ axiosInstance.interceptors.response.use(
 				});
 			};
 		} else {
-			console.log(error.message);
 			toast.error(error.message, {
 				position: 'bottom-center',
 				className: 'toast_error',

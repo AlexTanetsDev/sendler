@@ -1,18 +1,16 @@
-import {
-	fetchUserClientsTel,
-	insertNewClient,
-	fetchUsersId,
-	insertGroupMember
-} from "@/app/utils";
-
 import { QueryResult } from "pg";
 import {
 	IUserId,
 	ITelRes,
 	IClient,
 	ErrorCase,
-	IGroupId
 } from "@/globaltypes/types";
+import {
+	fetchUserClientsTel,
+	fetchUsersId,
+	insertNewClient,
+	insertGroupMember
+} from "@/api-actions";
 
 export default async function createClient(client: IClient, userId: number, groupId: number): Promise<ErrorCase | undefined> {
 	try {

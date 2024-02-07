@@ -1,7 +1,7 @@
 import db from "@/db";
 
 import { QueryResult } from "pg";
-import { IClientId, IGroupId } from "@/globaltypes/types";
+import { IClientId } from "@/globaltypes/types";
 
 export default async function insertGroupMember(tel: string, user_id: number, group_id: number): Promise<void> {
 	try {

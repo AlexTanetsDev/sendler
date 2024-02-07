@@ -10,21 +10,22 @@ import {
 
 import HttpError from '@/helpers/HttpError';
 
-import { IQieryParamsCreateClient } from "./types";
+import { IQieryParamsCreateClient, IQieryParamsDeleteClients } from "./types";
 import {
 	ITel,
 	ErrorCase,
 	IClientDatabase
 } from "@/globaltypes/types";
 
-import { schemaReqAddClient } from "@/models/clients";
+import { schemaReqAddClient, schemaReqDeleteClients } from "@/models/clients";
+import deleteClients from "../controllers/clients/deleteClients";
+
 
 // get all clients for one user with user_id from search params
 export async function GET(request: NextRequest): Promise<NextResponse<{
 	error: string;
 }> | NextResponse<{
 	clients: IClientDatabase[];
-	message: string;
 }> | NextResponse<{
 	message: string;
 	error: any;
@@ -50,7 +51,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<{
 			}
 
 			return NextResponse.json(
-				{ clients: res, message: 'Get a clients.' },
+				{ clients: res },
 				{ status: 200 }
 			);
 		} catch (error: any) {
@@ -64,7 +65,7 @@ export async function GET(request: NextRequest): Promise<NextResponse<{
 }
 
 // create client for user with user_id from search params
-export async function POST(request: NextRequest, { params }: { params: { userId: string } }): Promise<NextResponse<{
+export async function POST(request: NextRequest): Promise<NextResponse<{
 	message: string;
 }> | NextResponse<{
 	error: any;
@@ -80,11 +81,11 @@ export async function POST(request: NextRequest, { params }: { params: { userId:
 				{ error: error.message },
 				{ status: 400 }
 			);
-		}
+		};
 
 		if (!client) {
 			return HttpError(400, `The client is empty`);
-		}
+		};
 
 		const res: ErrorCase | undefined = await createClient(client, userId, groupId);
 		const { tel }: ITel = client;
@@ -98,12 +99,44 @@ export async function POST(request: NextRequest, { params }: { params: { userId:
 				{
 					return HttpError(400, `The client with tel ${tel} already exists`);
 				}
-		}
+		};
 		return NextResponse.json(
-			{ message: "New client created successfully" },
+			{ message: "New client has been created successfully" },
 			{ status: 201 }
 		);
 	} catch (error: any) {
 		return NextResponse.json({ error: error.message }, { status: 500 });
 	}
+};
+
+
+
+export async function DELETE(request: NextRequest) {
+	try {
+		const body: IQieryParamsDeleteClients = await request.json();
+		const { error, value } = schemaReqDeleteClients.validate(body);
+		const { clientsId } = value;
+
+		console.log('value', value)
+		const res = await deleteClients(clientsId);
+
+		if (error) {
+			return NextResponse.json(
+				{ error: error.message },
+				{ status: 400 }
+			);
+		};
+
+		if (res.length > 0) {
+			return HttpError(400, `The clients with id = ${res} don't exist`);
+		};
+
+		return NextResponse.json(
+			{ message: "Clients have been deleted." },
+			{ status: 200 }
+		);
+	} catch (error: any) {
+		return NextResponse.json({ error: error.message }, { status: 500 });
+	}
 }
+

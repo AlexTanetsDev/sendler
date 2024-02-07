@@ -1,7 +1,7 @@
 import {
 	insertNewClient,
 	deleteGroupData
-} from ".";
+} from "@/api-actions";
 
 import { IClient } from "@/globaltypes/types";
 
