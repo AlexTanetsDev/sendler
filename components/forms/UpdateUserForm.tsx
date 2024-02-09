@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback } from "react";
 import Image from "next/image";
 import { useForm, SubmitHandler } from "react-hook-form";
+import axios from "axios";
+axios.defaults.baseURL = "http://localhost:3000/";
 
 import { validationSchemaUpdateUser } from "@/models/forms";
 import { FormInputUpdateUser, IUser } from "@/globaltypes/types";
@@ -66,6 +68,7 @@ const UpdateUserForm = ({ userId }: Props) => {
 
 	const getData = async () => {
 		const res = await getUser(userId);
+
 		if (res) {
 			setUserState(res.data.user);
 		}
