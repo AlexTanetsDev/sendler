@@ -4,7 +4,7 @@ type Props = {
 }
 
 const CreateOptions = ({ min, max }: Props) => {
-	const optionsValus = (min: number, max: number) => {
+	const getOptionsValus = (min: number, max: number) => {
 		const optionsArray = [];
 		for (let i = min; i <= max; i += 1) {
 			optionsArray.push(i);
@@ -12,7 +12,7 @@ const CreateOptions = ({ min, max }: Props) => {
 		return optionsArray;
 	};
 
-	const selectOptions = optionsValus(min, max);
+	const selectOptions = getOptionsValus(min, max);
 
 	return (
 		<>
@@ -21,5 +21,5 @@ const CreateOptions = ({ min, max }: Props) => {
 			))}
 		</>
 	)
-}
-export default CreateOptions
+};
+export default CreateOptions;

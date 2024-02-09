@@ -120,7 +120,7 @@ export async function PUT(request: NextRequest, { params }: { params: { id: stri
 			return HttpError(400, `The client with id = ${clientId} does not exist`);
 		}
 		return NextResponse.json(
-			{ client: res.rows[0], message: `The client is updated` },
+			{ client: res.rows[0], message: `The client has been updated` },
 			{ status: 200 }
 		);
 	} catch (error: any) {

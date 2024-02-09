@@ -37,6 +37,8 @@ export interface IUser extends ITel, IUserId {
 	balance?: number;
 	user_token?: string | null;
 	user_create_date: Date;
+	alfa_names_active: string[];
+	alfa_names_disable: string[];
 }
 
 export interface INewDataUser {

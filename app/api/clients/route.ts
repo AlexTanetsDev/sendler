@@ -97,7 +97,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<{
 				};
 			case 2:
 				{
-					return HttpError(400, `The client with tel ${tel} already exists`);
+					return HttpError(400, `The client with tel: ${tel} already exists`);
 				}
 		};
 		return NextResponse.json(
@@ -117,7 +117,6 @@ export async function DELETE(request: NextRequest) {
 		const { error, value } = schemaReqDeleteClients.validate(body);
 		const { clientsId } = value;
 
-		console.log('value', value)
 		const res = await deleteClients(clientsId);
 
 		if (error) {
