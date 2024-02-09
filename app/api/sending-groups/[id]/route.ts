@@ -65,7 +65,7 @@ export async function DELETE(_request: NextRequest, { params }: { params: { id: 
 			return HttpError(400, `The group with id = ${groupId} does not exist`);
 		}
 		return NextResponse.json(
-			{ message: `Group with id = ${groupId} has been  deleted` },
+			{ message: `Group has been  deleted` },
 			{ status: 200 }
 		);
 	} catch (error: any) {

@@ -20,4 +20,6 @@ export { default as fetchAllClientsId } from "./fetchAllClientsId";
 export { default as fetchAllClients } from "./fetchAllClients";
 export { default as fetchGroupName } from "./fetchGroupName";
 export { default as fetchGroupClients } from "./fetchGroupClients";
+export { default as fetchUser } from "./fetchUser";
+
 
