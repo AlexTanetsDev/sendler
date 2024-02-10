@@ -1,10 +1,17 @@
+'use client';
+
+// import axios from 'axios';
+// axios.defaults.baseURL = 'http://localhost:3000/';
+
+import { useEffect, useState, useCallback } from 'react';
 import { getUserHistory } from '@/app/utils';
 import { IHistoryResponce } from '@/globaltypes/historyTypes';
 import HistoryList from './HistoryList';
 import HistoryPeriodForm from './forms/HistoryPeriodForm';
+import { FormInputsPeriod } from './forms/HistoryPeriodForm';
 
 //Test
-const userHistoryTest: IHistoryResponce[] = [
+const userHistory: IHistoryResponce[] = [
   {
     sending_group_date: new Date(),
     history_id: 123457676,
@@ -47,14 +54,64 @@ type Props = {
 };
 
 export default async function HistoryTable({ id }: Props) {
-  const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
-    id,
-  });
+  const [userHistory, setUserHistory] = useState<IHistoryResponce[] | undefined>([]);
+
+  // useEffect(() => {
+  //   async function fetchAPI() {
+  //     // const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
+  //     //   id,
+  //     // });
+  //     try {
+  //       // const response = await axios.get(`/api/sending-history`, {
+  //       //   params: {
+  //       //     userId: id,
+  //       //   },
+  //       // });
+  //       // const userHistory: IHistoryResponce[] = response.data.history;
+  //       // setUserHistory(userHistory);
+  //     } catch (error: any) {
+  //       console.log(error.message + ' | ' + error.response.data.error);
+  //       setUserHistory([]);
+  //     }
+  //   }
+  //   fetchAPI();
+  // }, []);
+
+  const memoizedUserHistory = useCallback(async () => {
+    // const historyPeriod: IHistoryPeriod = {
+    //   startDate: historyDate ? new Date(historyDate) : undefined,
+    //   endDate: historyDate ? new Date(historyDate) : undefined,
+    // };
+    const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
+      id,
+      // historyPeriod,
+    });
+
+    if (userHistory) setUserHistory(userHistory);
+  }, [id]);
+
+  useEffect(() => {
+    memoizedUserHistory();
+  }, [memoizedUserHistory]);
+
+  const handleHistoryPeriod = (data: IHistoryResponce[]) => {
+    console.log(data);
+
+    //   try {
+    //     //   const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
+    //     //     id,
+    //     //     historyPeriod: data,
+    //     //   });
+    // setUserHistory(data);
+    //   } catch (error) {
+    //     console.log(error);
+    //   }
+  };
 
   return (
     <>
       <div className="content-block">
-        <HistoryPeriodForm />
+        <HistoryPeriodForm onSubmitPeriod={handleHistoryPeriod} id={id} />
         <div className="flex items-center gap-[100px] h-[58px] px-[26px] font-roboto text-[20px] text-white bg-[#417D8A]">
           <p className="w-[194px]">Шлях відправлення</p>
           <p className="w-[184px]">Дата</p>
