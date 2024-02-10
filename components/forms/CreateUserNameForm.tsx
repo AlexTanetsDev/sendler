@@ -6,14 +6,14 @@ import { schemaReqCreateGroup } from "@/models/sending-groups";
 
 import { IGroupName } from "@/globaltypes/types";
 import GreenButton from "@/components/buttons/GreenButton";
-import { createGroup } from "@/fetch-actions/groupsFetchActions";
 
 type Props = {
-	id: number | undefined;
-	getGroups: () => void;
+	userId: number;
+	getUserNamesArray: (id: number) => void;
+	getIsOpened: () => void;
 }
 
-export default function CreateGroupForm({ id, getGroups }: Props) {
+export default function CreateUserNameForm({ userId, getUserNamesArray, getIsOpened }: Props) {
 
 	const {
 		register,
@@ -47,17 +47,18 @@ export default function CreateGroupForm({ id, getGroups }: Props) {
 	})
 
 	const onSubmit: SubmitHandler<IGroupName> = async (data) => {
-		await createGroup(data.group_name, id);
-		getGroups();
+		// await creaUserName(data.group_name, id);
+		getUserNamesArray(userId);
+		getIsOpened();
 		reset({ group_name: '' });
 	}
 	return (
 		<form
 			autoComplete="off"
 			onSubmit={handleSubmit(onSubmit)}
-			className='mb-[50px] ml-[26px]'>
+			className='mt-8'>
 			<label htmlFor='group_name' className='block mb-3.5 label'>
-				Назва групи
+				Нове ім&apos;я
 			</label>
 			<div className='flex items-center'>
 				<input id="group_name"
@@ -69,7 +70,7 @@ export default function CreateGroupForm({ id, getGroups }: Props) {
 				{errors.group_name && (
 					<span className="text-red-500 ">{errors.group_name.message}</span>
 				)}
-				<GreenButton size="normal">Створити</GreenButton>
+				<GreenButton size="normal">Додати</GreenButton>
 			</div>
 		</form>
 	);

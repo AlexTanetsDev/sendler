@@ -17,7 +17,7 @@ interface Props {
 
 export default function SearchClientForm({ getFilter, resetFilter }: Props) {
 	const [isDisabled, setIsDisabled] = useState(true);
-	const [filter, setFilter] = useState('');
+	const [filter, setFilter] = useState('380');
 	const {
 		register,
 		handleSubmit,
@@ -56,8 +56,8 @@ export default function SearchClientForm({ getFilter, resetFilter }: Props) {
 			setIsDisabled(false);
 		} else {
 			setIsDisabled(true);
-		}
-	}
+		};
+	};
 
 	const onSubmit: SubmitHandler<IFormInput> = async (data) => {
 

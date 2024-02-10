@@ -12,9 +12,9 @@ const LIMIT = 10;
 
 export default function EditGroupPage({ params }: { params: { id: IGroupId, userId: IUserId } }) {
 
-	const [groupName, setGroupName] = useState('');
-	const [filter, setFilter] = useState('');
-	const [isUpdated, setIsUpdated] = useState(false);
+	const [groupName, setGroupName] = useState<string>('');
+	const [filter, setFilter] = useState<string>('');
+	const [isUpdated, setIsUpdated] = useState<boolean>(false);
 	const [clients, setClients] = useState<IClientDatabase[] | undefined>([]);
 
 	const groupId = Number(params.id);
