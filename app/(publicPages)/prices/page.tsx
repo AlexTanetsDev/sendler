@@ -9,7 +9,7 @@ type Props = {};
 const Prices = () => {
   return (
     <>
-      <section className="w-full bg-[url('/bg-prices.png')] bg-cover flex flex-col items-center pt-[213px] pb-[248px] h-[606px]">
+      <section className="w-full bg-[url('/bg-prices.jpg')] bg-cover flex flex-col items-center pt-[213px] pb-[248px] h-[606px]">
         <div className="container ">
         <Title type="h1" color="light"> Вартість послуг на SMS розсилку</Title>
           <div className=" flex gap-[14px] mt-11 lg:mt-12 ">

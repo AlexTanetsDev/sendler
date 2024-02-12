@@ -10,7 +10,7 @@ const About = () => {
           Про сервіс
         </Title>
       </div>
-      <section className="bg-[url('/bg-about.png')] bg-cover flex flex-col items-center py-[116px]  h-[400px] w-full">
+      <section className="bg-[url('/bg-about.jpg')] bg-cover flex flex-col items-center py-[116px]  h-[400px] w-full">
         <div className="container">
           <p className="max-w-[855px] font-montserrat text-lg text-white">
             Компанія &quot;Інноваційні медіа рішення&quot; була заснована у 2000

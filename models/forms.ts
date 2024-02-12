@@ -30,10 +30,10 @@ export const validationSchemaSignUp = Joi.object({
 			'any.only': '{{#label}} does not match',
 		}),
 	phone: Joi.string()
-		.pattern(/^\d{10}$/)
+		.pattern(/^\d{9}$/)
 		.required()
 		.messages({
-			'string.pattern.base': 'Введіть правильний номер телефону (10 цифр)',
+			'string.pattern.base': 'Введіть правильний номер телефону (9 цифр)',
 		}),
 	email: Joi.string()
 		.email({ tlds: { allow: false } })
@@ -89,7 +89,7 @@ export const validationSchemaUpdateUser = Joi.object({
 		.pattern(/^\d{9,}$/)
 		.required()
 		.messages({
-			'string.pattern.base': 'Phone number must have at least 10 digits',
+			'string.pattern.base': 'Phone number must have at least 9 digits',
 		}),
 	email: Joi.string()
 		.email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } })
