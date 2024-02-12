@@ -304,6 +304,22 @@ select::-ms-expand {
   transform: translate(-50%, -50%);
 }
 
+.select-wrap {
+  @apply relative h-12 bg-white border-[1px] justify-center cursor-pointer;
+}
+
+.select {
+  @apply flex justify-between items-center w-full h-full;
+}
+
+.select-body {
+  @apply w-full py-3 bg-white rounded-[18px] border-[1px] border-[#E6E6E6];
+}
+
+.select-item {
+  @apply h-6 px-7 hover:bg-formBg font-montserrat font-normal text-lg leading-6;
+}
+
 input[type='checkbox']:checked,
 input[type='checkbox']:not(:checked) {
   position: absolute;

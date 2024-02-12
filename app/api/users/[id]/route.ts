@@ -6,36 +6,57 @@ import { QueryResult } from "pg";
 import { schemaNewDateUser, schemaUpdateUserPassword } from "@/models/users";
 import { userActive } from "@/helpers/Users";
 import { IUser } from "@/globaltypes/types";
+import { fetchUser } from "@/api-actions";
 
-export async function GET(req: Request, { params }: { params: { id: string } }): Promise<NextResponse<{
-	user: null;
-	message: string;
-}> | NextResponse<{
-	user: IUser;
-}> | undefined> {
+
+export async function GET(req: Request, { params }: { params: { id: string } }) {
 	const id = params.id;
 
-	const res: QueryResult<IUser> = await db.query(
-		`SELECT balance, email, user_active, user_create_date, user_id, user_login, user_name, 		user_role, tel
-  	FROM users
-		WHERE user_id = ${id}`
-	);
+	const user = await fetchUser(id);
 
-	if (!res) {
-		return NextResponse.json(
-			{ user: null, message: `User not found` },
-			{ status: 404 }
-		);
-	}
-
-	const user = res.rows[0]
-
-	if (res) {
+	if (user) {
 		return NextResponse.json(
 			{ user },
 			{ status: 200 }
 		);
 	};
+
+	// const res: QueryResult<IUser> = await db.query(
+	// 	`SELECT balance, email, user_active, user_create_date, user_id, user_login, user_name, user_role, tel
+	// 	FROM users
+	// 	WHERE user_id = ${id}`
+	// );
+
+	// const resAlfaNames = await db.query(`SELECT alfa_name
+	// FROM sendler_name
+	// WHERE user_id = ${id}`
+	// );
+
+	// const alfaNames = [];
+
+	// for (const name of resAlfaNames.rows) {
+	// 	alfaNames.push(name.alfa_name)
+	// }
+
+	// if (!res) {
+	// 	return NextResponse.json(
+	// 		{ user: null, message: `User not found` },
+	// 		{ status: 404 }
+	// 	);
+	// }
+
+	// const user = res.rows[0];
+	// user.alfa_names = alfaNames;
+
+	// console.log('user', user)
+
+	// if (res) {
+	// 	return NextResponse.json(
+	// 		{ user },
+	// 		{ status: 200 }
+	// 	);
+	// };
+
 };
 
 // update user

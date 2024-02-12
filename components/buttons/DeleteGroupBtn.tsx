@@ -1,4 +1,4 @@
-import axios from "axios";
+import { deleteGroup } from "@/fetch-actions/groupsFetchActions";
 
 type Props = {
 	id: number;
@@ -9,13 +9,10 @@ type Props = {
 export default function DeleteGroupBtn({ id, getGroups, children }: Props) {
 
 	const handleClick = async () => {
-		try {
-			await axios.delete(`api/sending-groups/${id}`);
-			getGroups();
-		} catch (error: any) {
-			console.log(error.message)
-		}
+		await deleteGroup(id);
+		getGroups();
 	}
+
 	return (
 		<button type="button" onClick={handleClick} className="row-table__btn">
 			{children}

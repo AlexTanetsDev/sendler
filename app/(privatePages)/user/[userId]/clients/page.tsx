@@ -12,8 +12,8 @@ const LIMIT = 10;
 
 export default function AllContactsUserPage({ params }: { params: { id: string, userId: string } }) {
 
-	const [filter, setFilter] = useState('');
-	const [isUpdated, setIsUpdated] = useState(false);
+	const [filter, setFilter] = useState<string>('');
+	const [isUpdated, setIsUpdated] = useState<boolean>(false);
 	const [clients, setClients] = useState<IClientDatabase[] | undefined>([]);
 
 	const userId = Number(params.userId);
