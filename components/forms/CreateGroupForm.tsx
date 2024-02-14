@@ -11,7 +11,7 @@ import { createGroup } from "@/fetch-actions/groupsFetchActions";
 type Props = {
 	id: number | undefined;
 	getGroups: () => void;
-}
+};
 
 export default function CreateGroupForm({ id, getGroups }: Props) {
 
@@ -34,17 +34,17 @@ export default function CreateGroupForm({ id, getGroups }: Props) {
 								validationErrors[detail.context.key] = {
 									message: detail.message,
 								};
-							}
+							};
 						}
 					);
-				}
+				};
 				return {
 					values: {},
 					errors: validationErrors,
 				};
 			}
 		},
-	})
+	});
 
 	const onSubmit: SubmitHandler<IGroupName> = async (data) => {
 		await createGroup(data.group_name, id);
@@ -67,7 +67,7 @@ export default function CreateGroupForm({ id, getGroups }: Props) {
 					required
 				/>
 				{errors.group_name && (
-					<span className="text-red-500 ">{errors.group_name.message}</span>
+					<span className="text-red-500">{errors.group_name.message}</span>
 				)}
 				<GreenButton size="normal">Створити</GreenButton>
 			</div>

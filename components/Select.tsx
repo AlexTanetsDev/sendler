@@ -67,7 +67,6 @@ const Select = ({ selectOptions, selectedOption, getSelect, widthValue = 474, st
 						className="absolute top-1/2 -translate-y-1/2 right-7 ml-auto cursor-pointer"
 					/>}
 			</div>
-
 			{isOpen && <div className={`w-full overflow-auto h-24 -mt-[2px] bg-white rounded-b-[18px] border-[1px] border-[#E6E6E6] border-t-0`} ref={selectBodyRef}>
 				<RSC>
 					{selectOptions?.map((selectOption) => (
