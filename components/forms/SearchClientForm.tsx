@@ -63,6 +63,7 @@ export default function SearchClientForm({ getFilter, resetFilter }: Props) {
 
 		setIsDisabled(true);
 		reset({ tel: '' });
+		setFilter('380');
 		resetFilter();
 		setIsDisabled(false);
 	};
@@ -85,7 +86,7 @@ export default function SearchClientForm({ getFilter, resetFilter }: Props) {
 					required
 				/>
 				{errors.tel && (
-					<span className="text-red-500 ">{errors.tel.message}</span>
+					<span className="form-errors">{errors.tel.message}</span>
 				)}
 				<GreenButton size="normal" isDisabled={isDisabled}>Скинути</GreenButton>
 			</div>
