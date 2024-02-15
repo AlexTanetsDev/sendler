@@ -7,10 +7,14 @@ type Props = {
 	getSelect: (item: string) => void;
 	widthValue?: number;
 	startValue?: string;
-	heightBodySelect: number;
 }
 
-const Select = ({ selectOptions, selectedOption, getSelect, widthValue = 474, startValue, heightBodySelect }: Props) => {
+const Select = ({
+	selectOptions,
+	selectedOption,
+	getSelect,
+	widthValue = 474,
+	startValue }: Props) => {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 	const selectBodyRef = useRef<HTMLDivElement | null>(null);
 	let key = 0;

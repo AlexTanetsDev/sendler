@@ -7,10 +7,13 @@ type Props = {
 	getSelect: (item: string) => void;
 	widthValue?: number;
 	startValue?: string;
-	heightBodySelect: number;
 }
 
-const SelectTime = ({ selectOptions, selectedOption, getSelect, widthValue = 474, startValue, heightBodySelect }: Props) => {
+const SelectTime = ({ selectOptions,
+	selectedOption,
+	getSelect,
+	widthValue = 474,
+	startValue }: Props) => {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 
 	const selectBodyRef = useRef<HTMLDivElement | null>(null);

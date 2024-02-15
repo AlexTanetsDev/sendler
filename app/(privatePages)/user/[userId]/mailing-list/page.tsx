@@ -148,7 +148,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 					</p>
 					<p className=" text-mainTextColor font-normal text-xl mt-[50px] label">Ім’я відправника</p>
 					<div className="flex gap-8 items-center mt-3">
-						<Select selectOptions={userNames} getSelect={getUserName} selectedOption={userName} widthValue={474} heightBodySelect={24} startValue='Обрати' />
+						<Select selectOptions={userNames} getSelect={getUserName} selectedOption={userName} widthValue={474} startValue='Обрати' />
 						<GreenButton size="normal" onClick={getIsOpened}>
 							Додати ім’я
 						</GreenButton>
@@ -190,9 +190,9 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 					</p>
 					<div className="flex gap-8 mt-8 mb-8">
 						<RecipientsForm recipients={recipients} getRecipients={getRecipients} />
-						<div className="flex flex-col gap-8 justify-start">
+						<div className="flex flex-col gap-16 justify-start">
 							<div>
-								<Select selectOptions={groupsNameArray} getSelect={getGroupName} selectedOption={groupName} widthValue={474} heightBodySelect={24} startValue='Обрати' />
+								<Select selectOptions={groupsNameArray} getSelect={getGroupName} selectedOption={groupName} widthValue={474} startValue='Обрати' />
 								<button onClick={handleClickAddGroup} className="mt-2 text-emailColorLink cursor-pointer">Додати групу до списку</button>
 							</div>
 							<AddClientPhoneNumberForm handleClick={handleClickAddPhoneNumber} />
@@ -231,9 +231,9 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 					/>
 					<p className=" text-xl text-mainTextColor mb-[13px] mt-[32px]">{'Час (з,по)'}</p>
 					<div className="flex gap-3 mt-3 items-center">
-						<SelectTime selectOptions={getTimeOptionsValus(1, 24)} getSelect={getHour} selectedOption={hour} widthValue={150} heightBodySelect={60} startValue='00' />
-						<SelectTime selectOptions={getTimeOptionsValus(1, 60)} getSelect={geMinute} selectedOption={minute} widthValue={150} heightBodySelect={60} startValue='00' />
-						<SelectTime selectOptions={getTimeOptionsValus(1, 60)} getSelect={getSecond} selectedOption={second} widthValue={150} heightBodySelect={60} startValue='00' />
+						<SelectTime selectOptions={getTimeOptionsValus(1, 24)} getSelect={getHour} selectedOption={hour} widthValue={150} startValue='00' />
+						<SelectTime selectOptions={getTimeOptionsValus(1, 60)} getSelect={geMinute} selectedOption={minute} widthValue={150} startValue='00' />
+						<SelectTime selectOptions={getTimeOptionsValus(1, 60)} getSelect={getSecond} selectedOption={second} widthValue={150} startValue='00' />
 					</div>
 				</div>
 			)}
