@@ -190,12 +190,12 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 					</p>
 					<div className="flex gap-8 mt-8 mb-8">
 						<RecipientsForm recipients={recipients} getRecipients={getRecipients} />
-						<div className="flex flex-col gap-16 justify-start">
+						<div className="flex flex-col gap-8 justify-start">
+							<AddClientPhoneNumberForm handleClick={handleClickAddPhoneNumber} />
 							<div>
 								<Select selectOptions={groupsNameArray} getSelect={getGroupName} selectedOption={groupName} widthValue={474} startValue='Обрати' />
 								<button onClick={handleClickAddGroup} className="mt-2 text-emailColorLink cursor-pointer">Додати групу до списку</button>
 							</div>
-							<AddClientPhoneNumberForm handleClick={handleClickAddPhoneNumber} />
 						</div>
 					</div>
 				</div>
