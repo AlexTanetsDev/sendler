@@ -2,28 +2,29 @@
 
 import { useForm, SubmitHandler } from "react-hook-form";
 
-import { schemaReqCreateGroup } from "@/models/sending-groups";
+import { schemaCreateAlfaName } from "@/models/users";
 
-import { IGroupName } from "@/globaltypes/types";
+import { IUserAlfaName } from "@/globaltypes/types";
 import GreenButton from "@/components/buttons/GreenButton";
+import { createAlfaName } from "@/fetch-actions/usersFetchActions";
 
 type Props = {
 	userId: number;
 	getUserNamesArray: (id: number) => void;
 	getIsOpened: () => void;
-}
+};
 
-export default function CreateUserNameForm({ userId, getUserNamesArray, getIsOpened }: Props) {
+export default function AddAlfaNameForm({ userId, getUserNamesArray, getIsOpened }: Props) {
 
 	const {
 		register,
 		handleSubmit,
 		reset,
 		formState: { errors },
-	} = useForm<IGroupName>({
+	} = useForm<IUserAlfaName>({
 		resolver: async (data) => {
 			try {
-				await schemaReqCreateGroup.validateAsync(data, { abortEarly: false });
+				await schemaCreateAlfaName.validateAsync(data, { abortEarly: false });
 				return { values: data, errors: {} };
 			} catch (error: any) {
 				const validationErrors: Record<string, { message: string }> = {};
@@ -37,40 +38,41 @@ export default function CreateUserNameForm({ userId, getUserNamesArray, getIsOpe
 							}
 						}
 					);
-				}
+				};
 				return {
 					values: {},
 					errors: validationErrors,
 				};
 			}
 		},
-	})
+	});
 
-	const onSubmit: SubmitHandler<IGroupName> = async (data) => {
-		// await creaUserName(data.group_name, id);
+	const onSubmit: SubmitHandler<IUserAlfaName> = async (data) => {
+		await createAlfaName(data.alfa_name, userId);
 		getUserNamesArray(userId);
 		getIsOpened();
-		reset({ group_name: '' });
-	}
+		reset({ alfa_name: '' });
+	};
+
 	return (
 		<form
 			autoComplete="off"
 			onSubmit={handleSubmit(onSubmit)}
 			className='mt-8'>
-			<label htmlFor='group_name' className='block mb-3.5 label'>
+			<label htmlFor='alfa_name' className='block mb-3.5 label'>
 				Нове ім&apos;я
 			</label>
 			<div className='flex items-center'>
-				<input id="group_name"
+				<input id="alfa_name"
 					type='text'
-					{...register("group_name")}
+					{...register("alfa_name")}
 					className='w-[474px] h-12 mr-8 px-4 input'
 					required
 				/>
-				{errors.group_name && (
-					<span className="text-red-500 ">{errors.group_name.message}</span>
+				{errors.alfa_name && (
+					<span className="text-red-500 ">{errors.alfa_name.message}</span>
 				)}
-				<GreenButton size="normal">Додати</GreenButton>
+				<GreenButton type="submit" size="normal">Додати</GreenButton>
 			</div>
 		</form>
 	);

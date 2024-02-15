@@ -33,6 +33,7 @@ export default function ClientsList({
 	clients,
 	isUpdated,
 	LIMIT }: Props) {
+
 	const [isSelected, setIsSelected] = useState(0);
 	const { register, handleSubmit, reset } = useForm();
 	const [isDisabled, setIsDisabled] = useState(false);

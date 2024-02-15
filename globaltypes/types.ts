@@ -39,7 +39,16 @@ export interface IUser extends ITel, IUserId {
 	user_create_date: Date;
 	alfa_names_active: string[];
 	alfa_names_disable: string[];
-}
+};
+
+export interface IUserAlfaName {
+	alfa_name: string;
+};
+
+export interface IUserAlfaNameReq {
+	alfa_name: string;
+	user_id: number;
+};
 
 export interface INewDataUser {
 	email: string;

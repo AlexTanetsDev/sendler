@@ -44,3 +44,20 @@ export async function updateUser(
 		return res;
 	} catch (error: any) { };
 };
+
+export async function createAlfaName(
+	name: string,
+	id: number
+) {
+	try {
+		const res = await api.patch<void, AxiosResponse<void>, {
+			alfa_name: string,
+			user_id: number
+		}>
+			(`api/users`,
+				{
+					alfa_name: name,
+					user_id: id
+				});
+	} catch (error: any) { };
+}
