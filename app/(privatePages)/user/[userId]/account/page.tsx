@@ -54,9 +54,9 @@ export default async function UserAccountPage() {
 							<p className="absolute -bottom-6 left-0 text-xs font-montserrat font-normal">Кількість</p>
 						</div>
 					</div>
-					<span>Сформувати рахунок (ПриватБанк)</span>
+					<span>Сформувати рахунок</span>
 				</div>
-				<p className="w-3/4 text-xl accent-main_text">Якщо Ви працюєте з ТОВ `&quot;`Інноваційні медіа рішення `&quot;` за договором як Юридична особа, то для виставлення рахунку Вам потрібно зв`&apos;`язатися з нами або зателефонувати нам за номером (097) 678-12-59.</p>
+				<p className="w-[906px] text-xl accent-main_text">Якщо Ви працюєте з ТОВ &quot;Інноваційні медіа рішення&quot; за договором як Юридична особа, то для виставлення рахунку Вам потрібно зв&apos;язатися з нами або зателефонувати нам за номером (097) 678-12-59.</p>
 			</div>
 			<div className='content-block mb-20'>
 				<div className="pl-[26px]">

@@ -8,7 +8,7 @@ export const schemaCreateNewUser = Joi.object({
 		.required(),
 	user_name: Joi.string().required().min(3),
 	tel: Joi.string()
-		.pattern(/^\d{13,}$/)
+		.pattern(/^\d{12,}$/)
 		.required()
 		.messages({
 			"string.pattern.base":

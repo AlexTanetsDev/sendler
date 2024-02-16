@@ -1,17 +1,20 @@
 'use client';
 
-import { useEffect, useCallback, useRef } from 'react';
+import React, { useState } from 'react';
+import { useEffect, useCallback } from 'react';
+import Image from 'next/image';
+
 import Title from '@/components/Title';
 import GreenButton from '@/components/buttons/GreenButton';
-import Image from 'next/image';
-import React, { useState } from 'react';
 import Select from '@/components/Select';
-import { getUserGroups } from '@/fetch-actions/groupsFetchActions';
-import { getUser } from '@/fetch-actions/usersFetchActions';
 import SelectTime from '@/components/SelectTime';
 import AddAlfaNameForm from '@/components/forms/AddAlfaNameForm';
 import AddClientPhoneNumberForm from '@/components/forms/AddClientPhoneNumberForm';
 import RecipientsForm from '@/components/forms/RecipientsForm';
+
+import { getUserGroups } from '@/fetch-actions/groupsFetchActions';
+import { getUser } from '@/fetch-actions/usersFetchActions';
+import { sendSMS } from '@/fetch-actions/smsFetchActions';
 
 const MailingList = ({ params }: { params: { userId: string } }) => {
 
@@ -84,7 +87,6 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			const recipientsArray = [...recipients, groupName];
 			setRecipients(recipientsArray);
 		};
-		console.log('recipients', recipients);
 	};
 
 	const handleClickAddPhoneNumber = (tel: number) => {
@@ -92,19 +94,18 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			const recipientsArray = [...recipients, tel];
 			setRecipients(recipientsArray);
 		}
-		console.log('recipients', recipients);
 	};
 
 	const handleClickAddUserName = () => {
-		setContentSMS(contentSMS + ' ' + `%${userName}%` + ' ');
+		setContentSMS(contentSMS + ' ' + `%UserName%`);
 	};
 
 	const handleClickParam1 = () => {
-		setContentSMS(contentSMS + ' ' + `%Param1%` + ' ');
+		setContentSMS(contentSMS + ' ' + `%Param1%`);
 	};
 
 	const handleClickParam2 = () => {
-		setContentSMS(contentSMS + ' ' + `%Param2%` + ' ');
+		setContentSMS(contentSMS + ' ' + `%Param2%`);
 	};
 
 	const handleClickChecked = () => {
@@ -238,7 +239,9 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 				</div>
 			)}
 			<div className="flex justify-center mt-[50px]">
-				<GreenButton size="big" onClick={() => null}>
+				<GreenButton
+					size="big"
+					onClick={async () => await sendSMS(userName, recipients, contentSMS, date, `${hour}.${minute}.${second}`)}>
 					Надіслати
 				</GreenButton>
 			</div>

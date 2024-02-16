@@ -211,4 +211,12 @@ export interface FormInputUpdateUser {
 	email: string;
 };
 
+export interface ISendSMS {
+	userName: string,
+	recipients: (string | number)[],
+	date?: string,
+	time?: string,
+	contentSMS: string
+}
+
 
