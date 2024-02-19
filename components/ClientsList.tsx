@@ -83,7 +83,7 @@ export default function ClientsList({
 				<p>Параметр 2</p>
 			</div>
 			<form onSubmit={handleSubmit(onSubmit)} className='scroll-bar'>
-				<ul className='h-[400px] overflow-auto'>
+				<ul className='h-[432px] overflow-auto'>
 					{convertClients?.length ? (
 						<RSC style={{ height: "100%" }}>
 							{convertClients.map(convertClient => (

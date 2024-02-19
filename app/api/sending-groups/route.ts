@@ -87,7 +87,7 @@ export async function POST(request: NextRequest): Promise<NextResponse<{ message
 
 		const res: IGroupDatabase | ErrorCase | NextResponse<{
 			error: string;
-		}> = await createGroup(group_name, userId, method);
+		}> = await createGroup(group_name, userId);
 
 		switch (res) {
 			case 1:

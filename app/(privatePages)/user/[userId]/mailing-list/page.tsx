@@ -134,7 +134,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	useEffect(() => {
 		memoizedgetData();
 		memoizedgetUserNamesArray(userId);
-	}, [memoizedgetData, memoizedgetUserNamesArray, userId, recipients]);
+	}, [memoizedgetData, memoizedgetUserNamesArray, userId, recipients, groupsNameArray]);
 
 	return (
 		<>
@@ -241,7 +241,9 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			<div className="flex justify-center mt-[50px]">
 				<GreenButton
 					size="big"
-					onClick={async () => await sendSMS(userName, recipients, contentSMS, date, `${hour}.${minute}.${second}`)}>
+					onClick={async () => {
+						await sendSMS(userName, recipients, contentSMS, date, `${hour}.${minute}.${second}`, 'api');
+					}}>
 					Надіслати
 				</GreenButton>
 			</div>

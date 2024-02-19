@@ -23,7 +23,7 @@ export default function GroupsList({ groups, getGroups }: Props) {
 			<ul>
 				{groups?.length ? groups?.map((group: IGroupDatabase) => (
 					<li key={group.group_id} className="flex  px-[26px] items-center h-[58px]  text-base font-montserrat font-normal border-b border-rowUnderLine">
-						<div className="w-[110px] mr-[60px] text-left">{group.group_name}</div>
+						<div className="w-[120px] mr-[50px] text-left overflow-hidden">{group.group_name}</div>
 						<div className="w-[186px] mr-[91px] text-left">{group.group_create_date}</div>
 						<div className="w-[100px] mr-[91px] text-left">{group.number_members}</div>
 						<div className="flex gap-x-[15px]">

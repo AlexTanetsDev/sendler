@@ -9,6 +9,7 @@ export async function sendSMS(
 	contentSMS: string,
 	date: string | undefined = '',
 	time: string | undefined = '',
+	send_method: string
 ) {
 	try {
 		const res = await api.post<string, AxiosResponse<string>, {
@@ -16,7 +17,8 @@ export async function sendSMS(
 			recipients: (string | number)[],
 			date: string | undefined,
 			time: string | undefined,
-			contentSMS: string
+			contentSMS: string,
+			send_method: string
 		}>
 			(`/api/reseller/send-sms`,
 				{
@@ -24,7 +26,8 @@ export async function sendSMS(
 					recipients,
 					date,
 					time,
-					contentSMS
+					contentSMS,
+					send_method
 				});
 		return res;
 	} catch (error: any) { };

@@ -216,7 +216,8 @@ export interface ISendSMS {
 	recipients: (string | number)[],
 	date?: string,
 	time?: string,
-	contentSMS: string
+	contentSMS: string,
+	send_method: string
 }
 
 
