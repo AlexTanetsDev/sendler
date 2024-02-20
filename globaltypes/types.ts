@@ -216,7 +216,29 @@ export interface ISendSMS {
 	recipients: (string | number)[],
 	date?: string,
 	time?: string,
-	contentSMS: string
+	contentSMS: string,
+	send_method: 'api' | 'veb'
+};
+
+export interface ISendHistoryDatabase {
+	history_id: number,
+	sending_group_date: Date,
+	send_method: 'api' | 'veb',
+	text_sms: string,
+};
+
+export interface ISmsIdentificatorsDatabase {
+	sms_id: number;
+	history_id: number,
+	client_id: number,
+	identificator: string
+};
+
+export interface IRecipientStatusDatabase {
+	recipient_id: number;
+	history_id: number;
+	client_id: number;
+	recipient_status: SmsStatusEnum;
 }
 
 

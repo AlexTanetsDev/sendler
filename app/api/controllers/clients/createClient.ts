@@ -32,7 +32,8 @@ export default async function createClient(client: IClient, userId: number, grou
 		const userClientsTelInDtabase = userClientsTelResData.rows;
 
 		if (userClientsTelInDtabase.find((userClientTelInDtabase: ITelRes) => userClientTelInDtabase.tel === String(tel))) {
-			return 2;
+			await insertGroupMember(client.tel, userId, groupId);
+			return;
 		}
 
 		await insertNewClient(client, userId);

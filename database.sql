@@ -1,11 +1,14 @@
 -- Active: 1699360075140@@194.28.86.87@5432@bsender
 
 DROP TABLE sendler_name;
+
 DROP TABLE recipients_status;
 
 DROP TABLE transactions_history;
 
 DROP TABLE sms_identificators;
+
+DROP TABLE sends_members;
 
 DROP TABLE sending_history;
 
@@ -50,13 +53,12 @@ CREATE TABLE
 CREATE UNIQUE INDEX send_groups_group_id_idx ON send_groups (group_id);
 
 CREATE TABLE groups_members (
-    group_id INT REFERENCES send_groups (group_id) ON DELETE CASCADE, client_id INT REFERENCES clients (client_id) ON DELETE CASCADE, PRIMARY KEY (group_id, client_id)
+    group_id INT REFERENCES send_groups (group_id) ON DELETE CASCADE, client_id INT REFERENCES clients (client_id) ON DELETE CASCADE PRIMARY KEY (group_id, client_id)
 );
 
 CREATE TABLE
     sending_history(
         history_id SERIAL,
-        group_id INT REFERENCES send_groups(group_id) ON DELETE CASCADE,
         sending_group_date TIMESTAMP DEFAULT NOW():: timestamp,
         PRIMARY KEY (history_id),
         send_method send_method_type DEFAULT 'api',
@@ -64,6 +66,10 @@ CREATE TABLE
     );
 
 CREATE TYPE send_method_type AS ENUM('veb', 'api');
+
+CREATE TABLE sending_members (
+    group_id INT REFERENCES send_groups (group_id) ON DELETE CASCADE, history_id INT REFERENCES sending_history (history_id) ON DELETE CASCADE, PRIMARY KEY (group_id, history_id)
+);
 
 CREATE TYPE status_type AS ENUM(
     'pending', 'fullfield', 'rejected'

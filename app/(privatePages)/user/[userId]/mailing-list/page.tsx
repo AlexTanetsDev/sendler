@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { useEffect, useCallback } from 'react';
 import Image from 'next/image';
+import toast from "react-hot-toast";
 
 import Title from '@/components/Title';
 import GreenButton from '@/components/buttons/GreenButton';
@@ -34,7 +35,11 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const [date, setDate] = useState('');
 	const [recipients, setRecipients] = useState<(string | number)[]>([]);
 	const [contentSMS, setContentSMS] = useState<string>('');
+	const [update, setUpdate] = useState<boolean>(false);
 
+	const getUpdate = () => {
+		setUpdate(!update);
+	}
 
 	const getTimeOptionsValus = (min: number, max: number) => {
 		const optionsArray = [];
@@ -42,6 +47,21 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			optionsArray.push(i.toString().padStart(2, '0'));
 		}
 		return optionsArray;
+	};
+
+	const isKyr = (str: string) => {
+		return /[а-яё]/i.test(str);
+	};
+
+	const setCharAndSmsCount = () => {
+		setCharCount(contentSMS.length);
+		if (isKyr(contentSMS)) {
+			const smsCounter = Math.floor(contentSMS.length / 70) + 1;
+			setSmsCount(smsCounter);
+		} else {
+			const smsCounter = Math.floor(contentSMS.length / 160) + 1;
+			setSmsCount(smsCounter);
+		}
 	};
 
 	const getUserName = (item: string) => {
@@ -84,6 +104,19 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 
 	const handleClickAddGroup = () => {
 		if (groupName) {
+			if (recipients.includes(groupName)) {
+				toast.error('This group has already been added.', {
+					position: 'bottom-center',
+					className: 'toast_error',
+					style: {
+						backgroundColor: '#0F3952',
+						color: '#fa9c9c',
+						fontSize: '24px',
+						marginBottom: '50%',
+					},
+				});
+				return;
+			};
 			const recipientsArray = [...recipients, groupName];
 			setRecipients(recipientsArray);
 		};
@@ -91,21 +124,34 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 
 	const handleClickAddPhoneNumber = (tel: number) => {
 		if (tel) {
+			if (recipients.includes(tel)) {
+				toast.error('This phone number has already been added.', {
+					position: 'bottom-center',
+					className: 'toast_error',
+					style: {
+						backgroundColor: '#0F3952',
+						color: '#fa9c9c',
+						fontSize: '24px',
+						marginBottom: '50%',
+					},
+				});
+				return;
+			};
 			const recipientsArray = [...recipients, tel];
 			setRecipients(recipientsArray);
 		}
 	};
 
 	const handleClickAddUserName = () => {
-		setContentSMS(contentSMS + ' ' + `%UserName%`);
+		setContentSMS(contentSMS + ' ' + `%User_name%`);
 	};
 
 	const handleClickParam1 = () => {
-		setContentSMS(contentSMS + ' ' + `%Param1%`);
+		setContentSMS(contentSMS + ' ' + `%Parametr1%`);
 	};
 
 	const handleClickParam2 = () => {
-		setContentSMS(contentSMS + ' ' + `%Param2%`);
+		setContentSMS(contentSMS + ' ' + `%Parametr2%`);
 	};
 
 	const handleClickChecked = () => {
@@ -130,11 +176,15 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 
 	const memoizedgetData = useCallback(getData, [userId]);
 	const memoizedgetUserNamesArray = useCallback(getUserNamesArray, [userId]);
+	const memoizedsetCharAndSmsCount = useCallback(setCharAndSmsCount, [contentSMS])
 
 	useEffect(() => {
+		memoizedsetCharAndSmsCount();
 		memoizedgetData();
 		memoizedgetUserNamesArray(userId);
-	}, [memoizedgetData, memoizedgetUserNamesArray, userId, recipients]);
+	}, [memoizedgetData, memoizedgetUserNamesArray, memoizedsetCharAndSmsCount, userId, recipients, update, contentSMS]);
+
+
 
 	return (
 		<>
@@ -241,7 +291,11 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			<div className="flex justify-center mt-[50px]">
 				<GreenButton
 					size="big"
-					onClick={async () => await sendSMS(userName, recipients, contentSMS, date, `${hour}.${minute}.${second}`)}>
+					onClick={async () => {
+						await sendSMS(userName, recipients, contentSMS, date, `${hour}.${minute}.${second}`, 'api');
+						await getData();
+						getUpdate();
+					}}>
 					Надіслати
 				</GreenButton>
 			</div>

@@ -25,6 +25,19 @@ axiosInstance.interceptors.response.use(
 	},
 	(error) => {
 		if (axios.isAxiosError(error)) {
+			if (error.response?.data.error) {
+				toast.error(error.response.status + ' | ' + error.response?.data.error, {
+					position: 'bottom-center',
+					className: 'toast_error',
+					style: {
+						backgroundColor: '#0F3952',
+						color: '#fa9c9c',
+						fontSize: '24px',
+						marginBottom: '50%',
+					},
+				});
+				return;
+			}
 			if (error.response?.data.message) {
 				toast.error(error.response.status + ' | ' + error.response?.data.message, {
 					position: 'bottom-center',
@@ -36,8 +49,10 @@ axiosInstance.interceptors.response.use(
 						marginBottom: '50%',
 					},
 				});
-			} else {
-				toast.error(error.response?.status + ' | ' + error.response?.statusText, {
+				return;
+			};
+			if (error.message) {
+				toast.error(error.response?.status + ' | ' + error.message, {
 					position: 'bottom-center',
 					className: 'toast_error',
 					style: {
@@ -48,19 +63,21 @@ axiosInstance.interceptors.response.use(
 					},
 				});
 			};
-		} else {
-			toast.error(error.message, {
-				position: 'bottom-center',
-				className: 'toast_error',
-				style: {
-					backgroundColor: '#0F3952',
-					color: '#fa9c9c',
-					fontSize: '24px',
-					marginBottom: '50%',
-				},
-			});
+			if (error.response?.statusText) {
+				toast.error(error.response?.status + ' | ' + error.response?.statusText, {
+					position: 'bottom-center',
+					className: 'toast_error',
+					style: {
+						backgroundColor: '#0F3952',
+						color: '#fa9c9c',
+						fontSize: '24px',
+						marginBottom: '50%',
+					},
+				});
+				return;
+			};
 		};
 	}
-)
+);
 
 
