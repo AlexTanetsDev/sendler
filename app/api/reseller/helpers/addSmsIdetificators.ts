@@ -10,8 +10,7 @@ export const addSmsIdentificators = async (
   const factor = identificators.length / clients.length;
   let counter = 0;
   let interval = 1;
-  const query = identificators
-    .map((identificator) => {
+  const query = identificators.map((identificator) => {
       const str = `(${history_id}, ${clients[counter].client_id}, '${identificator}')`;
       if (interval === factor) {
         counter += 1;

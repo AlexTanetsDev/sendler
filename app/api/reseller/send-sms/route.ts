@@ -96,18 +96,19 @@ export async function POST(request: Request) {
 
 		// console.log('smsQuerystr', smsQuerystr)
 
-		// const identificators = await smsSender(authRes, smsQuerystr, clients.length);
+		const identificators = await smsSender(authRes, smsQuerystr, clients.length);
 		// console.log('identificators', identificators);
 
-		// const historyId = await addSendingHistory(group_id);
+		const historyId = await addSendingHistory(groupIdArray, contentSMS);
+		const setSmsIdentificatorsRes = await addSmsIdentificators(
+			historyId,
+			clients,
+			identificators
+		);
 
-		// const setSmsIdentificatorsRes = await addSmsIdentificators(
-		// 	historyId,
-		// 	clients,
-		// 	identificators
-		// );
+		const statusRes = await addSmsStatus(historyId, clients, "pending");
 
-		// const statusRes = await addSmsStatus(historyId, clients, "pending");
+		console.log('statusRes', statusRes)
 
 		return NextResponse.json({ message: "SMS messages have been sent successfully." });
 	} catch (error: any) {

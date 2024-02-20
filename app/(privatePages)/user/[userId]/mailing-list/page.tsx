@@ -134,7 +134,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	useEffect(() => {
 		memoizedgetData();
 		memoizedgetUserNamesArray(userId);
-	}, [memoizedgetData, memoizedgetUserNamesArray, userId, recipients, groupsNameArray]);
+	}, [memoizedgetData, memoizedgetUserNamesArray, userId, recipients]);
 
 	return (
 		<>

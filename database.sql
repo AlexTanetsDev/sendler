@@ -8,6 +8,8 @@ DROP TABLE transactions_history;
 
 DROP TABLE sms_identificators;
 
+DROP TABLE sends_members;
+
 DROP TABLE sending_history;
 
 DROP TABLE groups_members;
@@ -57,7 +59,6 @@ CREATE TABLE groups_members (
 CREATE TABLE
     sending_history(
         history_id SERIAL,
-        group_id INT REFERENCES send_groups(group_id) ON DELETE CASCADE,
         sending_group_date TIMESTAMP DEFAULT NOW():: timestamp,
         PRIMARY KEY (history_id),
         send_method send_method_type DEFAULT 'api',
@@ -66,7 +67,7 @@ CREATE TABLE
 
 CREATE TYPE send_method_type AS ENUM('veb', 'api');
 
-CREATE TABLE sends_members (
+CREATE TABLE sending_members (
     group_id INT REFERENCES send_groups (group_id) ON DELETE CASCADE, history_id INT REFERENCES sending_history (history_id) ON DELETE CASCADE, PRIMARY KEY (group_id, history_id)
 );
 
