@@ -143,15 +143,15 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	};
 
 	const handleClickAddUserName = () => {
-		setContentSMS(contentSMS + ' ' + `%UserName%`);
+		setContentSMS(contentSMS + ' ' + `%User_name%`);
 	};
 
 	const handleClickParam1 = () => {
-		setContentSMS(contentSMS + ' ' + `%Param__1%`);
+		setContentSMS(contentSMS + ' ' + `%Parametr1%`);
 	};
 
 	const handleClickParam2 = () => {
-		setContentSMS(contentSMS + ' ' + `%Param__2%`);
+		setContentSMS(contentSMS + ' ' + `%Parametr2%`);
 	};
 
 	const handleClickChecked = () => {

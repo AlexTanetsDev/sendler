@@ -7,7 +7,7 @@ export const createSmsUrlStr = (clients: (IClientDatabase)[], text: string, user
 
 	const str = clients
 		.map((client) => {
-			return `${distination}=${client.tel}&Data=${adaptedText.replace('%UserName%', userName).replace('+%Param__1%', client.parameter_1 ? `${'+' + client.parameter_1}` : '').replace('+%Param__2%', client.parameter_2 ? `${'+' + client.parameter_2}` : '')}&`;
+			return `${distination}=${client.tel}&Data=${adaptedText.replace('%User_name%', userName).replace('+%Parametr1%', client.parameter_1 ? `${'+' + client.parameter_1}` : '').replace('+%Parametr2%', client.parameter_2 ? `${'+' + client.parameter_2}` : '')}&`;
 		})
 		.join("");
 	return str.slice(0, str.length - 1);
