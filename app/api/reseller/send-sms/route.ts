@@ -4,7 +4,6 @@ import { options } from "@/app/api/auth/[...nextauth]/options";
 
 
 import resellerAuth from "../helpers/resellerAuth";
-import { getClientsTelByGroupId } from "../helpers/getClientsTelByGroupId";
 import { createSmsUrlStr } from "../helpers/createSmsQueryString";
 import { addSendingHistory } from "../helpers/addSendingHistory";
 import { addSmsIdentificators } from "../helpers/addSmsIdetificators";
@@ -94,12 +93,10 @@ export async function POST(request: Request) {
 
 		const smsQuerystr = createSmsUrlStr(clients, contentSMS, userName);
 
-		// console.log('smsQuerystr', smsQuerystr)
+		const identificators = await smsSender(authRes, smsQuerystr, clients.length, userName);
 
-		const identificators = await smsSender(authRes, smsQuerystr, clients.length);
-		// console.log('identificators', identificators);
+		const historyId = await addSendingHistory(groupIdArray, contentSMS, send_method);
 
-		const historyId = await addSendingHistory(groupIdArray, contentSMS);
 		const setSmsIdentificatorsRes = await addSmsIdentificators(
 			historyId,
 			clients,
@@ -107,8 +104,6 @@ export async function POST(request: Request) {
 		);
 
 		const statusRes = await addSmsStatus(historyId, clients, "pending");
-
-		console.log('statusRes', statusRes)
 
 		return NextResponse.json({ message: "SMS messages have been sent successfully." });
 	} catch (error: any) {
