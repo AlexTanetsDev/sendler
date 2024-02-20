@@ -93,8 +93,6 @@ export async function POST(request: Request) {
 
 		const smsQuerystr = createSmsUrlStr(clients, contentSMS, userName);
 
-		console.log('smsQuerystr', smsQuerystr)
-
 		const identificators = await smsSender(authRes, smsQuerystr, clients.length, userName);
 
 		const historyId = await addSendingHistory(groupIdArray, contentSMS, send_method);
