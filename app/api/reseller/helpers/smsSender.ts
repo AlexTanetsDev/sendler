@@ -4,9 +4,11 @@ const { RESELLER_URL, RESELLER_SOURSE_ADRESS } = process.env;
 export const smsSender = async (
 	authRes: string,
 	smsQuerystr: string,
-	clientsLength: number
+	clientsLength: number,
+	userName: string,
 ): Promise<string[]> => {
 	const sendOption = clientsLength > 1 ? "SendBulk" : "Send";
+	console.log(`${RESELLER_URL}/rest/Sms/${sendOption}?SessionID=${authRes}&SourceAddress=${RESELLER_SOURSE_ADRESS}&${smsQuerystr}`)
 	const sendedSmsRes = await axios.post(
 		`${RESELLER_URL}/rest/Sms/${sendOption}?SessionID=${authRes}&SourceAddress=${RESELLER_SOURSE_ADRESS}&${smsQuerystr}`,
 		{
