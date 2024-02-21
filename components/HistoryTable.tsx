@@ -1,17 +1,14 @@
 'use client';
 
-// import axios from 'axios';
-// axios.defaults.baseURL = 'http://localhost:3000/';
-
 import { useEffect, useState, useCallback } from 'react';
-import { getUserHistory } from '@/app/utils';
+import { getUserHistory } from '@/fetch-actions/historyFetchActions';
 import { IHistoryResponce } from '@/globaltypes/historyTypes';
 import HistoryList from './HistoryList';
 import HistoryPeriodForm from './forms/HistoryPeriodForm';
 import { FormInputsPeriod } from './forms/HistoryPeriodForm';
 
 //Test
-const userHistory: IHistoryResponce[] = [
+const userHistoryTest: IHistoryResponce[] = [
   {
     sending_group_date: new Date(),
     history_id: 123457676,
@@ -53,8 +50,8 @@ type Props = {
   id: number | undefined;
 };
 
-export default async function HistoryTable({ id }: Props) {
-  const [userHistory, setUserHistory] = useState<IHistoryResponce[] | undefined>([]);
+export default function HistoryTable({ id }: Props) {
+  const [userHistory, setUserHistory] = useState<IHistoryResponce[] | undefined>(userHistoryTest);
 
   // useEffect(() => {
   //   async function fetchAPI() {

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
-import getUserHistory from '@/app/utils/getUserHistory';
+import { getUserHistory } from '@/fetch-actions/historyFetchActions';
 import formatTableDate from '@/app/utils/formatTableDate';
 import Title from '@/components/Title';
 import HistoryPeriodForm from '@/components/forms/HistoryPeriodForm';

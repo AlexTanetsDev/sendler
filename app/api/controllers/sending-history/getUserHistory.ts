@@ -1,4 +1,4 @@
-import { fetchUserHistory } from '@/app/utils';
+import fetchUserHistory from '@/api-actions/fetchUserHistory';
 
 import { QueryResult } from 'pg';
 import { IHistoryResponce, IHistoryPeriod } from '@/globaltypes/historyTypes';

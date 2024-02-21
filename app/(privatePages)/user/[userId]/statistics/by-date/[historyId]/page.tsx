@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import Title from '@/components/Title';
 import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
-import getUserHistoryDetails from '@/app/utils/getUserHistoryDetails';
+import { getUserHistoryDetails } from '@/fetch-actions/historyFetchActions';
 import { IHistoryDetailsResponce } from '@/globaltypes/historyTypes';
 
 export default function HistoryDetails({
