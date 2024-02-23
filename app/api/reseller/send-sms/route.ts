@@ -34,24 +34,28 @@ export async function POST(request: Request) {
 		};
 
 		const { userName, recipients, date, time, contentSMS, send_method } = value;
+		const dateString = date + ' ' + time;
+		const now = new Date();
+		const dateSending = new Date(dateString);
+		const diff = dateSending.getTime() - now.getTime();
 
 		if (!userName) {
 			return NextResponse.json(
-				{ message: "Enter user name, piease." },
+				{ message: "Enter user name, please." },
 				{ status: 400 }
 			);
 		};
 
 		if (!(recipients.length > 0)) {
 			return NextResponse.json(
-				{ message: "Enter recipients, piease." },
+				{ message: "Enter recipients, please." },
 				{ status: 400 }
 			);
 		};
 
 		if (!contentSMS) {
 			return NextResponse.json(
-				{ message: "Enter text sms, piease." },
+				{ message: "Enter text sms, please." },
 				{ status: 400 }
 			);
 		};
@@ -91,19 +95,24 @@ export async function POST(request: Request) {
 			};
 		};
 
-		const smsQuerystr = createSmsUrlStr(clients, contentSMS, userName);
+		const sendSmsAgrigatorFunctions = async () => {
+			const smsQuerystr = createSmsUrlStr(clients, contentSMS);
+			const identificators = await smsSender(authRes, smsQuerystr, clients.length, userName);
+			const historyId = await addSendingHistory(groupIdArray, contentSMS, send_method);
+			const setSmsIdentificatorsRes = await addSmsIdentificators(
+				historyId,
+				clients,
+				identificators
+			);
+			const statusRes = await addSmsStatus(historyId, clients, "pending");
+		};
 
-		const identificators = await smsSender(authRes, smsQuerystr, clients.length, userName);
-
-		const historyId = await addSendingHistory(groupIdArray, contentSMS, send_method);
-
-		const setSmsIdentificatorsRes = await addSmsIdentificators(
-			historyId,
-			clients,
-			identificators
-		);
-
-		const statusRes = await addSmsStatus(historyId, clients, "pending");
+		if (diff > 0) {
+			setTimeout(sendSmsAgrigatorFunctions, diff);
+			return NextResponse.json({ message: `SMS messages will be sent ${date} at ${time}.` });
+		} else {
+			await sendSmsAgrigatorFunctions();
+		};
 
 		return NextResponse.json({ message: "SMS messages have been sent successfully." });
 	} catch (error: any) {

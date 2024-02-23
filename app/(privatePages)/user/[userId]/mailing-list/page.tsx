@@ -16,6 +16,8 @@ import RecipientsForm from '@/components/forms/RecipientsForm';
 import { getUserGroups } from '@/fetch-actions/groupsFetchActions';
 import { getUser } from '@/fetch-actions/usersFetchActions';
 import { sendSMS } from '@/fetch-actions/smsFetchActions';
+import { isKyr } from '@/helpers/isKyr';
+import { getTimeOptionsValues } from '@/helpers/getTimeOptionsValues';
 
 const MailingList = ({ params }: { params: { userId: string } }) => {
 
@@ -28,9 +30,9 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const [userName, setUserName] = useState<string>('');
 	const [userNames, setUserNames] = useState<string[] | undefined>([]);
 	const [groupName, setGroupName] = useState<string>('');
-	const [hour, setHour] = useState<string>('00');
-	const [minute, setMinute] = useState<string>('00');
-	const [second, setSecond] = useState<string>('00');
+	const [hour, setHour] = useState<string>('');
+	const [minute, setMinute] = useState<string>('');
+	const [second, setSecond] = useState<string>('');
 	const [groupsNameArray, setGroupsNameArray] = useState<string[] | undefined>([]);
 	const [date, setDate] = useState('');
 	const [recipients, setRecipients] = useState<(string | number)[]>([]);
@@ -39,18 +41,6 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 
 	const getUpdate = () => {
 		setUpdate(!update);
-	}
-
-	const getTimeOptionsValus = (min: number, max: number) => {
-		const optionsArray = [];
-		for (let i = min; i <= max; i += 1) {
-			optionsArray.push(i.toString().padStart(2, '0'));
-		}
-		return optionsArray;
-	};
-
-	const isKyr = (str: string) => {
-		return /[а-яё]/i.test(str);
 	};
 
 	const setCharAndSmsCount = () => {
@@ -76,7 +66,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 
 	const getRecipients = (recipientsArray: (string | number)[]) => {
 		setRecipients(recipientsArray);
-	}
+	};
 
 	const getGroupName = (item: string) => {
 		setGroupName(item);
@@ -98,7 +88,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		setIsOpened(!isOpened)
 	};
 
-	const handleChange = (e: any) => {
+	const handleChangeTextSms = (e: any) => {
 		setContentSMS(e.target.value);
 	};
 
@@ -142,8 +132,8 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		}
 	};
 
-	const handleClickAddUserName = () => {
-		setContentSMS(contentSMS + ' ' + `%User_name%`);
+	const handleClickAddClientName = () => {
+		setContentSMS(contentSMS + ' ' + `%ClientName%`);
 	};
 
 	const handleClickParam1 = () => {
@@ -158,10 +148,20 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		setIsChecked(!isChecked);
 		if (isChecked == false) {
 			setDate('');
-			setHour('00');
-			setMinute('00');
-			setSecond('00');
+			setHour('');
+			setMinute('');
+			setSecond('');
 		}
+	};
+
+	const handleClickSubmit = async () => {
+		if (hour && minute && second && date) {
+			await sendSMS(userName, recipients, contentSMS, date, `${hour}:${minute}:${second}`, 'api');
+		} else {
+			await sendSMS(userName, recipients, contentSMS, '', '', 'api');
+		};
+		await getData();
+		getUpdate();
 	}
 
 	const getData = async () => {
@@ -170,7 +170,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		setGroupsNameArray(groupsName);
 	};
 
-	const onChange = (e: any) => {
+	const handleChangeDate = (e: any) => {
 		setDate(e.target.value);
 	};
 
@@ -221,11 +221,11 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 								<span>Символів: {charCount}</span>
 								<span>SMS: {smsCount}</span>
 							</div>
-							<textarea value={contentSMS} onChange={handleChange} placeholder="Text SMS" className="resize-none w-[636px] h-[220px] p-3 rounded-[18px] border-[1px] border-[#E6E6E6] mt-2 input"></textarea>
+							<textarea value={contentSMS} onChange={handleChangeTextSms} placeholder="Text SMS" className="resize-none w-[636px] h-[220px] p-3 rounded-[18px] border-[1px] border-[#E6E6E6] mt-2 input"></textarea>
 						</div>
 						<div className="flex flex-col gap-[18px] justify-center">
 							<span className=" text-base text-mainTextColor">Додати шаблон</span>
-							<button type='button' onClick={handleClickAddUserName} className="text-base text-emailColorLink cursor-pointer">Ім&#39;я клієнта</button>
+							<button type='button' onClick={handleClickAddClientName} className="text-base text-emailColorLink cursor-pointer">Ім&#39;я клієнта</button>
 							<button type='button' onClick={handleClickParam1} className="text-base text-emailColorLink cursor-pointer">Параметр 1</button>
 							<button type='button' onClick={handleClickParam2} className="text-base text-emailColorLink cursor-pointer">Параметр 2</button>
 						</div>
@@ -277,25 +277,21 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 					<p className=" text-xl text-mainTextColor mb-[13px]">Дата</p>
 					<input
 						type="date"
-						onChange={onChange}
+						onChange={handleChangeDate}
 						className="w-[250px] h-12 rounded-[18px] border border-inputBorder outline-none text-xl text-mainTextColor pr-[50px] pl-[50px] cursor-pointer"
 					/>
 					<p className=" text-xl text-mainTextColor mb-[13px] mt-[32px]">{'Час (з,по)'}</p>
 					<div className="flex gap-3 mt-3 items-center">
-						<SelectTime selectOptions={getTimeOptionsValus(1, 24)} getSelect={getHour} selectedOption={hour} widthValue={150} startValue='00' />
-						<SelectTime selectOptions={getTimeOptionsValus(1, 60)} getSelect={geMinute} selectedOption={minute} widthValue={150} startValue='00' />
-						<SelectTime selectOptions={getTimeOptionsValus(1, 60)} getSelect={getSecond} selectedOption={second} widthValue={150} startValue='00' />
+						<SelectTime selectOptions={getTimeOptionsValues(0, 24)} getSelect={getHour} selectedOption={hour} widthValue={150} startValue='' />
+						<SelectTime selectOptions={getTimeOptionsValues(0, 60)} getSelect={geMinute} selectedOption={minute} widthValue={150} startValue='' />
+						<SelectTime selectOptions={getTimeOptionsValues(0, 60)} getSelect={getSecond} selectedOption={second} widthValue={150} startValue='' />
 					</div>
 				</div>
 			)}
 			<div className="flex justify-center mt-[50px]">
 				<GreenButton
 					size="big"
-					onClick={async () => {
-						await sendSMS(userName, recipients, contentSMS, date, `${hour}.${minute}.${second}`, 'api');
-						await getData();
-						getUpdate();
-					}}>
+					onClick={handleClickSubmit}>
 					Надіслати
 				</GreenButton>
 			</div>

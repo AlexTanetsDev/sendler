@@ -8,7 +8,6 @@ export const smsSender = async (
 	userName: string,
 ): Promise<string[]> => {
 	const sendOption = clientsLength > 1 ? "SendBulk" : "Send";
-	console.log(`${RESELLER_URL}/rest/Sms/${sendOption}?SessionID=${authRes}&SourceAddress=${RESELLER_SOURSE_ADRESS}&${smsQuerystr}`)
 	const sendedSmsRes = await axios.post(
 		`${RESELLER_URL}/rest/Sms/${sendOption}?SessionID=${authRes}&SourceAddress=${RESELLER_SOURSE_ADRESS}&${smsQuerystr}`,
 		{

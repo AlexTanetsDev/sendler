@@ -99,7 +99,7 @@ CREATE TABLE
     );
 
 CREATE TABLE sms_identificators (
-    sms_id SERIAL, history_id INT REFERENCES sending_history (history_id) ON DELETE CASCADE, client_id INT REFERENCES clients (client_id), identificator TEXT NOT NULL, PRIMARY KEY (sms_id)
+    sms_id SERIAL, history_id INT REFERENCES sending_history (history_id) ON DELETE CASCADE, client_id INT REFERENCES clients (client_id) ON DELETE CASCADE, identificator TEXT NOT NULL, PRIMARY KEY (sms_id)
 );
 
 CREATE TABLE sendler_name (
