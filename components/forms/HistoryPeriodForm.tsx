@@ -1,31 +1,25 @@
 'use client';
 
 import { SubmitHandler, useForm } from 'react-hook-form';
-import { toast } from 'react-toastify';
-import axios from 'axios';
-
-import { getUserHistory } from '@/app/utils';
-import { IHistoryResponce } from '@/globaltypes/historyTypes';
-
-type Props = {
-  onSubmitPeriod: (data: IHistoryResponce[]) => void;
-  id: number | undefined;
-};
+import { IHistoryPeriod } from '@/globaltypes/historyTypes';
+import { useRouter, usePathname } from 'next/navigation';
 
 export interface FormInputsPeriod {
   startDate: Date;
   endDate: Date;
 }
 
-export default function HistoryPeriodForm({ onSubmitPeriod, id }: Props) {
+export default function HistoryPeriodForm() {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormInputsPeriod>({
+  } = useForm<IHistoryPeriod>({
     resolver: async data => {
       try {
-        // await schemaLogin.validateAsync(data, { abortEarly: false });
         return { values: data, errors: {} };
       } catch (error: any) {
         const validationErrors: Record<string, { message: string }> = {};
@@ -46,20 +40,16 @@ export default function HistoryPeriodForm({ onSubmitPeriod, id }: Props) {
     },
   });
 
-  const onSubmit: SubmitHandler<FormInputsPeriod> = async data => {
-    try {
-      const response = await axios.get(`/api/sending-history`, {
-        params: {
-          userId: id,
-          start_date: data.startDate,
-          end_date: data.endDate,
-        },
-      });
-      const userHistory: IHistoryResponce[] = response.data.history;
-      onSubmitPeriod(userHistory);
-    } catch (error) {
-      console.error('Помилка входу:', error);
-      toast.error('Під час входу сталася помилка');
+  const onSubmit: SubmitHandler<IHistoryPeriod> = data => {
+    const trimmedPath = pathname.match(/(\/user\/\d+\/statistics).*/);
+    if (data.startDate && data.endDate && trimmedPath) {
+      router.push(
+        `${trimmedPath[1]}?startDate=${new Date(data.startDate).toISOString()}&endDate=${new Date(
+          data.endDate
+        ).toISOString()}`
+      );
+    } else {
+      router.push(`${pathname}`);
     }
   };
 

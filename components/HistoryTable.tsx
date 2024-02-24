@@ -1,30 +1,31 @@
 'use client';
 
 import { useEffect, useState, useCallback } from 'react';
+import { useSearchParams } from 'next/navigation';
 import { getUserHistory } from '@/fetch-actions/historyFetchActions';
-import { IHistoryResponce } from '@/globaltypes/historyTypes';
 import HistoryList from './HistoryList';
 import HistoryPeriodForm from './forms/HistoryPeriodForm';
 import { FormInputsPeriod } from './forms/HistoryPeriodForm';
+import { IHistoryResponce, IHistoryPeriod } from '@/globaltypes/historyTypes';
 
 //Test
 const userHistoryTest: IHistoryResponce[] = [
   {
-    sending_group_date: new Date(),
+    sending_group_date: new Date(2024, 2, 7),
     history_id: 123457676,
     group_name: 'Group name',
     send_method: 'API',
     recipient_status: ['fulfield', 'fulfield', 'fulfield'],
   },
   {
-    sending_group_date: new Date(),
+    sending_group_date: new Date(1995, 11, 17),
     history_id: 12345767236,
     group_name: 'Group name',
     send_method: 'Site',
     recipient_status: ['fulfield', 'fulfield', 'fulfield', 'fulfield'],
   },
   {
-    sending_group_date: new Date(),
+    sending_group_date: new Date(1995, 11, 17),
     history_id: 12345,
     group_name: 'Group name',
     send_method: 'API',
@@ -45,70 +46,67 @@ const userHistoryTest: IHistoryResponce[] = [
     recipient_status: ['fulfield', 'fulfield', 'fulfield', 'fulfield'],
   },
 ];
+const historyPeriodTest = {
+  startDate: new Date(),
+  endDate: new Date(),
+};
 
 type Props = {
   id: number | undefined;
+  // dateHistoryPeriod: IHistoryPeriod | undefined;
 };
 
 export default function HistoryTable({ id }: Props) {
+  const searchParams = useSearchParams();
+  const startDate = searchParams.get('startDate');
+  const endDate = searchParams.get('endDate');
+
   const [userHistory, setUserHistory] = useState<IHistoryResponce[] | undefined>(userHistoryTest);
-
-  // useEffect(() => {
-  //   async function fetchAPI() {
-  //     // const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
-  //     //   id,
-  //     // });
-  //     try {
-  //       // const response = await axios.get(`/api/sending-history`, {
-  //       //   params: {
-  //       //     userId: id,
-  //       //   },
-  //       // });
-  //       // const userHistory: IHistoryResponce[] = response.data.history;
-  //       // setUserHistory(userHistory);
-  //     } catch (error: any) {
-  //       console.log(error.message + ' | ' + error.response.data.error);
-  //       setUserHistory([]);
-  //     }
-  //   }
-  //   fetchAPI();
-  // }, []);
-
-  const memoizedUserHistory = useCallback(async () => {
-    // const historyPeriod: IHistoryPeriod = {
-    //   startDate: historyDate ? new Date(historyDate) : undefined,
-    //   endDate: historyDate ? new Date(historyDate) : undefined,
-    // };
-    const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
-      id,
-      // historyPeriod,
-    });
-
-    if (userHistory) setUserHistory(userHistory);
-  }, [id]);
+  const [historyPeriod, setHistoryPeriod] = useState<IHistoryPeriod | undefined>(undefined);
 
   useEffect(() => {
-    memoizedUserHistory();
-  }, [memoizedUserHistory]);
+    if (startDate && endDate) {
+      setHistoryPeriod({
+        startDate: new Date(startDate),
+        endDate: new Date(endDate),
+      });
+    } else {
+      setHistoryPeriod(undefined);
+    }
+  }, [startDate, endDate]);
 
-  const handleHistoryPeriod = (data: IHistoryResponce[]) => {
-    console.log(data);
+  useEffect(() => {
+    async function fetchAPI() {
+      try {
+        // const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
+        //   id,
+        //   historyPeriod: dateHistoryPeriod,
+        // });
 
-    //   try {
-    //     //   const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
-    //     //     id,
-    //     //     historyPeriod: data,
-    //     //   });
-    // setUserHistory(data);
-    //   } catch (error) {
-    //     console.log(error);
-    //   }
-  };
+        const userHistory: IHistoryResponce[] | undefined = userHistoryTest.filter(item => {
+          return (
+            historyPeriod &&
+            historyPeriod.startDate &&
+            historyPeriod.endDate &&
+            new Date(item.sending_group_date).getTime() >=
+              new Date(historyPeriod.startDate).getTime() &&
+            new Date(item.sending_group_date).getTime() <= new Date(historyPeriod.endDate).getTime()
+          );
+        });
+
+        setUserHistory(userHistory);
+      } catch (error: any) {
+        console.log(error.message + ' | ' + error.response.data.error);
+        setUserHistory([]);
+      }
+    }
+    fetchAPI();
+  }, [historyPeriod]);
 
   return (
     <>
       <div className="content-block">
-        <HistoryPeriodForm onSubmitPeriod={handleHistoryPeriod} id={id} />
+        <HistoryPeriodForm />
         <div className="flex items-center gap-[100px] h-[58px] px-[26px] font-roboto text-[20px] text-white bg-[#417D8A]">
           <p className="w-[194px]">Шлях відправлення</p>
           <p className="w-[184px]">Дата</p>

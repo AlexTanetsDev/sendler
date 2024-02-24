@@ -23,11 +23,14 @@ export async function getUserHistory({ id, historyPeriod }: IGetHistoryProps) {
         start_date: historyPeriod?.startDate,
         end_date: historyPeriod?.endDate,
       },
-    });
+			});
+		
+		if (response.status !== 200) {
+			return [];
+		}
 
-    // const history: IHistoryResponce[] = response.data.history;
-
-    return response;
+    const history: IHistoryResponce[] = response.data.history;
+    return history;
   } catch (error: any) {
     console.log(error.message);
   }
@@ -45,10 +48,13 @@ export async function getUserHistoryDetails(historyId: string) {
       params: {
         historyId,
       },
-    });
+		});
+		
+		if (response.status !== 200) {
+      return [];
+    }
 
     const historyDetails: IHistoryDetailsResponce[] = response.data.history;
-
     return historyDetails;
   } catch (error: any) {
     console.log(error.message);

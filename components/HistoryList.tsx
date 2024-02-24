@@ -9,7 +9,7 @@ type Props = {
   userHistory: IHistoryResponce[] | undefined;
 };
 
-export default async function HistoryList({ userHistory }: Props) {
+export default function HistoryList({ userHistory }: Props) {
   const sortHistory = userHistory ? summarizeHistoryByDate(userHistory) : undefined;
 
   return (

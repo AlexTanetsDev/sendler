@@ -11,11 +11,12 @@ import Title from '@/components/Title';
 import HistoryPeriodForm from '@/components/forms/HistoryPeriodForm';
 import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
 import { IHistoryPeriod, IHistoryResponce } from '@/globaltypes/historyTypes';
+import { string } from 'joi';
 
 //testData
 const userHistoryTest: IHistoryResponce[] = [
   {
-    sending_group_date: new Date(),
+    sending_group_date: new Date(2024, 2, 7),
     history_id: 123457676,
     group_name: 'Group name',
     send_method: 'API',
@@ -24,7 +25,7 @@ const userHistoryTest: IHistoryResponce[] = [
     user_name: 'FASONCHIKI',
   },
   {
-    sending_group_date: new Date(),
+    sending_group_date: new Date(1995, 11, 17),
     history_id: 12345,
     group_name: 'Group name',
     send_method: 'API',
@@ -33,7 +34,7 @@ const userHistoryTest: IHistoryResponce[] = [
     user_name: 'FASONCHIKI',
   },
   {
-    sending_group_date: new Date(),
+    sending_group_date: new Date(1995, 11, 17),
     history_id: 1234512,
     group_name: 'Group name',
     send_method: 'Site',
@@ -73,9 +74,20 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
       startDate: historyDate ? new Date(historyDate) : undefined,
       endDate: historyDate ? new Date(historyDate) : undefined,
     };
-    const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
-      id: userId,
-      historyPeriod,
+    // const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
+    //   id: userId,
+    //   historyPeriod,
+    // });
+
+    const userHistory: IHistoryResponce[] | undefined = userHistoryTest.filter(item => {
+      return (
+        historyDate &&
+        historyPeriod.startDate &&
+        historyPeriod.endDate &&
+        new Date(item.sending_group_date).getTime() >=
+          new Date(historyPeriod.startDate).getTime() &&
+        new Date(item.sending_group_date).getTime() <= new Date(historyPeriod.endDate).getTime()
+      );
     });
 
     if (userHistory) setUserHistory(userHistory);
