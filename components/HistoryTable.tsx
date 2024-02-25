@@ -16,13 +16,8 @@ const userHistoryTest: IHistoryResponce[] = [
     group_name: 'Group name',
     send_method: 'API',
     recipient_status: ['fulfield', 'fulfield', 'fulfield'],
-  },
-  {
-    sending_group_date: new Date(1995, 11, 17),
-    history_id: 12345767236,
-    group_name: 'Group name',
-    send_method: 'Site',
-    recipient_status: ['fulfield', 'fulfield', 'fulfield', 'fulfield'],
+    text_sms: 'Запрошуємо',
+    user_name: 'FASONCHIKI',
   },
   {
     sending_group_date: new Date(1995, 11, 17),
@@ -30,6 +25,17 @@ const userHistoryTest: IHistoryResponce[] = [
     group_name: 'Group name',
     send_method: 'API',
     recipient_status: ['fulfield', 'rejected'],
+    text_sms: 'Запрошуємо',
+    user_name: 'FASONCHIKI',
+  },
+  {
+    sending_group_date: new Date(1995, 11, 17),
+    history_id: 1234512,
+    group_name: 'Group name',
+    send_method: 'Site',
+    recipient_status: ['fulfield', 'rejected', 'fulfield', 'fulfield'],
+    text_sms: 'Запрошуємо',
+    user_name: 'FASONCHIKI',
   },
   {
     sending_group_date: new Date(2021, 1, 10),
@@ -37,6 +43,8 @@ const userHistoryTest: IHistoryResponce[] = [
     group_name: 'Group name',
     send_method: 'API',
     recipient_status: ['pending', 'fulfield'],
+    text_sms: 'Запрошуємо',
+    user_name: 'FASONCHIKI',
   },
   {
     sending_group_date: new Date(2021, 12, 20),
@@ -44,16 +52,13 @@ const userHistoryTest: IHistoryResponce[] = [
     group_name: 'Group name',
     send_method: 'API',
     recipient_status: ['fulfield', 'fulfield', 'fulfield', 'fulfield'],
+    text_sms: 'Запрошуємо',
+    user_name: 'FASONCHIKI',
   },
 ];
-const historyPeriodTest = {
-  startDate: new Date(),
-  endDate: new Date(),
-};
 
 type Props = {
   id: number | undefined;
-  // dateHistoryPeriod: IHistoryPeriod | undefined;
 };
 
 export default function HistoryTable({ id }: Props) {
@@ -78,21 +83,23 @@ export default function HistoryTable({ id }: Props) {
   useEffect(() => {
     async function fetchAPI() {
       try {
-        // const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
-        //   id,
-        //   historyPeriod: dateHistoryPeriod,
-        // });
-
-        const userHistory: IHistoryResponce[] | undefined = userHistoryTest.filter(item => {
-          return (
-            historyPeriod &&
-            historyPeriod.startDate &&
-            historyPeriod.endDate &&
-            new Date(item.sending_group_date).getTime() >=
-              new Date(historyPeriod.startDate).getTime() &&
-            new Date(item.sending_group_date).getTime() <= new Date(historyPeriod.endDate).getTime()
-          );
+        const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
+          id,
+          historyPeriod,
         });
+
+        // const userHistory: IHistoryResponce[] | undefined = historyPeriod
+        //   ? userHistoryTest.filter(item => {
+        //       return (
+        //         historyPeriod.startDate &&
+        //         historyPeriod.endDate &&
+        //         new Date(item.sending_group_date).getTime() >=
+        //           new Date(historyPeriod.startDate).getTime() &&
+        //         new Date(item.sending_group_date).getTime() <=
+        //           new Date(historyPeriod.endDate).getTime()
+        //       );
+        //     })
+        //   : userHistoryTest;
 
         setUserHistory(userHistory);
       } catch (error: any) {

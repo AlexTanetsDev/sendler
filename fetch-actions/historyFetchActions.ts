@@ -25,7 +25,7 @@ export async function getUserHistory({ id, historyPeriod }: IGetHistoryProps) {
       },
 			});
 		
-		if (response.status !== 200) {
+		if (response?.status !== 200) {
 			return [];
 		}
 
@@ -38,19 +38,16 @@ export async function getUserHistory({ id, historyPeriod }: IGetHistoryProps) {
 
 export async function getUserHistoryDetails(historyId: string) {
   try {
-    const response = await api.get<
-      IGetUserHistoryDetails,
-      AxiosResponse<IGetUserHistoryDetails>,
-      {
+    const response = await api.get<IGetUserHistoryDetails, AxiosResponse<IGetUserHistoryDetails>, {
         historyId: string;
-      }
-    >(`api/sending-history/${historyId}`, {
+      }>
+			(`api/sending-history/${historyId}`, {
       params: {
         historyId,
       },
 		});
 		
-		if (response.status !== 200) {
+		if (response?.status !== 200) {
       return [];
     }
 

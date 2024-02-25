@@ -15,8 +15,6 @@ export default async function fetchUserHistoryDetails(
             INNER JOIN clients cl ON gm.client_id = cl.client_id
 						WHERE sh.history_id = $1 
             GROUP BY cl.tel, cl.client_id, sh.text_sms, sh.sending_group_date, u.user_name, sg.group_name
-        WHERE history_id = $1
-        RETURNING *
         `;
 
   return await db.query(query, [historyId]);

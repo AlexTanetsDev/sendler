@@ -21,7 +21,7 @@ const userHistoryTest: IHistoryResponce[] = [
     group_name: 'Group name',
     send_method: 'API',
     recipient_status: ['fulfield', 'fulfield', 'fulfield'],
-    text_sms: 'Запрошуємо',
+    text_sms: 'Запрошуємо усіх',
     user_name: 'FASONCHIKI',
   },
   {
@@ -30,7 +30,7 @@ const userHistoryTest: IHistoryResponce[] = [
     group_name: 'Group name',
     send_method: 'API',
     recipient_status: ['fulfield', 'rejected'],
-    text_sms: 'Запрошуємо',
+    text_sms: 'Запрошуємо не всіх',
     user_name: 'FASONCHIKI',
   },
   {
@@ -39,7 +39,7 @@ const userHistoryTest: IHistoryResponce[] = [
     group_name: 'Group name',
     send_method: 'Site',
     recipient_status: ['fulfield', 'rejected', 'fulfield', 'fulfield'],
-    text_sms: 'Запрошуємо',
+    text_sms: 'Вітаєм з НР',
     user_name: 'FASONCHIKI',
   },
   {
@@ -48,7 +48,7 @@ const userHistoryTest: IHistoryResponce[] = [
     group_name: 'Group name',
     send_method: 'API',
     recipient_status: ['pending', 'fulfield'],
-    text_sms: 'Запрошуємо',
+    text_sms: 'Будьте здорові',
     user_name: 'FASONCHIKI',
   },
   {
@@ -57,7 +57,7 @@ const userHistoryTest: IHistoryResponce[] = [
     group_name: 'Group name',
     send_method: 'API',
     recipient_status: ['fulfield', 'fulfield', 'fulfield', 'fulfield'],
-    text_sms: 'Запрошуємо',
+    text_sms: 'З Днем народження, Перемоги – швидкої! Миру – вічного! Здоров’я – міцного! Сім’ї- щасливої! Доходів – стабільних! Друзів – надійних!',
     user_name: 'FASONCHIKI',
   },
 ];
@@ -74,21 +74,21 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
       startDate: historyDate ? new Date(historyDate) : undefined,
       endDate: historyDate ? new Date(historyDate) : undefined,
     };
-    // const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
-    //   id: userId,
-    //   historyPeriod,
-    // });
-
-    const userHistory: IHistoryResponce[] | undefined = userHistoryTest.filter(item => {
-      return (
-        historyDate &&
-        historyPeriod.startDate &&
-        historyPeriod.endDate &&
-        new Date(item.sending_group_date).getTime() >=
-          new Date(historyPeriod.startDate).getTime() &&
-        new Date(item.sending_group_date).getTime() <= new Date(historyPeriod.endDate).getTime()
-      );
+    const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
+      id: userId,
+      historyPeriod,
     });
+
+    // const userHistory: IHistoryResponce[] | undefined = userHistoryTest.filter(item => {
+    //   return (
+    //     historyDate &&
+    //     historyPeriod.startDate &&
+    //     historyPeriod.endDate &&
+    //     new Date(item.sending_group_date).getTime() >=
+    //       new Date(historyPeriod.startDate).getTime() &&
+    //     new Date(item.sending_group_date).getTime() <= new Date(historyPeriod.endDate).getTime()
+    //   );
+    // });
 
     if (userHistory) setUserHistory(userHistory);
   }, [historyDate, userId]);
@@ -134,7 +134,7 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
                     key={item.history_id}
                     className="flex items-center justify-between h-[47px] px-[26px] font-roboto text-lg text-black border-b border-[#B5C9BE]"
                   >
-                    <p className="w-[130px] text-[#2366E8]">
+                    <p className="w-[130px] text-[#2366E8] text-ellipsis whitespace-nowrap overflow-hidden">
                       <Link href={`by-date/${item.history_id}`}>{item.text_sms}</Link>
                     </p>
                     <p className="w-[118px]">{item.user_name}</p>

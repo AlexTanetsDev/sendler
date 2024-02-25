@@ -8,6 +8,40 @@ import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
 import { getUserHistoryDetails } from '@/fetch-actions/historyFetchActions';
 import { IHistoryDetailsResponce } from '@/globaltypes/historyTypes';
 
+//test
+const userHistoryDetailsTest = [
+  {
+    tel: '+380985678910',
+    client_id: 13,
+    text_sms:
+      'З Днем народження, Перемоги – швидкої! Миру – вічного! Здоров’я – міцного! Сім’ї- щасливої! Доходів – стабільних! Друзів – надійних!',
+    sending_group_date: '2024-02-23T09:30:00.000Z',
+    group_name: 'Group A',
+    user_name: 'Jane Smith',
+    recipient_status: ['fulfield', 'fulfield', 'fulfield'],
+  },
+  {
+    tel: '+380967654210',
+    client_id: 23,
+    text_sms:
+      'З Днем народження, Перемоги – швидкої! Миру – вічного! Здоров’я – міцного! Сім’ї- щасливої! Доходів – стабільних! Друзів – надійних!',
+    sending_group_date: '2024-02-23T09:30:00.000Z',
+    group_name: 'Group B',
+    user_name: 'Jane Smith',
+    recipient_status: ['fulfield', 'fulfield', 'pending'],
+  },
+  {
+    tel: '+380966554210',
+    client_id: 25,
+    text_sms:
+      'З Днем народження, Перемоги – швидкої! Миру – вічного! Здоров’я – міцного! Сім’ї- щасливої! Доходів – стабільних! Друзів – надійних!',
+    sending_group_date: '2024-02-23T09:30:00.000Z',
+    group_name: 'Group B',
+    user_name: 'Jane Smith',
+    recipient_status: ['fulfield', 'fulfield', 'fulfield'],
+  },
+];
+
 export default function HistoryDetails({
   params,
 }: {
@@ -47,20 +81,22 @@ export default function HistoryDetails({
             <p>Повернутись до статистики за день</p>
           </BackStatisticsBtn>
           <div className="flex mb-10 text-xl font-roboto text-[#1B1B30]">
-            <div className="mr-8">
+            <div className="mr-8 w-40">
               <p className="mb-4">Відправник</p>
               <p className="mb-4">Статус розсилки</p>
               <p>Назва групи</p>
             </div>
             <div className="mr-28 font-montserrat text-lg">
-              <p className="mb-4 text-[#2366E8]">FASONCHIKI</p>
+              <p className="mb-4 text-[#2366E8]">
+                {userHistoryDetails[0] ? userHistoryDetails[0]?.user_name : '-'}
+              </p>
               <p className="mb-4">Відіслано</p>
               <p>Україна</p>
             </div>
-            <div>
+            <div className="max-w-2xl">
               <p className="mb-4">Текст sms</p>
               <p className="mr-28 font-montserrat text-base">
-                Святкові знижки і подарунки вже на сайті
+                {userHistoryDetails[0] ? userHistoryDetails[0]?.text_sms : '-'}
               </p>
             </div>
           </div>
@@ -97,7 +133,6 @@ export default function HistoryDetails({
                     {item.recipient_status.every(item => item === 'fulfield')
                       ? 'Доставлено'
                       : 'Недоставлено'}
-                    /{item.recipient_status.length}
                   </p>
                 </li>
               );
