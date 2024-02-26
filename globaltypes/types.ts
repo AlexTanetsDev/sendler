@@ -102,7 +102,7 @@ export interface IUserChangePassword {
 
 export interface IClientsIdWithTel extends IClientId, ITel { }
 
-export type SmsStatusEnum = "pending" | "rejected" | "fulfield";
+export type SmsStatusEnum = "pending" | "rejected" | "fullfield";
 
 export interface IClientReq {
 	userId: number;
@@ -239,6 +239,16 @@ export interface IRecipientStatusDatabase {
 	history_id: number;
 	client_id: number;
 	recipient_status: SmsStatusEnum;
-}
+	status_changing_date: Date,
+	identificator: string;
+};
 
+export interface IStatusSmsRes {
+	State: number,
+	CreationDateUtc: string,
+	SubmittedDateUtc: string,
+	ReportedDateUtc: string,
+	TimeStampUtc: string,
+	Price: number
+}
 
