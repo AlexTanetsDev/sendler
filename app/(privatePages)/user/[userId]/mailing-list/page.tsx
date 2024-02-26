@@ -155,13 +155,31 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	};
 
 	const handleClickSubmit = async () => {
+
 		if (hour && minute && second && date) {
 			await sendSMS(userName, recipients, contentSMS, date, `${hour}:${minute}:${second}`, 'api');
-		} else {
-			await sendSMS(userName, recipients, contentSMS, '', '', 'api');
+			await getData();
+			getUpdate();
+			return;
 		};
-		await getData();
-		getUpdate();
+
+		if (!hour && !minute && !second && !date) {
+			await sendSMS(userName, recipients, contentSMS, '', '', 'api');
+			await getData();
+			getUpdate();
+			return;
+		};
+
+		toast.error('Enter the complete date and time.', {
+			position: 'bottom-center',
+			className: 'toast_error',
+			style: {
+				backgroundColor: '#0F3952',
+				color: '#fa9c9c',
+				fontSize: '24px',
+				marginBottom: '50%',
+			},
+		});
 	}
 
 	const getData = async () => {

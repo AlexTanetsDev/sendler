@@ -7,16 +7,17 @@ import resellerAuth from "../helpers/resellerAuth";
 import { createSmsUrlStr } from "../helpers/createSmsQueryString";
 import { addSendingHistory } from "../helpers/addSendingHistory";
 import { addSmsIdentificators } from "../helpers/addSmsIdetificators";
-import { addSmsStatus } from "../helpers/addSmsStatus";
 import { smsSender } from "../helpers/smsSender";
 import { schemaSendSMS } from "@/models/send-sms";
 import { IClientDatabase, ISendSMS, ISession } from "@/globaltypes/types";
+import { SmsStatusEnum } from "@/globaltypes/types";
 import fetchGroupIdByName from "@/api-actions/fetchGroupIdByName";
 import { fetchGroupClients } from "@/api-actions";
 import { QueryResult } from "pg";
 import { IGroupId } from "@/globaltypes/types";
 import { createGroup } from "../../controllers/sending-groups";
 import { createClient } from "../../controllers/clients";
+import { updateSmsStatusByHistoryId } from "@/app/utils/updateSmsStatusesByHistoryId";
 
 export async function POST(request: Request) {
 	const session: ISession | null = await getServerSession(options);
@@ -35,9 +36,19 @@ export async function POST(request: Request) {
 
 		const { userName, recipients, date, time, contentSMS, send_method } = value;
 		const dateString = date + ' ' + time;
-		const now = new Date();
-		const dateSending = new Date(dateString);
-		const diff = dateSending.getTime() - now.getTime();
+		let diff = 0;
+		if (!(dateString === ' ')) {
+			const now = new Date();
+			const dateSending = new Date(dateString);
+			diff = dateSending.getTime() - now.getTime();
+		};
+
+		if (diff < 0) {
+			return NextResponse.json(
+				{ message: "Your date or time is rong." },
+				{ status: 400 }
+			);
+		};
 
 		if (!userName) {
 			return NextResponse.json(
@@ -99,12 +110,29 @@ export async function POST(request: Request) {
 			const smsQuerystr = createSmsUrlStr(clients, contentSMS);
 			const identificators = await smsSender(authRes, smsQuerystr, clients.length, userName);
 			const historyId = await addSendingHistory(groupIdArray, contentSMS, send_method);
-			const setSmsIdentificatorsRes = await addSmsIdentificators(
+
+			await addSmsIdentificators(
 				historyId,
 				clients,
 				identificators
 			);
-			const statusRes = await addSmsStatus(historyId, clients, "pending");
+
+			const wrapUpdateSmsStatusByHistoryId = async (i: number) => {
+				if (i <= 0) {
+					return 0;
+				};
+				let statuses: SmsStatusEnum[] = [];
+				setTimeout(async () => {
+					const res = await updateSmsStatusByHistoryId(historyId);
+					if (res === null) { return 0 };
+					res.map(item => {
+						statuses.push(item.recipient_status);
+					});
+					return await wrapUpdateSmsStatusByHistoryId(i - 60000);
+				}, 60000);
+			}
+
+			await wrapUpdateSmsStatusByHistoryId(21600000);
 		};
 
 		if (diff > 0) {
@@ -121,8 +149,4 @@ export async function POST(request: Request) {
 			{ status: 500, }
 		);
 	}
-
 }
-
-// const statuses = await updateSmsStatus(historyId);
-// console.log("statuses :", statuses);

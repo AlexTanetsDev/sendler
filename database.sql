@@ -8,7 +8,7 @@ DROP TABLE transactions_history;
 
 DROP TABLE sms_identificators;
 
-DROP TABLE sends_members;
+DROP TABLE sending_members;
 
 DROP TABLE sending_history;
 
@@ -83,6 +83,7 @@ CREATE TABLE
         history_id INT REFERENCES sending_history(history_id) ON DELETE CASCADE,
         client_id INT REFERENCES clients(client_id) ON DELETE CASCADE,
         recipient_status status_type,
+				identificator TEXT NOT NULL,
         PRIMARY KEY (recipient_id),
         status_changing_date TIMESTAMP DEFAULT NOW():: timestamp
     );
