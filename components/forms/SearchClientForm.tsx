@@ -5,7 +5,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { schemaSearchClient } from "@/models/clients";
 import { useState } from "react";
 import GreenButton from "../buttons/GreenButton";
-import { handleKeyPress } from "@/helpers/EnterOnlyFigures";
+import { EnterOnlyFigures } from "@/helpers/EnterOnlyFigures";
 
 interface IFormInput {
 	tel: string;
@@ -84,7 +84,7 @@ export default function SearchClientForm({ getFilter, resetFilter }: Props) {
 					{...register("tel")}
 					className='w-[474px] h-12 mr-8 px-4 input'
 					onChange={onChange}
-					onKeyDown={handleKeyPress}
+					onKeyDown={EnterOnlyFigures}
 					required
 				/>
 				{errors.tel && (
