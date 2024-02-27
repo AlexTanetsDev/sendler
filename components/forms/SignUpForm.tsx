@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 import ShowPassword from '../buttons/ShowPassword';
 import { fetchUserId } from '@/helpers/fetchUserId';
-import { handleKeyPress } from '@/helpers/EnterOnlyFigures';
+import { EnterOnlyFigures} from '@/helpers/EnterOnlyFigures';
 import axios from 'axios';
 
 const SingUpForm = () => {
@@ -109,7 +109,7 @@ const SingUpForm = () => {
           <input
             id="phone"
             type="tel"
-            onKeyPress={handleKeyPress}
+            onKeyPress={EnterOnlyFigures}
             {...register('phone')}
             className="w-full border py-2 pr-11 pl-[50px] focus:outline-none focus:border-blue-500 rounded-[18px] input"
             required
