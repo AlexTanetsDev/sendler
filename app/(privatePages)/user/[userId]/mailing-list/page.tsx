@@ -27,7 +27,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const [smsCount, setSmsCount] = useState<number>(0);
 	const [isChecked, setIsChecked] = useState<boolean>(false);
 	const [isOpened, setIsOpened] = useState<boolean>(false)
-	const [userName, setUserName] = useState<string>('');
+	const [userName, setUserName] = useState<string>('Outlet');
 	const [userNames, setUserNames] = useState<string[] | undefined>([]);
 	const [groupName, setGroupName] = useState<string>('');
 	const [hour, setHour] = useState<string>('');
@@ -95,7 +95,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const handleClickAddGroup = () => {
 		if (groupName) {
 			if (recipients.includes(groupName)) {
-				toast.error('This group has already been added.', {
+				toast.error('Цю групу вже додано.', {
 					position: 'bottom-center',
 					className: 'toast_error',
 					style: {
@@ -115,7 +115,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const handleClickAddPhoneNumber = (tel: number) => {
 		if (tel) {
 			if (recipients.includes(tel)) {
-				toast.error('This phone number has already been added.', {
+				toast.error('Цей номер телефону вже додано.', {
 					position: 'bottom-center',
 					className: 'toast_error',
 					style: {
@@ -170,7 +170,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			return;
 		};
 
-		toast.error('Enter the complete date and time.', {
+		toast.error('Введіть повну дату й час.', {
 			position: 'bottom-center',
 			className: 'toast_error',
 			style: {
@@ -217,7 +217,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 					</p>
 					<p className=" text-mainTextColor font-normal text-xl mt-[50px] label">Ім’я відправника</p>
 					<div className="flex gap-8 items-center mt-3">
-						<Select selectOptions={userNames} getSelect={getUserName} selectedOption={userName} widthValue={474} startValue='Обрати' />
+						<Select selectOptions={userNames} getSelect={getUserName} selectedOption={userName} widthValue={474} startValue='Обрати' defaultValue='Outlet' />
 						<GreenButton size="normal" onClick={getIsOpened}>
 							Додати ім’я
 						</GreenButton>
