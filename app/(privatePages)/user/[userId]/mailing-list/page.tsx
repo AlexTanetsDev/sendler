@@ -30,9 +30,9 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const [userName, setUserName] = useState<string>('');
 	const [userNames, setUserNames] = useState<string[] | undefined>([]);
 	const [groupName, setGroupName] = useState<string>('');
-	const [hour, setHour] = useState<string>('');
-	const [minute, setMinute] = useState<string>('');
-	const [second, setSecond] = useState<string>('');
+	const [hour, setHour] = useState<string | undefined>('');
+	const [minute, setMinute] = useState<string | undefined>('');
+	const [second, setSecond] = useState<string | undefined>('');
 	const [groupsNameArray, setGroupsNameArray] = useState<string[] | undefined>([]);
 	const [date, setDate] = useState('');
 	const [recipients, setRecipients] = useState<(string | number)[]>([]);
@@ -72,15 +72,15 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		setGroupName(item);
 	};
 
-	const getHour = (item: string) => {
+	const getHour = (item: string | undefined) => {
 		setHour(item);
 	};
 
-	const geMinute = (item: string) => {
+	const getMinute = (item: string | undefined) => {
 		setMinute(item);
 	};
 
-	const getSecond = (item: string) => {
+	const getSecond = (item: string | undefined) => {
 		setSecond(item);
 	};
 
@@ -197,6 +197,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const memoizedsetCharAndSmsCount = useCallback(setCharAndSmsCount, [contentSMS])
 
 	useEffect(() => {
+
 		memoizedsetCharAndSmsCount();
 		memoizedgetData();
 		memoizedgetUserNamesArray(userId);
@@ -301,7 +302,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 					<p className=" text-xl text-mainTextColor mb-[13px] mt-[32px]">{'Час (з,по)'}</p>
 					<div className="flex gap-3 mt-3 items-center">
 						<SelectTime selectOptions={getTimeOptionsValues(0, 24)} getSelect={getHour} selectedOption={hour} widthValue={150} startValue='' />
-						<SelectTime selectOptions={getTimeOptionsValues(0, 60)} getSelect={geMinute} selectedOption={minute} widthValue={150} startValue='' />
+						<SelectTime selectOptions={getTimeOptionsValues(0, 60)} getSelect={getMinute} selectedOption={minute} widthValue={150} startValue='' />
 						<SelectTime selectOptions={getTimeOptionsValues(0, 60)} getSelect={getSecond} selectedOption={second} widthValue={150} startValue='' />
 					</div>
 				</div>

@@ -54,7 +54,7 @@ const Select = ({
 	return (
 		<div onClick={onClose} className={`select-wrap w-[${widthValue}px] ${isOpen ? ` rounded-t-[18px]` : `border-[#E6E6E6] rounded-[18px]`}`}>
 			<div className='select'>
-				<div className='absolute top-1/2 -translate-y-1/2 left-7 font-montserrat font-normal text-lg leading-6'>
+				<div className='absolute top-1/2 -translate-y-1/2 left-7 font-montserrat font-normal text-base leading-6'>
 					{isOpen && !selectedOption ? startValue : selectedOption}</div>
 				{isOpen ?
 					<Image
