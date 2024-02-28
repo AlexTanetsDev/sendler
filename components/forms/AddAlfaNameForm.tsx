@@ -7,6 +7,7 @@ import { schemaCreateAlfaName } from "@/models/users";
 import { IUserAlfaName } from "@/globaltypes/types";
 import GreenButton from "@/components/buttons/GreenButton";
 import { createAlfaName } from "@/fetch-actions/usersFetchActions";
+import { EnterOnlyLetters } from "@/helpers/EnterOnlyLetters";
 
 type Props = {
 	userId: number;
@@ -60,7 +61,8 @@ export default function AddAlfaNameForm({ userId, getUserNamesArray, getIsOpened
 			onSubmit={handleSubmit(onSubmit)}
 			className='mt-8'>
 			<label htmlFor='alfa_name' className='block mb-3.5 label'>
-				Нове ім&apos;я
+				Нове ім&apos;я 
+				<p>Тут буде описано, що користувач повинен зробити, щоб додати нове ім’я</p>
 			</label>
 			<div className='flex items-center'>
 				<input id="alfa_name"
@@ -68,6 +70,8 @@ export default function AddAlfaNameForm({ userId, getUserNamesArray, getIsOpened
 					{...register("alfa_name")}
 					className='w-[474px] h-12 mr-8 px-4 input'
 					required
+					onKeyPress={EnterOnlyLetters}
+					maxLength={11}
 				/>
 				{errors.alfa_name && (
 					<span className="text-red-500 ">{errors.alfa_name.message}</span>

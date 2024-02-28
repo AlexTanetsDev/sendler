@@ -6,6 +6,7 @@ import { schemaAddClientNumber } from "@/models/users";
 
 import GreenButton from "@/components/buttons/GreenButton";
 import { ITel } from "@/globaltypes/types";
+import { EnterOnlyFigures } from "@/helpers/EnterOnlyFigures";
 
 type Props = {
 	handleClick: (tel: number) => void;
@@ -63,6 +64,8 @@ export default function AddClientPhoneNumberForm({ handleClick }: Props) {
 					className='w-[474px] border py-[11px] pr-11 pl-[50px] input'
 					placeholder="675555544"
 					required
+					maxLength={9}
+					onKeyPress={EnterOnlyFigures}
 				/>
 				{errors.tel && (
 					<span className="text-red-500 ">{errors.tel.message}</span>
