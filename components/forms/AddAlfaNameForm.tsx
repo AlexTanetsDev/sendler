@@ -4,10 +4,11 @@ import { useForm, SubmitHandler } from "react-hook-form";
 
 import { schemaCreateAlfaName } from "@/models/users";
 
-import { IUserAlfaName } from "@/globaltypes/types";
-import GreenButton from "@/components/buttons/GreenButton";
 import { createAlfaName } from "@/fetch-actions/usersFetchActions";
+import GreenButton from "@/components/buttons/GreenButton";
 import { EnterOnlyLetters } from "@/helpers/EnterOnlyLetters";
+
+import { IUserAlfaName } from "@/globaltypes/types";
 
 type Props = {
 	userId: number;
@@ -61,7 +62,7 @@ export default function AddAlfaNameForm({ userId, getUserNamesArray, getIsOpened
 			onSubmit={handleSubmit(onSubmit)}
 			className='mt-8'>
 			<label htmlFor='alfa_name' className='block mb-3.5 label'>
-				Нове ім&apos;я 
+				Нове ім&apos;я
 				<p>Тут буде описано, що користувач повинен зробити, щоб додати нове ім’я</p>
 			</label>
 			<div className='flex items-center'>

@@ -38,11 +38,19 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const [recipients, setRecipients] = useState<(string | number)[]>([]);
 	const [contentSMS, setContentSMS] = useState<string>('');
 	const [update, setUpdate] = useState<boolean>(false);
+	const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
 
+	// update page after update database
 	const getUpdate = () => {
 		setUpdate(!update);
 	};
 
+	// check select is opened
+	const openSelect = (isOpen: boolean) => {
+		setIsSelectOpen(isOpen);
+	};
+
+	// set values of sms and character counters
 	const setCharAndSmsCount = () => {
 		setCharCount(contentSMS.length);
 		if (isKyr(contentSMS)) {
@@ -94,6 +102,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 
 	const handleClickAddGroup = () => {
 		if (groupName) {
+			// uniqueness control of name of group
 			if (recipients.includes(groupName)) {
 				toast.error('Цю групу вже додано.', {
 					position: 'bottom-center',
@@ -114,6 +123,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 
 	const handleClickAddPhoneNumber = (tel: number) => {
 		if (tel) {
+			// uniqueness control of phone number
 			if (recipients.includes(tel)) {
 				toast.error('Цей номер телефону вже додано.', {
 					position: 'bottom-center',
@@ -136,14 +146,15 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		setContentSMS(contentSMS + ' ' + `%ClientName%`);
 	};
 
-	const handleClickParam1 = () => {
+	const handleClickAddParam1 = () => {
 		setContentSMS(contentSMS + ' ' + `%Parametr1%`);
 	};
 
-	const handleClickParam2 = () => {
+	const handleClickAddParam2 = () => {
 		setContentSMS(contentSMS + ' ' + `%Parametr2%`);
 	};
 
+	// reset date and time if input is closed
 	const handleClickChecked = () => {
 		setIsChecked(!isChecked);
 		if (isChecked == false) {
@@ -155,7 +166,6 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	};
 
 	const handleClickSubmit = async () => {
-
 		if (hour && minute && second && date) {
 			await sendSMS(userName, recipients, contentSMS, date, `${hour}:${minute}:${second}`, 'api');
 			await getData();
@@ -163,6 +173,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			return;
 		};
 
+		// date and time completeness control
 		if (!hour && !minute && !second && !date) {
 			await sendSMS(userName, recipients, contentSMS, '', '', 'api');
 			await getData();
@@ -182,6 +193,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		});
 	}
 
+	// get array of group's name
 	const getData = async () => {
 		const resGroups = await getUserGroups(userId);
 		const groupsName = resGroups?.map((group) => group.group_name);
@@ -194,10 +206,9 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 
 	const memoizedgetData = useCallback(getData, [userId]);
 	const memoizedgetUserNamesArray = useCallback(getUserNamesArray, [userId]);
-	const memoizedsetCharAndSmsCount = useCallback(setCharAndSmsCount, [contentSMS])
+	const memoizedsetCharAndSmsCount = useCallback(setCharAndSmsCount, [contentSMS]);
 
 	useEffect(() => {
-
 		memoizedsetCharAndSmsCount();
 		memoizedgetData();
 		memoizedgetUserNamesArray(userId);
@@ -218,7 +229,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 					</p>
 					<p className=" text-mainTextColor font-normal text-xl mt-[50px] label">Ім’я відправника</p>
 					<div className="flex gap-8 items-center mt-3">
-						<Select selectOptions={userNames} getSelect={getUserName} selectedOption={userName} widthValue={474} startValue='Обрати' defaultValue='Outlet' />
+						<Select openSelect={(a: boolean) => a} selectOptions={userNames} getSelect={getUserName} selectedOption={userName} widthValue={474} startValue='Обрати' defaultValue='Outlet' />
 						<GreenButton size="normal" onClick={getIsOpened}>
 							Додати ім’я
 						</GreenButton>
@@ -245,8 +256,8 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 						<div className="flex flex-col gap-[18px] justify-center">
 							<span className=" text-base text-mainTextColor">Додати шаблон</span>
 							<button type='button' onClick={handleClickAddClientName} className="text-base text-emailColorLink cursor-pointer">Ім&#39;я клієнта</button>
-							<button type='button' onClick={handleClickParam1} className="text-base text-emailColorLink cursor-pointer">Параметр 1</button>
-							<button type='button' onClick={handleClickParam2} className="text-base text-emailColorLink cursor-pointer">Параметр 2</button>
+							<button type='button' onClick={handleClickAddParam1} className="text-base text-emailColorLink cursor-pointer">Параметр 1</button>
+							<button type='button' onClick={handleClickAddParam2} className="text-base text-emailColorLink cursor-pointer">Параметр 2</button>
 						</div>
 					</div>
 				</div>
@@ -263,8 +274,10 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 						<div className="flex flex-col gap-8 justify-start">
 							<AddClientPhoneNumberForm handleClick={handleClickAddPhoneNumber} />
 							<div>
-								<Select selectOptions={groupsNameArray} getSelect={getGroupName} selectedOption={groupName} widthValue={474} startValue='Обрати' />
-								<button onClick={handleClickAddGroup} className="mt-2 text-emailColorLink cursor-pointer">Додати групу до списку</button>
+								<Select openSelect={openSelect} selectOptions={groupsNameArray} getSelect={getGroupName} selectedOption={groupName} widthValue={474} startValue='Обрати' />
+								<div className={`${isSelectOpen && 'hidden'}`}>
+									<button disabled={groupName ? false : true} onClick={handleClickAddGroup} className={`mt-2 text-emailColorLink cursor-pointer ${groupName ? 'opacity-100' : 'opacity-50'}`}>Додати групу до списку</button>
+								</div>
 							</div>
 						</div>
 					</div>
@@ -301,9 +314,9 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 					/>
 					<p className=" text-xl text-mainTextColor mb-[13px] mt-[32px]">{'Час (з,по)'}</p>
 					<div className="flex gap-3 mt-3 items-center">
-						<SelectTime selectOptions={getTimeOptionsValues(0, 24)} getSelect={getHour} selectedOption={hour} widthValue={150} startValue='' />
-						<SelectTime selectOptions={getTimeOptionsValues(0, 60)} getSelect={getMinute} selectedOption={minute} widthValue={150} startValue='' />
-						<SelectTime selectOptions={getTimeOptionsValues(0, 60)} getSelect={getSecond} selectedOption={second} widthValue={150} startValue='' />
+						<SelectTime openSelect={(a: boolean) => a} selectOptions={getTimeOptionsValues(0, 24)} getSelect={getHour} selectedOption={hour} widthValue={150} startValue='' />
+						<SelectTime openSelect={(a: boolean) => a} selectOptions={getTimeOptionsValues(0, 60)} getSelect={getMinute} selectedOption={minute} widthValue={150} startValue='' />
+						<SelectTime openSelect={(a: boolean) => a} selectOptions={getTimeOptionsValues(0, 60)} getSelect={getSecond} selectedOption={second} widthValue={150} startValue='' />
 					</div>
 				</div>
 			)}

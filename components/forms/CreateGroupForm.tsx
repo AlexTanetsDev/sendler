@@ -3,10 +3,10 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import { schemaReqCreateGroup } from "@/models/sending-groups";
+import { createGroup } from "@/fetch-actions/groupsFetchActions";
+import GreenButton from "@/components/buttons/GreenButton";
 
 import { IGroupName } from "@/globaltypes/types";
-import GreenButton from "@/components/buttons/GreenButton";
-import { createGroup } from "@/fetch-actions/groupsFetchActions";
 
 type Props = {
 	id: number | undefined;

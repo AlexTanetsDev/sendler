@@ -1,11 +1,8 @@
-import { number } from 'joi';
 import { FieldValues, UseFormRegister } from 'react-hook-form';
 
 interface Props {
 	recipient: string | number;
 	index: number;
-	// updateClients: () => void;
-	// getUpdate: () => void;
 	register: UseFormRegister<FieldValues>
 	onSelect: (e: any) => void;
 }
@@ -13,8 +10,7 @@ interface Props {
 const Recipient = ({
 	recipient,
 	index,
-	// updateClients,
-	// getUpdate,
+
 	register,
 	onSelect
 }: Props) => {
