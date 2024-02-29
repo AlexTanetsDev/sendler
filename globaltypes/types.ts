@@ -134,6 +134,14 @@ export interface IGroupDatabase extends IGroupId, IGroupName, IUserId {
 	number_members: number;
 };
 
+export interface IPaymentHistory {
+	transaction_id: number;
+	user_id: number;
+	sms_count: number;
+	money_count:number;
+	transactions_date: string;
+}
+
 export interface IGroupCreateReq extends IGroupName, IGroupUpdateReq { };
 
 export interface IGroupUpdateReq {
