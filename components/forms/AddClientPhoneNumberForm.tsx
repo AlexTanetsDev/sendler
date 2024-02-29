@@ -56,12 +56,12 @@ export default function AddClientPhoneNumberForm({ handleClick }: Props) {
 			onSubmit={handleSubmit(onSubmit)}
 		>
 			<div className='relative'>
-				<span className="absolute left-3 top-[9px]">+380</span>
+				<span className="absolute left-3 top-[12px]">+380</span>
 				<input id="tel"
 					type='text'
 					defaultValue={''}
 					{...register("tel")}
-					className='w-[474px] border py-2 pr-11 pl-[50px] input'
+					className='w-[474px] border py-[11px] pr-11 pl-[50px] input'
 					placeholder="675555544"
 					required
 					maxLength={9}
