@@ -25,14 +25,14 @@ const EditClient = ({ groupId,
 		document.body.classList.add('overflow-hidden');
 	};
 
-	// control keydown 'Escape' depend on open select in CreateClientForm 
-	const openSelect = (isOpen: boolean) => {
-		setIsSelectOpen(isOpen);
-	};
-
 	const closeModal = () => {
 		setIsModalOpen(false);
 		document.body.classList.remove('overflow-hidden');
+	};
+
+	// control keydown 'Escape' depend on open select in CreateClientForm 
+	const openSelect = (isOpen: boolean) => {
+		setIsSelectOpen(isOpen);
 	};
 
 	return (
