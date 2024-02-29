@@ -18,18 +18,22 @@ export default function AllContactsUserPage({ params }: { params: { id: string, 
 
 	const userId = Number(params.userId);
 
+	// update page if list of clients or client in database are updated
 	const getUpdate = () => {
 		setIsUpdated(!isUpdated);
 	};
 
+	// update list of clients if filter is changed
 	const getFilter = (e: any) => {
 		setFilter(e.target.value);
 	};
 
+	// update list of clients if filter is cleaned
 	const resetFilter = () => {
 		setFilter('');
 	};
 
+	//get data from database
 	const updateData = async () => {
 		const res = await getUserClients(userId, filter, LIMIT, 0);
 		if (res) {

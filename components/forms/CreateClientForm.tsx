@@ -6,17 +6,19 @@ import { useState, useRef } from "react";
 import toast from "react-hot-toast";
 
 import { validationSchemaCreateClient } from "@/models/forms";
-import { FormInputCreateClient, IClientDatabase } from "@/globaltypes/types";
 import GreenButton from "../buttons/GreenButton";
+import SelectTime from "../SelectTime";
 import { createGroupClient, updateUserClient } from "@/fetch-actions/clientsFetchActions";
 import { getTimeOptionsValues } from '@/helpers/getTimeOptionsValues';
-import SelectTime from "../SelectTime";
 import checkDate from "@/helpers/checkDate";
+
+import { FormInputCreateClient, IClientDatabase } from "@/globaltypes/types";
 
 interface Props {
 	onClose: (() => void) | undefined;
 	updateClients: () => void,
 	getUpdate: () => void,
+	openSelect: (isOpen: boolean) => void;
 	title?: string;
 	groupId?: number;
 	groupName?: string;
@@ -27,6 +29,7 @@ const CreateClientForm = ({
 	onClose,
 	updateClients,
 	getUpdate,
+	openSelect,
 	title,
 	groupName,
 	currentClient,
@@ -114,7 +117,6 @@ const CreateClientForm = ({
 			parameter_1: data.parameter1,
 			parameter_2: data.parameter2,
 		};
-
 
 		if (currentClient?.client_id) {
 			updateUserClient(currentClient.client_id, clientData);
@@ -234,9 +236,9 @@ const CreateClientForm = ({
 					Дата народження
 				</label>
 				<div className="flex gap-x-3 justify-center">
-					<SelectTime isModal={true} selectOptions={getTimeOptionsValues(1, 31)} getSelect={getDay} selectedOption={day} widthValue={118} startValue='' />
-					<SelectTime isModal={true} selectOptions={getTimeOptionsValues(1, 12)} getSelect={getMonth} selectedOption={month} widthValue={130} startValue='' />
-					<SelectTime isModal={true} selectOptions={getTimeOptionsValues(1900, new Date().getFullYear())} getSelect={getYear} selectedOption={year} widthValue={198} startValue='' />
+					<SelectTime openSelect={openSelect} isModal={true} selectOptions={getTimeOptionsValues(1, 31)} getSelect={getDay} selectedOption={day} widthValue={118} startValue='' />
+					<SelectTime openSelect={openSelect} isModal={true} selectOptions={getTimeOptionsValues(1, 12)} getSelect={getMonth} selectedOption={month} widthValue={130} startValue='' />
+					<SelectTime openSelect={openSelect} isModal={true} selectOptions={getTimeOptionsValues(1900, new Date().getFullYear())} getSelect={getYear} selectedOption={year} widthValue={198} startValue='' />
 				</div>
 
 				<label

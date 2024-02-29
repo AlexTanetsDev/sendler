@@ -3,17 +3,17 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import { schemaAddClientNumber } from "@/models/users";
-
-import GreenButton from "@/components/buttons/GreenButton";
-import { ITel } from "@/globaltypes/types";
 import { EnterOnlyFigures } from "@/helpers/EnterOnlyFigures";
+
+import { ITel } from "@/globaltypes/types";
+import { useState } from "react";
 
 type Props = {
 	handleClick: (tel: number) => void;
 };
 
 export default function AddClientPhoneNumberForm({ handleClick }: Props) {
-
+	const [tel, setTel] = useState('');
 	const {
 		register,
 		handleSubmit,
@@ -50,6 +50,11 @@ export default function AddClientPhoneNumberForm({ handleClick }: Props) {
 		reset({ tel: '' });
 	};
 
+	const handleChange = (e: any) => {
+		console.log('TEL', tel.length);
+		setTel(e.target.value);
+	};
+
 	return (
 		<form
 			autoComplete="off"
@@ -65,12 +70,13 @@ export default function AddClientPhoneNumberForm({ handleClick }: Props) {
 					placeholder="675555544"
 					required
 					maxLength={9}
-					onKeyPress={EnterOnlyFigures}
+					onKeyDown={EnterOnlyFigures}
+					onChange={handleChange}
 				/>
 				{errors.tel && (
 					<span className="text-red-500 ">{errors.tel.message}</span>
 				)}
-				<button className="block mt-2 text-emailColorLink cursor-pointer">Додати телефон до списку</button>
+				<button disabled={tel.length < 9 ? true : true} className={`block mt-2 text-emailColorLink cursor-pointer ${tel.length < 9 ? 'opacity-50' : 'opacity-100'}`}>Додати телефон до списку</button>
 			</div>
 		</form>
 	);

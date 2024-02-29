@@ -5,6 +5,7 @@ type Props = {
 	selectOptions?: string[];
 	selectedOption: string | undefined;
 	getSelect: (item: string | undefined) => void;
+	openSelect: (isOpen: boolean) => void;
 	widthValue?: number;
 	startValue?: string;
 	isModal?: boolean;
@@ -13,6 +14,7 @@ type Props = {
 const SelectTime = ({ selectOptions,
 	selectedOption,
 	getSelect,
+	openSelect,
 	widthValue = 474,
 	startValue,
 	isModal }: Props) => {
@@ -29,12 +31,19 @@ const SelectTime = ({ selectOptions,
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
+			//close select if it is opened
 			if (e.key === 'Escape' && selectBodyRef?.current) {
+				openSelect(true);
 				memoizedClose();
+			};
+			// close modal
+			if (e.key === 'Escape' && !selectBodyRef?.current) {
+				openSelect(false);
 			};
 		};
 
-		const handleCloseInputClick = (e: any) => {
+		// close select if click outside of select
+		const handleClickCloseInput = (e: any) => {
 			if (selectBodyRef?.current && !selectBodyRef?.current?.contains(e.target as Node)) {
 				memoizedClose();
 				if (startValue === '00') {
@@ -45,28 +54,32 @@ const SelectTime = ({ selectOptions,
 			};
 		};
 
-
+		// control click or keydown for close select
 		if (isModal) {
+			// if select is inside modal
 			document.body.addEventListener('keydown', handleKeyDown);
-			document.body.addEventListener('click', handleCloseInputClick);
+			document.body.addEventListener('click', handleClickCloseInput);
 		}
 		else {
+			// if select is outside modal
 			document.addEventListener('keydown', handleKeyDown);
-			document.addEventListener('click', handleCloseInputClick);
+			document.addEventListener('click', handleClickCloseInput);
 		}
 
 		return () => {
 			if (isModal) {
+				// if select is inside modal
 				document.body.removeEventListener('keydown', handleKeyDown);
-				document.body.removeEventListener('click', handleCloseInputClick);
+				document.body.removeEventListener('click', handleClickCloseInput);
 			}
 			else {
+				// if select is outside modal
 				document.removeEventListener('keydown', handleKeyDown);
-				document.removeEventListener('click', handleCloseInputClick);
+				document.removeEventListener('click', handleClickCloseInput);
 			}
 		};
 
-	}, [memoizedClose, getSelect, startValue, isModal]);
+	}, [memoizedClose, getSelect, startValue, isModal, openSelect, isOpen]);
 
 	return (
 		<div onClick={onClose} className={`select-wrap relative w-[${widthValue}px] ${isOpen ? `rounded-t-[18px]` : `border-[#E6E6E6] rounded-[18px]`}`}>

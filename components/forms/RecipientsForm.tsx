@@ -16,11 +16,10 @@ export default function RecipientsForm({
 	getRecipients
 
 }: Props) {
-
 	const [isSelected, setIsSelected] = useState(0);
 	const { register, handleSubmit, reset } = useForm();
-	const [isDisabled, setIsDisabled] = useState(false);
 
+	// variable for control of state of delete button
 	const onSelect = (e: any) => {
 		const { checked } = e.target;
 		if (checked) {
@@ -30,14 +29,14 @@ export default function RecipientsForm({
 		}
 	};
 
+	// delete list of recipients
 	const deleteRecipients = (recipientsArray: (string | number)[], indexArray: number[]) => {
 		indexArray.map(index => recipientsArray.splice(index, 1));
 		getRecipients(recipientsArray);
 	};
 
 	const onSubmit = async (data: any) => {
-
-		setIsDisabled(true);
+		// create list of recipients have been marked for deletion
 		const deletedRecipientsIndex: number[] = [];
 		for (const key in data) {
 			if (data[key] === true) {
@@ -45,14 +44,13 @@ export default function RecipientsForm({
 			}
 		};
 		deleteRecipients(recipients, deletedRecipientsIndex);
+		setIsSelected(0);
 		reset();
-		setIsDisabled(false);
 	};
 
 	const handleClick = () => {
 		getRecipients([]);
-	}
-
+	};
 
 	return (
 		<form onSubmit={handleSubmit(onSubmit)} className='scroll-bar z-999'>
@@ -68,8 +66,8 @@ export default function RecipientsForm({
 					))}
 				</RSC>
 			</ul>
-			<button className=" text-lg text-emailColorLink mr-5 cursor-pointer">Видалити обране</button>
-			<button type='button' onClick={handleClick} className=" text-lg text-emailColorLink cursor-pointer">Очистити</button>
+			<button disabled={isSelected ? false : true} className={`text-lg text-emailColorLink mr-5 cursor-pointer ${isSelected ? 'opacity-100' : 'opacity-50'}`}>Видалити обране</button>
+			<button disabled={recipients.length > 0 ? false : true} type='button' onClick={handleClick} className={` text-lg text-emailColorLink cursor-pointer ${recipients.length > 0 ? 'opacity-100' : 'opacity-50'}`}>Очистити</button>
 		</form>
 	);
 };

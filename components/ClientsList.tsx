@@ -39,6 +39,7 @@ export default function ClientsList({
 	const [isDisabled, setIsDisabled] = useState(false);
 	const convertClients = convertClientsBirthdayFormat(clients);
 
+	// variable for control of state of delete button
 	const onSelect = (e: any) => {
 		const { checked } = e.target;
 		if (checked) {
@@ -51,6 +52,7 @@ export default function ClientsList({
 	const onSubmit = async (data: any) => {
 
 		setIsDisabled(true);
+		// create array of client_id that should be deleted
 		const deletedClientsId: number[] = [];
 		for (const key in data) {
 			if (data[key] === true) {
@@ -59,11 +61,13 @@ export default function ClientsList({
 		}
 
 		if (groupId) {
+			// delete clients from group
 			await deleteGroupClients(groupId, deletedClientsId);
 			setIsSelected(0);
 			updateClients();
 			getUpdate();
 		} else {
+			// delete clients from list of clients
 			await deleteClients(deletedClientsId);
 			setIsSelected(0);
 			updateClients();
