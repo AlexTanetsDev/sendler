@@ -28,7 +28,8 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const [isChecked, setIsChecked] = useState<boolean>(false);
 	const [isOpened, setIsOpened] = useState<boolean>(false)
 	const [userName, setUserName] = useState<string>('Outlet');
-	const [userNames, setUserNames] = useState<string[] | undefined>([]);
+	const [userActiveNames, setActiveUserNames] = useState<string[] | undefined>([]);
+	const [userDisableeNames, setDisableUserNames] = useState<string[] | undefined>([]);
 	const [groupName, setGroupName] = useState<string>('');
 	const [hour, setHour] = useState<string | undefined>('');
 	const [minute, setMinute] = useState<string | undefined>('');
@@ -69,7 +70,8 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const getUserNamesArray = async (id: number) => {
 		const res = await getUser(userId);
 		const user = res?.data.user
-		setUserNames(user?.alfa_names_active);
+		setActiveUserNames(user?.alfa_names_active);
+		setDisableUserNames(user?.alfa_names_disable);
 	};
 
 	const getRecipients = (recipientsArray: (string | number)[]) => {
@@ -223,13 +225,22 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			</Title>
 			<div className="flex flex-col gap-[80px] pt-[60px]">
 				<div className="sms-page-box">
-					<p className="w-[724px] text-mainTextColor text-base font-montserrat">
-						Виберіть підпис (Ім&#39;я відправника), який буде відображатися замість номера
-						відправника SMS-повідомлення
-					</p>
+					<div className='flex'>
+						<p className="w-[724px] text-mainTextColor text-base font-montserrat">
+							Виберіть підпис (Ім&#39;я відправника), який буде відображатися замість номера
+							відправника SMS-повідомлення
+						</p>
+						<ul className='flex'>
+							{userDisableeNames?.map((item, index) => (
+								<li key={index}>
+									{`${item}` + ', '}
+								</li>
+							))}
+						</ul>
+					</div>
 					<p className=" text-mainTextColor font-normal text-xl mt-[50px] label">Ім’я відправника</p>
 					<div className="flex gap-8 items-center mt-3">
-						<Select openSelect={(a: boolean) => a} selectOptions={userNames} getSelect={getUserName} selectedOption={userName} widthValue={474} startValue='Обрати' defaultValue='Outlet' />
+						<Select openSelect={(a: boolean) => a} selectOptions={userActiveNames} getSelect={getUserName} selectedOption={userName} widthValue={474} startValue='Обрати' defaultValue='Outlet' />
 						<GreenButton size="normal" onClick={getIsOpened}>
 							Додати ім’я
 						</GreenButton>
@@ -276,7 +287,9 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 							<div>
 								<Select openSelect={openSelect} selectOptions={groupsNameArray} getSelect={getGroupName} selectedOption={groupName} widthValue={474} startValue='Обрати' />
 								<div className={`${isSelectOpen && 'hidden'}`}>
-									<button disabled={groupName ? false : true} onClick={handleClickAddGroup} className={`mt-2 text-emailColorLink cursor-pointer ${groupName ? 'opacity-100' : 'opacity-50'}`}>Додати групу до списку</button>
+									<button disabled={groupName ? false : true} onClick={handleClickAddGroup} className={`mt-2 text-emailColorLink cursor-pointer ${groupName ? 'opacity-100' : 'opacity-50'}`}>
+										Додати групу до списку
+									</button>
 								</div>
 							</div>
 						</div>
