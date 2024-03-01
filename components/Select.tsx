@@ -28,7 +28,6 @@ const Select = ({
 	const onClose = () => {
 		setIsOpen(!isOpen);
 		openSelect(!isOpen);
-		console.log('isOpen', isOpen);
 	};
 
 	const memoizedClose = useCallback(onClose, [isOpen, openSelect]);

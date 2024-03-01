@@ -48,10 +48,10 @@ export default function AddClientPhoneNumberForm({ handleClick }: Props) {
 	const onSubmit: SubmitHandler<ITel> = async (data) => {
 		handleClick(Number('380' + data.tel));
 		reset({ tel: '' });
+		setTel('');
 	};
 
 	const handleChange = (e: any) => {
-		console.log('TEL', tel.length);
 		setTel(e.target.value);
 	};
 
@@ -76,7 +76,7 @@ export default function AddClientPhoneNumberForm({ handleClick }: Props) {
 				{errors.tel && (
 					<span className="text-red-500 ">{errors.tel.message}</span>
 				)}
-				<button disabled={tel.length < 9 ? true : true} className={`block mt-2 text-emailColorLink cursor-pointer ${tel.length < 9 ? 'opacity-50' : 'opacity-100'}`}>Додати телефон до списку</button>
+				<button disabled={tel.length < 9 ? true : false} className={`block mt-2 text-emailColorLink cursor-pointer ${tel.length < 9 ? 'opacity-50' : 'opacity-100'}`}>Додати телефон до списку</button>
 			</div>
 		</form>
 	);
