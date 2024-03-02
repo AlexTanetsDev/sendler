@@ -102,7 +102,7 @@ const SelectTime = ({ selectOptions,
 					/>}
 			</div>
 
-			{isOpen ? <div className={`w-full absolute overflow-auto h-60 -mt-[2px] bg-white rounded-b-[18px] border-[1px] border-[#E6E6E6] border-t-0`} ref={selectBodyRef}>
+			{isOpen ? <div className={`w-[${widthValue}px] absolute overflow-auto h-60 -ml-[1px] -mt-[2px] bg-white rounded-b-[18px] border-[1px] border-[#E6E6E6] border-t-0`} ref={selectBodyRef}>
 				<RSC>
 					{selectOptions?.map((selectOption) => (
 						<div key={key++} onClick={() => getSelect(selectOption)} className="select-item">{selectOption}</div>
