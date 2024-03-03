@@ -1,25 +1,30 @@
+import { PricesArray } from '@/data/data';
+
 export function defineSum(smsCount: number) {
   let pricePerSms;
-
   switch (true) {
     case smsCount >= 100000:
-      pricePerSms = 0.7;
+      pricePerSms = PricesArray[5].price;
       break;
     case smsCount >= 50000:
-      pricePerSms = 0.71;
+      pricePerSms = PricesArray[4].price;
       break;
     case smsCount >= 10000:
-      pricePerSms = 0.72;
+      pricePerSms = PricesArray[3].price;
       break;
     case smsCount >= 5000:
-      pricePerSms = 0.73;
+      pricePerSms = PricesArray[2].price;
       break;
     case smsCount >= 1000:
-      pricePerSms = 0.74;
+      pricePerSms = PricesArray[1].price;
       break;
     default:
-      pricePerSms = 0.77;
+      pricePerSms = PricesArray[0].price;
   }
 
-  return smsCount * pricePerSms;
+  if (pricePerSms === null ) {
+    return 'Вартість СМС невідома';
+  }
+
+  return (smsCount * pricePerSms).toFixed(2);
 }
