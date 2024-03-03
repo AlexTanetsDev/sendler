@@ -2,11 +2,12 @@ import Table from "@/components/Table";
 import Title from "@/components/Title";
 import HeroBtn from "@/components/buttons/HeroBtn";
 import Image from "next/image";
-import React from "react";
 
-type Props = {};
 
 const Prices = () => {
+
+
+
   return (
     <>
       <section className="w-full bg-[url('/bg-prices.jpg')] bg-cover flex flex-col items-center pt-[213px] pb-[248px] h-[606px]">

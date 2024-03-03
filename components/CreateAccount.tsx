@@ -21,6 +21,7 @@ const CreateAccount = () => {
             onKeyDown={EnterOnlyFigures}
             value={inputValue}
             onChange={handleInputChange}
+            maxLength={12}
           />
           <p className="absolute -bottom-6 left-0 text-xs font-montserrat font-normal mr-56">
             Кількість
