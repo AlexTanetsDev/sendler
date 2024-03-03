@@ -7,40 +7,7 @@ import Title from '@/components/Title';
 import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
 import { getUserHistoryDetails } from '@/fetch-actions/historyFetchActions';
 import { IHistoryDetailsResponce } from '@/globaltypes/historyTypes';
-
-//test
-const userHistoryDetailsTest = [
-  {
-    tel: '+380985678910',
-    client_id: 13,
-    text_sms:
-      'З Днем народження, Перемоги – швидкої! Миру – вічного! Здоров’я – міцного! Сім’ї- щасливої! Доходів – стабільних! Друзів – надійних!',
-    sending_group_date: '2024-02-23T09:30:00.000Z',
-    group_name: 'Group A',
-    user_name: 'Jane Smith',
-    recipient_status: ['fulfield', 'fulfield', 'fulfield'],
-  },
-  {
-    tel: '+380967654210',
-    client_id: 23,
-    text_sms:
-      'З Днем народження, Перемоги – швидкої! Миру – вічного! Здоров’я – міцного! Сім’ї- щасливої! Доходів – стабільних! Друзів – надійних!',
-    sending_group_date: '2024-02-23T09:30:00.000Z',
-    group_name: 'Group B',
-    user_name: 'Jane Smith',
-    recipient_status: ['fulfield', 'fulfield', 'pending'],
-  },
-  {
-    tel: '+380966554210',
-    client_id: 25,
-    text_sms:
-      'З Днем народження, Перемоги – швидкої! Миру – вічного! Здоров’я – міцного! Сім’ї- щасливої! Доходів – стабільних! Друзів – надійних!',
-    sending_group_date: '2024-02-23T09:30:00.000Z',
-    group_name: 'Group B',
-    user_name: 'Jane Smith',
-    recipient_status: ['fulfield', 'fulfield', 'fulfield'],
-  },
-];
+import { SmsStatusEnum } from '@/globaltypes/types';
 
 export default function HistoryDetails({
   params,
@@ -112,6 +79,10 @@ export default function HistoryDetails({
           {userHistoryDetails &&
             userHistoryDetails.length !== 0 &&
             userHistoryDetails.map(item => {
+              item.recipient_status = (item.recipient_status as unknown as string)
+                ?.replace(/{|}/g, '')
+                .split(',') as SmsStatusEnum[];
+
               return (
                 <li
                   key={item.client_id}
@@ -119,16 +90,13 @@ export default function HistoryDetails({
                 >
                   <p className="w-[166px]">{item.tel}</p>
                   <p className="w-[196px]">
-                    {new Date(item.sending_group_date).toLocaleString('uk-UA', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      second: '2-digit',
+                    {new Date(item.sending_group_date)?.toLocaleString('uk-UA', {
+                      timeZone: 'UTC',
                     })}
                   </p>
-                  <p className="w-[130px]">{item.recipient_status.length}</p>
+                  <p className="w-[130px]">
+                    {item.recipient_status.length}
+                  </p>
                   <p className="w-[130px]">
                     {item.recipient_status.every(item => item === 'fulfield')
                       ? 'Доставлено'

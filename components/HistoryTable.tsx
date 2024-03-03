@@ -8,55 +8,6 @@ import HistoryPeriodForm from './forms/HistoryPeriodForm';
 import { FormInputsPeriod } from './forms/HistoryPeriodForm';
 import { IHistoryResponce, IHistoryPeriod } from '@/globaltypes/historyTypes';
 
-//Test
-const userHistoryTest: IHistoryResponce[] = [
-  {
-    sending_group_date: new Date(2024, 2, 7),
-    history_id: 123457676,
-    group_name: 'Group name',
-    send_method: 'API',
-    recipient_status: ['fulfield', 'fulfield', 'fulfield'],
-    text_sms: 'Запрошуємо',
-    user_name: 'FASONCHIKI',
-  },
-  {
-    sending_group_date: new Date(1995, 11, 17),
-    history_id: 12345,
-    group_name: 'Group name',
-    send_method: 'API',
-    recipient_status: ['fulfield', 'rejected'],
-    text_sms: 'Запрошуємо',
-    user_name: 'FASONCHIKI',
-  },
-  {
-    sending_group_date: new Date(1995, 11, 17),
-    history_id: 1234512,
-    group_name: 'Group name',
-    send_method: 'Site',
-    recipient_status: ['fulfield', 'rejected', 'fulfield', 'fulfield'],
-    text_sms: 'Запрошуємо',
-    user_name: 'FASONCHIKI',
-  },
-  {
-    sending_group_date: new Date(2021, 1, 10),
-    history_id: 1256345,
-    group_name: 'Group name',
-    send_method: 'API',
-    recipient_status: ['pending', 'fulfield'],
-    text_sms: 'Запрошуємо',
-    user_name: 'FASONCHIKI',
-  },
-  {
-    sending_group_date: new Date(2021, 12, 20),
-    history_id: 12336545,
-    group_name: 'Group name',
-    send_method: 'API',
-    recipient_status: ['fulfield', 'fulfield', 'fulfield', 'fulfield'],
-    text_sms: 'Запрошуємо',
-    user_name: 'FASONCHIKI',
-  },
-];
-
 type Props = {
   id: number | undefined;
 };
@@ -66,7 +17,7 @@ export default function HistoryTable({ id }: Props) {
   const startDate = searchParams.get('startDate');
   const endDate = searchParams.get('endDate');
 
-  const [userHistory, setUserHistory] = useState<IHistoryResponce[] | undefined>(userHistoryTest);
+  const [userHistory, setUserHistory] = useState<IHistoryResponce[] | undefined>([]);
   const [historyPeriod, setHistoryPeriod] = useState<IHistoryPeriod | undefined>(undefined);
 
   useEffect(() => {
@@ -87,19 +38,6 @@ export default function HistoryTable({ id }: Props) {
           id,
           historyPeriod,
         });
-
-        // const userHistory: IHistoryResponce[] | undefined = historyPeriod
-        //   ? userHistoryTest.filter(item => {
-        //       return (
-        //         historyPeriod.startDate &&
-        //         historyPeriod.endDate &&
-        //         new Date(item.sending_group_date).getTime() >=
-        //           new Date(historyPeriod.startDate).getTime() &&
-        //         new Date(item.sending_group_date).getTime() <=
-        //           new Date(historyPeriod.endDate).getTime()
-        //       );
-        //     })
-        //   : userHistoryTest;
 
         setUserHistory(userHistory);
       } catch (error: any) {

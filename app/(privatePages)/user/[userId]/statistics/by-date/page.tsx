@@ -11,56 +11,7 @@ import Title from '@/components/Title';
 import HistoryPeriodForm from '@/components/forms/HistoryPeriodForm';
 import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
 import { IHistoryPeriod, IHistoryResponce } from '@/globaltypes/historyTypes';
-import { string } from 'joi';
-
-//testData
-const userHistoryTest: IHistoryResponce[] = [
-  {
-    sending_group_date: new Date(2024, 2, 7),
-    history_id: 123457676,
-    group_name: 'Group name',
-    send_method: 'API',
-    recipient_status: ['fulfield', 'fulfield', 'fulfield'],
-    text_sms: 'Запрошуємо усіх',
-    user_name: 'FASONCHIKI',
-  },
-  {
-    sending_group_date: new Date(1995, 11, 17),
-    history_id: 12345,
-    group_name: 'Group name',
-    send_method: 'API',
-    recipient_status: ['fulfield', 'rejected'],
-    text_sms: 'Запрошуємо не всіх',
-    user_name: 'FASONCHIKI',
-  },
-  {
-    sending_group_date: new Date(1995, 11, 17),
-    history_id: 1234512,
-    group_name: 'Group name',
-    send_method: 'Site',
-    recipient_status: ['fulfield', 'rejected', 'fulfield', 'fulfield'],
-    text_sms: 'Вітаєм з НР',
-    user_name: 'FASONCHIKI',
-  },
-  {
-    sending_group_date: new Date(2021, 1, 10),
-    history_id: 1256345,
-    group_name: 'Group name',
-    send_method: 'API',
-    recipient_status: ['pending', 'fulfield'],
-    text_sms: 'Будьте здорові',
-    user_name: 'FASONCHIKI',
-  },
-  {
-    sending_group_date: new Date(2021, 12, 20),
-    history_id: 12336545,
-    group_name: 'Group name',
-    send_method: 'API',
-    recipient_status: ['fulfield', 'fulfield', 'fulfield', 'fulfield'],
-    text_sms: 'З Днем народження, Перемоги – швидкої! Миру – вічного! Здоров’я – міцного! Сім’ї- щасливої! Доходів – стабільних! Друзів – надійних!',
-    user_name: 'FASONCHIKI',
-  },
-];
+import { SmsStatusEnum } from '@/globaltypes/types';
 
 export default function DayHistory({ params }: { params: { userId: string } }) {
   const [userHistory, setUserHistory] = useState<IHistoryResponce[]>([]);
@@ -78,17 +29,6 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
       id: userId,
       historyPeriod,
     });
-
-    // const userHistory: IHistoryResponce[] | undefined = userHistoryTest.filter(item => {
-    //   return (
-    //     historyDate &&
-    //     historyPeriod.startDate &&
-    //     historyPeriod.endDate &&
-    //     new Date(item.sending_group_date).getTime() >=
-    //       new Date(historyPeriod.startDate).getTime() &&
-    //     new Date(item.sending_group_date).getTime() <= new Date(historyPeriod.endDate).getTime()
-    //   );
-    // });
 
     if (userHistory) setUserHistory(userHistory);
   }, [historyDate, userId]);
@@ -129,6 +69,8 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
             {userHistory &&
               userHistory.length !== 0 &&
               userHistory.map(item => {
+                item.recipient_status = (item.recipient_status as unknown as string)?.replace(/{|}/g, '').split(',') as SmsStatusEnum[];
+
                 return (
                   <li
                     key={item.history_id}
@@ -138,7 +80,11 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
                       <Link href={`by-date/${item.history_id}`}>{item.text_sms}</Link>
                     </p>
                     <p className="w-[118px]">{item.user_name}</p>
-                    <p className="w-[126px]">Доставлено</p>
+                    <p className="w-[126px]">
+                      {item.recipient_status.every(item => item === 'fulfield')
+                        ? 'Доставлено'
+                        : 'Недоставлено'}
+                    </p>
                     <p className="w-[160px]">
                       {item.recipient_status.filter(item => item === 'fulfield').length}/
                       {item.recipient_status.length}

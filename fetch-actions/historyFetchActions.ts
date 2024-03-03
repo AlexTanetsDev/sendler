@@ -12,22 +12,25 @@ const api = axiosInstance;
 
 export async function getUserHistory({ id, historyPeriod }: IGetHistoryProps) {
   try {
-    const response = await api.get<IGetUserHistory,AxiosResponse<IGetUserHistory>, {
-        userId: number | undefined,
-        start_date: Date | undefined,
-        end_date: Date | undefined,
-			}>
-			(`api/sending-history`, {
+    const response = await api.get<
+      IGetUserHistory,
+      AxiosResponse<IGetUserHistory>,
+      {
+        userId: number | undefined;
+        start_date: Date | undefined;
+        end_date: Date | undefined;
+      }
+    >(`api/sending-history`, {
       params: {
         userId: id,
         start_date: historyPeriod?.startDate,
         end_date: historyPeriod?.endDate,
       },
-			});
+		});
 		
-		if (response?.status !== 200) {
-			return [];
-		}
+    if (response?.status !== 200) {
+      return [];
+    }
 
     const history: IHistoryResponce[] = response.data.history;
     return history;
@@ -38,16 +41,19 @@ export async function getUserHistory({ id, historyPeriod }: IGetHistoryProps) {
 
 export async function getUserHistoryDetails(historyId: string) {
   try {
-    const response = await api.get<IGetUserHistoryDetails, AxiosResponse<IGetUserHistoryDetails>, {
+    const response = await api.get<
+      IGetUserHistoryDetails,
+      AxiosResponse<IGetUserHistoryDetails>,
+      {
         historyId: string;
-      }>
-			(`api/sending-history/${historyId}`, {
+      }
+    >(`api/sending-history/${historyId}`, {
       params: {
         historyId,
       },
-		});
-		
-		if (response?.status !== 200) {
+    });
+
+    if (response?.status !== 200) {
       return [];
     }
 

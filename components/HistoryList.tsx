@@ -29,7 +29,7 @@ export default function HistoryList({ userHistory }: Props) {
                   href={{
                     pathname: `statistics/by-date/`,
                     query: {
-                      date: item.sending_group_date.toISOString(),
+                      date: (new Date(item.sending_group_date)).toString() ,
                     },
                   }}
                 >

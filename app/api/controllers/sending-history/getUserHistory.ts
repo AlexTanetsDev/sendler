@@ -12,6 +12,7 @@ export default async function getUserHistory(
 
     return history.rows;
   } catch (error: any) {
+    console.log(error);
     throw new Error(error.message);
   }
 }
