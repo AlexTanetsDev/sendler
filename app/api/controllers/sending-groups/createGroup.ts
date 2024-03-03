@@ -12,7 +12,7 @@ import {
 } from "@/api-actions";
 
 
-export default async function createGroup(groupName: string, userId: number, method: string): Promise<IGroupDatabase | ErrorCase> {
+export default async function createGroup(groupName: string, userId: number): Promise<IGroupDatabase | ErrorCase> {
 
 	try {
 		//checking user_id existense

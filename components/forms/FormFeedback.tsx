@@ -6,7 +6,7 @@ import { validationSchemaFeedback } from '@/models/forms';
 import { FormInputFeedback } from '@/globaltypes/types';
 import GreenButton from '../buttons/GreenButton';
 import Image from 'next/image';
-import { handleKeyPress } from '@/helpers/EnterOnlyFigures';
+import { EnterOnlyFigures } from '@/helpers/EnterOnlyFigures';
 
 interface Props {
   onClose: (() => void) | undefined;
@@ -95,7 +95,7 @@ const FormFeedback = ({ onClose, title, cross }: Props) => {
           <input
             id="phone"
             type="tel"
-            onKeyPress={handleKeyPress}
+            onKeyPress={EnterOnlyFigures}
             {...register('phone')}
             className="w-full border py-2 pr-11 pl-[50px] focus:outline-none focus:border-blue-500 rounded-[18px] input"
           />

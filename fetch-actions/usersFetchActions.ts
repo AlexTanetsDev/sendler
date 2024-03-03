@@ -16,11 +16,11 @@ export async function getUser(userId: number | undefined) {
 
 export async function updateUser(
 	userId: number | undefined,
-	login: string,
+	userLogin: string,
 	password: string,
 	newPassword: string,
 	userName: string,
-	phone: string,
+	tel: string,
 	email: string) {
 	try {
 		const res = await api.put<IUpdateUser, AxiosResponse<IUpdateUser>, {
@@ -33,14 +33,31 @@ export async function updateUser(
 		}>
 			(`api/users/${userId}`,
 				{
-					userLogin: login,
-					password: password,
-					newPassword: newPassword,
-					userName: userName,
-					tel: phone,
-					email: email,
+					userLogin,
+					password,
+					newPassword,
+					userName,
+					tel,
+					email,
 				}
 			);
 		return res;
 	} catch (error: any) { };
 };
+
+export async function createAlfaName(
+	alfa_name: string,
+	user_id: number
+) {
+	try {
+		const res = await api.patch<void, AxiosResponse<void>, {
+			alfa_name: string,
+			user_id: number
+		}>
+			(`api/users`,
+				{
+					alfa_name,
+					user_id,
+				});
+	} catch (error: any) { };
+}

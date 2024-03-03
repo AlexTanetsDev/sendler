@@ -39,7 +39,16 @@ export interface IUser extends ITel, IUserId {
 	user_create_date: Date;
 	alfa_names_active: string[];
 	alfa_names_disable: string[];
-}
+};
+
+export interface IUserAlfaName {
+	alfa_name: string;
+};
+
+export interface IUserAlfaNameReq {
+	alfa_name: string;
+	user_id: number;
+};
 
 export interface INewDataUser {
 	email: string;
@@ -93,7 +102,7 @@ export interface IUserChangePassword {
 
 export interface IClientsIdWithTel extends IClientId, ITel { }
 
-export type SmsStatusEnum = "pending" | "rejected" | "fulfield";
+export type SmsStatusEnum = "pending" | "rejected" | "fullfield";
 
 export interface IClientReq {
 	userId: number;
@@ -124,6 +133,14 @@ export interface IGroupDatabase extends IGroupId, IGroupName, IUserId {
 	group_create_date?: DateTime;
 	number_members: number;
 };
+
+export interface IPaymentHistory {
+	transaction_id: number;
+	user_id: number;
+	sms_count: number;
+	money_count:number;
+	transactions_date: string;
+}
 
 export interface IGroupCreateReq extends IGroupName, IGroupUpdateReq { };
 
@@ -202,4 +219,44 @@ export interface FormInputUpdateUser {
 	email: string;
 };
 
+export interface ISendSMS {
+	userName: string,
+	recipients: (string | number)[],
+	date?: string,
+	time?: string,
+	contentSMS: string,
+	send_method: 'api' | 'veb'
+};
+
+export interface ISendHistoryDatabase {
+	history_id: number,
+	sending_group_date: Date,
+	send_method: 'api' | 'veb',
+	text_sms: string,
+};
+
+export interface ISmsIdentificatorsDatabase {
+	sms_id: number;
+	history_id: number,
+	client_id: number,
+	identificator: string
+};
+
+export interface IRecipientStatusDatabase {
+	recipient_id: number;
+	history_id: number;
+	client_id: number;
+	recipient_status: SmsStatusEnum;
+	status_changing_date: Date,
+	identificator: string;
+};
+
+export interface IStatusSmsRes {
+	State: number,
+	CreationDateUtc: string,
+	SubmittedDateUtc: string,
+	ReportedDateUtc: string,
+	TimeStampUtc: string,
+	Price: number
+}
 

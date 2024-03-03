@@ -14,57 +14,56 @@ import { IHistoryPeriod, IHistoryResponce } from '@/globaltypes/historyTypes';
 import { SmsStatusEnum } from '@/globaltypes/types';
 
 export default function DayHistory({ params }: { params: { userId: string } }) {
-  const [userHistory, setUserHistory] = useState<IHistoryResponce[]>([]);
+	const [userHistory, setUserHistory] = useState<IHistoryResponce[]>([]);
 
-  const userId = Number(params.userId);
-  const searchParams = useSearchParams();
-  const historyDate = searchParams.get('date');
+	const userId = Number(params.userId);
+	const searchParams = useSearchParams();
+	const historyDate = searchParams.get('date');
 
-  const memoizedUserHistory = useCallback(async () => {
-    const historyPeriod: IHistoryPeriod = {
-      startDate: historyDate ? new Date(historyDate) : undefined,
-      endDate: historyDate ? new Date(historyDate) : undefined,
-    };
-    const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
-      id: userId,
-      historyPeriod,
-    });
+	const memoizedUserHistory = useCallback(async () => {
+		const historyPeriod: IHistoryPeriod = {
+			startDate: historyDate ? new Date(historyDate) : undefined,
+			endDate: historyDate ? new Date(historyDate) : undefined,
+		};
+		const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
+			id: userId,
+			historyPeriod,
+		});
 
-    if (userHistory) setUserHistory(userHistory);
-  }, [historyDate, userId]);
+		if (userHistory) setUserHistory(userHistory);
+	}, [historyDate, userId]);
 
-  useEffect(() => {
-    memoizedUserHistory();
-  }, [memoizedUserHistory]);
+	useEffect(() => {
+		memoizedUserHistory();
+	}, [memoizedUserHistory]);
 
-  return (
-    <section className="container mx-auto">
-      <Title type="h1" color="dark">
-        Статистика за датою
-      </Title>
-      <div className="mt-[60px]">
-        <div className="content-block">
-          <HistoryPeriodForm />
-          <div className="ml-[26px]">
-            <p className="mb-5 text-xl font-roboto text-[#1B1B30]">
-              Розсилки за {historyDate ? formatTableDate(new Date(historyDate)) : '-'}
-            </p>
-            <BackStatisticsBtn>
-              <p>Повернутись до загальної статистики за період</p>
-            </BackStatisticsBtn>
-          </div>
-          <div className="flex items-center justify-between h-[58px] px-[26px] font-roboto text-[20px] text-white bg-[#417D8A]">
-            <p className="w-[130px]">Текст sms</p>
-            <p className="w-[118px]">Відправник</p>
-            <p className="w-[126px]">Статус </p>
-            <p className="w-[160px]">Доставлено sms</p>
-            <p className="w-[200px]">Доставлено номерів</p>
-            <p className="w-[77px]">
-              <Image src="/svg/excel.svg" alt="Excel icon" width={42} height={42} />
-            </p>
-            <p className="w-[73px]">Дії</p>
-          </div>
-
+	return (
+		<section className="container mx-auto">
+			<Title type="h1" color="dark">
+				Статистика за датою
+			</Title>
+			<div className="mt-[60px]">
+				<div className="content-block">
+					<HistoryPeriodForm />
+					<div className="ml-[26px]">
+						<p className="mb-5 text-xl font-roboto text-[#1B1B30]">
+							Розсилки за {historyDate ? formatTableDate(new Date(historyDate)) : '-'}
+						</p>
+						<BackStatisticsBtn>
+							<p>Повернутись до загальної статистики за період</p>
+						</BackStatisticsBtn>
+					</div>
+					<div className="flex items-center justify-between h-[58px] px-[26px] font-roboto text-[20px] text-white bg-[#417D8A]">
+						<p className="w-[130px]">Текст sms</p>
+						<p className="w-[118px]">Відправник</p>
+						<p className="w-[126px]">Статус </p>
+						<p className="w-[160px]">Доставлено sms</p>
+						<p className="w-[200px]">Доставлено номерів</p>
+						<p className="w-[77px]">
+							<Image src="/svg/excel.svg" alt="Excel icon" width={42} height={42} />
+						</p>
+						<p className="w-[73px]">Дії</p>
+					</div>
           <ul>
             {userHistory &&
               userHistory.length !== 0 &&
@@ -81,16 +80,16 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
                     </p>
                     <p className="w-[118px]">{item.user_name}</p>
                     <p className="w-[126px]">
-                      {item.recipient_status.every(item => item === 'fulfield')
+                      {item.recipient_status.every(item => item === 'fullfield')
                         ? 'Доставлено'
                         : 'Недоставлено'}
                     </p>
                     <p className="w-[160px]">
-                      {item.recipient_status.filter(item => item === 'fulfield').length}/
+                      {item.recipient_status.filter(item => item === 'fullfield').length}/
                       {item.recipient_status.length}
                     </p>
                     <p className="w-[200px]">
-                      {item.recipient_status.filter(item => item === 'fulfield').length}/
+                      {item.recipient_status.filter(item => item === 'fullfield').length}/
                       {item.recipient_status.length}
                     </p>
                     <p className="w-[77px] text-[#2366E8]">Export</p>

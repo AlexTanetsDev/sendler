@@ -18,7 +18,7 @@ export default function Home() {
 
 	return (
 		<>
-			<div className="w-full pb-[321px] pt-[310px] bg-[url('/start-hero.png')] bg-cover ">
+			<div className="w-full pb-[321px] pt-[310px] bg-[url('/start-hero.jpg')] bg-cover ">
 				<div className=" container mx-auto ">
 					<h1 className=" text-7xl font-bold text-white font-montserrat">
 						BSender

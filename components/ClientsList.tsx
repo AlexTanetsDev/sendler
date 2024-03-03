@@ -33,11 +33,13 @@ export default function ClientsList({
 	clients,
 	isUpdated,
 	LIMIT }: Props) {
+
 	const [isSelected, setIsSelected] = useState(0);
 	const { register, handleSubmit, reset } = useForm();
 	const [isDisabled, setIsDisabled] = useState(false);
 	const convertClients = convertClientsBirthdayFormat(clients);
 
+	// variable for control of state of delete button
 	const onSelect = (e: any) => {
 		const { checked } = e.target;
 		if (checked) {
@@ -50,6 +52,7 @@ export default function ClientsList({
 	const onSubmit = async (data: any) => {
 
 		setIsDisabled(true);
+		// create array of client_id that should be deleted
 		const deletedClientsId: number[] = [];
 		for (const key in data) {
 			if (data[key] === true) {
@@ -58,11 +61,13 @@ export default function ClientsList({
 		}
 
 		if (groupId) {
+			// delete clients from group
 			await deleteGroupClients(groupId, deletedClientsId);
 			setIsSelected(0);
 			updateClients();
 			getUpdate();
 		} else {
+			// delete clients from list of clients
 			await deleteClients(deletedClientsId);
 			setIsSelected(0);
 			updateClients();
@@ -82,7 +87,7 @@ export default function ClientsList({
 				<p>Параметр 2</p>
 			</div>
 			<form onSubmit={handleSubmit(onSubmit)} className='scroll-bar'>
-				<ul className='h-[400px] overflow-auto'>
+				<ul className='h-[432px] overflow-auto'>
 					{convertClients?.length ? (
 						<RSC style={{ height: "100%" }}>
 							{convertClients.map(convertClient => (

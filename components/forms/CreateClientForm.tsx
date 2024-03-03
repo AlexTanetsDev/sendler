@@ -2,18 +2,23 @@
 
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useSession } from "next-auth/react";
-import { useState } from "react";
+import { useState, useRef } from "react";
+import toast from "react-hot-toast";
 
 import { validationSchemaCreateClient } from "@/models/forms";
-import { FormInputCreateClient, IClientDatabase } from "@/globaltypes/types";
 import GreenButton from "../buttons/GreenButton";
-import CreateOptions from "../CreateOptions";
+import SelectTime from "../SelectTime";
 import { createGroupClient, updateUserClient } from "@/fetch-actions/clientsFetchActions";
+import { getTimeOptionsValues } from '@/helpers/getTimeOptionsValues';
+import checkDate from "@/helpers/checkDate";
+
+import { FormInputCreateClient, IClientDatabase } from "@/globaltypes/types";
 
 interface Props {
 	onClose: (() => void) | undefined;
 	updateClients: () => void,
 	getUpdate: () => void,
+	openSelect: (isOpen: boolean) => void;
 	title?: string;
 	groupId?: number;
 	groupName?: string;
@@ -24,6 +29,7 @@ const CreateClientForm = ({
 	onClose,
 	updateClients,
 	getUpdate,
+	openSelect,
 	title,
 	groupName,
 	currentClient,
@@ -32,10 +38,22 @@ const CreateClientForm = ({
 	const { data: session } = useSession();
 	const userId = session?.user.user_id;
 	const [isDisabled, setIsDisabled] = useState(false);
+	const [day, setDay] = useState<string | undefined>(currentClient?.date_of_birth?.split('.')[0]);
+	const [month, setMonth] = useState<string | undefined>(currentClient?.date_of_birth?.split('.')[1]);
+	const [year, setYear] = useState<string | undefined>(currentClient?.date_of_birth?.split('.')[2]);
+	const refForm = useRef<HTMLFormElement | null>(null);
 
-	const day = Number(currentClient?.date_of_birth?.split('.')[0]);
-	const month = Number(currentClient?.date_of_birth?.split('.')[1]);
-	const year = Number(currentClient?.date_of_birth?.split('.')[2]);
+	const getDay = (item: string | undefined) => {
+		setDay(item);
+	};
+
+	const getMonth = (item: string | undefined) => {
+		setMonth(item);
+	};
+
+	const getYear = (item: string | undefined) => {
+		setYear(item);
+	};
 
 	const {
 		register,
@@ -73,16 +91,32 @@ const CreateClientForm = ({
 	const onSubmit: SubmitHandler<FormInputCreateClient> = async (data) => {
 		setIsDisabled(true);
 
+
+		if (!checkDate(year, month, day)) {
+			toast.error('Your data is out of range.', {
+				position: 'bottom-center',
+				className: 'toast_error',
+				style: {
+					backgroundColor: '#0F3952',
+					color: '#fa9c9c',
+					fontSize: '24px',
+					marginBottom: '50%',
+				},
+			});
+			setIsDisabled(false);
+			return;
+		};
+
 		const clientData = {
 			tel: `380${data.phone}`,
 			last_name: data.lastName,
 			first_name: data.firstName,
 			middle_name: data.middleName,
-			date_of_birth: `${data.year}.${data.month}.${data.day}`,
+			// date_of_birth: `${data.year}.${data.month}.${data.day}`,
+			date_of_birth: `${year}.${month}.${day}`,
 			parameter_1: data.parameter1,
 			parameter_2: data.parameter2,
 		};
-
 
 		if (currentClient?.client_id) {
 			updateUserClient(currentClient.client_id, clientData);
@@ -105,6 +139,7 @@ const CreateClientForm = ({
 			autoComplete="off"
 			onSubmit={handleSubmit(onSubmit)}
 			className="w-[526px] mx-auto pb-11 pt-[29px]  flex justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px]"
+			ref={refForm}
 		>
 			{title && !groupName && <p className="form-title mb-8 mt-[15px]">{title}</p>}
 			{title && groupName && <p className="form-title mb-8 mt-[15px]">{`${title} - ${groupName}`}</p>}
@@ -200,42 +235,10 @@ const CreateClientForm = ({
 				>
 					Дата народження
 				</label>
-				<div className="flex gap-x-3">
-					<div className="relative flex">
-						<select
-							id='day'
-							{...register("day")}
-							defaultValue={currentClient?.date_of_birth ? day : ''}
-							className="input w-[118px] border py-2 pl-4 pr-10 focus:outline-none focus:border-blue-500  hover:cursor-pointer">
-							<CreateOptions min={1} max={31} />
-						</select>
-						<div className="select_arrow">
-						</div>
-					</div>
-
-					<div className="relative flex">
-						<select
-							id='month'
-							{...register("month")}
-							defaultValue={currentClient?.date_of_birth ? month : ''}
-							className="input w-[138px] border py-2 pl-4 pr-10 focus:outline-none focus:border-blue-500  hover:cursor-pointer">
-							<CreateOptions min={1} max={12} />
-						</select>
-						<div className="select_arrow">
-						</div>
-					</div>
-
-					<div className="relative flex">
-						<select
-							id='year'
-							{...register("year")}
-							defaultValue={currentClient?.date_of_birth ? year : ''}
-							className="input w-[194px] border py-2 pl-4 pr-10 focus:outline-none focus:border-blue-500 hover:cursor-pointer">
-							<CreateOptions min={1900} max={new Date().getFullYear()} />
-						</select>
-						<div className="select_arrow">
-						</div>
-					</div>
+				<div className="flex gap-x-3 justify-center">
+					<SelectTime openSelect={openSelect} isModal={true} selectOptions={getTimeOptionsValues(1, 31)} getSelect={getDay} selectedOption={day} widthValue={118} startValue='' />
+					<SelectTime openSelect={openSelect} isModal={true} selectOptions={getTimeOptionsValues(1, 12)} getSelect={getMonth} selectedOption={month} widthValue={130} startValue='' />
+					<SelectTime openSelect={openSelect} isModal={true} selectOptions={getTimeOptionsValues(1900, new Date().getFullYear())} getSelect={getYear} selectedOption={year} widthValue={198} startValue='' />
 				</div>
 
 				<label
@@ -244,7 +247,7 @@ const CreateClientForm = ({
 				>
 					Параметр 1
 				</label>
-				<div className="flex relative">
+				<div className="flex">
 					<input
 						id="parameter1"
 						type="text"
@@ -263,13 +266,13 @@ const CreateClientForm = ({
 				>
 					Параметр 2
 				</label>
-				<div className="flex relative">
+				<div className="flex">
 					<input
 						id="parameter2"
 						type="text"
 						defaultValue={currentClient?.parameter_2 && currentClient.parameter_2}
 						{...register("parameter2")}
-						className="input w-full border py-2 px-3 focus:outline-none focus:border-blue-500 "
+						className="input block w-full border py-2 px-3 focus:outline-none focus:border-blue-500"
 					/>
 					{errors.parameter2 && (
 						<span className="form-errors">{errors.parameter2.message}</span>

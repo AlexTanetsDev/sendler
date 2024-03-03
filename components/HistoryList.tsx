@@ -6,7 +6,7 @@ import { IHistoryResponce } from '@/globaltypes/historyTypes';
 import { SmsStatusEnum } from '@/globaltypes/types';
 
 type Props = {
-  userHistory: IHistoryResponce[] | undefined;
+	userHistory: IHistoryResponce[] | undefined;
 };
 
 export default function HistoryList({ userHistory }: Props) {
@@ -38,7 +38,7 @@ export default function HistoryList({ userHistory }: Props) {
               </p>
               <p className="w-[150px]">{item.recipient_status.length}</p>
               <p className="w-[150px]">
-                {item.recipient_status.filter((item: SmsStatusEnum) => item === 'fulfield').length}
+                {item.recipient_status.filter((item: SmsStatusEnum) => item === 'fullfield').length}
               </p>
             </li>
           );
@@ -56,7 +56,7 @@ export default function HistoryList({ userHistory }: Props) {
               {sortHistory?.reduce(
                 (acc, item) =>
                   acc +
-                  item.recipient_status.filter((item: SmsStatusEnum) => item === 'fulfield').length,
+                  item.recipient_status.filter((item: SmsStatusEnum) => item === 'fullfield').length,
                 0
               )}
             </p>

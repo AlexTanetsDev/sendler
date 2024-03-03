@@ -88,17 +88,9 @@ export async function POST(request: NextRequest): Promise<NextResponse<{
 		};
 
 		const res: ErrorCase | undefined = await createClient(client, userId, groupId);
-		const { tel }: ITel = client;
 
-		switch (res) {
-			case 1:
-				{
-					return HttpError(400, `The user with id = ${userId} does not exist`);
-				};
-			case 2:
-				{
-					return HttpError(400, `The client with tel: ${tel} already exists`);
-				}
+		if (res) {
+			return HttpError(400, `The user with id = ${userId} does not exist`);
 		};
 		return NextResponse.json(
 			{ message: "New client has been created successfully" },
