@@ -91,7 +91,7 @@ const Select = ({
 			</div>
 			{isOpen && (
 				<div
-					className="w-full overflow-auto h-32 -mt-[2px] bg-white rounded-b-[18px] border-[1px] border-[#E6E6E6] border-t-0"
+					className={`w-[${widthValue}px] overflow-auto h-32 -ml-[1px] -mt-[2px] bg-white rounded-b-[18px] border-[1px] border-[#E6E6E6] border-t-0`}
 					ref={selectBodyRef}
 				>
 					<RSC>

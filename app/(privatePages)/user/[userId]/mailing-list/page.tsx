@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import toast from "react-hot-toast";
+import RSC from 'react-scrollbars-custom';
 
 import Title from '@/components/Title';
 import GreenButton from '@/components/buttons/GreenButton';
@@ -45,6 +46,15 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const getUpdate = () => {
 		setUpdate(!update);
 	};
+
+	const disabledNamesVisible = (namesArray: string[] | undefined) => {
+		if (namesArray) {
+			if (namesArray?.length > 0) {
+				return true;
+			};
+		};
+		return false;
+	}
 
 	// check select is opened
 	const openSelect = (isOpen: boolean) => {
@@ -224,29 +234,36 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 				Розсилка SMS
 			</Title>
 			<div className="flex flex-col gap-[80px] pt-[60px]">
-				<div className="sms-page-box">
-					<div className='flex'>
-						<p className="w-[724px] text-mainTextColor text-base font-montserrat">
-							Виберіть підпис (Ім&#39;я відправника), який буде відображатися замість номера
-							відправника SMS-повідомлення
-						</p>
-						<ul className='flex'>
-							{userDisableeNames?.map((item, index) => (
-								<li key={index}>
-									{`${item}` + ', '}
-								</li>
-							))}
+				<div className="sms-page-box flex">
+					<div className='mr-32'>
+						<div className='flex relative'>
+							<p className="w-[724px] text-mainTextColor text-base font-montserrat">
+								Виберіть підпис (Ім&#39;я відправника), який буде відображатися замість номера
+								відправника SMS-повідомлення
+							</p>
+						</div>
+						<p className=" text-mainTextColor font-normal text-xl mt-[50px] label">Ім’я відправника</p>
+						<div className="flex gap-8 items-center mt-3">
+							<Select openSelect={(a: boolean) => a} selectOptions={userActiveNames} getSelect={getUserName} selectedOption={userName} widthValue={474} startValue='Обрати' defaultValue='Outlet' />
+							<GreenButton size="normal" onClick={getIsOpened}>
+								Додати ім’я
+							</GreenButton>
+						</div>
+						{isOpened &&
+							<AddAlfaNameForm userId={userId} getUserNamesArray={getUserNamesArray} getIsOpened={getIsOpened} />}
+					</div>
+					{disabledNamesVisible(userDisableeNames) && <div className='text-mainTextColor text-base font-montserrat'>
+						<p className='mb-2 font-medium'>Імена що знаходяться на узгодженні</p>
+						<ul className='w-64 h-32 flex flex-wrap gap-2  overflow-auto'>
+							<RSC>
+								{userDisableeNames?.map((item, index) => (
+									<li key={index} className='text-red-600'>
+										{item}
+									</li>
+								))}
+							</RSC>
 						</ul>
-					</div>
-					<p className=" text-mainTextColor font-normal text-xl mt-[50px] label">Ім’я відправника</p>
-					<div className="flex gap-8 items-center mt-3">
-						<Select openSelect={(a: boolean) => a} selectOptions={userActiveNames} getSelect={getUserName} selectedOption={userName} widthValue={474} startValue='Обрати' defaultValue='Outlet' />
-						<GreenButton size="normal" onClick={getIsOpened}>
-							Додати ім’я
-						</GreenButton>
-					</div>
-					{isOpened &&
-						<AddAlfaNameForm userId={userId} getUserNamesArray={getUserNamesArray} getIsOpened={getIsOpened} />}
+					</div>}
 				</div>
 
 				<div className="sms-page-box">
