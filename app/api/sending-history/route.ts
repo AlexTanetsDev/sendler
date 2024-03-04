@@ -16,6 +16,8 @@ export async function GET(
 
     const startDate = start_date ? new Date(start_date) : undefined;
     const endDate = end_date ? new Date(end_date) : undefined;
+    startDate?.setHours(0, 0, 0, 0);
+    endDate?.setHours(23, 59, 59, 999);
 
     if (!userId) {
       return HttpError(400, `ID required for getting user's history`);
@@ -29,7 +31,10 @@ export async function GET(
     if (!result) {
       return HttpError(400, `Failed to get user's history by userID = ${userId}`);
     }
-    return NextResponse.json({ history: result });
+
+    return NextResponse.json({
+      history: result,
+    });
   } catch (error: any) {
     return NextResponse.json({ message: 'Server error', error: error.message }, { status: 500 });
   }

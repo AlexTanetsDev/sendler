@@ -5,61 +5,13 @@ import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
 import Image from 'next/image';
 
-import getUserHistory from '@/app/utils/getUserHistory';
+import { getUserHistory } from '@/fetch-actions/historyFetchActions';
 import formatTableDate from '@/app/utils/formatTableDate';
 import Title from '@/components/Title';
 import HistoryPeriodForm from '@/components/forms/HistoryPeriodForm';
 import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
 import { IHistoryPeriod, IHistoryResponce } from '@/globaltypes/historyTypes';
-
-//testData
-const userHistoryTest: IHistoryResponce[] = [
-	{
-		sending_group_date: new Date(),
-		history_id: 123457676,
-		group_name: 'Group name',
-		send_method: 'API',
-		recipient_status: ['fullfield', 'fullfield', 'fullfield'],
-		text_sms: 'Запрошуємо',
-		user_name: 'FASONCHIKI',
-	},
-	{
-		sending_group_date: new Date(),
-		history_id: 12345,
-		group_name: 'Group name',
-		send_method: 'API',
-		recipient_status: ['fullfield', 'rejected'],
-		text_sms: 'Запрошуємо',
-		user_name: 'FASONCHIKI',
-	},
-	{
-		sending_group_date: new Date(),
-		history_id: 1234512,
-		group_name: 'Group name',
-		send_method: 'Site',
-		recipient_status: ['fullfield', 'rejected', 'fullfield', 'fullfield'],
-		text_sms: 'Запрошуємо',
-		user_name: 'FASONCHIKI',
-	},
-	{
-		sending_group_date: new Date(2021, 1, 10),
-		history_id: 1256345,
-		group_name: 'Group name',
-		send_method: 'API',
-		recipient_status: ['pending', 'fullfield'],
-		text_sms: 'Запрошуємо',
-		user_name: 'FASONCHIKI',
-	},
-	{
-		sending_group_date: new Date(2021, 12, 20),
-		history_id: 12336545,
-		group_name: 'Group name',
-		send_method: 'API',
-		recipient_status: ['fullfield', 'fullfield', 'fullfield', 'fullfield'],
-		text_sms: 'Запрошуємо',
-		user_name: 'FASONCHIKI',
-	},
-];
+import { SmsStatusEnum } from '@/globaltypes/types';
 
 export default function DayHistory({ params }: { params: { userId: string } }) {
 	const [userHistory, setUserHistory] = useState<IHistoryResponce[]>([]);
@@ -112,46 +64,51 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
 						</p>
 						<p className="w-[73px]">Дії</p>
 					</div>
+          <ul>
+            {userHistory &&
+              userHistory.length !== 0 &&
+              userHistory.map(item => {
+                item.recipient_status = (item.recipient_status as unknown as string)?.replace(/{|}/g, '').split(',') as SmsStatusEnum[];
 
-					<ul>
-						{userHistory &&
-							userHistory.length !== 0 &&
-							userHistory.map(item => {
-								return (
-									<li
-										key={item.history_id}
-										className="flex items-center justify-between h-[47px] px-[26px] font-roboto text-lg text-black border-b border-[#B5C9BE]"
-									>
-										<p className="w-[130px] text-[#2366E8]">
-											<Link href={`by-date/${item.history_id}`}>{item.text_sms}</Link>
-										</p>
-										<p className="w-[118px]">{item.user_name}</p>
-										<p className="w-[126px]">Доставлено</p>
-										<p className="w-[160px]">
-											{item.recipient_status.filter(item => item === 'fullfield').length}/
-											{item.recipient_status.length}
-										</p>
-										<p className="w-[200px]">
-											{item.recipient_status.filter(item => item === 'fullfield').length}/
-											{item.recipient_status.length}
-										</p>
-										<p className="w-[77px] text-[#2366E8]">Export</p>
-										<p className="w-[73px]">&#8212;</p>
-									</li>
-								);
-							})}
-						{(!userHistory || userHistory.length < 3) &&
-							Array.from({ length: 3 - userHistory.length }).map((_, index: number) => {
-								return (
-									<li
-										key={index}
-										className="flex items-center justify-between h-[47px] px-[26px] font-roboto text-lg text-black border-b border-[#B5C9BE]"
-									></li>
-								);
-							})}
-					</ul>
-				</div>
-			</div>
-		</section>
-	);
+                return (
+                  <li
+                    key={item.history_id}
+                    className="flex items-center justify-between h-[47px] px-[26px] font-roboto text-lg text-black border-b border-[#B5C9BE]"
+                  >
+                    <p className="w-[130px] text-[#2366E8] text-ellipsis whitespace-nowrap overflow-hidden">
+                      <Link href={`by-date/${item.history_id}`}>{item.text_sms}</Link>
+                    </p>
+                    <p className="w-[118px]">{item.user_name}</p>
+                    <p className="w-[126px]">
+                      {item.recipient_status.every(item => item === 'fullfield')
+                        ? 'Доставлено'
+                        : 'Недоставлено'}
+                    </p>
+                    <p className="w-[160px]">
+                      {item.recipient_status.filter(item => item === 'fullfield').length}/
+                      {item.recipient_status.length}
+                    </p>
+                    <p className="w-[200px]">
+                      {item.recipient_status.filter(item => item === 'fullfield').length}/
+                      {item.recipient_status.length}
+                    </p>
+                    <p className="w-[77px] text-[#2366E8]">Export</p>
+                    <p className="w-[73px]">&#8212;</p>
+                  </li>
+                );
+              })}
+            {(!userHistory || userHistory.length < 3) &&
+              Array.from({ length: 3 - userHistory.length }).map((_, index: number) => {
+                return (
+                  <li
+                    key={index}
+                    className="flex items-center justify-between h-[47px] px-[26px] font-roboto text-lg text-black border-b border-[#B5C9BE]"
+                  ></li>
+                );
+              })}
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
 }

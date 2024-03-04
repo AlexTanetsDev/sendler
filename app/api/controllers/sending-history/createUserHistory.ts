@@ -1,4 +1,4 @@
-import { insertNewUserHistory } from "@/app/utils";
+import insertNewUserHistory from '@/api-actions/insertNewUserHistory';
 
 import { QueryResult } from "pg";
 import { IHistoryResponce } from "@/globaltypes/historyTypes";
