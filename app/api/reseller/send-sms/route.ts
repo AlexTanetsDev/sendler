@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { options } from "@/app/api/auth/[...nextauth]/options";
-
-
 import resellerAuth from "../helpers/resellerAuth";
 import { createSmsUrlStr } from "../helpers/createSmsQueryString";
 import { addSendingHistory } from "../helpers/addSendingHistory";
@@ -18,12 +16,16 @@ import { IGroupId } from "@/globaltypes/types";
 import { createGroup } from "../../controllers/sending-groups";
 import { createClient } from "../../controllers/clients";
 import { updateSmsStatusByHistoryId } from "@/app/utils/updateSmsStatusesByHistoryId";
+import { getClientsTelByGroupId } from '../helpers/getClientsTelByGroupId';
+import { addSmsStatus } from '../helpers/addSmsStatus';
+
 
 export async function POST(request: Request) {
 	const session: ISession | null = await getServerSession(options);
 	const userId = session?.user.user_id;
 	try {
 		const body: ISendSMS = await request.json();
+
 
 		const { error, value } = schemaSendSMS.validate(body);
 

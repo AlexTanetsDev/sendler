@@ -8,10 +8,10 @@ import { IHistoryDetailsProps, IHistoryDetailsResponce } from '@/globaltypes/his
 
 export async function GET(
   req: NextRequest,
-  { params }: { params: { historyId: string } }
+  { params }: { params: { id: string } }
 ): Promise<NextResponse<IErrorResponse> | NextResponse<IHistoryDetailsProps>> {
   try {
-    const historyId = params.historyId;
+    const historyId = params.id;
 
     if (!historyId) {
       return HttpError(400, `HistoryId required for getting user's history`);
