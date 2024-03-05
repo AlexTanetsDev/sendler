@@ -22,7 +22,6 @@ export const addSmsIdentificators = async (
 		.join(",");
 
 	const res: QueryResult<ISmsIdentificatorsDatabase> = await db.query(
-		// `INSERT INTO sms_identificators (history_id, client_id, identificator) VALUES ${query} RETURNING *`
 		`INSERT INTO recipients_status (history_id, client_id, recipient_status, identificator) VALUES ${query} RETURNING *`
 	);
 

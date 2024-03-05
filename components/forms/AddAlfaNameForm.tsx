@@ -9,6 +9,7 @@ import GreenButton from "@/components/buttons/GreenButton";
 import { EnterOnlyLetters } from "@/helpers/EnterOnlyLetters";
 
 import { IUserAlfaName } from "@/globaltypes/types";
+import { useEffect, useState } from "react";
 
 type Props = {
 	userId: number;
@@ -17,6 +18,13 @@ type Props = {
 };
 
 export default function AddAlfaNameForm({ userId, getUserNamesArray, getIsOpened }: Props) {
+
+	const [isDisabled, setIsDisabled] = useState<boolean>(true);
+	const [name, setName] = useState<string>('');
+
+	const handleOnChange = (e: any) => {
+		setName(e.target.value);
+	};
 
 	const {
 		register,
@@ -56,6 +64,14 @@ export default function AddAlfaNameForm({ userId, getUserNamesArray, getIsOpened
 		reset({ alfa_name: '' });
 	};
 
+	useEffect(() => {
+		if (name) {
+			setIsDisabled(false);
+		} else {
+			setIsDisabled(true);
+		};
+	}, [name]);
+
 	return (
 		<form
 			autoComplete="off"
@@ -71,13 +87,14 @@ export default function AddAlfaNameForm({ userId, getUserNamesArray, getIsOpened
 					{...register("alfa_name")}
 					className='w-[474px] h-12 mr-8 px-4 input'
 					required
-					onKeyPress={EnterOnlyLetters}
+					onKeyDown={EnterOnlyLetters}
+					onChange={handleOnChange}
 					maxLength={11}
 				/>
 				{errors.alfa_name && (
 					<span className="text-red-500 ">{errors.alfa_name.message}</span>
 				)}
-				<GreenButton type="submit" size="normal">Додати</GreenButton>
+				<GreenButton isDisabled={isDisabled} type="submit" size="normal">Додати</GreenButton>
 			</div>
 		</form>
 	);

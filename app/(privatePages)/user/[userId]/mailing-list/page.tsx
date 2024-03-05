@@ -27,10 +27,10 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const [charCount, setCharCount] = useState<number>(0);
 	const [smsCount, setSmsCount] = useState<number>(0);
 	const [isChecked, setIsChecked] = useState<boolean>(false);
-	const [isOpened, setIsOpened] = useState<boolean>(false)
+	const [isOpened, setIsOpened] = useState<boolean>(false);
 	const [userName, setUserName] = useState<string>('Outlet');
 	const [userActiveNames, setActiveUserNames] = useState<string[] | undefined>([]);
-	const [userDisableeNames, setDisableUserNames] = useState<string[] | undefined>([]);
+	const [userDisableNames, setDisableUserNames] = useState<string[] | undefined>([]);
 	const [groupName, setGroupName] = useState<string>('');
 	const [hour, setHour] = useState<string | undefined>('');
 	const [minute, setMinute] = useState<string | undefined>('');
@@ -47,14 +47,21 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		setUpdate(!update);
 	};
 
+	const setDisabledSendBtn = () => {
+		if (!isChecked && contentSMS && recipients.length > 0) {
+			return false;
+		};
+		if (isChecked && contentSMS && recipients.length > 0 && date && hour && minute && second) {
+			return false;
+		};
+		return true;
+	};
+
 	const disabledNamesVisible = (namesArray: string[] | undefined) => {
 		if (namesArray) {
-			if (namesArray?.length > 0) {
-				return true;
-			};
+			return namesArray?.length > 0;
 		};
-		return false;
-	}
+	};
 
 	// check select is opened
 	const openSelect = (isOpen: boolean) => {
@@ -169,7 +176,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	// reset date and time if input is closed
 	const handleClickChecked = () => {
 		setIsChecked(!isChecked);
-		if (isChecked == false) {
+		if (isChecked === false) {
 			setDate('');
 			setHour('');
 			setMinute('');
@@ -180,6 +187,13 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const handleClickSubmit = async () => {
 		if (hour && minute && second && date) {
 			await sendSMS(userName, recipients, contentSMS, date, `${hour}:${minute}:${second}`, 'api');
+			setContentSMS('');
+			setRecipients([]);
+			setDate('');
+			setHour('');
+			setMinute('');
+			setSecond('');
+			setIsChecked(false);
 			await getData();
 			getUpdate();
 			return;
@@ -188,6 +202,8 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		// date and time completeness control
 		if (!hour && !minute && !second && !date) {
 			await sendSMS(userName, recipients, contentSMS, '', '', 'api');
+			setContentSMS('');
+			setRecipients([]);
 			await getData();
 			getUpdate();
 			return;
@@ -203,7 +219,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 				marginBottom: '50%',
 			},
 		});
-	}
+	};
 
 	// get array of group's name
 	const getData = async () => {
@@ -217,16 +233,19 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	};
 
 	const memoizedgetData = useCallback(getData, [userId]);
+	const memoizedsetDisabledSendBtn = useCallback(setDisabledSendBtn, [contentSMS, recipients, date, hour, minute, second, isChecked]);
 	const memoizedgetUserNamesArray = useCallback(getUserNamesArray, [userId]);
 	const memoizedsetCharAndSmsCount = useCallback(setCharAndSmsCount, [contentSMS]);
 
 	useEffect(() => {
 		memoizedsetCharAndSmsCount();
+		memoizedsetDisabledSendBtn();
+	}, [memoizedsetCharAndSmsCount, memoizedsetDisabledSendBtn])
+
+	useEffect(() => {
 		memoizedgetData();
 		memoizedgetUserNamesArray(userId);
-	}, [memoizedgetData, memoizedgetUserNamesArray, memoizedsetCharAndSmsCount, userId, recipients, update, contentSMS]);
-
-
+	}, [memoizedgetData, memoizedgetUserNamesArray, userId, recipients, update]);
 
 	return (
 		<>
@@ -252,11 +271,11 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 						{isOpened &&
 							<AddAlfaNameForm userId={userId} getUserNamesArray={getUserNamesArray} getIsOpened={getIsOpened} />}
 					</div>
-					{disabledNamesVisible(userDisableeNames) && <div className='text-mainTextColor text-base font-montserrat'>
+					{disabledNamesVisible(userDisableNames) && <div className='text-mainTextColor text-base font-montserrat'>
 						<p className='mb-2 font-medium'>Імена що знаходяться на узгодженні</p>
 						<ul className='w-64 h-32 flex flex-wrap gap-2  overflow-auto'>
 							<RSC>
-								{userDisableeNames?.map((item, index) => (
+								{userDisableNames?.map((item, index) => (
 									<li key={index} className='text-red-600'>
 										{item}
 									</li>
@@ -353,7 +372,8 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			<div className="flex justify-center mt-[50px]">
 				<GreenButton
 					size="big"
-					onClick={handleClickSubmit}>
+					onClick={handleClickSubmit}
+					isDisabled={setDisabledSendBtn()}>
 					Надіслати
 				</GreenButton>
 			</div>
