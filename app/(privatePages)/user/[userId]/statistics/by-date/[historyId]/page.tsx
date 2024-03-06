@@ -1,13 +1,12 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
+import XLSX from 'xlsx';
 import Title from '@/components/Title';
 import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
 import { getUserHistoryDetails } from '@/fetch-actions/historyFetchActions';
 import { IHistoryDetailsResponce } from '@/globaltypes/historyTypes';
-import { SmsStatusEnum } from '@/globaltypes/types';
 
 export default function HistoryDetails({
   params,
@@ -31,6 +30,33 @@ export default function HistoryDetails({
     memoizedUserHistoryDetails();
   }, [memoizedUserHistoryDetails]);
 
+  const handleClick = async () => {
+    try {
+      const formatedHistory: any[] = [];
+
+      userHistoryDetails.forEach(history => {
+        formatedHistory.push({
+          tel: history.tel,
+          date: new Date(history.sending_group_date).toLocaleDateString('uk-UA', {
+            timeZone: 'UTC',
+          }),
+          countSMS: history.recipient_status.length,
+          status: history.recipient_status.every(item => item === 'fullfield')
+            ? 'Доставлено'
+            : 'Недоставлено',
+        });
+      });
+
+      const keysObject = Object.keys(formatedHistory[0]);
+      const ws = XLSX.utils.json_to_sheet(formatedHistory, { header: keysObject });
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, ws, 'Sheet 1');
+      XLSX.writeFile(workbook, `Statistics.xlsx`);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
   return (
     <section className="container mx-auto">
       <Title type="h1" color="dark">
@@ -40,9 +66,9 @@ export default function HistoryDetails({
         <div className="ml-[26px]">
           <div className="flex items-center gap-3 mb-5">
             <p className="text-xl font-roboto text-[#1B1B30]">Розсилки за</p>
-            <Link href={`/statistics/`}>
+            <button type="button" onClick={handleClick}>
               <Image src="/svg/excel.svg" alt="Excel icon" width={42} height={42} />
-            </Link>
+            </button>
           </div>
           <BackStatisticsBtn>
             <p>Повернутись до статистики за день</p>
@@ -79,10 +105,6 @@ export default function HistoryDetails({
           {userHistoryDetails &&
             userHistoryDetails.length !== 0 &&
             userHistoryDetails.map(item => {
-              item.recipient_status = (item.recipient_status as unknown as string)
-                ?.replace(/{|}/g, '')
-                .split(',') as SmsStatusEnum[];
-
               return (
                 <li
                   key={item.client_id}

@@ -13,9 +13,7 @@ export function summarizeHistoryByDate(userHistory: IHistoryResponce[]) {
         history_id: entry.history_id,
         group_name: entry.group_name,
         send_method: entry.send_method,
-        recipient_status: (entry.recipient_status as unknown as string)
-          .replace(/{|}/g, '')
-          .split(',') as SmsStatusEnum[],
+        recipient_status: entry.recipient_status,
       };
     } else {
       mergedData[dateKey].recipient_status = [

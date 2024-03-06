@@ -62,7 +62,6 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
       </Title>
       <div className="mt-[60px]">
         <div className="content-block">
-          <HistoryPeriodForm />
           <div className="ml-[26px]">
             <p className="mb-5 text-xl font-roboto text-[#1B1B30]">
               Розсилки за {historyDate ? formatTableDate(new Date(historyDate)) : '-'}
@@ -77,19 +76,12 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
             <p className="w-[126px]">Статус </p>
             <p className="w-[160px]">Доставлено sms</p>
             <p className="w-[200px]">Доставлено номерів</p>
-            <p className="w-[77px]">
-              <Image src="/svg/excel.svg" alt="Excel icon" width={42} height={42} />
-            </p>
             <p className="w-[73px]">Дії</p>
           </div>
           <ul>
             {userHistory &&
               userHistory.length !== 0 &&
               userHistory.map(item => {
-                item.recipient_status = (item.recipient_status as unknown as string)
-                  ?.replace(/{|}/g, '')
-                  .split(',') as SmsStatusEnum[];
-                
                 return (
                   <li
                     key={item.history_id}
@@ -109,10 +101,8 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
                       {item.recipient_status.length}
                     </p>
                     <p className="w-[200px]">
-                      {countSuccessfullySentNumbers(item)}/{Array.from(new Set(item.clients)).length}
-                    </p>
-                    <p className="w-[77px] text-[#2366E8]">
-                      <button>Export</button>
+                      {countSuccessfullySentNumbers(item)}/
+                      {Array.from(new Set(item.clients)).length}
                     </p>
                     <p className="w-[73px]">&#8212;</p>
                   </li>
