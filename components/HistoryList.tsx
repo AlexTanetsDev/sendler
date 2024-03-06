@@ -6,7 +6,7 @@ import { IHistoryResponce } from '@/globaltypes/historyTypes';
 import { SmsStatusEnum } from '@/globaltypes/types';
 
 type Props = {
-	userHistory: IHistoryResponce[] | undefined;
+  userHistory: IHistoryResponce[] | undefined;
 };
 
 export default function HistoryList({ userHistory }: Props) {
@@ -29,7 +29,7 @@ export default function HistoryList({ userHistory }: Props) {
                   href={{
                     pathname: `statistics/by-date/`,
                     query: {
-                      date: (new Date(item.sending_group_date)).toString() ,
+                      date: new Date(item.sending_group_date).toString(),
                     },
                   }}
                 >
@@ -56,7 +56,8 @@ export default function HistoryList({ userHistory }: Props) {
               {sortHistory?.reduce(
                 (acc, item) =>
                   acc +
-                  item.recipient_status.filter((item: SmsStatusEnum) => item === 'fullfield').length,
+                  item.recipient_status.filter((item: SmsStatusEnum) => item === 'fullfield')
+                    .length,
                 0
               )}
             </p>

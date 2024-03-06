@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import HttpError from '@/helpers/HttpError';
 import { getUserHistoryDetails } from '@/app/api/controllers/sending-history';
 
-import { IErrorResponse } from '@/globaltypes/types';
+import { IErrorResponse, SmsStatusEnum } from '@/globaltypes/types';
 import { IHistoryDetailsProps, IHistoryDetailsResponce } from '@/globaltypes/historyTypes';
 
 export async function GET(
@@ -23,7 +23,16 @@ export async function GET(
       return HttpError(400, `Failed to get user's history by historyId = ${historyId}`);
     }
 
-    return NextResponse.json({ history: result });
+    const formatedHistory = result.map(history => {
+      return {
+        ...history,
+        recipient_status: `${history.recipient_status as unknown as string}`
+          ?.replace(/{|}/g, '')
+          .split(',') as SmsStatusEnum[],
+      };
+    });
+
+    return NextResponse.json({ history: formatedHistory });
   } catch (error: any) {
     return NextResponse.json({ message: 'Server error', error: error.message }, { status: 500 });
   }
