@@ -10,6 +10,7 @@ export interface IHistoryResponce extends IHistoryId, IGroupName {
   recipient_status: SmsStatusEnum[];
   text_sms?: string;
   user_name?: string;
+  clients?: number[];
 }
 
 export interface IHistoryDetailsResponce extends IHistoryId, IGroupName, ITel {
