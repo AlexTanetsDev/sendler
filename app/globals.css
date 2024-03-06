@@ -409,3 +409,7 @@ input[type='checkbox']:checked + label:after {
 .tHuMbY {
   background-color: red;
 }
+
+.print-page {
+  padding: 40px;
+}

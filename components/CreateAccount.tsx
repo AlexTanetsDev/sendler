@@ -2,7 +2,9 @@
 import { defineSum } from '@/helpers/DefinSum';
 import { EnterOnlyFigures } from '@/helpers/EnterOnlyFigures';
 import { useState } from 'react';
-
+import GreenButton from './buttons/GreenButton';
+import Modal from './Modal/Modal';
+import AccountInPdf from './AccountInPdf';
 
 const CreateAccount = () => {
   const [inputValue, setInputValue] = useState<string>('');
@@ -12,6 +14,17 @@ const CreateAccount = () => {
   };
 
   const summ = defineSum(Number(inputValue));
+  console.log('summ', summ);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const openModal = () => {
+    setIsModalOpen(true);
+    document.body.classList.add('overflow-hidden');
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    document.body.classList.remove('overflow-hidden');
+  };
   return (
     <div className="flex items-center mb-[74px]">
       <div className="relative flex items-center mr-8">
@@ -31,7 +44,18 @@ const CreateAccount = () => {
           <p className="text-lg font-montserrat font-normal">Сума: {summ} грн</p>
         </div>
       </div>
-      <span>Сформувати рахунок</span>
+      <button
+        onClick={openModal}
+        disabled={!inputValue}
+        className={`block mt-2 text-emailColorLink  ${
+          inputValue ? 'opacity-100 cursor-pointer hover:opacity-80 focus:opacity-80' : 'opacity-50'
+        }  `}
+      >
+        Сформувати рахунок
+      </button>
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <AccountInPdf summ={summ} />
+      </Modal>
     </div>
   );
 };
