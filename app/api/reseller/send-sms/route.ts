@@ -10,7 +10,7 @@ import { schemaSendSMS } from "@/models/send-sms";
 import { IClientDatabase, ISendSMS, ISession } from "@/globaltypes/types";
 import { SmsStatusEnum } from "@/globaltypes/types";
 import fetchGroupIdByName from "@/api-actions/fetchGroupIdByName";
-import { fetchGroupClients } from "@/api-actions";
+import { deleteHistoryId, fetchGroupClients, fetchHistoryId } from "@/api-actions";
 import { QueryResult } from "pg";
 import { IGroupId } from "@/globaltypes/types";
 import { createGroup } from "../../controllers/sending-groups";
@@ -39,6 +39,7 @@ export async function POST(request: Request) {
 		const { userName, recipients, date, time, contentSMS, send_method } = value;
 		const dateString = date + ' ' + time;
 		let diff = 0;
+
 		if (!(dateString === ' ')) {
 			const now = new Date();
 			const dateSending = new Date(dateString);
@@ -79,6 +80,21 @@ export async function POST(request: Request) {
 		const clients: IClientDatabase[] = [];
 		const groupIdArray: number[] = [];
 
+		const UpdateSmsStatusByHistoryId = async (i: number) => {
+			if (i <= 0) {
+				return 0;
+			};
+			let statuses: SmsStatusEnum[] = [];
+			setTimeout(async () => {
+				const res = await updateSmsStatusByHistoryId(history_id);
+				if (res === null) { return 0 };
+				res.map(item => {
+					statuses.push(item.recipient_status);
+				});
+				return await UpdateSmsStatusByHistoryId(i - 60000);
+			}, 60000);
+		};
+
 		for (let i = 0; i < recipients.length; i++) {
 			if (typeof recipients[i] === "number") {
 				const currentDate = new Date().toLocaleString('en');
@@ -108,33 +124,26 @@ export async function POST(request: Request) {
 			};
 		};
 
+		let res;
+		if (diff > 0) {
+			res = await addSendingHistory(groupIdArray, contentSMS, send_method, dateString);
+		} else {
+			res = await addSendingHistory(groupIdArray, contentSMS, send_method);
+		};
+
+		const { history_id } = res;
+
 		const sendSmsAgrigatorFunctions = async () => {
-			const smsQuerystr = createSmsUrlStr(clients, contentSMS);
-			const identificators = await smsSender(authRes, smsQuerystr, clients.length, userName);
-			const historyId = await addSendingHistory(groupIdArray, contentSMS, send_method);
-
-			await addSmsIdentificators(
-				historyId,
-				clients,
-				identificators
-			);
-
-			const wrapUpdateSmsStatusByHistoryId = async (i: number) => {
-				if (i <= 0) {
-					return 0;
-				};
-				let statuses: SmsStatusEnum[] = [];
-				setTimeout(async () => {
-					const res = await updateSmsStatusByHistoryId(historyId);
-					if (res === null) { return 0 };
-					res.map(item => {
-						statuses.push(item.recipient_status);
-					});
-					return await wrapUpdateSmsStatusByHistoryId(i - 60000);
-				}, 60000);
-			}
-
-			await wrapUpdateSmsStatusByHistoryId(21600000);
+			const { sending_permission } = await fetchHistoryId(history_id);
+			if (sending_permission) {
+				const smsQuerystr = createSmsUrlStr(clients, contentSMS);
+				const identificators = await smsSender(authRes, smsQuerystr, clients.length, userName);
+				await addSmsIdentificators(history_id, clients, identificators);
+				await UpdateSmsStatusByHistoryId(21600000);
+				return;
+			};
+			await deleteHistoryId(history_id);
+			return;
 		};
 
 		if (diff > 0) {

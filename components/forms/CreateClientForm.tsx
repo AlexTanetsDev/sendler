@@ -279,7 +279,7 @@ const CreateClientForm = ({
 					)}
 				</div>
 			</div>
-			<GreenButton size="big" isDisabled={isDisabled}>Відправити</GreenButton>
+			<GreenButton size="big" isDisabled={isDisabled}>Зберегти</GreenButton>
 		</form>
 	);
 };

@@ -61,8 +61,9 @@ CREATE TABLE
         history_id SERIAL,
         sending_group_date TIMESTAMP DEFAULT NOW():: timestamp,
         PRIMARY KEY (history_id),
-        send_method send_method_type DEFAULT 'api',
-				text_sms TEXT NOT NULL
+        send_method send_method_type DEFAULT 'veb',
+				text_sms TEXT NOT NULL,
+				sending_permission BOOLEAN DEFAULT TRUE
     );
 
 CREATE TYPE send_method_type AS ENUM('veb', 'api');

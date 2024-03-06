@@ -15,10 +15,12 @@ export default function ExportGroupBtn({ id, group, children }) {
           visible: 0,
         },
       });
+
       const { clients, groupName } = res.data.res;
       clients.forEach(client => {
         delete client.id;
       });
+
       const keysObject = Object.keys(clients[0]);
       const ws = XLSX.utils.json_to_sheet(clients, { headers: keysObject });
       const workbook = XLSX.utils.book_new();

@@ -138,7 +138,7 @@ export interface IPaymentHistory {
 	transaction_id: number;
 	user_id: number;
 	sms_count: number;
-	money_count:number;
+	money_count: number;
 	transactions_date: string;
 }
 
@@ -233,6 +233,7 @@ export interface ISendHistoryDatabase {
 	sending_group_date: Date,
 	send_method: 'api' | 'veb',
 	text_sms: string,
+	sending_permission: boolean
 };
 
 export interface ISmsIdentificatorsDatabase {
