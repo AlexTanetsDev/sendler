@@ -1,15 +1,16 @@
 'use client';
 
 import { useForm, SubmitHandler } from "react-hook-form";
+import { useEffect, useState } from "react";
+import { toast } from 'react-toastify';
+
 
 import { schemaCreateAlfaName } from "@/models/users";
-
 import { createAlfaName } from "@/fetch-actions/usersFetchActions";
 import GreenButton from "@/components/buttons/GreenButton";
 import { EnterOnlyLetters } from "@/helpers/EnterOnlyLetters";
 
 import { IUserAlfaName } from "@/globaltypes/types";
-import { useEffect, useState } from "react";
 
 type Props = {
 	userId: number;
@@ -77,9 +78,11 @@ export default function AddAlfaNameForm({ userId, getUserNamesArray, getIsOpened
 			autoComplete="off"
 			onSubmit={handleSubmit(onSubmit)}
 			className='mt-8'>
+			<p className="mb-[22px] text-mainTextColor text-base font-montserrat">
+				Ім&apos;я відправника має бути не більше ніж 11 латинських символів
+			</p>
 			<label htmlFor='alfa_name' className='block mb-3.5 label'>
 				Нове ім&apos;я
-				<p>Тут буде описано, що користувач повинен зробити, щоб додати нове ім’я</p>
 			</label>
 			<div className='flex items-center'>
 				<input id="alfa_name"

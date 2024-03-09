@@ -62,7 +62,7 @@ export async function PATCH(
 					{ status: 400 }
 				);
 			}
-			return NextResponse.json({ message: `Name ${res} has been added.` });
+			return NextResponse.json({ message: "Ім`я відправника надіслано на активацію. Після підтвердження ім`я відправника з`явиться у списку." });
 		};
 
 	} catch (error) {
