@@ -1,24 +1,23 @@
 import axios from 'axios';
 import { useEffect, useState } from 'react';
 import * as XLSX from 'xlsx/xlsx.mjs';
+import { getGroupById } from '@/fetch-actions/groupsFetchActions';
 
 export default function ExportGroupBtn({ id, group, children }) {
   const [isDisabled, setIsDisabled] = useState(false);
 
   const handleClick = async () => {
     try {
-      const res = await axios.get(`api/sending-groups/${id}`, {
-        params: {
-          userId: null,
-          filter: '',
-          limit: null,
-          visible: 0,
-        },
-      });
+      const res = await getGroupById(id);
 
       const { clients, groupName } = res.data.res;
       clients.forEach(client => {
         delete client.id;
+      });
+
+      clients.forEach(client => {
+        delete client.total_count;
+        delete client.client_id;
       });
 
       const keysObject = Object.keys(clients[0]);

@@ -5,6 +5,8 @@ import { useState } from 'react';
 import RSC from "react-scrollbars-custom";
 
 import Recipient from '../Recipient';
+import EmailColorLinkBtn from "../buttons/EmailColorLinkBtn";
+
 
 type Props = {
 	recipients: (string | number)[];
@@ -67,8 +69,12 @@ export default function RecipientsForm({
 					))}
 				</RSC>
 			</ul>
-			<button disabled={isSelected ? false : true} className={`text-lg text-emailColorLink mr-5 cursor-pointer ${isSelected ? 'opacity-100' : 'opacity-50'}`}>Видалити обране</button>
-			<button disabled={recipients.length > 0 ? false : true} type='button' onClick={handleClick} className={` text-lg text-emailColorLink cursor-pointer ${recipients.length > 0 ? 'opacity-100' : 'opacity-50'}`}>Очистити</button>
+			<div className='flex'>
+				<div className='mr-5'>
+					<EmailColorLinkBtn isDisabled={isSelected ? false : true} type='submit'>Видалити обране</EmailColorLinkBtn>
+				</div>
+				<EmailColorLinkBtn isDisabled={recipients.length > 0 ? false : true} type='button' onClick={handleClick}>Очистити</EmailColorLinkBtn>
+			</div>
 		</form>
 	);
 };

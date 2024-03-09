@@ -43,3 +43,17 @@ export async function createGroup(groupName: string, userId: number | undefined)
 			);
 	} catch (error: any) { };
 };
+
+export async function getGroupById(id: number) {
+	try {
+		const res = await api.get(`api/sending-groups/${id}`, {
+			params: {
+				userId: null,
+				filter: '',
+				limit: null,
+				visible: 0,
+			},
+		});
+		return res;
+	} catch (error) { };
+};

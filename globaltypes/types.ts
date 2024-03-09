@@ -72,7 +72,7 @@ export interface IClientData {
 	last_name: string | undefined;
 	first_name: string | undefined;
 	middle_name: string | undefined;
-	date_of_birth: string;
+	date_of_birth: string | undefined;
 	parameter_1: string | undefined;
 	parameter_2: string | undefined;
 }
