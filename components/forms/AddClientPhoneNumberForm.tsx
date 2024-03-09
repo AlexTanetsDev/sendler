@@ -1,12 +1,14 @@
 'use client';
 
+import { useState } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import { schemaAddClientNumber } from "@/models/users";
 import { EnterOnlyFigures } from "@/helpers/EnterOnlyFigures";
+import EmailColorLinkBtn from "../buttons/EmailColorLinkBtn";
 
 import { ITel } from "@/globaltypes/types";
-import { useState } from "react";
+
 
 type Props = {
 	handleClick: (tel: number) => void;
@@ -76,7 +78,7 @@ export default function AddClientPhoneNumberForm({ handleClick }: Props) {
 				{errors.tel && (
 					<span className="text-red-500 ">{errors.tel.message}</span>
 				)}
-				<button disabled={tel.length < 9 ? true : false} className={`block mt-2 text-emailColorLink cursor-pointer ${tel.length < 9 ? 'opacity-50' : 'opacity-100'}`}>Додати телефон до списку</button>
+				<EmailColorLinkBtn isDisabled={tel.length < 9 ? true : false} type='submit'>Додати телефон до списку</EmailColorLinkBtn>
 			</div>
 		</form>
 	);

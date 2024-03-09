@@ -3,17 +3,16 @@ import { QueryResult } from "pg";
 
 import { ISendHistoryDatabase } from "@/globaltypes/types";
 
-export const addSendingHistory = async (idArray: number[], text: string, method: 'api' | 'veb', sending_date?: string): Promise<ISendHistoryDatabase> => {
+export const addSendingHistory = async (idArray: number[], text: string, method: 'api' | 'veb', second?: number): Promise<ISendHistoryDatabase> => {
 	let res: QueryResult<ISendHistoryDatabase>;
-	if (sending_date) {
+	// now() + interval '${second} second'
+	if (second) {
 		res = await db.query(
-			"INSERT INTO sending_history (send_method, text_sms, sending_group_date) VALUES ($1, $2, $3) RETURNING *",
-			[method, text, sending_date]
+			`INSERT INTO sending_history (send_method, text_sms, sending_group_date) VALUES ('${method}', '${text}', now()::timestamp(0) + interval '${second} second') RETURNING *`
 		);
 	} else {
 		res = await db.query(
-			"INSERT INTO sending_history (send_method, text_sms) VALUES ($1, $2) RETURNING *",
-			[method, text]
+			`INSERT INTO sending_history (send_method, text_sms) VALUES ('${method}', '${text}') RETURNING *`,
 		);
 	};
 

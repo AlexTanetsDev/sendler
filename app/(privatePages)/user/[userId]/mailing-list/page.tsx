@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useEffect, useCallback } from 'react';
 import Image from 'next/image';
-import toast from "react-hot-toast";
+import { toast } from 'react-toastify';
 import RSC from 'react-scrollbars-custom';
 
 import Title from '@/components/Title';
@@ -19,6 +19,7 @@ import { getUser } from '@/fetch-actions/usersFetchActions';
 import { sendSMS } from '@/fetch-actions/smsFetchActions';
 import { isKyr } from '@/helpers/isKyr';
 import { getTimeOptionsValues } from '@/helpers/getTimeOptionsValues';
+import EmailColorLinkBtn from '@/components/buttons/EmailColorLinkBtn';
 
 const MailingList = ({ params }: { params: { userId: string } }) => {
 
@@ -48,9 +49,11 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	};
 
 	const setDisabledSendBtn = () => {
+
 		if (!isChecked && contentSMS && recipients.length > 0) {
 			return false;
 		};
+
 		if (isChecked && contentSMS && recipients.length > 0 && date && hour && minute && second) {
 			return false;
 		};
@@ -86,7 +89,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 
 	const getUserNamesArray = async (id: number) => {
 		const res = await getUser(userId);
-		const user = res?.data.user
+		const user = res?.data.user;
 		setActiveUserNames(user?.alfa_names_active);
 		setDisableUserNames(user?.alfa_names_disable);
 	};
@@ -323,9 +326,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 							<div>
 								<Select openSelect={openSelect} selectOptions={groupsNameArray} getSelect={getGroupName} selectedOption={groupName} widthValue={474} startValue='Обрати' />
 								<div className={`${isSelectOpen && 'hidden'}`}>
-									<button disabled={groupName ? false : true} onClick={handleClickAddGroup} className={`mt-2 text-emailColorLink cursor-pointer ${groupName ? 'opacity-100' : 'opacity-50'}`}>
-										Додати групу до списку
-									</button>
+									<EmailColorLinkBtn onClick={handleClickAddGroup} isDisabled={groupName ? false : true} type='button'>Додати групу до списку</EmailColorLinkBtn>
 								</div>
 							</div>
 						</div>

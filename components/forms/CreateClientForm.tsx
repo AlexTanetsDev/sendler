@@ -89,22 +89,10 @@ const CreateClientForm = ({
 	});
 
 	const onSubmit: SubmitHandler<FormInputCreateClient> = async (data) => {
-		setIsDisabled(true);
+		let birthday: string | undefined;
 
-
-		if (!checkDate(year, month, day)) {
-			toast.error('Your data is out of range.', {
-				position: 'bottom-center',
-				className: 'toast_error',
-				style: {
-					backgroundColor: '#0F3952',
-					color: '#fa9c9c',
-					fontSize: '24px',
-					marginBottom: '50%',
-				},
-			});
-			setIsDisabled(false);
-			return;
+		if (day && month && year) {
+			birthday = `${year}.${month}.${day}`;
 		};
 
 		const clientData = {
@@ -112,8 +100,7 @@ const CreateClientForm = ({
 			last_name: data.lastName,
 			first_name: data.firstName,
 			middle_name: data.middleName,
-			// date_of_birth: `${data.year}.${data.month}.${data.day}`,
-			date_of_birth: `${year}.${month}.${day}`,
+			date_of_birth: birthday,
 			parameter_1: data.parameter1,
 			parameter_2: data.parameter2,
 		};
@@ -161,6 +148,7 @@ const CreateClientForm = ({
 						{...register("phone")}
 						className="w-full border py-2 pr-11 pl-[50px] focus:outline-none focus:border-blue-500 input"
 						placeholder="675555544"
+						maxLength={9}
 						required
 					/>
 					{errors.phone && (

@@ -34,7 +34,7 @@ CREATE TABLE
         user_password TEXT NOT NULL,
         balance INT NOT NULL DEFAULT 0,
         user_token TEXT,
-        user_create_date TIMESTAMP DEFAULT NOW():: timestamp
+        user_create_date TIMESTAMPTZ DEFAULT NOW():: timestamp(0)
     );
 
 CREATE TABLE clients (
@@ -47,7 +47,7 @@ CREATE TABLE
         group_name TEXT NOT NULL,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
         PRIMARY KEY (group_id),
-        group_create_date TIMESTAMP DEFAULT NOW():: timestamp(0)
+        group_create_date TIMESTAMPTZ DEFAULT NOW():: timestamp(0)
     );
 
 CREATE UNIQUE INDEX send_groups_group_id_idx ON send_groups (group_id);
@@ -59,7 +59,7 @@ CREATE TABLE groups_members (
 CREATE TABLE
     sending_history(
         history_id SERIAL,
-        sending_group_date TIMESTAMP DEFAULT NOW():: timestamp,
+        sending_group_date TIMESTAMPTZ DEFAULT NOW():: timestamp(0),
         PRIMARY KEY (history_id),
         send_method send_method_type DEFAULT 'veb',
 				text_sms TEXT NOT NULL,
@@ -86,7 +86,7 @@ CREATE TABLE
         recipient_status status_type,
 				identificator TEXT NOT NULL,
         PRIMARY KEY (recipient_id),
-        status_changing_date TIMESTAMP DEFAULT NOW():: timestamp
+        status_changing_date TIMESTAMPTZ DEFAULT NOW():: timestamp(0)
     );
 
 CREATE TABLE
@@ -97,7 +97,7 @@ CREATE TABLE
         sms_count INT NOT NULL,
         money_count MONEY NOT NULL,
         PRIMARY KEY (transaction_id),
-        transactions_date TIMESTAMP DEFAULT NOW():: timestamp(0)
+        transactions_date TIMESTAMPTZ DEFAULT NOW():: timestamp(0)
     );
 
 CREATE TABLE sms_identificators (

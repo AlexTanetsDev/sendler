@@ -16,9 +16,6 @@ import { IGroupId } from "@/globaltypes/types";
 import { createGroup } from "../../controllers/sending-groups";
 import { createClient } from "../../controllers/clients";
 import { updateSmsStatusByHistoryId } from "@/app/utils/updateSmsStatusesByHistoryId";
-import { getClientsTelByGroupId } from '../helpers/getClientsTelByGroupId';
-import { addSmsStatus } from '../helpers/addSmsStatus';
-
 
 export async function POST(request: Request) {
 	const session: ISession | null = await getServerSession(options);
@@ -39,11 +36,13 @@ export async function POST(request: Request) {
 		const { userName, recipients, date, time, contentSMS, send_method } = value;
 		const dateString = date + ' ' + time;
 		let diff = 0;
+		let diffSecond = 0;
 
 		if (!(dateString === ' ')) {
 			const now = new Date();
 			const dateSending = new Date(dateString);
 			diff = dateSending.getTime() - now.getTime();
+			diffSecond = Math.round(diff / 1000);
 		};
 
 		if (diff < 0) {
@@ -126,7 +125,7 @@ export async function POST(request: Request) {
 
 		let res;
 		if (diff > 0) {
-			res = await addSendingHistory(groupIdArray, contentSMS, send_method, dateString);
+			res = await addSendingHistory(groupIdArray, contentSMS, send_method, diffSecond);
 		} else {
 			res = await addSendingHistory(groupIdArray, contentSMS, send_method);
 		};
