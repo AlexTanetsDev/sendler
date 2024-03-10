@@ -14,7 +14,6 @@ const CreateAccount = () => {
   };
 
   const summ = defineSum(Number(inputValue));
-  console.log('summ', summ);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const openModal = () => {
     setIsModalOpen(true);
