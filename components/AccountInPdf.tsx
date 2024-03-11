@@ -12,9 +12,11 @@ const AccountInPdf = ({ summ }: Props) => {
   const { data: session, status } = useSession();
   const userName = session?.user.user_name;
   const currentDate = new Date();
-  const formattedDate = `${currentDate.getDate()}.${
-    currentDate.getMonth() + 1
-  }.${currentDate.getFullYear()}`;
+  const day = currentDate.getDate().toString().padStart(2, '0'); // Dodaje zero przed jednocyfrowymi dniami
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, '0'); // Dodaje zero przed jednocyfrowymi miesiącami
+  
+  const formattedDate = `${day}.${month}.${currentDate.getFullYear()}`;
+  const numberOfAcount = `${day}/${month}/${currentDate.getFullYear()}`;
 
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -61,7 +63,7 @@ const AccountInPdf = ({ summ }: Props) => {
               <span className="font-bold"> МФО:</span> 300528
             </p>
             <p>
-              <span className="font-bold">Банк одержувача:</span> АТ &lt;&lt;ОТП БАНК&gt;&gt; в м.
+              <span className="font-bold">Банк одержувача:</span> АТ &quot;ОТП БАНК&quot; в м.
               Київ
             </p>
           </li>
@@ -75,7 +77,7 @@ const AccountInPdf = ({ summ }: Props) => {
           </li>
         </ul>
         <p className="text-center mb-8">
-          Рахунок-фактура ...Where... <br /> від <span className="font-bold">{formattedDate}</span>
+          Рахунок-фактура {numberOfAcount} <br /> від <span className="font-bold">{formattedDate}</span>
         </p>
         <p className="mb-8">
           Послуги з СМС-Розсилки. Імя на сайті: <span className="font-bold">{userName}</span>
