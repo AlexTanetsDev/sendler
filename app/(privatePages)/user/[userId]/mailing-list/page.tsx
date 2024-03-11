@@ -243,6 +243,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	};
 
 	const memoizedgetData = useCallback(getData, [userId]);
+
 	const memoizedsetDisabledSendBtn = useCallback(setDisabledSendBtn, [
 		contentSMS,
 		recipients,
