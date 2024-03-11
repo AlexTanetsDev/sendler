@@ -20,6 +20,8 @@ import { sendSMS } from '@/fetch-actions/smsFetchActions';
 import { isKyr } from '@/helpers/isKyr';
 import { getTimeOptionsValues } from '@/helpers/getTimeOptionsValues';
 import EmailColorLinkBtn from '@/components/buttons/EmailColorLinkBtn';
+import Modal from '@/components/Modal/Modal';
+import OfferContract from '@/components/OfferContact';
 
 const MailingList = ({ params }: { params: { userId: string } }) => {
 
@@ -42,7 +44,8 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const [contentSMS, setContentSMS] = useState<string>('');
 	const [update, setUpdate] = useState<boolean>(false);
 	const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
-	const [isDisabled, setIsDisabled] = useState<boolean>(false);
+	const [isOfferContractChecked, setIsOfferContractChecked] = useState(false);
+	const [isDisabled, setIsDisabled] = useState<boolean>(false)
 
 	// update page after update database
 	const getUpdate = () => {
@@ -50,19 +53,20 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	};
 
 	const setDisabledSendBtn = () => {
-		if (!isChecked && contentSMS && recipients.length > 0) {
+		if (!isChecked && contentSMS && recipients.length > 0 && isOfferContractChecked) {
 			return false;
-		};
+		}
+
 		if (isChecked && contentSMS && recipients.length > 0 && date && hour && minute && second) {
 			return false;
-		};
+		}
 		return true;
 	};
 
 	const disabledNamesVisible = (namesArray: string[] | undefined) => {
 		if (namesArray) {
 			return namesArray?.length > 0;
-		};
+		}
 	};
 
 	// check select is opened
@@ -114,7 +118,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	};
 
 	const getIsOpened = () => {
-		setIsOpened(!isOpened)
+		setIsOpened(!isOpened);
 	};
 
 	const handleChangeTextSms = (e: any) => {
@@ -136,10 +140,10 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 					},
 				});
 				return;
-			};
+			}
 			const recipientsArray = [...recipients, groupName];
 			setRecipients(recipientsArray);
-		};
+		}
 	};
 
 	const handleClickAddPhoneNumber = (tel: number) => {
@@ -157,7 +161,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 					},
 				});
 				return;
-			};
+			}
 			const recipientsArray = [...recipients, tel];
 			setRecipients(recipientsArray);
 		}
@@ -186,6 +190,10 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		}
 	};
 
+	const handleChekedOfferContract = () => {
+		setIsOfferContractChecked(!isOfferContractChecked);
+	};
+
 	const handleClickSubmit = async () => {
 		setIsDisabled(true);
 		if (hour && minute && second && date) {
@@ -201,7 +209,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			getUpdate();
 			setIsDisabled(false);
 			return;
-		};
+		}
 
 		// date and time completeness control
 		if (!hour && !minute && !second && !date) {
@@ -212,10 +220,10 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			getUpdate();
 			setIsDisabled(false);
 			return;
-		};
+		}
 
 		toast.error('Введіть повну дату й час.', {
-			position: 'top-center',
+			position: 'bottom-center',
 			className: 'toast_error',
 			style: {
 				backgroundColor: '#0F3952',
@@ -230,7 +238,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	// get array of group's name
 	const getData = async () => {
 		const resGroups = await getUserGroups(userId);
-		const groupsName = resGroups?.map((group) => group.group_name);
+		const groupsName = resGroups?.map(group => group.group_name);
 		setGroupsNameArray(groupsName);
 	};
 
@@ -238,16 +246,35 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		setDate(e.target.value);
 	};
 
-
 	const memoizedgetData = useCallback(getData, [userId]);
-	const memoizedsetDisabledSendBtn = useCallback(setDisabledSendBtn, [contentSMS, recipients, date, hour, minute, second, isChecked]);
+	const memoizedsetDisabledSendBtn = useCallback(setDisabledSendBtn, [
+		contentSMS,
+		recipients,
+		date,
+		hour,
+		minute,
+		second,
+		isChecked,
+		isOfferContractChecked
+	]);
 	const memoizedgetUserNamesArray = useCallback(getUserNamesArray, [userId]);
 	const memoizedsetCharAndSmsCount = useCallback(setCharAndSmsCount, [contentSMS]);
+
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const openModal = () => {
+		setIsModalOpen(true);
+		document.body.classList.add('overflow-hidden');
+	};
+
+	const closeModal = () => {
+		setIsModalOpen(false);
+		document.body.classList.remove('overflow-hidden');
+	};
 
 	useEffect(() => {
 		memoizedsetCharAndSmsCount();
 		memoizedsetDisabledSendBtn();
-	}, [memoizedsetCharAndSmsCount, memoizedsetDisabledSendBtn])
+	}, [memoizedsetCharAndSmsCount, memoizedsetDisabledSendBtn]);
 
 	useEffect(() => {
 		memoizedgetData();
@@ -261,35 +288,52 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			</Title>
 			<div className="flex flex-col gap-[80px] pt-[60px]">
 				<div className="sms-page-box flex">
-					<div className='mr-32'>
-						<div className='flex relative'>
+					<div className="mr-32">
+						<div className="flex relative">
 							<p className="w-[724px] text-mainTextColor text-base font-montserrat">
 								Виберіть підпис (Ім&#39;я відправника), який буде відображатися замість номера
 								відправника SMS-повідомлення
 							</p>
 						</div>
-						<p className=" text-mainTextColor font-normal text-xl mt-[50px] label">Ім’я відправника</p>
+						<p className=" text-mainTextColor font-normal text-xl mt-[50px] label">
+							Ім’я відправника
+						</p>
 						<div className="flex gap-8 items-center mt-3">
-							<Select openSelect={(a: boolean) => a} selectOptions={userActiveNames} getSelect={getUserName} selectedOption={userName} widthValue={474} startValue='Обрати' defaultValue='Outlet' />
+							<Select
+								openSelect={(a: boolean) => a}
+								selectOptions={userActiveNames}
+								getSelect={getUserName}
+								selectedOption={userName}
+								widthValue={474}
+								startValue="Обрати"
+								defaultValue="Outlet"
+							/>
 							<GreenButton size="normal" onClick={getIsOpened}>
 								Додати ім’я
 							</GreenButton>
 						</div>
-						{isOpened &&
-							<AddAlfaNameForm userId={userId} getUserNamesArray={getUserNamesArray} getIsOpened={getIsOpened} />}
+						{isOpened && (
+							<AddAlfaNameForm
+								userId={userId}
+								getUserNamesArray={getUserNamesArray}
+								getIsOpened={getIsOpened}
+							/>
+						)}
 					</div>
-					{disabledNamesVisible(userDisableNames) && <div className='text-mainTextColor text-base font-montserrat'>
-						<p className='mb-2 font-normal'>Імена що знаходяться на узгодженні</p>
-						<ul className='w-64 h-32 flex flex-wrap gap-2  overflow-auto'>
-							<RSC>
-								{userDisableNames?.map((item, index) => (
-									<li key={index} className='text-disableAlfaName'>
-										{item}
-									</li>
-								))}
-							</RSC>
-						</ul>
-					</div>}
+					{disabledNamesVisible(userDisableNames) && (
+						<div className="text-mainTextColor text-base font-montserrat">
+							<p className="mb-2 font-normal">Імена що знаходяться на узгодженні</p>
+							<ul className="w-64 h-32 flex flex-wrap gap-2  overflow-auto">
+								<RSC>
+									{userDisableNames?.map((item, index) => (
+										<li key={index} className="text-disableAlfaName">
+											{item}
+										</li>
+									))}
+								</RSC>
+							</ul>
+						</div>
+					)}
 				</div>
 
 				<div className="sms-page-box">
@@ -305,13 +349,36 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 								<span>Символів: {charCount}</span>
 								<span>SMS: {smsCount}</span>
 							</div>
-							<textarea value={contentSMS} onChange={handleChangeTextSms} placeholder="Text SMS" className="resize-none w-[636px] h-[220px] p-3 rounded-[18px] border-[1px] border-[#E6E6E6] mt-2 input"></textarea>
+							<textarea
+								value={contentSMS}
+								onChange={handleChangeTextSms}
+								placeholder="Text SMS"
+								className="resize-none w-[636px] h-[220px] p-3 rounded-[18px] border-[1px] border-[#E6E6E6] mt-2 input"
+							></textarea>
 						</div>
 						<div className="flex flex-col gap-[18px] justify-center">
 							<span className=" text-base text-mainTextColor">Додати шаблон</span>
-							<button type='button' onClick={handleClickAddClientName} className="text-base text-emailColorLink cursor-pointer">Ім&#39;я клієнта</button>
-							<button type='button' onClick={handleClickAddParam1} className="text-base text-emailColorLink cursor-pointer">Параметр 1</button>
-							<button type='button' onClick={handleClickAddParam2} className="text-base text-emailColorLink cursor-pointer">Параметр 2</button>
+							<button
+								type="button"
+								onClick={handleClickAddClientName}
+								className="text-base text-emailColorLink cursor-pointer"
+							>
+								Ім&#39;я клієнта
+							</button>
+							<button
+								type="button"
+								onClick={handleClickAddParam1}
+								className="text-base text-emailColorLink cursor-pointer"
+							>
+								Параметр 1
+							</button>
+							<button
+								type="button"
+								onClick={handleClickAddParam2}
+								className="text-base text-emailColorLink cursor-pointer"
+							>
+								Параметр 2
+							</button>
 						</div>
 					</div>
 				</div>
@@ -328,9 +395,22 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 						<div className="flex flex-col gap-8 justify-start">
 							<AddClientPhoneNumberForm handleClick={handleClickAddPhoneNumber} />
 							<div>
-								<Select openSelect={openSelect} selectOptions={groupsNameArray} getSelect={getGroupName} selectedOption={groupName} widthValue={474} startValue='Обрати' />
+								<Select
+									openSelect={openSelect}
+									selectOptions={groupsNameArray}
+									getSelect={getGroupName}
+									selectedOption={groupName}
+									widthValue={474}
+									startValue="Обрати"
+								/>
 								<div className={`${isSelectOpen && 'hidden'}`}>
-									<EmailColorLinkBtn onClick={handleClickAddGroup} isDisabled={groupName ? false : true} type='button'>Додати групу до списку</EmailColorLinkBtn>
+									<EmailColorLinkBtn
+										onClick={handleClickAddGroup}
+										isDisabled={groupName ? false : true}
+										type="button"
+									>
+										Додати групу до списку
+									</EmailColorLinkBtn>
 								</div>
 							</div>
 						</div>
@@ -368,17 +448,63 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 					/>
 					<p className=" text-xl text-mainTextColor mb-[13px] mt-[32px]">{'Час (з,по)'}</p>
 					<div className="flex gap-3 mt-3 items-center">
-						<SelectTime openSelect={(a: boolean) => a} selectOptions={getTimeOptionsValues(0, 24)} getSelect={getHour} selectedOption={hour} widthValue={150} startValue='' />
-						<SelectTime openSelect={(a: boolean) => a} selectOptions={getTimeOptionsValues(0, 60)} getSelect={getMinute} selectedOption={minute} widthValue={150} startValue='' />
-						<SelectTime openSelect={(a: boolean) => a} selectOptions={getTimeOptionsValues(0, 60)} getSelect={getSecond} selectedOption={second} widthValue={150} startValue='' />
+						<SelectTime
+							openSelect={(a: boolean) => a}
+							selectOptions={getTimeOptionsValues(0, 24)}
+							getSelect={getHour}
+							selectedOption={hour}
+							widthValue={150}
+							startValue=""
+						/>
+						<SelectTime
+							openSelect={(a: boolean) => a}
+							selectOptions={getTimeOptionsValues(0, 60)}
+							getSelect={getMinute}
+							selectedOption={minute}
+							widthValue={150}
+							startValue=""
+						/>
+						<SelectTime
+							openSelect={(a: boolean) => a}
+							selectOptions={getTimeOptionsValues(0, 60)}
+							getSelect={getSecond}
+							selectedOption={second}
+							widthValue={150}
+							startValue=""
+						/>
 					</div>
 				</div>
 			)}
-			<div className="flex justify-center mt-[50px]">
-				<GreenButton
-					size="big"
-					onClick={handleClickSubmit}
-					isDisabled={setDisabledSendBtn() || isDisabled}>
+			<div className="flex justify-center items-center flex-col mt-[50px]">
+				<span className="flex items-center gap-1 mb-4">
+					{!isOfferContractChecked ? (
+						<Image
+							src="/svg/checkbox-empty.svg"
+							width={24}
+							height={24}
+							alt="Check box"
+							onClick={handleChekedOfferContract}
+						/>
+					) : (
+						<Image
+							src="/svg/checkbox-checked.svg"
+							width={24}
+							height={24}
+							alt="Check box checked"
+							onClick={handleChekedOfferContract}
+						/>
+					)}
+					<span className=" text-redStar"> * </span>
+					Натискаючи кнопку Надіслати ви підтверджуєте відправлення форми, та що всі данні введенні
+					правильно, а також підверджуєте ознайомлення з
+					<button onClick={openModal} className={`block text-emailColorLink `}>
+						Договорем оферти.
+					</button>
+					<Modal isOpen={isModalOpen} onClose={closeModal}>
+						<OfferContract />
+					</Modal>
+				</span>
+				<GreenButton size="big" onClick={handleClickSubmit} isDisabled={setDisabledSendBtn() || isDisabled || !isOfferContractChecked}>
 					Надіслати
 				</GreenButton>
 			</div>
