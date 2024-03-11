@@ -42,6 +42,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const [contentSMS, setContentSMS] = useState<string>('');
 	const [update, setUpdate] = useState<boolean>(false);
 	const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
+	const [isDisabled, setIsDisabled] = useState<boolean>(false);
 
 	// update page after update database
 	const getUpdate = () => {
@@ -49,11 +50,9 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	};
 
 	const setDisabledSendBtn = () => {
-
 		if (!isChecked && contentSMS && recipients.length > 0) {
 			return false;
 		};
-
 		if (isChecked && contentSMS && recipients.length > 0 && date && hour && minute && second) {
 			return false;
 		};
@@ -127,7 +126,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			// uniqueness control of name of group
 			if (recipients.includes(groupName)) {
 				toast.error('Цю групу вже додано.', {
-					position: 'bottom-center',
+					position: 'top-center',
 					className: 'toast_error',
 					style: {
 						backgroundColor: '#0F3952',
@@ -148,7 +147,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			// uniqueness control of phone number
 			if (recipients.includes(tel)) {
 				toast.error('Цей номер телефону вже додано.', {
-					position: 'bottom-center',
+					position: 'top-center',
 					className: 'toast_error',
 					style: {
 						backgroundColor: '#0F3952',
@@ -188,6 +187,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	};
 
 	const handleClickSubmit = async () => {
+		setIsDisabled(true);
 		if (hour && minute && second && date) {
 			await sendSMS(userName, recipients, contentSMS, date, `${hour}:${minute}:${second}`, 'api');
 			setContentSMS('');
@@ -199,6 +199,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			setIsChecked(false);
 			await getData();
 			getUpdate();
+			setIsDisabled(false);
 			return;
 		};
 
@@ -209,11 +210,12 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			setRecipients([]);
 			await getData();
 			getUpdate();
+			setIsDisabled(false);
 			return;
 		};
 
 		toast.error('Введіть повну дату й час.', {
-			position: 'bottom-center',
+			position: 'top-center',
 			className: 'toast_error',
 			style: {
 				backgroundColor: '#0F3952',
@@ -222,6 +224,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 				marginBottom: '50%',
 			},
 		});
+		setIsDisabled(false);
 	};
 
 	// get array of group's name
@@ -234,6 +237,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const handleChangeDate = (e: any) => {
 		setDate(e.target.value);
 	};
+
 
 	const memoizedgetData = useCallback(getData, [userId]);
 	const memoizedsetDisabledSendBtn = useCallback(setDisabledSendBtn, [contentSMS, recipients, date, hour, minute, second, isChecked]);
@@ -275,11 +279,11 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 							<AddAlfaNameForm userId={userId} getUserNamesArray={getUserNamesArray} getIsOpened={getIsOpened} />}
 					</div>
 					{disabledNamesVisible(userDisableNames) && <div className='text-mainTextColor text-base font-montserrat'>
-						<p className='mb-2 font-medium'>Імена що знаходяться на узгодженні</p>
+						<p className='mb-2 font-normal'>Імена що знаходяться на узгодженні</p>
 						<ul className='w-64 h-32 flex flex-wrap gap-2  overflow-auto'>
 							<RSC>
 								{userDisableNames?.map((item, index) => (
-									<li key={index} className='text-red-600'>
+									<li key={index} className='text-disableAlfaName'>
 										{item}
 									</li>
 								))}
@@ -374,7 +378,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 				<GreenButton
 					size="big"
 					onClick={handleClickSubmit}
-					isDisabled={setDisabledSendBtn()}>
+					isDisabled={setDisabledSendBtn() || isDisabled}>
 					Надіслати
 				</GreenButton>
 			</div>
