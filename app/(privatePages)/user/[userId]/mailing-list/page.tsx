@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
 import RSC from 'react-scrollbars-custom';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 import Title from '@/components/Title';
 import GreenButton from '@/components/buttons/GreenButton';
@@ -38,7 +40,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
   const [minute, setMinute] = useState<string | undefined>('');
   const [second, setSecond] = useState<string | undefined>('');
   const [groupsNameArray, setGroupsNameArray] = useState<string[] | undefined>([]);
-  const [date, setDate] = useState('');
+  const [date, setDate] = useState<string | null>(null);
   const [recipients, setRecipients] = useState<(string | number)[]>([]);
   const [contentSMS, setContentSMS] = useState<string>('');
   const [update, setUpdate] = useState<boolean>(false);
@@ -55,7 +57,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
       return false;
     }
 
-    if (isChecked && contentSMS && recipients.length > 0 && date && hour && minute && second) {
+    if (isChecked && contentSMS && recipients.length > 0 && date && hour && minute && second && isOfferContractChecked) {
       return false;
     }
     return true;
@@ -236,10 +238,6 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
     setGroupsNameArray(groupsName);
   };
 
-  const handleChangeDate = (e: any) => {
-    setDate(e.target.value);
-  };
-
   const memoizedgetData = useCallback(getData, [userId]);
   const memoizedsetDisabledSendBtn = useCallback(setDisabledSendBtn, [
     contentSMS,
@@ -273,6 +271,10 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
     memoizedgetData();
     memoizedgetUserNamesArray(userId);
   }, [memoizedgetData, memoizedgetUserNamesArray, userId, recipients, update]);
+
+  const handleChangeDate = (date: Date | null) => {
+    setDate(date ? date.toISOString().split('T')[0] : null);
+  };
 
   return (
     <>
@@ -433,9 +435,22 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
       {isChecked && (
         <div className="sms-page-box mt-[80px]">
           {' '}
-          <p className=" text-xl text-mainTextColor mb-[13px]">Дата</p>
-          <input
-            type="date"
+          <label
+            htmlFor="calendar"
+            className="text-xl text-mainTextColor mb-[13px] flex cursor-pointer"
+          >
+            Дата{' '}
+            <Image
+              src="/svg/calendar.svg"
+              width={24}
+              height={24}
+              alt="Check box"
+              className="ml-4"
+            />
+          </label>
+          <DatePicker
+            id="calendar"
+            selected={date ? new Date(date) : null}
             onChange={handleChangeDate}
             className="w-[250px] h-12 rounded-[18px] border border-inputBorder outline-none text-xl text-mainTextColor pr-[50px] pl-[50px] cursor-pointer"
           />
