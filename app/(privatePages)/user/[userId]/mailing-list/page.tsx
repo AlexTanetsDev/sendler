@@ -24,7 +24,6 @@ import Modal from '@/components/Modal/Modal';
 import OfferContract from '@/components/OfferContact';
 
 const MailingList = ({ params }: { params: { userId: string } }) => {
-
 	const userId = Number(params.userId);
 
 	const [charCount, setCharCount] = useState<number>(0);
@@ -55,11 +54,11 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const setDisabledSendBtn = () => {
 		if (!isChecked && contentSMS && recipients.length > 0 && isOfferContractChecked) {
 			return false;
-		}
+		};
 
 		if (isChecked && contentSMS && recipients.length > 0 && date && hour && minute && second) {
 			return false;
-		}
+		};
 		return true;
 	};
 
@@ -116,6 +115,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const getSecond = (item: string | undefined) => {
 		setSecond(item);
 	};
+
 
 	const getIsOpened = () => {
 		setIsOpened(!isOpened);
@@ -242,10 +242,6 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		setGroupsNameArray(groupsName);
 	};
 
-	const handleChangeDate = (e: any) => {
-		setDate(e.target.value);
-	};
-
 	const memoizedgetData = useCallback(getData, [userId]);
 	const memoizedsetDisabledSendBtn = useCallback(setDisabledSendBtn, [
 		contentSMS,
@@ -271,6 +267,10 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		document.body.classList.remove('overflow-hidden');
 	};
 
+	const handleChangeDate = (e: any) => {
+		setDate(e.target.value);
+	};
+
 	useEffect(() => {
 		memoizedsetCharAndSmsCount();
 		memoizedsetDisabledSendBtn();
@@ -280,6 +280,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		memoizedgetData();
 		memoizedgetUserNamesArray(userId);
 	}, [memoizedgetData, memoizedgetUserNamesArray, userId, recipients, update]);
+
 
 	return (
 		<>
@@ -511,5 +512,6 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		</>
 	);
 };
+
 
 export default MailingList;
