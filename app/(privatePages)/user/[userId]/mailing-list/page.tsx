@@ -1,10 +1,12 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
 import RSC from 'react-scrollbars-custom';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
 
 import Title from '@/components/Title';
 import GreenButton from '@/components/buttons/GreenButton';
@@ -38,14 +40,13 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const [minute, setMinute] = useState<string | undefined>('');
 	const [second, setSecond] = useState<string | undefined>('');
 	const [groupsNameArray, setGroupsNameArray] = useState<string[] | undefined>([]);
-	const [date, setDate] = useState('');
+	const [date, setDate] = useState<string | null>(null);
 	const [recipients, setRecipients] = useState<(string | number)[]>([]);
 	const [contentSMS, setContentSMS] = useState<string>('');
 	const [update, setUpdate] = useState<boolean>(false);
 	const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
 	const [isOfferContractChecked, setIsOfferContractChecked] = useState(false);
-	const [isDisabled, setIsDisabled] = useState<boolean>(false)
-
+  const [isDisabled, setIsDisabled] = useState<boolean>(false)
 	// update page after update database
 	const getUpdate = () => {
 		setUpdate(!update);
@@ -56,11 +57,11 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			return false;
 		};
 
-		if (isChecked && contentSMS && recipients.length > 0 && date && hour && minute && second) {
-			return false;
-		};
-		return true;
-	};
+    if (isChecked && contentSMS && recipients.length > 0 && date && hour && minute && second && isOfferContractChecked) {
+      return false;
+    }
+    return true;
+  };
 
 	const disabledNamesVisible = (namesArray: string[] | undefined) => {
 		if (namesArray) {
@@ -268,20 +269,19 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		document.body.classList.remove('overflow-hidden');
 	};
 
-	const handleChangeDate = (e: any) => {
-		setDate(e.target.value);
-	};
-
 	useEffect(() => {
 		memoizedsetCharAndSmsCount();
 		memoizedsetDisabledSendBtn();
 	}, [memoizedsetCharAndSmsCount, memoizedsetDisabledSendBtn]);
 
-	useEffect(() => {
-		memoizedgetData();
-		memoizedgetUserNamesArray(userId);
-	}, [memoizedgetData, memoizedgetUserNamesArray, userId, recipients, update]);
+  useEffect(() => {
+    memoizedgetData();
+    memoizedgetUserNamesArray(userId);
+  }, [memoizedgetData, memoizedgetUserNamesArray, userId, recipients, update]);
 
+  const handleChangeDate = (date: Date | null) => {
+    setDate(date ? date.toISOString().split('T')[0] : null);
+  };
 
 	return (
 		<>
@@ -338,180 +338,193 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 					)}
 				</div>
 
-				<div className="sms-page-box">
-					<p className="w-[724px] text-mainTextColor text-base font-montserrat">
-						Введіть SMS-повідомлення. Слідкуйте за розміром повідомлення. Пам&#39;ятайте: для
-						кирилиці в одній SMS може поміститися 70 знаків, для латиниці - 160 символів.
-					</p>
-					<p className=" text-mainTextColor font-normal text-xl mt-[50px]">Текст повідомлення</p>
-					<div className="flex gap-8">
-						<div className=" inline-block mt-1">
-							<div className="flex justify-end gap-5 font-roboto text-sm text-mainTextColor">
-								{' '}
-								<span>Символів: {charCount}</span>
-								<span>SMS: {smsCount}</span>
-							</div>
-							<textarea
-								value={contentSMS}
-								onChange={handleChangeTextSms}
-								placeholder="Text SMS"
-								className="resize-none w-[636px] h-[220px] p-3 rounded-[18px] border-[1px] border-[#E6E6E6] mt-2 input"
-							></textarea>
-						</div>
-						<div className="flex flex-col gap-[18px] justify-center">
-							<span className=" text-base text-mainTextColor">Додати шаблон</span>
-							<button
-								type="button"
-								onClick={handleClickAddClientName}
-								className="text-base text-emailColorLink cursor-pointer"
-							>
-								Ім&#39;я клієнта
-							</button>
-							<button
-								type="button"
-								onClick={handleClickAddParam1}
-								className="text-base text-emailColorLink cursor-pointer"
-							>
-								Параметр 1
-							</button>
-							<button
-								type="button"
-								onClick={handleClickAddParam2}
-								className="text-base text-emailColorLink cursor-pointer"
-							>
-								Параметр 2
-							</button>
-						</div>
-					</div>
-				</div>
-				<div className="sms-page-box">
-					<p className="w-[724px] text-mainTextColor text-base font-montserrat">
-						Виберіть групу контактів, якій Ви бажаєте надіслати SMS-повідомлення. У Вас є можливість
-						ввести новий номер або вибрати один із контактів.
-					</p>
-					<p className=" text-mainTextColor font-normal text-xl mt-[50px]">
-						Групи та номери телефонів, яким буде надіслано SMS- повідомлення
-					</p>
-					<div className="flex gap-8 mt-8 mb-8">
-						<RecipientsForm recipients={recipients} getRecipients={getRecipients} />
-						<div className="flex flex-col gap-8 justify-start">
-							<AddClientPhoneNumberForm handleClick={handleClickAddPhoneNumber} />
-							<div>
-								<Select
-									openSelect={openSelect}
-									selectOptions={groupsNameArray}
-									getSelect={getGroupName}
-									selectedOption={groupName}
-									widthValue={474}
-									startValue="Обрати"
-								/>
-								<div className={`${isSelectOpen && 'hidden'}`}>
-									<EmailColorLinkBtn
-										onClick={handleClickAddGroup}
-										isDisabled={groupName ? false : true}
-										type="button"
-									>
-										Додати групу до списку
-									</EmailColorLinkBtn>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
-				<span className="flex items-center gap-1">
-					{!isChecked ? (
-						<Image
-							src="/svg/checkbox-empty.svg"
-							width={24}
-							height={24}
-							alt="Check box"
-							onClick={handleClickChecked}
-						/>
-					) : (
-						<Image
-							src="/svg/checkbox-checked.svg"
-							width={24}
-							height={24}
-							alt="Check box checked"
-							onClick={handleClickChecked}
-						/>
-					)}
-					Заплановане розсилання
-				</span>
-			</div>
-			{isChecked && (
-				<div className="sms-page-box mt-[80px]">
-					{' '}
-					<p className=" text-xl text-mainTextColor mb-[13px]">Дата</p>
-					<input
-						type="date"
-						onChange={handleChangeDate}
-						className="w-[250px] h-12 rounded-[18px] border border-inputBorder outline-none text-xl text-mainTextColor pr-[50px] pl-[50px] cursor-pointer"
-					/>
-					<p className=" text-xl text-mainTextColor mb-[13px] mt-[32px]">{'Час (з,по)'}</p>
-					<div className="flex gap-3 mt-3 items-center">
-						<SelectTime
-							openSelect={(a: boolean) => a}
-							selectOptions={getTimeOptionsValues(0, 24)}
-							getSelect={getHour}
-							selectedOption={hour}
-							widthValue={150}
-							startValue=""
-						/>
-						<SelectTime
-							openSelect={(a: boolean) => a}
-							selectOptions={getTimeOptionsValues(0, 60)}
-							getSelect={getMinute}
-							selectedOption={minute}
-							widthValue={150}
-							startValue=""
-						/>
-						<SelectTime
-							openSelect={(a: boolean) => a}
-							selectOptions={getTimeOptionsValues(0, 60)}
-							getSelect={getSecond}
-							selectedOption={second}
-							widthValue={150}
-							startValue=""
-						/>
-					</div>
-				</div>
-			)}
-			<div className="flex justify-center items-center flex-col mt-[50px]">
-				<span className="flex items-center gap-1 mb-4">
-					{!isOfferContractChecked ? (
-						<Image
-							src="/svg/checkbox-empty.svg"
-							width={24}
-							height={24}
-							alt="Check box"
-							onClick={handleChekedOfferContract}
-						/>
-					) : (
-						<Image
-							src="/svg/checkbox-checked.svg"
-							width={24}
-							height={24}
-							alt="Check box checked"
-							onClick={handleChekedOfferContract}
-						/>
-					)}
-					<span className=" text-redStar"> * </span>
-					Натискаючи кнопку Надіслати ви підтверджуєте відправлення форми, та що всі данні введенні
-					правильно, а також підверджуєте ознайомлення з
-					<button onClick={openModal} className={`block text-emailColorLink `}>
-						Договорем оферти.
-					</button>
-					<Modal isOpen={isModalOpen} onClose={closeModal}>
-						<OfferContract />
-					</Modal>
-				</span>
-				<GreenButton size="big" onClick={handleClickSubmit} isDisabled={setDisabledSendBtn() || isDisabled || !isOfferContractChecked}>
-					Надіслати
-				</GreenButton>
-			</div>
-		</>
-	);
+        <div className="sms-page-box">
+          <p className="w-[724px] text-mainTextColor text-base font-montserrat">
+            Введіть SMS-повідомлення. Слідкуйте за розміром повідомлення. Пам&#39;ятайте: для
+            кирилиці в одній SMS може поміститися 70 знаків, для латиниці - 160 символів.
+          </p>
+          <p className=" text-mainTextColor font-normal text-xl mt-[50px]">Текст повідомлення</p>
+          <div className="flex gap-8">
+            <div className=" inline-block mt-1">
+              <div className="flex justify-end gap-5 font-roboto text-sm text-mainTextColor">
+                {' '}
+                <span>Символів: {charCount}</span>
+                <span>SMS: {smsCount}</span>
+              </div>
+              <textarea
+                value={contentSMS}
+                onChange={handleChangeTextSms}
+                placeholder="Text SMS"
+                className="resize-none w-[636px] h-[220px] p-3 rounded-[18px] border-[1px] border-[#E6E6E6] mt-2 input"
+              ></textarea>
+            </div>
+            <div className="flex flex-col gap-[18px] justify-center">
+              <span className=" text-base text-mainTextColor">Додати шаблон</span>
+              <button
+                type="button"
+                onClick={handleClickAddClientName}
+                className="text-base text-emailColorLink cursor-pointer"
+              >
+                Ім&#39;я клієнта
+              </button>
+              <button
+                type="button"
+                onClick={handleClickAddParam1}
+                className="text-base text-emailColorLink cursor-pointer"
+              >
+                Параметр 1
+              </button>
+              <button
+                type="button"
+                onClick={handleClickAddParam2}
+                className="text-base text-emailColorLink cursor-pointer"
+              >
+                Параметр 2
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="sms-page-box">
+          <p className="w-[724px] text-mainTextColor text-base font-montserrat">
+            Виберіть групу контактів, якій Ви бажаєте надіслати SMS-повідомлення. У Вас є можливість
+            ввести новий номер або вибрати один із контактів.
+          </p>
+          <p className=" text-mainTextColor font-normal text-xl mt-[50px]">
+            Групи та номери телефонів, яким буде надіслано SMS- повідомлення
+          </p>
+          <div className="flex gap-8 mt-8 mb-8">
+            <RecipientsForm recipients={recipients} getRecipients={getRecipients} />
+            <div className="flex flex-col gap-8 justify-start">
+              <AddClientPhoneNumberForm handleClick={handleClickAddPhoneNumber} />
+              <div>
+                <Select
+                  openSelect={openSelect}
+                  selectOptions={groupsNameArray}
+                  getSelect={getGroupName}
+                  selectedOption={groupName}
+                  widthValue={474}
+                  startValue="Обрати"
+                />
+                <div className={`${isSelectOpen && 'hidden'}`}>
+                  <EmailColorLinkBtn
+                    onClick={handleClickAddGroup}
+                    isDisabled={groupName ? false : true}
+                    type="button"
+                  >
+                    Додати групу до списку
+                  </EmailColorLinkBtn>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <span className="flex items-center gap-1">
+          {!isChecked ? (
+            <Image
+              src="/svg/checkbox-empty.svg"
+              width={24}
+              height={24}
+              alt="Check box"
+              onClick={handleClickChecked}
+            />
+          ) : (
+            <Image
+              src="/svg/checkbox-checked.svg"
+              width={24}
+              height={24}
+              alt="Check box checked"
+              onClick={handleClickChecked}
+            />
+          )}
+          Заплановане розсилання
+        </span>
+      </div>
+      {isChecked && (
+        <div className="sms-page-box mt-[80px]">
+          {' '}
+          <label
+            htmlFor="calendar"
+            className="text-xl text-mainTextColor mb-[13px] flex cursor-pointer"
+          >
+            Дата{' '}
+            <Image
+              src="/svg/calendar.svg"
+              width={24}
+              height={24}
+              alt="Check box"
+              className="ml-4"
+            />
+          </label>
+          <DatePicker
+            id="calendar"
+            selected={date ? new Date(date) : null}
+            onChange={handleChangeDate}
+            className="w-[250px] h-12 rounded-[18px] border border-inputBorder outline-none text-xl text-mainTextColor pr-[50px] pl-[50px] cursor-pointer"
+          />
+          <p className=" text-xl text-mainTextColor mb-[13px] mt-[32px]">{'Час (з,по)'}</p>
+          <div className="flex gap-3 mt-3 items-center">
+            <SelectTime
+              openSelect={(a: boolean) => a}
+              selectOptions={getTimeOptionsValues(0, 24)}
+              getSelect={getHour}
+              selectedOption={hour}
+              widthValue={150}
+              startValue=""
+            />
+            <SelectTime
+              openSelect={(a: boolean) => a}
+              selectOptions={getTimeOptionsValues(0, 60)}
+              getSelect={getMinute}
+              selectedOption={minute}
+              widthValue={150}
+              startValue=""
+            />
+            <SelectTime
+              openSelect={(a: boolean) => a}
+              selectOptions={getTimeOptionsValues(0, 60)}
+              getSelect={getSecond}
+              selectedOption={second}
+              widthValue={150}
+              startValue=""
+            />
+          </div>
+        </div>
+      )}
+      <div className="flex justify-center items-center flex-col mt-[50px]">
+        <span className="flex items-center gap-1 mb-4">
+          {!isOfferContractChecked ? (
+            <Image
+              src="/svg/checkbox-empty.svg"
+              width={24}
+              height={24}
+              alt="Check box"
+              onClick={handleChekedOfferContract}
+            />
+          ) : (
+            <Image
+              src="/svg/checkbox-checked.svg"
+              width={24}
+              height={24}
+              alt="Check box checked"
+              onClick={handleChekedOfferContract}
+            />
+          )}
+          <span className=" text-redStar"> * </span>
+          Натискаючи кнопку Надіслати ви підтверджуєте відправлення форми, та що всі данні введенні
+          правильно, а також підверджуєте ознайомлення з
+          <button onClick={openModal} className={`block text-emailColorLink `}>
+            Договорем оферти.
+          </button>
+          <Modal isOpen={isModalOpen} onClose={closeModal}>
+            <OfferContract />
+          </Modal>
+        </span>
+        <GreenButton size="big" onClick={handleClickSubmit} isDisabled={setDisabledSendBtn()}>
+          Надіслати
+        </GreenButton>
+      </div>
+    </>
+  );
 };
 
 
