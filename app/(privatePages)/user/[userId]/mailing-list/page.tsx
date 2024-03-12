@@ -23,39 +23,39 @@ import { isKyr } from '@/helpers/isKyr';
 import { getTimeOptionsValues } from '@/helpers/getTimeOptionsValues';
 import EmailColorLinkBtn from '@/components/buttons/EmailColorLinkBtn';
 import Modal from '@/components/Modal/Modal';
-import OfferContract from '@/components/OfferContract';
+import OfferContract from '@/components/OfferContact';
 
 const MailingList = ({ params }: { params: { userId: string } }) => {
-  const userId = Number(params.userId);
+	const userId = Number(params.userId);
 
-  const [charCount, setCharCount] = useState<number>(0);
-  const [smsCount, setSmsCount] = useState<number>(0);
-  const [isChecked, setIsChecked] = useState<boolean>(false);
-  const [isOpened, setIsOpened] = useState<boolean>(false);
-  const [userName, setUserName] = useState<string>('Outlet');
-  const [userActiveNames, setActiveUserNames] = useState<string[] | undefined>([]);
-  const [userDisableNames, setDisableUserNames] = useState<string[] | undefined>([]);
-  const [groupName, setGroupName] = useState<string>('');
-  const [hour, setHour] = useState<string | undefined>('');
-  const [minute, setMinute] = useState<string | undefined>('');
-  const [second, setSecond] = useState<string | undefined>('');
-  const [groupsNameArray, setGroupsNameArray] = useState<string[] | undefined>([]);
-  const [date, setDate] = useState<string | null>(null);
-  const [recipients, setRecipients] = useState<(string | number)[]>([]);
-  const [contentSMS, setContentSMS] = useState<string>('');
-  const [update, setUpdate] = useState<boolean>(false);
-  const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
-  const [isOfferContractChecked, setIsOfferContractChecked] = useState(false);
+	const [charCount, setCharCount] = useState<number>(0);
+	const [smsCount, setSmsCount] = useState<number>(0);
+	const [isChecked, setIsChecked] = useState<boolean>(false);
+	const [isOpened, setIsOpened] = useState<boolean>(false);
+	const [userName, setUserName] = useState<string>('Outlet');
+	const [userActiveNames, setActiveUserNames] = useState<string[] | undefined>([]);
+	const [userDisableNames, setDisableUserNames] = useState<string[] | undefined>([]);
+	const [groupName, setGroupName] = useState<string>('');
+	const [hour, setHour] = useState<string | undefined>('');
+	const [minute, setMinute] = useState<string | undefined>('');
+	const [second, setSecond] = useState<string | undefined>('');
+	const [groupsNameArray, setGroupsNameArray] = useState<string[] | undefined>([]);
+	const [date, setDate] = useState<string | null>(null);
+	const [recipients, setRecipients] = useState<(string | number)[]>([]);
+	const [contentSMS, setContentSMS] = useState<string>('');
+	const [update, setUpdate] = useState<boolean>(false);
+	const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
+	const [isOfferContractChecked, setIsOfferContractChecked] = useState(false);
+  const [isDisabled, setIsDisabled] = useState<boolean>(false)
+	// update page after update database
+	const getUpdate = () => {
+		setUpdate(!update);
+	};
 
-  // update page after update database
-  const getUpdate = () => {
-    setUpdate(!update);
-  };
-
-  const setDisabledSendBtn = () => {
-    if (!isChecked && contentSMS && recipients.length > 0 && isOfferContractChecked) {
-      return false;
-    }
+	const setDisabledSendBtn = () => {
+		if (!isChecked && contentSMS && recipients.length > 0 && isOfferContractChecked) {
+			return false;
+		};
 
     if (isChecked && contentSMS && recipients.length > 0 && date && hour && minute && second && isOfferContractChecked) {
       return false;
@@ -63,209 +63,216 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
     return true;
   };
 
-  const disabledNamesVisible = (namesArray: string[] | undefined) => {
-    if (namesArray) {
-      return namesArray?.length > 0;
-    }
-  };
+	const disabledNamesVisible = (namesArray: string[] | undefined) => {
+		if (namesArray) {
+			return namesArray?.length > 0;
+		}
+	};
 
-  // check select is opened
-  const openSelect = (isOpen: boolean) => {
-    setIsSelectOpen(isOpen);
-  };
+	// check select is opened
+	const openSelect = (isOpen: boolean) => {
+		setIsSelectOpen(isOpen);
+	};
 
-  // set values of sms and character counters
-  const setCharAndSmsCount = () => {
-    setCharCount(contentSMS.length);
-    if (isKyr(contentSMS)) {
-      const smsCounter = Math.floor(contentSMS.length / 70) + 1;
-      setSmsCount(smsCounter);
-    } else {
-      const smsCounter = Math.floor(contentSMS.length / 160) + 1;
-      setSmsCount(smsCounter);
-    }
-  };
+	// set values of sms and character counters
+	const setCharAndSmsCount = () => {
+		setCharCount(contentSMS.length);
+		if (isKyr(contentSMS)) {
+			const smsCounter = Math.floor(contentSMS.length / 70) + 1;
+			setSmsCount(smsCounter);
+		} else {
+			const smsCounter = Math.floor(contentSMS.length / 160) + 1;
+			setSmsCount(smsCounter);
+		}
+	};
 
-  const getUserName = (item: string) => {
-    setUserName(item);
-  };
+	const getUserName = (item: string) => {
+		setUserName(item);
+	};
 
-  const getUserNamesArray = async (id: number) => {
-    const res = await getUser(userId);
-    const user = res?.data.user;
-    setActiveUserNames(user?.alfa_names_active);
-    setDisableUserNames(user?.alfa_names_disable);
-  };
+	const getUserNamesArray = async (id: number) => {
+		const res = await getUser(userId);
+		const user = res?.data.user;
+		setActiveUserNames(user?.alfa_names_active);
+		setDisableUserNames(user?.alfa_names_disable);
+	};
 
-  const getRecipients = (recipientsArray: (string | number)[]) => {
-    setRecipients(recipientsArray);
-  };
+	const getRecipients = (recipientsArray: (string | number)[]) => {
+		setRecipients(recipientsArray);
+	};
 
-  const getGroupName = (item: string) => {
-    setGroupName(item);
-  };
+	const getGroupName = (item: string) => {
+		setGroupName(item);
+	};
 
-  const getHour = (item: string | undefined) => {
-    setHour(item);
-  };
+	const getHour = (item: string | undefined) => {
+		setHour(item);
+	};
 
-  const getMinute = (item: string | undefined) => {
-    setMinute(item);
-  };
+	const getMinute = (item: string | undefined) => {
+		setMinute(item);
+	};
 
-  const getSecond = (item: string | undefined) => {
-    setSecond(item);
-  };
+	const getSecond = (item: string | undefined) => {
+		setSecond(item);
+	};
 
-  const getIsOpened = () => {
-    setIsOpened(!isOpened);
-  };
 
-  const handleChangeTextSms = (e: any) => {
-    setContentSMS(e.target.value);
-  };
+	const getIsOpened = () => {
+		setIsOpened(!isOpened);
+	};
 
-  const handleClickAddGroup = () => {
-    if (groupName) {
-      // uniqueness control of name of group
-      if (recipients.includes(groupName)) {
-        toast.error('Цю групу вже додано.', {
-          position: 'bottom-center',
-          className: 'toast_error',
-          style: {
-            backgroundColor: '#0F3952',
-            color: '#fa9c9c',
-            fontSize: '24px',
-            marginBottom: '50%',
-          },
-        });
-        return;
-      }
-      const recipientsArray = [...recipients, groupName];
-      setRecipients(recipientsArray);
-    }
-  };
+	const handleChangeTextSms = (e: any) => {
+		setContentSMS(e.target.value);
+	};
 
-  const handleClickAddPhoneNumber = (tel: number) => {
-    if (tel) {
-      // uniqueness control of phone number
-      if (recipients.includes(tel)) {
-        toast.error('Цей номер телефону вже додано.', {
-          position: 'bottom-center',
-          className: 'toast_error',
-          style: {
-            backgroundColor: '#0F3952',
-            color: '#fa9c9c',
-            fontSize: '24px',
-            marginBottom: '50%',
-          },
-        });
-        return;
-      }
-      const recipientsArray = [...recipients, tel];
-      setRecipients(recipientsArray);
-    }
-  };
+	const handleClickAddGroup = () => {
+		if (groupName) {
+			// uniqueness control of name of group
+			if (recipients.includes(groupName)) {
+				toast.error('Цю групу вже додано.', {
+					position: 'top-center',
+					className: 'toast_error',
+					style: {
+						backgroundColor: '#0F3952',
+						color: '#fa9c9c',
+						fontSize: '24px',
+						marginBottom: '50%',
+					},
+				});
+				return;
+			}
+			const recipientsArray = [...recipients, groupName];
+			setRecipients(recipientsArray);
+		}
+	};
 
-  const handleClickAddClientName = () => {
-    setContentSMS(contentSMS + ' ' + `%ClientName%`);
-  };
+	const handleClickAddPhoneNumber = (tel: number) => {
+		if (tel) {
+			// uniqueness control of phone number
+			if (recipients.includes(tel)) {
+				toast.error('Цей номер телефону вже додано.', {
+					position: 'top-center',
+					className: 'toast_error',
+					style: {
+						backgroundColor: '#0F3952',
+						color: '#fa9c9c',
+						fontSize: '24px',
+						marginBottom: '50%',
+					},
+				});
+				return;
+			}
+			const recipientsArray = [...recipients, tel];
+			setRecipients(recipientsArray);
+		}
+	};
 
-  const handleClickAddParam1 = () => {
-    setContentSMS(contentSMS + ' ' + `%Parametr1%`);
-  };
+	const handleClickAddClientName = () => {
+		setContentSMS(contentSMS + ' ' + `%ClientName%`);
+	};
 
-  const handleClickAddParam2 = () => {
-    setContentSMS(contentSMS + ' ' + `%Parametr2%`);
-  };
+	const handleClickAddParam1 = () => {
+		setContentSMS(contentSMS + ' ' + `%Parametr1%`);
+	};
 
-  // reset date and time if input is closed
-  const handleClickChecked = () => {
-    setIsChecked(!isChecked);
-    if (isChecked === false) {
-      setDate('');
-      setHour('');
-      setMinute('');
-      setSecond('');
-    }
-  };
+	const handleClickAddParam2 = () => {
+		setContentSMS(contentSMS + ' ' + `%Parametr2%`);
+	};
 
-  const handleChekedOfferContract = () => {
-    setIsOfferContractChecked(!isOfferContractChecked);
-  };
+	// reset date and time if input is closed
+	const handleClickChecked = () => {
+		setIsChecked(!isChecked);
+		if (isChecked === false) {
+			setDate('');
+			setHour('');
+			setMinute('');
+			setSecond('');
+		}
+	};
 
-  const handleClickSubmit = async () => {
-    if (hour && minute && second && date) {
-      await sendSMS(userName, recipients, contentSMS, date, `${hour}:${minute}:${second}`, 'api');
-      setContentSMS('');
-      setRecipients([]);
-      setDate('');
-      setHour('');
-      setMinute('');
-      setSecond('');
-      setIsChecked(false);
-      await getData();
-      getUpdate();
-      return;
-    }
+	const handleChekedOfferContract = () => {
+		setIsOfferContractChecked(!isOfferContractChecked);
+	};
 
-    // date and time completeness control
-    if (!hour && !minute && !second && !date) {
-      await sendSMS(userName, recipients, contentSMS, '', '', 'api');
-      setContentSMS('');
-      setRecipients([]);
-      await getData();
-      getUpdate();
-      return;
-    }
+	const handleClickSubmit = async () => {
+		setIsDisabled(true);
+		if (hour && minute && second && date) {
+			await sendSMS(userName, recipients, contentSMS, date, `${hour}:${minute}:${second}`, 'api');
+			setContentSMS('');
+			setRecipients([]);
+			setDate('');
+			setHour('');
+			setMinute('');
+			setSecond('');
+			setIsChecked(false);
+			await getData();
+			getUpdate();
+			setIsDisabled(false);
+			return;
+		}
 
-    toast.error('Введіть повну дату й час.', {
-      position: 'bottom-center',
-      className: 'toast_error',
-      style: {
-        backgroundColor: '#0F3952',
-        color: '#fa9c9c',
-        fontSize: '24px',
-        marginBottom: '50%',
-      },
-    });
-  };
+		// date and time completeness control
+		if (!hour && !minute && !second && !date) {
+			await sendSMS(userName, recipients, contentSMS, '', '', 'api');
+			setContentSMS('');
+			setRecipients([]);
+			await getData();
+			getUpdate();
+			setIsDisabled(false);
+			return;
+		}
 
-  // get array of group's name
-  const getData = async () => {
-    const resGroups = await getUserGroups(userId);
-    const groupsName = resGroups?.map(group => group.group_name);
-    setGroupsNameArray(groupsName);
-  };
+		toast.error('Введіть повну дату й час.', {
+			position: 'bottom-center',
+			className: 'toast_error',
+			style: {
+				backgroundColor: '#0F3952',
+				color: '#fa9c9c',
+				fontSize: '24px',
+				marginBottom: '50%',
+			},
+		});
+		setIsDisabled(false);
+	};
 
-  const memoizedgetData = useCallback(getData, [userId]);
-  const memoizedsetDisabledSendBtn = useCallback(setDisabledSendBtn, [
-    contentSMS,
-    recipients,
-    date,
-    hour,
-    minute,
-    second,
-    isChecked,
-  ]);
-  const memoizedgetUserNamesArray = useCallback(getUserNamesArray, [userId]);
-  const memoizedsetCharAndSmsCount = useCallback(setCharAndSmsCount, [contentSMS]);
+	// get array of group's name
+	const getData = async () => {
+		const resGroups = await getUserGroups(userId);
+		const groupsName = resGroups?.map(group => group.group_name);
+		setGroupsNameArray(groupsName);
+	};
 
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const openModal = () => {
-    setIsModalOpen(true);
-    document.body.classList.add('overflow-hidden');
-  };
+	const memoizedgetData = useCallback(getData, [userId]);
 
-  const closeModal = () => {
-    setIsModalOpen(false);
-    document.body.classList.remove('overflow-hidden');
-  };
+	const memoizedsetDisabledSendBtn = useCallback(setDisabledSendBtn, [
+		contentSMS,
+		recipients,
+		date,
+		hour,
+		minute,
+		second,
+		isChecked,
+		isOfferContractChecked
+	]);
+	const memoizedgetUserNamesArray = useCallback(getUserNamesArray, [userId]);
+	const memoizedsetCharAndSmsCount = useCallback(setCharAndSmsCount, [contentSMS]);
 
-  useEffect(() => {
-    memoizedsetCharAndSmsCount();
-    memoizedsetDisabledSendBtn();
-  }, [memoizedsetCharAndSmsCount, memoizedsetDisabledSendBtn]);
+	const [isModalOpen, setIsModalOpen] = useState(false);
+	const openModal = () => {
+		setIsModalOpen(true);
+		document.body.classList.add('overflow-hidden');
+	};
+
+	const closeModal = () => {
+		setIsModalOpen(false);
+		document.body.classList.remove('overflow-hidden');
+	};
+
+	useEffect(() => {
+		memoizedsetCharAndSmsCount();
+		memoizedsetDisabledSendBtn();
+	}, [memoizedsetCharAndSmsCount, memoizedsetDisabledSendBtn]);
 
   useEffect(() => {
     memoizedgetData();
@@ -276,60 +283,60 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
     setDate(date ? date.toISOString().split('T')[0] : null);
   };
 
-  return (
-    <>
-      <Title type="h1" color="dark">
-        Розсилка SMS
-      </Title>
-      <div className="flex flex-col gap-[80px] pt-[60px]">
-        <div className="sms-page-box flex">
-          <div className="mr-32">
-            <div className="flex relative">
-              <p className="w-[724px] text-mainTextColor text-base font-montserrat">
-                Виберіть підпис (Ім&#39;я відправника), який буде відображатися замість номера
-                відправника SMS-повідомлення
-              </p>
-            </div>
-            <p className=" text-mainTextColor font-normal text-xl mt-[50px] label">
-              Ім’я відправника
-            </p>
-            <div className="flex gap-8 items-center mt-3">
-              <Select
-                openSelect={(a: boolean) => a}
-                selectOptions={userActiveNames}
-                getSelect={getUserName}
-                selectedOption={userName}
-                widthValue={474}
-                startValue="Обрати"
-                defaultValue="Outlet"
-              />
-              <GreenButton size="normal" onClick={getIsOpened}>
-                Додати ім’я
-              </GreenButton>
-            </div>
-            {isOpened && (
-              <AddAlfaNameForm
-                userId={userId}
-                getUserNamesArray={getUserNamesArray}
-                getIsOpened={getIsOpened}
-              />
-            )}
-          </div>
-          {disabledNamesVisible(userDisableNames) && (
-            <div className="text-mainTextColor text-base font-montserrat">
-              <p className="mb-2 font-medium">Імена що знаходяться на узгодженні</p>
-              <ul className="w-64 h-32 flex flex-wrap gap-2  overflow-auto">
-                <RSC>
-                  {userDisableNames?.map((item, index) => (
-                    <li key={index} className="text-red-600">
-                      {item}
-                    </li>
-                  ))}
-                </RSC>
-              </ul>
-            </div>
-          )}
-        </div>
+	return (
+		<>
+			<Title type="h1" color="dark">
+				Розсилка SMS
+			</Title>
+			<div className="flex flex-col gap-[80px] pt-[60px]">
+				<div className="sms-page-box flex">
+					<div className="mr-32">
+						<div className="flex relative">
+							<p className="w-[724px] text-mainTextColor text-base font-montserrat">
+								Виберіть підпис (Ім&#39;я відправника), який буде відображатися замість номера
+								відправника SMS-повідомлення
+							</p>
+						</div>
+						<p className=" text-mainTextColor font-normal text-xl mt-[50px] label">
+							Ім’я відправника
+						</p>
+						<div className="flex gap-8 items-center mt-3">
+							<Select
+								openSelect={(a: boolean) => a}
+								selectOptions={userActiveNames}
+								getSelect={getUserName}
+								selectedOption={userName}
+								widthValue={474}
+								startValue="Обрати"
+								defaultValue="Outlet"
+							/>
+							<GreenButton size="normal" onClick={getIsOpened}>
+								Додати ім’я
+							</GreenButton>
+						</div>
+						{isOpened && (
+							<AddAlfaNameForm
+								userId={userId}
+								getUserNamesArray={getUserNamesArray}
+								getIsOpened={getIsOpened}
+							/>
+						)}
+					</div>
+					{disabledNamesVisible(userDisableNames) && (
+						<div className="text-mainTextColor text-base font-montserrat">
+							<p className="mb-2 font-normal">Імена що знаходяться на узгодженні</p>
+							<ul className="w-64 h-32 flex flex-wrap gap-2  overflow-auto">
+								<RSC>
+									{userDisableNames?.map((item, index) => (
+										<li key={index} className="text-disableAlfaName">
+											{item}
+										</li>
+									))}
+								</RSC>
+							</ul>
+						</div>
+					)}
+				</div>
 
         <div className="sms-page-box">
           <p className="w-[724px] text-mainTextColor text-base font-montserrat">
@@ -519,5 +526,6 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
     </>
   );
 };
+
 
 export default MailingList;

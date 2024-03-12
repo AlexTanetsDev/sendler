@@ -44,7 +44,8 @@ const config: Config = {
 				disable: '#908F8F',
 				textDisable: '#6C6C6C',
 				rowBtnDisableText: '#858585',
-				rowBtnDisableBorder: '#6C6C6C'
+				rowBtnDisableBorder: '#6C6C6C',
+				disableAlfaName: '#372037'
 			},
 			backgroundImage: {
 				'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
