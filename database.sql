@@ -47,13 +47,14 @@ CREATE TABLE
         group_name TEXT NOT NULL,
         user_id INT REFERENCES users(user_id) ON DELETE CASCADE,
         PRIMARY KEY (group_id),
-        group_create_date TIMESTAMPTZ DEFAULT NOW():: timestamp(0)
-    );
+        group_create_date TIMESTAMPTZ DEFAULT NOW():: timestamp(0),
+				automatically_generated BOOLEAN DEFAULT FALSE
+				);
 
 CREATE UNIQUE INDEX send_groups_group_id_idx ON send_groups (group_id);
 
 CREATE TABLE groups_members (
-    group_id INT REFERENCES send_groups (group_id) ON DELETE CASCADE, client_id INT REFERENCES clients (client_id) ON DELETE CASCADE PRIMARY KEY (group_id, client_id)
+    group_id INT REFERENCES send_groups (group_id) ON DELETE CASCADE, client_id INT REFERENCES clients (client_id) ON DELETE CASCADE, PRIMARY KEY (group_id, client_id)
 );
 
 CREATE TABLE

@@ -99,7 +99,7 @@ export async function POST(request: Request) {
 				const currentDate = new Date().toLocaleString('en');
 				if (userId) {
 					const group_name = `${recipients[i]} ${currentDate}`.split(" ").join("_").replace(",", "");
-					await createGroup(group_name, userId);
+					await createGroup(group_name, userId, true);
 					const res: QueryResult<IGroupId> = await fetchGroupIdByName(userId, group_name);
 					const { group_id } = res.rows[0];
 					await createClient({ tel: String(recipients[i]) }, userId, group_id);
