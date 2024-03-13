@@ -132,6 +132,7 @@ export interface IGroup extends IGroupId, IGroupName { };
 export interface IGroupDatabase extends IGroupId, IGroupName, IUserId {
 	group_create_date?: DateTime;
 	number_members: number;
+	automatically_generated: boolean
 };
 
 export interface IPaymentHistory {
