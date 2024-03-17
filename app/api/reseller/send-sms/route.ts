@@ -23,7 +23,6 @@ export async function POST(request: Request) {
 	try {
 		const body: ISendSMS = await request.json();
 
-
 		const { error, value } = schemaSendSMS.validate(body);
 
 		if (error) {

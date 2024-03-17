@@ -197,7 +197,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
   const handleClickSubmit = async () => {
     setIsDisabled(true);
     if (hour && minute && second && date) {
-      await sendSMS(userName, recipients, contentSMS, date, `${hour}:${minute}:${second}`, 'api');
+      await sendSMS(userName, recipients, contentSMS, date, `${hour}:${minute}:${second}`, 'web');
       setContentSMS('');
       setRecipients([]);
       setDate('');
@@ -213,7 +213,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 
     // date and time completeness control
     if (!hour && !minute && !second && !date) {
-      await sendSMS(userName, recipients, contentSMS, '', '', 'api');
+      await sendSMS(userName, recipients, contentSMS, '', '', 'web');
       setContentSMS('');
       setRecipients([]);
       await getData();

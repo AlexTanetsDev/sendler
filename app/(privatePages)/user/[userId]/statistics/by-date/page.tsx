@@ -3,12 +3,11 @@
 import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import Image from 'next/image';
 
 import { getUserHistory } from '@/fetch-actions/historyFetchActions';
 import formatTableDate from '@/app/utils/formatTableDate';
 import Title from '@/components/Title';
-import HistoryPeriodForm from '@/components/forms/HistoryPeriodForm';
+import SendingPermissionBtn from '@/components/buttons/SendingPermissionBtn';
 import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
 import { IHistoryPeriod, IHistoryResponce } from '@/globaltypes/historyTypes';
 import { SmsStatusEnum } from '@/globaltypes/types';
@@ -76,7 +75,7 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
             <p className="w-[126px]">Статус </p>
             <p className="w-[160px]">Доставлено sms</p>
             <p className="w-[200px]">Доставлено номерів</p>
-            <p className="w-[73px]">Дії</p>
+            <p className="w-[113px]">Дії</p>
           </div>
           <ul>
             {userHistory &&
@@ -104,7 +103,13 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
                       {countSuccessfullySentNumbers(item)}/
                       {Array.from(new Set(item.clients)).length}
                     </p>
-                    <p className="w-[73px]">&#8212;</p>
+                    <p className="w-[113px]">
+                      {new Date(item.sending_group_date) > new Date() ? (
+                        <SendingPermissionBtn history={item} />
+                      ) : (
+                        <>&#8212;</>
+                      )}
+                    </p>
                   </li>
                 );
               })}
