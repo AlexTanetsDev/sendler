@@ -5,16 +5,16 @@ export default function convertClientsBirthdayFormat(userClients: IClientDatabas
 		switch (monthOfBirthday) {
 			case '01': return 'січня';
 			case '02': return 'лютого';
-			case '03': return 'березеня';
-			case '04': return 'квітеня';
-			case '05': return 'травеня';
+			case '03': return 'березня';
+			case '04': return 'квітня';
+			case '05': return 'травня';
 			case '06': return 'червня';
-			case '07': return 'липеня';
-			case '08': return 'серпеня';
+			case '07': return 'липня';
+			case '08': return 'серпня';
 			case '09': return 'вересня';
-			case '10': return 'жовтеня';
+			case '10': return 'жовтня';
 			case '11': return 'листопада';
-			case '12': return 'груденя';
+			case '12': return 'грудня';
 		}
 	};
 

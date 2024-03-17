@@ -131,3 +131,9 @@ set
     end
 where
     history_id = 22;
+
+    CREATE TABLE pdf_files (
+    id SERIAL PRIMARY KEY,
+    file_name TEXT NOT NULL,
+    file_data BYTEA
+);
