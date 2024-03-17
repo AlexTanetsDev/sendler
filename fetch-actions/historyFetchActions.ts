@@ -5,6 +5,7 @@ import {
   IHistoryResponce,
   IGetHistoryProps,
   IHistoryDetailsResponce,
+  ISendingHistoryResponce,
 } from '@/globaltypes/historyTypes';
 import { IGetUserHistory, IGetUserHistoryDetails } from './types';
 
@@ -26,8 +27,8 @@ export async function getUserHistory({ id, historyPeriod }: IGetHistoryProps) {
         start_date: historyPeriod?.startDate,
         end_date: historyPeriod?.endDate,
       },
-		});
-		
+    });
+
     if (response?.status !== 200) {
       return [];
     }
@@ -59,6 +60,20 @@ export async function getUserHistoryDetails(historyId: string) {
 
     const historyDetails: IHistoryDetailsResponce[] = response.data.history;
     return historyDetails;
+  } catch (error: any) {
+    console.log(error.message);
+  }
+}
+
+export async function toggleSendingPermission(historyId: number) {
+  try {
+    const response = await api.patch<
+      ISendingHistoryResponce,
+      AxiosResponse<ISendingHistoryResponce>
+    >(`api/sending-history/${historyId}`);
+
+    const history: ISendingHistoryResponce = response.data;
+    return history;
   } catch (error: any) {
     console.log(error.message);
   }

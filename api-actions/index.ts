@@ -1,4 +1,3 @@
-
 export { default as fetchUserClientsTel } from './fetchUserClientsTel';
 export { default as fetchUserClients } from './fetchUserClients';
 export { default as insertNewGroup } from './insertNewGroup';
@@ -25,6 +24,6 @@ export { default as fetchUser } from './fetchUser';
 export { default as fetchUserHistory } from './fetchUserHistory';
 export { default as fetchUserHistoryDetails } from './fetchUserHistoryDetails';
 export { default as insertNewUserHistory } from './insertNewUserHistory';
-export { default as fetchHistoryId } from "./fetchHistoryId";
-export { default as deleteHistoryId } from "./deleteHistoryId";
-
+export { default as fetchHistoryId } from './fetchHistoryId';
+export { default as deleteHistoryId } from './deleteHistoryId';
+export { default as updateSendingPermission } from './updateSendingPermission';
