@@ -234,7 +234,6 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
     });
     setIsDisabled(false);
   };
->>>>>>> 8233d7f9e799e30a9039fef92b4347811e8ebcfb
 
   // get array of group's name
   const getData = async () => {
