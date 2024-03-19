@@ -62,12 +62,12 @@ CREATE TABLE
         history_id SERIAL,
         sending_group_date TIMESTAMPTZ DEFAULT NOW():: timestamp(0),
         PRIMARY KEY (history_id),
-        send_method send_method_type DEFAULT 'veb',
+        send_method send_method_type DEFAULT 'api',
 				text_sms TEXT NOT NULL,
 				sending_permission BOOLEAN DEFAULT TRUE
     );
 
-CREATE TYPE send_method_type AS ENUM('veb', 'api');
+CREATE TYPE send_method_type AS ENUM('web', 'api');
 
 CREATE TABLE sending_members (
     group_id INT REFERENCES send_groups (group_id) ON DELETE CASCADE, history_id INT REFERENCES sending_history (history_id) ON DELETE CASCADE, PRIMARY KEY (group_id, history_id)
