@@ -2,7 +2,7 @@
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 import LogOutButton from './buttons/LogOutButton';
-import { privateNavigation, publicNavigation } from '@/data/data';
+import { privateNavigation, privateNavigationAdmin, publicNavigation } from '@/data/data';
 import LoginButton from './buttons/LoginButon';
 import LogoNav from './LogoNav';
 import { useState } from 'react';
@@ -15,6 +15,8 @@ const Nav = () => {
   const pathName = usePathname();
   const userId = session?.user.user_id;
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const admin = status === 'authenticated' && session.user.user_role === 'admin';
 
   const toggleModal = () => {
     if (isModalOpen) {
@@ -63,18 +65,34 @@ const Nav = () => {
         <ul
           className={` hidden lg:py-0 lg:h-auto bg-bgFooter lg:flex lg:justify-center lg:items-center lg:gap-10 lg:static lg:bg-transparent lg:w-auto text-center lg:text-lg text-[22px] font-medium lg:font-normal leading-[33px] lg:leading-6 pt-[189px] pl-[84px] lg:pt-0 Lg:pl-0`}
         >
-          {status === 'authenticated'
-            ? privateNavigation.map(({ id, title, path }) => (
-                <li key={id} className="mb-10 lg:mb-0">
-                  <Link
-                    href={`/user/${userId}/${path}`}
-                    className="hover:underline hover:underline-offset-4 py-4 transition-all"
-                  >
-                    {title}
-                  </Link>
-                </li>
-              ))
-            : publicNavigation.map(({ id, title, path }) => (
+          {status === 'authenticated' && (
+            <>
+              {admin
+                ? privateNavigationAdmin.map(({ id, title, path }) => (
+                    <li key={id} className="mb-10 lg:mb-0">
+                      <Link
+                        href={`${path}`}
+                        className="hover:underline hover:underline-offset-4 py-4 transition-all"
+                      >
+                        {title}
+                      </Link>
+                    </li>
+                  ))
+                : privateNavigation.map(({ id, title, path }) => (
+                    <li key={id} className="mb-10 lg:mb-0">
+                      <Link
+                        href={`/user/${userId}/${path}`}
+                        className="hover:underline hover:underline-offset-4 py-4 transition-all"
+                      >
+                        {title}
+                      </Link>
+                    </li>
+                  ))}
+            </>
+          )}
+          {status !== 'authenticated' && (
+            <>
+              {publicNavigation.map(({ id, title, path }) => (
                 <li className="mb-10 lg:mb-0" key={id}>
                   <Link
                     href={path}
@@ -86,6 +104,8 @@ const Nav = () => {
                   </Link>
                 </li>
               ))}
+            </>
+          )}
           {status === 'authenticated' ? <LogOutButton /> : <LoginButton />}
         </ul>
       </nav>
@@ -97,31 +117,47 @@ const Nav = () => {
           <div className=" mb-[120px] h-[49px]  ml-[-64px]">
             <LogoNav onClose={closeModal} />
           </div>
-          {status === 'authenticated'
-            ? privateNavigation.map(({ id, title, path }) => (
-                <li key={id} className="mb-10 lg:mb-0">
-                  <Link
-                    onClick={toggleModal}
-                    href={`/user/${userId}/${path}`}
-                    className="hover:underline hover:underline-offset-4 py-4 transition-all"
-                  >
-                    {title}
-                  </Link>
-                </li>
-              ))
-            : publicNavigation.map(({ id, title, path }) => (
-                <li className="mb-10 lg:mb-0" key={id}>
-                  <Link
-                    onClick={toggleModal}
-                    href={path}
-                    className={`hover:underline hover:underline-offset-4 py-4 transition-all ${
-                      pathName === path ? 'underline underline-offset-4' : 'no-underline'
-                    }`}
-                  >
-                    {title}
-                  </Link>
-                </li>
-              ))}
+          {status === 'authenticated' ? (
+            <>
+              {admin
+                ? privateNavigationAdmin.map(({ id, title, path }) => (
+                    <li key={id} className="mb-10 lg:mb-0">
+                      <Link
+                        onClick={toggleModal}
+                        href={`${path}`}
+                        className="hover:underline hover:underline-offset-4 py-4 transition-all"
+                      >
+                        {title}
+                      </Link>
+                    </li>
+                  ))
+                : privateNavigation.map(({ id, title, path }) => (
+                    <li key={id} className="mb-10 lg:mb-0">
+                      <Link
+                        onClick={toggleModal}
+                        href={`/user/${userId}/${path}`}
+                        className="hover:underline hover:underline-offset-4 py-4 transition-all"
+                      >
+                        {title}
+                      </Link>
+                    </li>
+                  ))}
+            </>
+          ) : (
+            publicNavigation.map(({ id, title, path }) => (
+              <li className="mb-10 lg:mb-0" key={id}>
+                <Link
+                  onClick={toggleModal}
+                  href={path}
+                  className={`hover:underline hover:underline-offset-4 py-4 transition-all ${
+                    pathName === path ? 'underline underline-offset-4' : 'no-underline'
+                  }`}
+                >
+                  {title}
+                </Link>
+              </li>
+            ))
+          )}
           {status === 'authenticated' ? (
             <LogOutButton onClick={toggleModal} />
           ) : (
