@@ -14,6 +14,13 @@ export const privateNavigation = [
   { id: 4, title: 'Особистий кабінет', path: '/account' },
 ];
 
+export const privateNavigationAdmin = [
+  { id: 1, title: 'Admin Home Page', path: '/admin' },
+  { id: 2, title: 'Sender Name Approved', path: '/sender-name-approved' },
+  { id: 3, title: 'General Statistics', path: '/general-statistics' },
+  { id: 4, title: 'Debts', path: '/debts' },
+];
+
 export const ArrayQuestions = [
   {
     id: 1,
