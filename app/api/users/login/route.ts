@@ -60,16 +60,10 @@ export async function POST(req: Request) {
 				);
 
 				const { user_password: disible, email: hiddenEmail, tel: hiddenTel, user_token:hiddenTokenclear,  ...rest } = userWithToken.rows[0];
-				
-				const cookie = serialize("token", token, {
-					httpOnly: true,
-					maxAge: 60 * 60 * 24, // Термін життя, наприклад, 24 години
-					path: "/", // Шлях доступу
-					sameSite: "strict", // Захист від CSRF-атак
-				});
+
 				return NextResponse.json(
 					{ rest, message: "User login successfully" },
-					{ status: 200, headers: { "Set-Cookie": cookie } }
+					{ status: 200 }
 				);
 			} else {
 				return NextResponse.json(

@@ -91,9 +91,12 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
                     </p>
                     <p className="w-[118px]">{item.user_name}</p>
                     <p className="w-[126px]">
-                      {item.recipient_status.every(item => item === 'fullfield')
-                        ? 'Доставлено'
-                        : 'Недоставлено'}
+                      {item.sending_group_date >= new Date() && item.sending_permission === true
+                        ? 'Заплановано'
+                        : item.sending_permission === false
+                        ? 'Зупинено'
+                        : item.sending_group_date < new Date() &&
+                          item.recipient_status.some(item => item === 'pending') ? 'Відправлено' : 'Завершено'}
                     </p>
                     <p className="w-[160px]">
                       {item.recipient_status.filter(item => item === 'fullfield').length}/
