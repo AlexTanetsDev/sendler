@@ -24,7 +24,7 @@ const Admin = () => {
   }, []);
 
   return (
-    <div className="sms-page-box">
+    <>
       <table className="mt-10 w-full border bg-priceTableBg">
         <thead>
           <tr className="bg-headerTable text-white text-xl font-roboto  leading-[30px]">
@@ -54,7 +54,7 @@ const Admin = () => {
           ))}
         </tbody>
       </table>
-    </div>
+    </>
   );
 };
 

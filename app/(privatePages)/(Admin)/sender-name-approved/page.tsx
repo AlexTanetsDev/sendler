@@ -38,7 +38,7 @@ const SenderNameApproved = () => {
   };
 
   return (
-    <div className="sms-page-box flex justify-center items-center">
+    <>
       <table className="mt-10 w-full border bg-priceTableBg">
         <thead>
           <tr className="bg-headerTable text-white text-xl font-roboto  leading-[30px]">
@@ -90,7 +90,7 @@ const SenderNameApproved = () => {
 </tbody>
 
       </table>
-    </div>
+    </>
   );
 };
 
