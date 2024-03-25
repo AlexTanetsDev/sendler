@@ -74,6 +74,8 @@ export default function HistoryDetails({
     }
   };
 
+  console.log(userHistoryDetails);
+
   return (
     <section className="container mx-auto">
       <Title type="h1" color="dark">
@@ -100,7 +102,18 @@ export default function HistoryDetails({
               <p className="mb-4 text-[#2366E8]">
                 {userHistoryDetails[0] ? userHistoryDetails[0]?.user_name : '-'}
               </p>
-              <p className="mb-4">Відіслано</p>
+              <p className="mb-4">
+                {userHistoryDetails.some(history => {
+                  history.recipient_status.some(status => status === 'pending');
+                })
+                  ? 'Відправлено'
+                  : userHistoryDetails[0]?.sending_group_date >= new Date() &&
+                    userHistoryDetails[0]?.sending_permission === true
+                  ? 'Заплановано'
+                  : userHistoryDetails[0]?.sending_permission === false
+                  ? 'Зупинено'
+                  : 'Завершено'}
+              </p>
               <p>Україна</p>
             </div>
             <div>

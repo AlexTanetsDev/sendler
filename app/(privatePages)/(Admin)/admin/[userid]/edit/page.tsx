@@ -4,7 +4,7 @@ type Props = {
   id:string
 }
 
-const Edit = ({id}: Props) => {
+const Edit = () => {
   return (
     <div>Edit</div>
   )
