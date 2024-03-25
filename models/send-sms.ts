@@ -1,6 +1,5 @@
-import Joi from "joi";
-import { ISendSMS } from "@/globaltypes/types";
-
+import Joi from 'joi';
+import { ISendSMS } from '@/globaltypes/types';
 
 export const schemaSendSMS: Joi.ObjectSchema<ISendSMS> = Joi.object({
 	userName: Joi.string().required().messages({
