@@ -27,4 +27,6 @@ export { default as fetchUserHistoryDetails } from './fetchUserHistoryDetails';
 export { default as insertNewUserHistory } from './insertNewUserHistory';
 export { default as fetchHistoryId } from "./fetchHistoryId";
 export { default as deleteHistoryId } from "./deleteHistoryId";
+export { default as fetchQuantitySentSms } from "./fetchQuantitySentSms";
+export { default as fetchDeliveredSentSms } from "./fetchQuantityDeliveredSms";
 

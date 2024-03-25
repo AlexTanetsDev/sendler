@@ -1,3 +1,4 @@
+import { number } from "joi";
 import { DateTime } from "next-auth/providers/kakao";
 
 export type ErrorType = 400 | 401 | 403 | 404 | 409;
@@ -39,6 +40,8 @@ export interface IUser extends ITel, IUserId {
 	user_create_date: Date;
 	alfa_names_active: string[];
 	alfa_names_disable: string[];
+	sent_sms: number;
+	delivered_sms: number
 };
 
 export interface IUserAlfaName {
@@ -234,7 +237,8 @@ export interface ISendHistoryDatabase {
 	sending_group_date: Date,
 	send_method: 'api' | 'veb',
 	text_sms: string,
-	sending_permission: boolean
+	sending_permission: boolean,
+	userName: string
 };
 
 export interface ISmsIdentificatorsDatabase {

@@ -16,7 +16,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 
 	if (user === null) {
 		return NextResponse.json(
-			{ message: `User not found` },
+			{ message: `User information not found` },
 			{ status: 404 }
 		);
 	}
@@ -115,7 +115,6 @@ export async function PUT(req: Request, { params }: { params: { id: string } }):
 }
 
 //update password
-
 export async function PATCH(
 	req: Request,
 	{ params }: { params: { id: string } }

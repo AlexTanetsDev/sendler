@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
@@ -25,7 +25,7 @@ import EmailColorLinkBtn from '@/components/buttons/EmailColorLinkBtn';
 import Modal from '@/components/Modal/Modal';
 import OfferContract from '@/components/OfferContact';
 
-const MailingList = ({ params }: { params: { userId: string } }) => {
+export default function MailingList({ params }: { params: { userId: string } }) {
 	const userId = Number(params.userId);
 
 	const [charCount, setCharCount] = useState<number>(0);
@@ -526,6 +526,3 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		</>
 	);
 };
-
-
-export default MailingList;
