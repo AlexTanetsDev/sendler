@@ -1,6 +1,6 @@
 import { PricesArray } from '@/data/data';
 
-const Table = () => {
+const TablePrices = () => {
   return (
     <table className="lg:w-[746px] w-[626px] ml-auto bg-priceTableBg  border border-priceTableBorderColor lg:ml-6">
       <thead className="bg-lightGreen">
@@ -25,4 +25,4 @@ const Table = () => {
   );
 };
 
-export default Table;
+export default TablePrices;

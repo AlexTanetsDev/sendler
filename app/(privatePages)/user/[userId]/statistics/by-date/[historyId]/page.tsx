@@ -2,11 +2,12 @@
 
 import { useState, useCallback, useEffect } from 'react';
 import Image from 'next/image';
-import XLSX from 'xlsx';
+import * as XLSX from 'xlsx/xlsx.mjs';
 import Title from '@/components/Title';
 import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
 import { getUserHistoryDetails } from '@/fetch-actions/historyFetchActions';
 import { IHistoryDetailsResponce } from '@/globaltypes/historyTypes';
+import Link from 'next/link';
 
 export default function HistoryDetails({
   params,
@@ -36,19 +37,35 @@ export default function HistoryDetails({
 
       userHistoryDetails.forEach(history => {
         formatedHistory.push({
-          tel: history.tel,
-          date: new Date(history.sending_group_date).toLocaleDateString('uk-UA', {
-            timeZone: 'UTC',
+          ['Одержувач']: history.tel,
+          ['Відправник']: history.user_name,
+          ['Відправлено']: new Date(history.sending_group_date).toLocaleDateString('uk-UA', {
+            year: 'numeric',
+            month: 'numeric',
+            day: 'numeric',
+            hour: 'numeric',
+            minute: 'numeric',
+            second: 'numeric',
           }),
-          countSMS: history.recipient_status.length,
-          status: history.recipient_status.every(item => item === 'fullfield')
+          ['Статус']: history.recipient_status.every(item => item === 'fullfield')
             ? 'Доставлено'
             : 'Недоставлено',
+          ['Текст повідомлення']: history.text_sms,
         });
       });
 
       const keysObject = Object.keys(formatedHistory[0]);
-      const ws = XLSX.utils.json_to_sheet(formatedHistory, { header: keysObject });
+      const ws = XLSX.utils.json_to_sheet(formatedHistory, {
+        header: keysObject,
+      });
+
+      if (!ws['!cols']) ws['!cols'] = [];
+      const range = XLSX.utils.decode_range(ws['!ref']);
+      const width = 20;
+      for (let i = range.s.c; i <= range.e.c; i++) {
+        ws['!cols'][i] = { wch: width };
+      }
+
       const workbook = XLSX.utils.book_new();
       XLSX.utils.book_append_sheet(workbook, ws, 'Sheet 1');
       XLSX.writeFile(workbook, `Statistics.xlsx`);

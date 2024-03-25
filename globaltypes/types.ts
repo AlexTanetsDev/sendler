@@ -229,13 +229,13 @@ export interface ISendSMS {
 	date?: string,
 	time?: string,
 	contentSMS: string,
-	send_method: 'api' | 'veb'
+	send_method: 'api' | 'web'
 };
 
 export interface ISendHistoryDatabase {
 	history_id: number,
 	sending_group_date: Date,
-	send_method: 'api' | 'veb',
+	send_method: 'api' | 'web',
 	text_sms: string,
 	sending_permission: boolean,
 	userName: string
@@ -266,3 +266,31 @@ export interface IStatusSmsRes {
 	Price: number
 }
 
+export interface allUsers {
+  user_id: number;
+  user_name: string;
+  tel: string;
+  user_login: string;
+  balance: number;
+}
+
+export interface AlfaName {
+  alfa_name_id: number;
+  alfa_name: string;
+  user_id: number;
+  alfa_name_active: boolean;
+  alfa_name_param: boolean;
+}
+
+export interface combinedAlfaNameAndUser {
+	id:string;
+	balance: number;
+	tel: string;
+	user_active: boolean;
+	user_login: string;
+	email: string;
+	alfa_name_id: number;
+	alfa_name: string[] | null;
+	alfa_name_active: boolean;
+	user_id: number;
+}

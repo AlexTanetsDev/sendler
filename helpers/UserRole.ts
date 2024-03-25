@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const fetchUserId = async (login: string): Promise<string> => {
+export const fetchUserRole = async (login: string): Promise<string> => {
   try {
     const response = await axios.post(
       '/api/users',
@@ -12,7 +12,7 @@ export const fetchUserId = async (login: string): Promise<string> => {
       }
     );
 
-    return response.data.userIdAndRole.user_id;
+    return response.data.userIdAndRole.user_role;
   } catch (error) {
     throw new Error('Сталася помилка під час отримання User Id');
   }

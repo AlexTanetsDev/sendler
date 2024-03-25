@@ -11,6 +11,14 @@ export interface IHistoryResponce extends IHistoryId, IGroupName {
   text_sms?: string;
   user_name?: string;
   clients?: number[];
+  sending_permission?: boolean;
+}
+
+export interface ISendingHistoryResponce extends IHistoryId {
+  sending_group_date: Date;
+  send_method: string;
+  text_sms: string;
+  sending_permission: boolean;
 }
 
 export interface IHistoryDetailsResponce extends IHistoryId, IGroupName, ITel {
@@ -20,6 +28,7 @@ export interface IHistoryDetailsResponce extends IHistoryId, IGroupName, ITel {
   text_sms: string;
   user_name: string;
   client_id?: number;
+  sending_permission?: boolean;
 }
 
 export interface IHistoryProps {

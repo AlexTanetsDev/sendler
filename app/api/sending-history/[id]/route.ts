@@ -1,10 +1,17 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 import HttpError from '@/helpers/HttpError';
-import { getUserHistoryDetails } from '@/app/api/controllers/sending-history';
+import {
+  getUserHistoryDetails,
+  toggleSendingPermission,
+} from '@/app/api/controllers/sending-history';
 
 import { IErrorResponse, SmsStatusEnum } from '@/globaltypes/types';
-import { IHistoryDetailsProps, IHistoryDetailsResponce } from '@/globaltypes/historyTypes';
+import {
+  IHistoryDetailsProps,
+  IHistoryDetailsResponce,
+  ISendingHistoryResponce,
+} from '@/globaltypes/historyTypes';
 
 export async function GET(
   req: NextRequest,
@@ -33,6 +40,29 @@ export async function GET(
     });
 
     return NextResponse.json({ history: formatedHistory });
+  } catch (error: any) {
+    return NextResponse.json({ message: 'Server error', error: error.message }, { status: 500 });
+  }
+}
+
+export async function PATCH(
+  req: NextRequest,
+  { params }: { params: { id: string } }
+): Promise<NextResponse<IErrorResponse> | NextResponse<ISendingHistoryResponce>> {
+  try {
+    const historyId = params.id;
+
+    if (!historyId) {
+      return HttpError(400, `History Id required for updating sending permission`);
+    }
+
+    const result: null | ISendingHistoryResponce = await toggleSendingPermission(historyId);
+
+    if (!result) {
+      return HttpError(400, `Failed to update sending permission`);
+    }
+
+    return NextResponse.json( result );
   } catch (error: any) {
     return NextResponse.json({ message: 'Server error', error: error.message }, { status: 500 });
   }

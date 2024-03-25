@@ -62,7 +62,7 @@ CREATE TABLE
         history_id SERIAL,
         sending_group_date TIMESTAMPTZ DEFAULT NOW():: timestamp(0),
         PRIMARY KEY (history_id),
-        send_method send_method_type DEFAULT 'web',
+        send_method send_method_type DEFAULT 'api',
 				text_sms TEXT NOT NULL,
 				sending_permission BOOLEAN DEFAULT TRUE
     );
@@ -108,7 +108,6 @@ CREATE TABLE sms_identificators (
 CREATE TABLE sendler_name (
     alfa_name_id SERIAL, alfa_name TEXT NOT NULL DEFAULT 'Outlet', user_id INT REFERENCES users (user_id) ON DELETE CASCADE, alfa_name_active BOOLEAN DEFAULT FALSE, PRIMARY KEY (alfa_name_id)
 );
-
 CREATE OR REPLACE FUNCTION get_sent_sms_by_user(id 
 bigint) RETURNS bigint AS 
 $$
@@ -159,3 +158,4 @@ $$
 SQL; 
 
 ALTER TYPE send_method_type RENAME VALUE 'veb' TO 'web';
+
