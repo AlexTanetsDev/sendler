@@ -8,12 +8,20 @@ import Title from "@/components/Title";
 import { ISession } from "@/globaltypes/types";
 import { UpdateUserForm } from "@/components/forms/UpdateUserForm";
 import CreateAccount from "@/components/CreateAccount";
+import fetchQuantitySentSms from "@/api-actions/fetchQuantitySentSms";
+import fetchQuantityDeliveredSms from "@/api-actions/fetchQuantityDeliveredSms"
 
 export default async function UserAccountPage() {
 	const session: ISession | null = await getServerSession(options);
 	const balance = session?.user.balance;
 	const userId = session?.user.user_id;
-console.log('userId', userId);
+	let sentSms;
+	let deliveredSms;
+
+	if (userId) {
+		sentSms = await fetchQuantitySentSms(userId);
+		deliveredSms = await fetchQuantityDeliveredSms(userId);
+	};
 
 	return (
 		<>
@@ -27,18 +35,18 @@ console.log('userId', userId);
 					</div>
 					<div className='flex'>
 						<div className='w-52 mr-8'>Всього відправлено</div>
-						<div className='text-xl font-montserrat font-normal'>{balance} SMS</div>
+						<div className='text-xl font-montserrat font-normal'>{sentSms} SMS</div>
 					</div>
 					<div className='flex'>
 						<div className='w-52 mr-8'>Усього доставлено</div>
-						<div className='text-xl font-montserrat font-normal'>{balance} SMS</div>
+						<div className='text-xl font-montserrat font-normal'>{deliveredSms} SMS</div>
 					</div>
 				</div>
 			</div>
 			<div className='content-block mb-20 pl-[26px]'>
 				<Title type="accent-main_text" color="dark">Поповнити рахунок</Title>
 				<p className="mt-10 mb-3">Введіть потрібну кількість SMS</p>
-				<CreateAccount/>
+				<CreateAccount />
 				<p className="w-[906px] text-xl accent-main_text">Якщо Ви працюєте з ТОВ &quot;Інноваційні медіа рішення&quot; за договором як Юридична особа, то для виставлення рахунку Вам потрібно зв&apos;язатися з нами або зателефонувати нам за номером (097) 678-12-59.</p>
 			</div>
 			<div className='content-block mb-20'>

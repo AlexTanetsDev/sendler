@@ -124,9 +124,9 @@ export async function POST(request: Request) {
 
 		let res;
 		if (diff > 0) {
-			res = await addSendingHistory(groupIdArray, contentSMS, send_method, diffSecond);
+			res = await addSendingHistory(groupIdArray, contentSMS, send_method, userName, diffSecond);
 		} else {
-			res = await addSendingHistory(groupIdArray, contentSMS, send_method);
+			res = await addSendingHistory(groupIdArray, contentSMS, send_method, userName);
 		};
 
 		const { history_id } = res;

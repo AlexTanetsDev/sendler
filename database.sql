@@ -106,34 +106,56 @@ CREATE TABLE sms_identificators (
 );
 
 CREATE TABLE sendler_name (
-    alfa_name_id SERIAL, alfa_name TEXT NOT NULL DEFAULT 'Outlet', user_id INT REFERENCES users (user_id) ON DELETE CASCADE, PRIMARY KEY (alfa_name_id)
+    alfa_name_id SERIAL, alfa_name TEXT NOT NULL DEFAULT 'Outlet', user_id INT REFERENCES users (user_id) ON DELETE CASCADE, alfa_name_active BOOLEAN DEFAULT FALSE, PRIMARY KEY (alfa_name_id)
 );
+CREATE OR REPLACE FUNCTION get_sent_sms_by_user(id 
+bigint) RETURNS bigint AS 
+$$
+	SELECT COUNT(*)
+	FROM
+	    send_groups sg
+	    INNER JOIN users u ON u.user_id = sg.user_id
+	    INNER JOIN groups_members gm ON gm.group_id = sg.group_id
+	    INNER JOIN sending_members sm ON sm.group_id = sg.group_id
+	    INNER JOIN recipients_status rs ON rs.client_id = gm.client_id
+	    AND rs.history_id = sm.history_id
+	WHERE
+	    u.user_id = id $$ LANGUAGE
+SQL; 
 
-SELECT clients.client_id, clients.tel
-FROM clients
-    JOIN groups_members ON groups_members.client_id = clients.client_id
-    AND groups_members.group_id = 90;
+CREATE OR REPLACE FUNCTION get_delivered_sms_by_user
+(id bigint) RETURNS bigint AS 
+$$
+	SELECT COUNT(*)
+	FROM
+	    send_groups sg
+	    INNER JOIN users u ON u.user_id = sg.user_id
+	    INNER JOIN groups_members gm ON gm.group_id = sg.group_id
+	    INNER JOIN sending_members sm ON sm.group_id = sg.group_id
+	    INNER JOIN recipients_status rs ON rs.client_id = gm.client_id
+	    AND rs.history_id = sm.history_id
+	WHERE
+	    u.user_id = id
+	    AND recipient_status = 'fullfield' $$ LANGUAGE
+SQL; 
 
-INSERT INTO
-    sms_identificators (
-        history_id, client_id, identificator
-    )
-VALUES (5, 174, '12345'),
-    (5, 174, '123456') RETURNING *
+CREATE OR REPLACE FUNCTION get_paid_sms_by_user(id 
+bigint) RETURNS bigint AS 
+$$
+	SELECT SUM(sms_count)
+	FROM transactions_history
+	WHERE
+	    user_id = id
+	GROUP BY
+	    user_id $$ LANGUAGE
+SQL; 
 
-update recipients_status
-set
-    recipient_status = case client_id
-        when 174 then 'rejected'
-        when 175 then 'rejected'
-        when 176 then 'rejected'
-        else recipient_status
-    end
-where
-    history_id = 22;
+CREATE OR REPLACE FUNCTION get_user_balance(id bigint
+) RETURNS bigint AS 
+$$
+	SELECT
+	    get_paid_sms_by_user (id) - get_delivered_sms_by_user (id) $$ LANGUAGE
+SQL; 
 
-    CREATE TABLE pdf_files (
-    id SERIAL PRIMARY KEY,
-    file_name TEXT NOT NULL,
-    file_data BYTEA
-);
+ALTER TYPE send_method_type RENAME VALUE 'veb' TO 'web';
+

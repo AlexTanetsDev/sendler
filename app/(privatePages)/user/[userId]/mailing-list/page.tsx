@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useEffect, useCallback } from 'react';
 import Image from 'next/image';
 import { toast } from 'react-toastify';
@@ -531,3 +531,4 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 };
 
 export default MailingList;
+
