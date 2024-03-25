@@ -23,5 +23,5 @@ export const schemaSendSMS: Joi.ObjectSchema<ISendSMS> = Joi.object({
 		"string.pattern.base":
 			'Enter recipients, piease.',
 	}),
-	send_method: Joi.string().valid('api', 'veb').required(),
+	send_method: Joi.string().valid('api', 'web').required(),
 });

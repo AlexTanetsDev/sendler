@@ -229,13 +229,13 @@ export interface ISendSMS {
 	date?: string,
 	time?: string,
 	contentSMS: string,
-	send_method: 'api' | 'veb'
+	send_method: 'api' | 'web'
 };
 
 export interface ISendHistoryDatabase {
 	history_id: number,
 	sending_group_date: Date,
-	send_method: 'api' | 'veb',
+	send_method: 'api' | 'web',
 	text_sms: string,
 	sending_permission: boolean,
 	userName: string

@@ -3,7 +3,7 @@ import { QueryResult } from "pg";
 
 import { ISendHistoryDatabase } from "@/globaltypes/types";
 
-export const addSendingHistory = async (idArray: number[], text: string, method: 'api' | 'veb', userName: string, second?: number): Promise<ISendHistoryDatabase> => {
+export const addSendingHistory = async (idArray: number[], text: string, method: 'api' | 'web', userName: string, second?: number): Promise<ISendHistoryDatabase> => {
 	let res: QueryResult<ISendHistoryDatabase>;
 	// now() + interval '${second} second'
 	if (second) {
