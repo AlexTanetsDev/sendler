@@ -108,6 +108,7 @@ CREATE TABLE sms_identificators (
 CREATE TABLE sendler_name (
     alfa_name_id SERIAL, alfa_name TEXT NOT NULL DEFAULT 'Outlet', user_id INT REFERENCES users (user_id) ON DELETE CASCADE, alfa_name_active BOOLEAN DEFAULT FALSE, PRIMARY KEY (alfa_name_id)
 );
+
 CREATE OR REPLACE FUNCTION get_sent_sms_by_user(id 
 bigint) RETURNS bigint AS 
 $$
@@ -154,8 +155,8 @@ CREATE OR REPLACE FUNCTION get_user_balance(id bigint
 ) RETURNS bigint AS 
 $$
 	SELECT
-	    get_paid_sms_by_user (id) - get_delivered_sms_by_user (id) $$ LANGUAGE
+	    get_paid_sms_by_user (id) - get_delivered_sms_by_user (id) AS balance,
+	    $$ LANGUAGE
 SQL; 
 
 ALTER TYPE send_method_type RENAME VALUE 'veb' TO 'web';
-

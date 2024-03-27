@@ -1,11 +1,10 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { serialize } from "cookie";
 import db from "@/db";
 
 import { compare } from "bcrypt";
 
 import { generateToken } from "@/helpers/Users";
+import { fetchUserDeliveredSms, fetchUserPaidSms } from "@/api-actions";
 
 
 // login User
@@ -47,22 +46,32 @@ export async function POST(req: Request) {
 						{ message: "Token generation failed" },
 						{ status: 500 }
 					);
-				}
+				};
 				await db.query("UPDATE users SET  user_token = $1 where user_id = $2", [
 					token,
 					user_id,
 				]);
 
-				await db.query("UPDATE users SET balance = get_user_balance($1) where user_id = $1", [
-					user_id,
-				]);
-
+				let paidSms;
+				let deliveredSms;
+				let balance;
+				if (user_id) {
+					paidSms = await fetchUserPaidSms(user_id);
+					deliveredSms = await fetchUserDeliveredSms(user_id);
+					if (paidSms === null || paidSms === undefined) {
+						paidSms = 0;
+					};
+					if (deliveredSms === null || deliveredSms === undefined) {
+						deliveredSms = 0;
+					};
+					balance = paidSms - deliveredSms;
+					await db.query(`UPDATE users SET balance = ${balance} where user_id = ${user_id}`);
+				};
 				const userWithToken = await db.query(
 					"SELECT * FROM users WHERE user_id = $1",
 					[user_id]
 				);
-
-				const { user_password: disible, email: hiddenEmail, tel: hiddenTel, user_token:hiddenTokenclear,  ...rest } = userWithToken.rows[0];
+				const { user_password: disible, email: hiddenEmail, tel: hiddenTel, user_token: hiddenTokenclear, ...rest } = userWithToken.rows[0];
 				return NextResponse.json(
 					{ rest, message: "User login successfully" },
 					{ status: 200 }
