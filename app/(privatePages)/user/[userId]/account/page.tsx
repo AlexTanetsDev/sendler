@@ -22,9 +22,13 @@ export default async function UserAccountPage() {
 		paidSms = await fetchUserPaidSms(userId);
 		sentSms = await fetchUserSentSms(userId);
 		deliveredSms = await fetchUserDeliveredSms(userId);
-		if (paidSms !== null && deliveredSms !== null) {
-			balance = paidSms - deliveredSms;
+		if (paidSms === null || paidSms === undefined) {
+			paidSms = 0;
 		};
+		if (deliveredSms === null || deliveredSms === undefined) {
+			deliveredSms = 0;
+		};
+		balance = paidSms - deliveredSms;
 	};
 
 	return (

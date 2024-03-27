@@ -58,10 +58,14 @@ export async function POST(req: Request) {
 				if (user_id) {
 					paidSms = await fetchUserPaidSms(user_id);
 					deliveredSms = await fetchUserDeliveredSms(user_id);
-					if (paidSms !== null && deliveredSms !== null) {
-						balance = paidSms - deliveredSms;
-						await db.query(`UPDATE users SET balance = ${balance} where user_id = ${user_id}`);
+					if (paidSms === null || paidSms === undefined) {
+						paidSms = 0;
 					};
+					if (deliveredSms === null || deliveredSms === undefined) {
+						deliveredSms = 0;
+					};
+					balance = paidSms - deliveredSms;
+					await db.query(`UPDATE users SET balance = ${balance} where user_id = ${user_id}`);
 				};
 				const userWithToken = await db.query(
 					"SELECT * FROM users WHERE user_id = $1",
