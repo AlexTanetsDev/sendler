@@ -1,16 +1,23 @@
-"use client"
+'use client';
 
-import { fetchUser } from "@/api-actions";
-import TablePaymentHistory from "@/components/TablePaymentHistory";
-import TableUserInfo from "@/components/TableUserInfo";
-import { getUser } from "@/fetch-actions/usersFetchActions";
-import { IUser } from "@/globaltypes/types";
-import { useEffect, useState } from "react";
+import TablePaymentHistory from '@/components/TablePaymentHistory';
+import TableUserInfo from '@/components/TableUserInfo';
+import DescUserForm from '@/components/forms/DescUserForm';
+import { getUser } from '@/fetch-actions/usersFetchActions';
+import { IUser } from '@/globaltypes/types';
+import { DeleteUser } from '@/helpers/fetchUserId';
 
-const Detail = ({ params }: { params: { userid: string} }) => {
-  const userId = Number(params.userid);
-  const [user, setUser] = useState<IUser | null>();
-console.log(user);
+import { useEffect, useState } from 'react';
+
+const Detail = ({ params }: { params: { userId: string } }) => {
+  const userId = Number(params.userId);
+  const [user, setUser] = useState<IUser>();
+  const [isUpdated, setisUpdated] = useState(false);
+
+  const handleDelete = async (userId: number) => {
+    await DeleteUser(userId);
+    setisUpdated(prevIsUpdate => !prevIsUpdate);
+  };
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -23,13 +30,18 @@ console.log(user);
     };
 
     fetchUserData();
-  }, [userId]);
-  
+  }, [userId, isUpdated]);
 
-  return <div className="flex">
-  <TablePaymentHistory/>
-  <TableUserInfo/>
-  </div>;
+  return (
+    <>
+      {' '}
+      <TablePaymentHistory userId={userId} />
+      <div className="flex mt-10 justify-between items-center">
+        {user && <TableUserInfo user={user} handleDelete={handleDelete} />}
+        {user && <DescUserForm userId={userId} />}
+      </div>
+    </>
+  );
 };
 
 export default Detail;

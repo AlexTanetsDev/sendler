@@ -1,5 +1,6 @@
 import db from '@/db';
 import { INewDataUser } from '@/globaltypes/types';
+import axios from 'axios';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 
 const SECRET_KEY = process.env.SECRET_KEY;

@@ -36,6 +36,7 @@ const SenderNameApproved = () => {
     await ActiveAlfaName(id);
     setisUpdated(prevIsUpdate => !prevIsUpdate);
   };
+console.log("isLoading",isLoading);
 
   return (
     <>
@@ -50,45 +51,48 @@ const SenderNameApproved = () => {
             <th className=" border px-4 py-3 font-normal">Видалити</th>
           </tr>
         </thead>
-        <tbody>
-  {OnlyNotActiveAlfaNames.length === 0 ? (
-    <tr className="text-center">
-      <td colSpan={6} className="py-4 px-3 border font-montserrat text-xl">
-      Ви не маєте жодних альфа-імен для активації
-      </td>
-    </tr>
-  ) : (
-    OnlyNotActiveAlfaNames.map(elem => (
-      <tr className="text-center" key={elem.alfa_name_id}>
-        <td className="py-4 px-3 border font-montserrat text-xl">{elem.user_login}</td>
-        <td className="py-4 px-3 border font-montserrat text-xl">{elem.alfa_name}</td>
-        <td className="py-4 px-3 border font-montserrat text-xl">{elem.email}</td>
-        <td className="py-4 px-3 border font-montserrat text-xl">{elem.tel}</td>
-        <td className="py-4 px-3 border font-montserrat text-xl">
-          <button
-            className={`row-table__btn px-2 ${isLoading ? 'text-slate-400 hover:bg-slate-500' : ''}`}
-            onClick={async () => {
-              await handleActivateAlfaName(elem?.alfa_name_id);
-            }}
-            disabled={isLoading}
-          >
-            Активувати
-          </button>
-        </td>
-        <td className="py-4 px-3 border font-montserrat text-xl">
-          <button
-            className={`row-table__btn px-2 ${isLoading ? 'text-slate-400 hover:bg-slate-500' : ''}`}
-            onClick={async () => await handleDelete(elem?.alfa_name_id)}
-            disabled={isLoading}
-          >
-            Видалити
-          </button>
-        </td>
-      </tr>
-    ))
-  )}
-</tbody>
-
+       { !isLoading && <tbody>
+          {OnlyNotActiveAlfaNames.length === 0 ? (
+            <tr className="text-center">
+              <td colSpan={6} className="py-4 px-3 border font-montserrat text-xl">
+                Ви не маєте жодних альфа-імен для активації
+              </td>
+            </tr>
+          ) : (
+            OnlyNotActiveAlfaNames.map(elem => (
+              <tr className="text-center" key={elem.alfa_name_id}>
+                <td className="py-4 px-3 border font-montserrat text-xl">{elem.user_login}</td>
+                <td className="py-4 px-3 border font-montserrat text-xl">{elem.alfa_name}</td>
+                <td className="py-4 px-3 border font-montserrat text-xl">{elem.email}</td>
+                <td className="py-4 px-3 border font-montserrat text-xl">{elem.tel}</td>
+                <td className="py-4 px-3 border font-montserrat text-xl">
+                  <button
+                    className={`row-table__btn px-2 ${
+                      isLoading ? 'text-slate-400 hover:bg-slate-500' : ''
+                    }`}
+                    onClick={async () => {
+                      await handleActivateAlfaName(elem?.alfa_name_id);
+                    }}
+                    disabled={isLoading}
+                  >
+                    Активувати
+                  </button>
+                </td>
+                <td className="py-4 px-3 border font-montserrat text-xl">
+                  <button
+                    className={`row-table__btn px-2 ${
+                      isLoading ? 'text-slate-400 hover:bg-slate-500' : ''
+                    }`}
+                    onClick={async () => await handleDelete(elem?.alfa_name_id)}
+                    disabled={isLoading}
+                  >
+                    Видалити
+                  </button>
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>}
       </table>
     </>
   );

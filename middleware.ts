@@ -29,6 +29,7 @@ export const config = {
 		"/update-group/:path*",
 		"/sending-history/:path*",
 		"/user/:path*",
+		"/admin/:path*",
 		// "/api/:path*",
 	],
 };
