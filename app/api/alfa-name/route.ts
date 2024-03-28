@@ -63,12 +63,12 @@ export async function DELETE(req: Request) {
 }
 
 export async function PUT() {
-  try {
+  // try {
     const getAllUsersAlfaNames = await db.query(
-      'SELECT balance, tel, user_active, user_login, email, alfa_name_id,  alfa_name, alfa_name_active, users.user_id  FROM  users  FULL OUTER JOIN sendler_name ON sendler_name.user_id = users.user_id;'
+      'SELECT balance, tel, user_active, user_login, email, alfa_name_id,  alfa_name, alfa_name_active, users.user_id, description  FROM  users  FULL OUTER JOIN sendler_name ON sendler_name.user_id = users.user_id;'
     );
 
-    const users = await db.query('SELECT * FROM users');
+    const users = await db.query('SELECT balance, tel, user_active, user_login, email, user_id, description FROM users');
     const alfaNames = await db.query('SELECT * FROM sendler_name');
 
     const mappedUsers = users.rows.map(user => {
@@ -101,7 +101,7 @@ export async function PUT() {
         { status: 200 }
       );
     }
-  } catch (error) {
-    return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
-  }
+  // } catch (error) {
+  //   return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
+  // }
 }

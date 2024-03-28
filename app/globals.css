@@ -132,6 +132,10 @@ footer {
   @apply w-[110px] py-[3px] hover:bg-blueHoverBtn hover:text-white hover:border-transparent text-base  text-center font-roboto font-normal border border-headerTable rounded-xl;
 }
 
+.row-table__btn_delete {
+  @apply  py-[3px] hover:bg-blueHoverBtn hover:text-white hover:border-transparent text-base  text-center font-roboto font-normal border border-headerTable rounded-xl;
+}
+
 .row-table-disable__btn {
   @apply w-[110px] py-[3px]  text-base  text-center text-rowBtnDisableText font-roboto font-normal border border-rowBtnDisableBorder rounded-xl;
 }

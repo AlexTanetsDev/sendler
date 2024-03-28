@@ -22,7 +22,6 @@ export default withAuth(
 export const config = {
   matcher: [
     // "/((?!login|api|_next/static|_next/image|favicon.ico).*)",
-
     // "/sms-sender/:path*",
     '/dashboard/:path*',
     '/create-group/:path*',
