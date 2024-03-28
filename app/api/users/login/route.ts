@@ -9,7 +9,6 @@ import { generateToken } from "@/helpers/Users";
 
 
 // login User
-
 export async function POST(req: Request) {
 	try {
 		const body = await req.json();
@@ -54,22 +53,19 @@ export async function POST(req: Request) {
 					user_id,
 				]);
 
+				await db.query("UPDATE users SET balance = get_user_balance($1) where user_id = $1", [
+					user_id,
+				]);
+
 				const userWithToken = await db.query(
 					"SELECT * FROM users WHERE user_id = $1",
 					[user_id]
 				);
 
 				const { user_password: disible, email: hiddenEmail, tel: hiddenTel, user_token:hiddenTokenclear,  ...rest } = userWithToken.rows[0];
-				
-				const cookie = serialize("token", token, {
-					httpOnly: true,
-					maxAge: 60 * 60 * 24, // Термін життя, наприклад, 24 години
-					path: "/", // Шлях доступу
-					sameSite: "strict", // Захист від CSRF-атак
-				});
 				return NextResponse.json(
 					{ rest, message: "User login successfully" },
-					{ status: 200, headers: { "Set-Cookie": cookie } }
+					{ status: 200 }
 				);
 			} else {
 				return NextResponse.json(

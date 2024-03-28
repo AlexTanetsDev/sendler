@@ -14,12 +14,16 @@ export default async function fetchUser(id: string): Promise<IUser | null> {
 
 	if (!res) {
 		return null;
-	}
+	};
 
 	const resAlfaNames: QueryResult<{ alfa_name: string, alfa_name_active: boolean }> = await db.query(`SELECT alfa_name, alfa_name_active
 	FROM sendler_name
 	WHERE user_id = ${id}`
 	);
+
+	if (!resAlfaNames) {
+		return null;
+	};
 
 	const alfaNamesActive: string[] = [];
 	const alfaNamesDisable: string[] = [];
@@ -30,7 +34,7 @@ export default async function fetchUser(id: string): Promise<IUser | null> {
 		} else {
 			alfaNamesDisable.push(resAlfaName.alfa_name)
 		}
-	}
+	};
 
 	const user = res.rows[0];
 	user.alfa_names_active = alfaNamesActive;

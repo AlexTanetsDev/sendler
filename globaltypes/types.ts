@@ -1,4 +1,7 @@
-import { DateTime } from 'next-auth/providers/kakao';
+
+import { number } from "joi";
+import { DateTime } from "next-auth/providers/kakao";
+
 
 export type ErrorType = 400 | 401 | 403 | 404 | 409;
 
@@ -30,17 +33,20 @@ export interface IUserId {
 }
 
 export interface IUser extends ITel, IUserId {
-  user_login: string;
-  email: string;
-  user_name: string;
-  user_active?: boolean;
-  user_password: string;
-  balance?: number;
-  user_token?: string | null;
-  user_create_date: Date;
-  alfa_names_active: string[];
-  alfa_names_disable: string[];
-}
+	user_login: string;
+	email: string;
+	user_name: string;
+	user_active?: boolean;
+	user_password: string;
+	balance?: number;
+	user_token?: string | null;
+	user_create_date: Date;
+	alfa_names_active: string[];
+	alfa_names_disable: string[];
+	sent_sms: number;
+	delivered_sms: number
+};
+
 
 export interface IUserAlfaName {
   alfa_name: string;
@@ -236,12 +242,13 @@ export interface ISendSMS {
 }
 
 export interface ISendHistoryDatabase {
-  history_id: number;
-  sending_group_date: Date;
-  send_method: 'api' | 'web';
-  text_sms: string;
-  sending_permission: boolean;
-}
+	history_id: number,
+	sending_group_date: Date,
+	send_method: 'api' | 'web',
+	text_sms: string,
+	sending_permission: boolean,
+	userName: string
+};
 
 export interface ISmsIdentificatorsDatabase {
   sms_id: number;
