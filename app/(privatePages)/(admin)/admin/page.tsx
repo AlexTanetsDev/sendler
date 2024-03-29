@@ -24,7 +24,7 @@ const Admin = () => {
   }, []);
 
   return (
-    <div className="sms-page-box">
+    <>
       <table className="mt-10 w-full border bg-priceTableBg">
         <thead>
           <tr className="bg-headerTable text-white text-xl font-roboto  leading-[30px]">
@@ -38,7 +38,7 @@ const Admin = () => {
         </thead>
         <tbody>
           {allUsersAlfaNames.map(elem => (
-            <tr className=" text-center" key={elem.user_id}>
+            <tr className={` text-center ${elem.user_active ? "" : ' bg-gray-500'}`} key={elem.user_id}>
               <td className="py-4 px-3 border font-montserrat text-xl">{elem.user_id}</td>
               <td className="py-4 px-3 border font-montserrat text-xl">
                 {elem?.alfa_name?.join(', ')}
@@ -49,12 +49,12 @@ const Admin = () => {
                 <ManageContactBtn id={elem.user_id}>Manage Contact </ManageContactBtn>{' '}
                 <DetailBtn id={elem.user_id}>Detail </DetailBtn>
               </td>
-              <td className="py-4 px-3 border font-montserrat text-sm"></td>
+              <td className="py-4 px-3 border font-montserrat text-sm">{elem.description}</td>
             </tr>
           ))}
         </tbody>
       </table>
-    </div>
+    </>
   );
 };
 

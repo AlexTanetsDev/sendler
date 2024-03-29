@@ -29,3 +29,4 @@ export const DeleteAlfaName = async (id: number) => {
     throw error;
   }
 };
+

@@ -40,3 +40,21 @@ export async function PUT(req: Request) {
     return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
   }
 }
+
+export async function PATCH(req: Request) {
+  try {
+    const body = await req.json();
+    const { user_id, description } = body;
+
+    await db.query('UPDATE users SET description = $1 WHERE user_id = $2', [description, user_id]);
+
+    return NextResponse.json(
+      { message: `Опис для користувача з ID ${user_id} оновлено` },
+      { status: 200 }
+    );
+  } catch (error) {
+    return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
+  }
+}
+
+

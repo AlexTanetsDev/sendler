@@ -1,12 +1,11 @@
 import React from 'react'
 
-type Props = {
-  id:string
-}
 
-const Edit = () => {
+const Edit = ({ params }: { params: { userId: string } }) => {
+  const userId = Number(params.userId);
+
   return (
-    <div>Edit</div>
+    <div>Edit {userId}</div>
   )
 }
 
