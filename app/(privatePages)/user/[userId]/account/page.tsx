@@ -8,19 +8,27 @@ import Title from "@/components/Title";
 import { ISession } from "@/globaltypes/types";
 import { UpdateUserForm } from "@/components/forms/UpdateUserForm";
 import CreateAccount from "@/components/CreateAccount";
-import fetchQuantitySentSms from "@/api-actions/fetchQuantitySentSms";
-import fetchQuantityDeliveredSms from "@/api-actions/fetchQuantityDeliveredSms"
+import { fetchUserDeliveredSms, fetchUserPaidSms, fetchUserSentSms } from "@/api-actions";
 
 export default async function UserAccountPage() {
 	const session: ISession | null = await getServerSession(options);
-	const balance = session?.user.balance;
 	const userId = session?.user.user_id;
 	let sentSms;
 	let deliveredSms;
+	let balance;
+	let paidSms;
 
 	if (userId) {
-		sentSms = await fetchQuantitySentSms(userId);
-		deliveredSms = await fetchQuantityDeliveredSms(userId);
+		paidSms = await fetchUserPaidSms(userId);
+		sentSms = await fetchUserSentSms(userId);
+		deliveredSms = await fetchUserDeliveredSms(userId);
+		if (paidSms === null || paidSms === undefined) {
+			paidSms = 0;
+		};
+		if (deliveredSms === null || deliveredSms === undefined) {
+			deliveredSms = 0;
+		};
+		balance = paidSms - deliveredSms;
 	};
 
 	return (
