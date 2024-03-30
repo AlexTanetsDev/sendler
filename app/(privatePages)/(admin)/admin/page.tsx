@@ -9,6 +9,11 @@ import { useEffect, useState } from 'react';
 const Admin = () => {
   const [allUsersAlfaNames, setallUsersAlfaNames] = useState<combinedAlfaNameAndUser[]>([]);
 
+
+  const sortAllUsersAlfaNames = allUsersAlfaNames.sort((a, b) => {
+    return a.user_active === b.user_active ? 0 : a.user_active ? -1 : 1;
+  });
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -37,7 +42,7 @@ const Admin = () => {
           </tr>
         </thead>
         <tbody>
-          {allUsersAlfaNames.map(elem => (
+          {sortAllUsersAlfaNames.map(elem => (
             <tr className={` text-center ${elem.user_active ? "" : ' bg-gray-500'}`} key={elem.user_id}>
               <td className="py-4 px-3 border font-montserrat text-xl">{elem.user_id}</td>
               <td className="py-4 px-3 border font-montserrat text-xl">

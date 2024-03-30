@@ -22,9 +22,23 @@ export function defineSum(smsCount: number) {
       pricePerSms = PricesArray[0].price;
   }
 
-  if (pricePerSms === null ) {
+  if (pricePerSms === null) {
     return 'Вартість СМС невідома';
   }
 
   return (smsCount * pricePerSms).toFixed(2);
+}
+
+export function defineSmsCount(sum: number) {
+  let smsCount = 0;
+
+  for (let i = PricesArray.length - 1; i >= 0; i--) {
+    const price = PricesArray[i].price;
+    if (price !== null && sum >= price) {
+      const smsForPrice = Math.floor(sum / price);
+      smsCount += smsForPrice;
+      sum -= smsForPrice * price;
+    }
+  }
+  return smsCount;
 }

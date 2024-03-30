@@ -13,7 +13,7 @@ const TableUserInfo = ({ user, handleDelete }: TableUserInfoProps) => {
   const formattedDate = date.toISOString().split('T')[0];
 
   return (
-    <table className="table-auto w-1/2 border bg-priceTableBg text-left">
+    <table className="table-auto w-1/2 border bg-priceTableBg text-left mr-5">
       <caption className=" text-2xl mb-2">Персональна інформація про користувача</caption>
       <tbody className=" text-center text-xl font-roboto  leading-[30px]">
         <tr>

@@ -34,12 +34,11 @@ const Detail = ({ params }: { params: { userId: string } }) => {
 
   return (
     <>
-      {' '}
-      <TablePaymentHistory userId={userId} />
-      <div className="flex mt-10 justify-between items-center">
+      <div className="flex mt-10 justify-center items-center">
         {user && <TableUserInfo user={user} handleDelete={handleDelete} />}
         {user && <DescUserForm userId={userId} />}
       </div>
+      <TablePaymentHistory userId={userId} />
     </>
   );
 };
