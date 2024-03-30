@@ -7,7 +7,9 @@ export async function POST(req: Request) {
     const { user_id, sms_count, money_count, paid } = body;
 
     const newPaid = await db.query(
-      'INSERT INTO transactions_history (user_id, sms_count, money_count,paid ) VALUES ($1, $2, $3, $4) RETURNING *',
+      `INSERT INTO transactions_history (user_id, sms_count, money_count, paid, transactions_date, paymant_date ) VALUES ($1, $2, $3, $4, NOW(), ${
+        paid ? 'NOW()' : 'NULL'
+      }) RETURNING *`,
       [user_id, sms_count, money_count, paid]
     );
 
@@ -57,4 +59,32 @@ export async function PATCH(req: Request) {
   }
 }
 
+export async function DELETE(req: Request) {
+  try {
+    const body = await req.json();
+    const { user_id, sms_count } = body;
+    const currentSmsCount = await db.query('SELECT balance FROM  users WHERE user_id = $1', [
+      user_id,
+    ]);
 
+    const summSms: number = currentSmsCount.rows[0].balance;
+
+    const newCountSms = Number(summSms) - Number(sms_count);
+
+    const newPaid = await db.query('UPDATE users SET balance = $1 WHERE user_id = $2 RETURNING *', [
+      newCountSms,
+      user_id,
+    ]);
+
+    const newUserPaid = newPaid.rows[0];
+
+    if (newUserPaid) {
+      return NextResponse.json(
+        { newUserPaid, message: `${sms_count} SMS було знято з користувача. ` },
+        { status: 200 }
+      );
+    }
+  } catch (error) {
+    return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
+  }
+}

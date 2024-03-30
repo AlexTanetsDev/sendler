@@ -57,11 +57,20 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
       return false;
     }
 
-		if (isChecked && contentSMS && recipients.length > 0 && date && hour && minute && second && isOfferContractChecked) {
-			return false;
-		}
-		return true;
-	};
+    if (
+      isChecked &&
+      contentSMS &&
+      recipients.length > 0 &&
+      date &&
+      hour &&
+      minute &&
+      second &&
+      isOfferContractChecked
+    ) {
+      return false;
+    }
+    return true;
+  };
 
   const disabledNamesVisible = (namesArray: string[] | undefined) => {
     if (namesArray) {
@@ -416,79 +425,83 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
               </div>
             </div>
           </div>
-        </div>
-        <span className="flex items-center gap-1">
-          {!isChecked ? (
-            <Image
-              src="/svg/checkbox-empty.svg"
-              width={24}
-              height={24}
-              alt="Check box"
-              onClick={handleClickChecked}
-            />
-          ) : (
-            <Image
-              src="/svg/checkbox-checked.svg"
-              width={24}
-              height={24}
-              alt="Check box checked"
-              onClick={handleClickChecked}
-            />
+          <span className="flex items-center gap-1">
+            {!isChecked ? (
+              <Image
+                src="/svg/checkbox-empty.svg"
+                width={24}
+                height={24}
+                alt="Check box"
+                onClick={handleClickChecked}
+              />
+            ) : (
+              <Image
+                src="/svg/checkbox-checked.svg"
+                width={24}
+                height={24}
+                alt="Check box checked"
+                onClick={handleClickChecked}
+              />
+            )}
+            Заплановати розсилання
+          </span>
+          {isChecked && (
+            <div className='mt-5 flex  items-center'>
+              {' '}
+              <label
+                htmlFor="calendar"
+                className="text-xl text-mainTextColor flex cursor-pointer "
+              >
+                Дата{' '}
+                <Image
+                  src="/svg/calendar.svg"
+                  width={24}
+                  height={24}
+                  alt="Check box"
+                  className="ml-2 mr-4"
+                />
+              </label>
+              <DatePicker
+                id="calendar"
+                selected={date ? new Date(date) : null}
+                onChange={handleChangeDate}
+                className="w-[250px] h-12 rounded-[18px] border border-inputBorder outline-none text-xl text-mainTextColor pr-[50px] pl-[50px] cursor-pointer"
+              />
+              <p className=" text-xl text-mainTextColor  ml-5 mr-2 ">Час</p>
+              <div className="flex gap-3 items-center">
+                <SelectTime
+                  openSelect={(a: boolean) => a}
+                  selectOptions={getTimeOptionsValues(0, 24)}
+                  getSelect={getHour}
+                  selectedOption={hour}
+                  widthValue={150}
+                  startValue=""
+                />
+                год
+                <SelectTime
+                  openSelect={(a: boolean) => a}
+                  selectOptions={getTimeOptionsValues(0, 60)}
+                  getSelect={getMinute}
+                  selectedOption={minute}
+                  widthValue={150}
+                  startValue=""
+                />
+                хв
+                <SelectTime
+                  openSelect={(a: boolean) => a}
+                  selectOptions={getTimeOptionsValues(0, 60)}
+                  getSelect={getSecond}
+                  selectedOption={second}
+                  widthValue={150}
+                  startValue=""
+                />
+                сек
+              </div>
+            </div>
           )}
-          Заплановане розсилання
-        </span>
-      </div>
-      {isChecked && (
-        <div className="sms-page-box mt-[80px]">
-          {' '}
-          <label
-            htmlFor="calendar"
-            className="text-xl text-mainTextColor mb-[13px] flex cursor-pointer"
-          >
-            Дата{' '}
-            <Image
-              src="/svg/calendar.svg"
-              width={24}
-              height={24}
-              alt="Check box"
-              className="ml-4"
-            />
-          </label>
-          <DatePicker
-            id="calendar"
-            selected={date ? new Date(date) : null}
-            onChange={handleChangeDate}
-            className="w-[250px] h-12 rounded-[18px] border border-inputBorder outline-none text-xl text-mainTextColor pr-[50px] pl-[50px] cursor-pointer"
-          />
-          <p className=" text-xl text-mainTextColor mb-[13px] mt-[32px]">{'Час (з,по)'}</p>
-          <div className="flex gap-3 mt-3 items-center">
-            <SelectTime
-              openSelect={(a: boolean) => a}
-              selectOptions={getTimeOptionsValues(0, 24)}
-              getSelect={getHour}
-              selectedOption={hour}
-              widthValue={150}
-              startValue=""
-            />
-            <SelectTime
-              openSelect={(a: boolean) => a}
-              selectOptions={getTimeOptionsValues(0, 60)}
-              getSelect={getMinute}
-              selectedOption={minute}
-              widthValue={150}
-              startValue=""
-            />
-            <SelectTime
-              openSelect={(a: boolean) => a}
-              selectOptions={getTimeOptionsValues(0, 60)}
-              getSelect={getSecond}
-              selectedOption={second}
-              widthValue={150}
-              startValue=""
-            />
-          </div>
         </div>
-      )}
+      </div>
+
       <div className="flex justify-center items-center flex-col mt-[50px]">
         <span className="flex items-center gap-1 mb-4">
           {!isOfferContractChecked ? (
@@ -531,4 +544,3 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 };
 
 export default MailingList;
-
