@@ -52,6 +52,7 @@ export async function POST(req: Request) {
 					user_id,
 				]);
 
+				await updateUserBalance(user_id);
 				const userWithToken = await db.query(
 					"SELECT * FROM users WHERE user_id = $1",
 					[user_id]
