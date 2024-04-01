@@ -10,12 +10,12 @@ import { schemaSendSMS } from "@/models/send-sms";
 import { IClientDatabase, ISendSMS, ISession } from "@/globaltypes/types";
 import { SmsStatusEnum } from "@/globaltypes/types";
 import fetchGroupIdByName from "@/api-actions/fetchGroupIdByName";
-import { deleteHistoryId, fetchGroupClients, fetchHistoryId } from "@/api-actions";
+import { deleteHistoryId, fetchGroupClients, fetchHistoryId, updateUserBalance } from "@/api-actions";
 import { QueryResult } from "pg";
 import { IGroupId } from "@/globaltypes/types";
 import { createGroup } from "../../controllers/sending-groups";
 import { createClient } from "../../controllers/clients";
-import { updateSmsStatusByHistoryId } from "@/app/utils/updateSmsStatusesByHistoryId";
+import { updateSmsStatusesByHistoryId } from "@/app/utils/updateSmsStatusesByHistoryId";
 
 export async function POST(request: Request) {
 	const session: ISession | null = await getServerSession(options);
@@ -78,18 +78,19 @@ export async function POST(request: Request) {
 		const clients: IClientDatabase[] = [];
 		const groupIdArray: number[] = [];
 
-		const UpdateSmsStatusByHistoryId = async (i: number) => {
+		const updateSmsStatusesInRealTime = async (i: number) => {
 			if (i <= 0) {
 				return 0;
 			};
 			let statuses: SmsStatusEnum[] = [];
 			setTimeout(async () => {
-				const res = await updateSmsStatusByHistoryId(history_id);
+				const res = await updateSmsStatusesByHistoryId(history_id);
 				if (res === null) { return 0 };
+				await updateUserBalance(userId);
 				res.map(item => {
 					statuses.push(item.recipient_status);
 				});
-				return await UpdateSmsStatusByHistoryId(i - 60000);
+				return await updateSmsStatusesInRealTime(i - 60000);
 			}, 60000);
 		};
 
@@ -137,7 +138,7 @@ export async function POST(request: Request) {
 				const smsQuerystr = createSmsUrlStr(clients, contentSMS);
 				const identificators = await smsSender(authRes, smsQuerystr, clients.length, userName);
 				await addSmsIdentificators(history_id, clients, identificators);
-				await UpdateSmsStatusByHistoryId(21600000);
+				await updateSmsStatusesInRealTime(21600000);
 				return;
 			};
 			await deleteHistoryId(history_id);
