@@ -36,7 +36,6 @@ const SenderNameApproved = () => {
     await ActiveAlfaName(id);
     setisUpdated(prevIsUpdate => !prevIsUpdate);
   };
-console.log("isLoading",isLoading);
 
   return (
     <>

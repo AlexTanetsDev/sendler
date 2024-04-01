@@ -28,14 +28,14 @@ const TablePaymentHistory = ({ userId }: Props) => {
     <table className="w-full border bg-priceTableBg">
       <caption className=" text-2xl text-right mb-2">Історія оплат користувача</caption>
       <thead>
-        <tr className="bg-headerTable text-white text-xl font-roboto  leading-[30px]">
+        <tr className="bg-headerTable text-white text-xl font-roboto leading-[30px]">
           <th className="border px-4 py-3 font-normal">Сума</th>
           <th className="border px-4 py-3 font-normal">SMS</th>
           <th className="border px-4 py-3 font-normal">Дата поповнення</th>
           <th className="border px-4 py-3 font-normal">Дата оплати</th>
         </tr>
       </thead>
-      <tbody className=" text-xl">
+      <tbody className=" text-xl text-center">
         {userTransactionsHistory ? (
           userTransactionsHistory.map(elem => (
             <tr key={elem.transaction_id}>

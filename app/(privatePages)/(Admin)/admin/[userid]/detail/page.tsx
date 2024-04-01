@@ -38,7 +38,7 @@ const Detail = ({ params }: { params: { userId: string } }) => {
         {user && <TableUserInfo user={user} handleDelete={handleDelete} />}
         {user && <DescUserForm userId={userId} />}
       </div>
-      <TablePaymentHistory userId={userId} />
+     {user && <TablePaymentHistory userId={userId} />}
     </>
   );
 };
