@@ -28,6 +28,7 @@ export const config = {
     '/update-group/:path*',
     '/sending-history/:path*',
     '/user/:path*',
+    '/admin/:path*',
     '/api/admin/:path*',
     '/api/alfa-name/:path*',
     '/api/clients/:path*',

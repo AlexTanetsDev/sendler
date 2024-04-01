@@ -1,11 +1,12 @@
-import React from 'react'
+import TableDebts from '@/components/TableDebts';
+import React from 'react';
 
-type Props = {}
-
-const Debts = (props: Props) => {
+const Debts = async () => {
   return (
-    <div>Debts</div>
-  )
-}
+    <div>
+      <TableDebts />
+    </div>
+  );
+};
 
-export default Debts
+export default Debts;

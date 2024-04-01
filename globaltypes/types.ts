@@ -151,10 +151,22 @@ export interface IPaymentHistory {
   transaction_id: number;
   user_id: number;
   sms_count: number;
-  money_count: number;
+  money_count: string;
   transactions_date: string;
-  paymant_date: string;
+  paymant_date: string| null;
+  paid:boolean;
 }
+
+export interface IDebts {
+  transaction_id: number;
+  user_id: number;
+  sms_count: number;
+  money_count: string;
+  transactions_date: string;
+  user_login:string;
+  paid:boolean;
+}
+
 
 export interface IGroupCreateReq extends IGroupName, IGroupUpdateReq {}
 

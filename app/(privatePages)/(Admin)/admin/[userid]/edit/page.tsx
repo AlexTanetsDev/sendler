@@ -1,6 +1,7 @@
 import { fetchUser } from '@/api-actions';
 import SMSReductionForm from '@/components/forms/SMSReductionForm';
 import UserPaymentForm from '@/components/forms/UserPaymentForm';
+import { allDebts } from '@/fetch-actions/debtsFetch';
 import Link from 'next/link';
 import React from 'react';
 
