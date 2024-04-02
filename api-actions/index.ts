@@ -30,4 +30,6 @@ export { default as fetchUserSentSms } from "./fetchUserSentSms";
 export { default as fetchUserDeliveredSms } from "./fetchUserDeliveredSms";
 export { default as updateSendingPermission } from './updateSendingPermission';
 export { default as fetchUserPaidSms } from './fetchUserPaidSms';
+export { default as fetchUserBalance } from './fetchUserBalance';
+export { default as updateUserBalance } from './updateUserBalance';
 
