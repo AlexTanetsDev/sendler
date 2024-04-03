@@ -1,7 +1,6 @@
 import db from "@/db";
-
+import { fetchUserDeliveredSms, fetchUserSentSms } from ".";
 import { QueryResult } from "pg";
-
 import { IUser } from "@/globaltypes/types";
 
 export default async function fetchUser(id: string): Promise<IUser | null> {
@@ -37,8 +36,17 @@ export default async function fetchUser(id: string): Promise<IUser | null> {
 	};
 
 	const user = res.rows[0];
+	const deliveredSms = await fetchUserDeliveredSms(Number(id));
+	if (!deliveredSms) {
+		return null;
+	};
+	const sentSms = await fetchUserSentSms(Number(id));
+	if (!sentSms) {
+		return null;
+	};
+	user.sent_sms = sentSms;
+	user.delivered_sms = deliveredSms;
 	user.alfa_names_active = alfaNamesActive;
 	user.alfa_names_disable = alfaNamesDisable;
-
 	return user;
 };
