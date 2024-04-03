@@ -65,10 +65,12 @@ const UpdateUserForm = ({ userId }: Props) => {
 	});
 
 	const getData = async () => {
-		const res = await getUser(userId);
-		if (res) {
-			setUserState(res.data.user);
-		}
+		if (userId) {
+			const res = await getUser(userId);
+			if (res) {
+				setUserState(res.data.user);
+			}
+		};
 	}
 
 	const memoizedgetData = useCallback(getData, [userId]);
