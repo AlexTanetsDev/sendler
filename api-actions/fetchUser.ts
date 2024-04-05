@@ -1,10 +1,11 @@
 import db from "@/db";
-import { fetchUserDeliveredSms, fetchUserSentSms } from ".";
+import { fetchUserAdjusmentSms, fetchUserDeliveredSms, fetchUserPaymentHistory, fetchUserSentSms, updateUserBalance } from ".";
 import { QueryResult } from "pg";
 import { IUser } from "@/globaltypes/types";
 
 export default async function fetchUser(id: string): Promise<IUser | null> {
 
+	await updateUserBalance(Number(id));
 	const res: QueryResult<IUser> = await db.query(
 		`SELECT balance, email, user_active, user_create_date, user_id, user_login, user_name, user_role, tel
   	FROM users
@@ -38,15 +39,27 @@ export default async function fetchUser(id: string): Promise<IUser | null> {
 	const user = res.rows[0];
 	const deliveredSms = await fetchUserDeliveredSms(Number(id));
 	if (!deliveredSms) {
-		return null;
+		user.delivered_sms = 0;
+	} else {
+		user.delivered_sms = deliveredSms;
 	};
 	const sentSms = await fetchUserSentSms(Number(id));
 	if (!sentSms) {
-		return null;
+		user.sent_sms = 0;
+	} else {
+		user.sent_sms = sentSms;
 	};
-	user.sent_sms = sentSms;
-	user.delivered_sms = deliveredSms;
+	const adjusmentSms = await fetchUserAdjusmentSms(Number(id));
+	if (adjusmentSms && user.balance) {
+		user.balance = user.balance - adjusmentSms;
+	};
+	let paymentHistory = await fetchUserPaymentHistory(Number(id));
+	if (!paymentHistory) {
+		paymentHistory = [];
+	};
+
 	user.alfa_names_active = alfaNamesActive;
 	user.alfa_names_disable = alfaNamesDisable;
+	user.paymentHistory = paymentHistory;
 	return user;
 };

@@ -32,4 +32,10 @@ export { default as updateSendingPermission } from './updateSendingPermission';
 export { default as fetchUserPaidSms } from './fetchUserPaidSms';
 export { default as fetchUserBalance } from './fetchUserBalance';
 export { default as updateUserBalance } from './updateUserBalance';
+export { default as fetchGroupIdByName } from './fetchGroupIdByName';
+export { default as fetchUserRejectedSmsByHistoryId } from './fetchUserRejectedSmsByHistoryId';
+export { default as fetchUserAdjusmentSms } from './fetchUserAdjusmentSms';
+export { default as fetchUserPaymentHistory } from './fetchUserPaymentHistory';
+
+
 

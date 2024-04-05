@@ -1,4 +1,5 @@
 -- Active: 1699360075140@@194.28.86.87@5432@bsender
+DROP TABLE user_sms_adjustments;
 
 DROP TABLE sendler_name;
 
@@ -109,6 +110,13 @@ CREATE TABLE sendler_name (
     alfa_name_id SERIAL, alfa_name TEXT NOT NULL DEFAULT 'Outlet', user_id INT REFERENCES users (user_id) ON DELETE CASCADE, alfa_name_active BOOLEAN DEFAULT FALSE, PRIMARY KEY (alfa_name_id)
 );
 
+CREATE TABLE user_sms_adjustments (
+	adjustment_id SERIAL,
+	create_time TIMESTAMPTZ DEFAULT NOW():: timestamp(0),
+	user_id INT REFERENCES users (user_id) ON DELETE CASCADE,
+	sms_count INTEGER
+);
+
 CREATE OR REPLACE FUNCTION get_sent_sms_by_user(id 
 bigint) RETURNS bigint AS 
 $$
@@ -138,6 +146,23 @@ $$
 	WHERE
 	    u.user_id = id
 	    AND recipient_status = 'fullfield' $$ LANGUAGE
+SQL; 
+
+CREATE OR REPLACE FUNCTION get_rejected_sms_by_user_and_history_id
+(id bigint, historyId bigint) RETURNS bigint AS 
+$$
+	SELECT COUNT(*)
+	FROM
+	    send_groups sg
+	    INNER JOIN users u ON u.user_id = sg.user_id
+	    INNER JOIN groups_members gm ON gm.group_id = sg.group_id
+	    INNER JOIN sending_members sm ON sm.group_id = sg.group_id
+	    INNER JOIN recipients_status rs ON rs.client_id = gm.client_id
+	    AND rs.history_id = sm.history_id
+	WHERE
+	    u.user_id = id
+	    AND rs.history_id = historyId
+	    AND recipient_status = 'rejected' $$ LANGUAGE
 SQL; 
 
 CREATE OR REPLACE FUNCTION get_paid_sms_by_user(id 
