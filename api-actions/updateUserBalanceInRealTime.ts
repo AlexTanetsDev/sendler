@@ -1,11 +1,10 @@
 import db from "@/db";
 import { fetchUserDeliveredSms, fetchUserPaidSms } from ".";
 
-export default async function updateUserBalance(id: number | undefined): Promise<number | undefined> {
-	let balance: number;
-	let paidSms: number | null;
-	let deliveredSms: number | null;
-
+export default async function updateUserBalanceInRealTime(id: number | undefined, history_id: number, quantity: number): Promise<number | undefined> {
+	let paidSms;
+	let deliveredSms;
+	let balance;
 	if (id) {
 		paidSms = await fetchUserPaidSms(id);
 		deliveredSms = await fetchUserDeliveredSms(id);
@@ -17,6 +16,6 @@ export default async function updateUserBalance(id: number | undefined): Promise
 		};
 		balance = paidSms - deliveredSms;
 		await db.query(`UPDATE users SET balance = ${balance} where user_id = ${id}`);
-		return balance;
 	};
+	return balance;
 };

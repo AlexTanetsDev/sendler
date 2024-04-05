@@ -7,15 +7,21 @@ import { addSendingHistory } from "../helpers/addSendingHistory";
 import { addSmsIdentificators } from "../helpers/addSmsIdetificators";
 import { smsSender } from "../helpers/smsSender";
 import { schemaSendSMS } from "@/models/send-sms";
-import { IClientDatabase, ISendSMS, ISession } from "@/globaltypes/types";
-import { SmsStatusEnum } from "@/globaltypes/types";
-import fetchGroupIdByName from "@/api-actions/fetchGroupIdByName";
-import { deleteHistoryId, fetchGroupClients, fetchHistoryId, updateUserBalance } from "@/api-actions";
-import { QueryResult } from "pg";
-import { IGroupId } from "@/globaltypes/types";
+import {
+	deleteHistoryId,
+	fetchGroupClients,
+	fetchHistoryId,
+	updateUserBalance,
+	fetchGroupIdByName
+} from "@/api-actions";
 import { createGroup } from "../../controllers/sending-groups";
 import { createClient } from "../../controllers/clients";
 import { updateSmsStatusesByHistoryId } from "@/app/utils/updateSmsStatusesByHistoryId";
+
+import { QueryResult } from "pg";
+import { SmsStatusEnum } from "@/globaltypes/types";
+import { IClientDatabase, ISendSMS, ISession } from "@/globaltypes/types";
+import { IGroupId } from "@/globaltypes/types";
 
 export async function POST(request: Request) {
 	const session: ISession | null = await getServerSession(options);

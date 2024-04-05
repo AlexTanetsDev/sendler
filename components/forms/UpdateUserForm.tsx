@@ -71,7 +71,7 @@ const UpdateUserForm = ({ userId }: Props) => {
 				setUserState(res.data.user);
 			}
 		};
-	}
+	};
 
 	const memoizedgetData = useCallback(getData, [userId]);
 
