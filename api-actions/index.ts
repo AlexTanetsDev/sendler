@@ -36,6 +36,7 @@ export { default as fetchGroupIdByName } from './fetchGroupIdByName';
 export { default as fetchUserRejectedSmsByHistoryId } from './fetchUserRejectedSmsByHistoryId';
 export { default as fetchUserAdjusmentSms } from './fetchUserAdjusmentSms';
 export { default as fetchUserPaymentHistory } from './fetchUserPaymentHistory';
+export { default as correctUserBalance } from './correctUserBalance';
 
 
 

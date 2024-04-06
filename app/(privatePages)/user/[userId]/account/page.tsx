@@ -29,7 +29,6 @@ export default function UserAccountPage() {
 	};
 
 	useEffect(() => {
-
 		const getData = async () => {
 			if (userId) {
 				const res = await getUser(userId);

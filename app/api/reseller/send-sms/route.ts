@@ -12,7 +12,9 @@ import {
 	fetchGroupClients,
 	fetchHistoryId,
 	updateUserBalance,
-	fetchGroupIdByName
+	correctUserBalance,
+	fetchGroupIdByName,
+	fetchUserRejectedSmsByHistoryId
 } from "@/api-actions";
 import { createGroup } from "../../controllers/sending-groups";
 import { createClient } from "../../controllers/clients";
@@ -26,6 +28,12 @@ import { IGroupId } from "@/globaltypes/types";
 export async function POST(request: Request) {
 	const session: ISession | null = await getServerSession(options);
 	const userId = session?.user.user_id;
+	if (!userId) {
+		return NextResponse.json(
+			{ message: "The userId doesn't exist." },
+			{ status: 400 }
+		);
+	}
 	try {
 		const body: ISendSMS = await request.json();
 
@@ -83,6 +91,8 @@ export async function POST(request: Request) {
 
 		const clients: IClientDatabase[] = [];
 		const groupIdArray: number[] = [];
+		let rejectedSms: number | null = 0;
+		let correctQuantitySms: number;
 
 		const updateSmsStatusesInRealTime = async (i: number) => {
 			if (i <= 0) {
@@ -92,7 +102,17 @@ export async function POST(request: Request) {
 			setTimeout(async () => {
 				const res = await updateSmsStatusesByHistoryId(history_id);
 				if (res === null) { return 0 };
-				await updateUserBalance(userId);
+				const resRejectedSms = await fetchUserRejectedSmsByHistoryId(userId, history_id);
+				console.log(resRejectedSms, rejectedSms);
+				if (rejectedSms !== null && resRejectedSms !== null) {
+					correctQuantitySms = resRejectedSms - rejectedSms;
+					console.log('correctQuantitySms', correctQuantitySms);
+				};
+				if (correctQuantitySms > 0) {
+					await correctUserBalance(userId, correctQuantitySms);
+					rejectedSms = resRejectedSms;
+				};
+				// await updateUserBalance(userId);
 				res.map(item => {
 					statuses.push(item.recipient_status);
 				});
@@ -144,6 +164,8 @@ export async function POST(request: Request) {
 				const smsQuerystr = createSmsUrlStr(clients, contentSMS);
 				const identificators = await smsSender(authRes, smsQuerystr, clients.length, userName);
 				await addSmsIdentificators(history_id, clients, identificators);
+				console.log('clients.length', -clients.length);
+				await correctUserBalance(userId, (-clients.length));
 				await updateSmsStatusesInRealTime(21600000);
 				return;
 			};

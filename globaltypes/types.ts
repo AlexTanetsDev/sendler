@@ -286,7 +286,7 @@ export interface IStatusSmsRes {
 	ReportedDateUtc: string;
 	TimeStampUtc: string;
 	Price: number;
-}
+};
 
 export interface allUsers {
 	user_id: number;
@@ -294,7 +294,7 @@ export interface allUsers {
 	tel: string;
 	user_login: string;
 	balance: number;
-}
+};
 
 export interface AlfaName {
 	alfa_name_id: number;
@@ -302,7 +302,7 @@ export interface AlfaName {
 	user_id: number;
 	alfa_name_active: boolean;
 	alfa_name_param: boolean;
-}
+};
 
 export interface combinedAlfaNameAndUser {
 	id: string;
@@ -316,4 +316,8 @@ export interface combinedAlfaNameAndUser {
 	alfa_name_active: boolean;
 	user_id: number;
 	description: string;
+};
+
+export interface IResUserRejectedSmsByHistoryId {
+	rejected_sms: number;
 }
