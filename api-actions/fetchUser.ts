@@ -5,7 +5,7 @@ import { IUser } from "@/globaltypes/types";
 
 export default async function fetchUser(id: string): Promise<IUser | null> {
 
-	await updateUserBalance(Number(id));
+	// await updateUserBalance(Number(id));
 	const res: QueryResult<IUser> = await db.query(
 		`SELECT balance, email, user_active, user_create_date, user_id, user_login, user_name, user_role, tel
   	FROM users
