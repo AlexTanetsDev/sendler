@@ -25,6 +25,9 @@ import { sendSMS } from '@/fetch-actions/smsFetchActions';
 import { isKyr } from '@/helpers/isKyr';
 import { getTimeOptionsValues } from '@/helpers/getTimeOptionsValues';
 
+import { IUser } from '@/globaltypes/types';
+import SendSmsModal from '@/components/SendSmsModal';
+
 const MailingList = ({ params }: { params: { userId: string } }) => {
 
 	const userId = Number(params.userId);
@@ -33,8 +36,6 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const [isChecked, setIsChecked] = useState<boolean>(false);
 	const [isOpened, setIsOpened] = useState<boolean>(false);
 	const [userName, setUserName] = useState<string>('Outlet');
-	const [userActiveNames, setActiveUserNames] = useState<string[] | undefined>([]);
-	const [userDisableNames, setDisableUserNames] = useState<string[] | undefined>([]);
 	const [groupName, setGroupName] = useState<string>('');
 	const [hour, setHour] = useState<string | undefined>('');
 	const [minute, setMinute] = useState<string | undefined>('');
@@ -47,7 +48,9 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
 	const [isOfferContractChecked, setIsOfferContractChecked] = useState(false);
 	const [isDisabled, setIsDisabled] = useState<boolean>(false);
+	const [user, setUser] = useState<IUser>();
 	// update page after update database
+
 	const getUpdate = () => {
 		setUpdate(!update);
 	};
@@ -70,12 +73,6 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 			return false;
 		};
 		return true;
-	};
-
-	const disabledNamesVisible = (namesArray: string[] | undefined) => {
-		if (namesArray) {
-			return namesArray?.length > 0;
-		}
 	};
 
 	// check select is opened
@@ -102,8 +99,9 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 	const getUserNamesArray = async (id: number) => {
 		const res = await getUser(userId);
 		const user = res?.data.user;
-		setActiveUserNames(user?.alfa_names_active);
-		setDisableUserNames(user?.alfa_names_disable);
+		if (user) {
+			setUser(user);
+		};
 	};
 
 	const getRecipients = (recipientsArray: (string | number)[]) => {
@@ -311,7 +309,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 						<div className="flex gap-8 items-center mt-3">
 							<Select
 								openSelect={(a: boolean) => a}
-								selectOptions={userActiveNames}
+								selectOptions={user?.alfa_names_active}
 								getSelect={getUserName}
 								selectedOption={userName}
 								widthValue={474}
@@ -330,12 +328,12 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 							/>
 						)}
 					</div>
-					{disabledNamesVisible(userDisableNames) && (
+					{(user?.alfa_names_disable)?.length && (
 						<div className="text-mainTextColor text-base font-montserrat">
 							<p className="mb-2 font-normal">Імена що знаходяться на узгодженні</p>
 							<ul className="w-64 h-32 flex flex-wrap gap-2  overflow-auto">
 								<RSC>
-									{userDisableNames?.map((item, index) => (
+									{user?.alfa_names_disable.map((item, index) => (
 										<li key={index} className="text-disableAlfaName">
 											{item}
 										</li>
@@ -531,13 +529,14 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 						<OfferContract />
 					</Modal>
 				</span>
-				<GreenButton
+				{/* <GreenButton
 					size="big"
 					onClick={handleClickSubmit}
 					isDisabled={setDisabledSendBtn() || isDisabled}
 				>
 					Надіслати
-				</GreenButton>
+				</GreenButton> */}
+				<SendSmsModal handleClickSubmit={handleClickSubmit} setDisabledSendBtn={setDisabledSendBtn} isDisabled={isDisabled} recipients={recipients} balance={user?.balance} />
 			</div>
 		</>
 	);

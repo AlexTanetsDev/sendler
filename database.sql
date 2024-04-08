@@ -117,6 +117,22 @@ CREATE TABLE user_sms_adjustments (
 	sms_count INTEGER
 );
 
+CREATE OR REPLACE FUNCTION get_sms_by_user(id bigint
+, smsType status_type) RETURNS bigint AS 
+$$
+	SELECT COUNT(*)
+	FROM
+	    send_groups sg
+	    INNER JOIN users u ON u.user_id = sg.user_id
+	    INNER JOIN groups_members gm ON gm.group_id = sg.group_id
+	    INNER JOIN sending_members sm ON sm.group_id = sg.group_id
+	    INNER JOIN recipients_status rs ON rs.client_id = gm.client_id
+	    AND rs.history_id = sm.history_id
+	WHERE
+	    u.user_id = id
+	    AND recipient_status = smsType $$ LANGUAGE
+SQL; 
+
 CREATE OR REPLACE FUNCTION get_sent_sms_by_user(id 
 bigint) RETURNS bigint AS 
 $$
@@ -163,6 +179,23 @@ $$
 	    u.user_id = id
 	    AND rs.history_id = historyId
 	    AND recipient_status = 'rejected' $$ LANGUAGE
+SQL; 
+
+CREATE OR REPLACE FUNCTION get_pending_sms_by_user(
+id bigint) RETURNS bigint AS 
+$$
+	SELECT COUNT(*)
+	FROM
+	    send_groups sg
+	    INNER JOIN users u ON u.user_id = sg.user_id
+	    INNER JOIN groups_members gm ON gm.group_id = sg.group_id
+	    INNER JOIN sending_members sm ON sm.group_id = sg.group_id
+	    INNER JOIN recipients_status rs ON rs.client_id = gm.client_id
+	    AND rs.history_id = sm.history_id
+	WHERE
+	    u.user_id = id
+	    AND rs.history_id = historyId
+	    AND recipient_status = 'pending' $$ LANGUAGE
 SQL; 
 
 CREATE OR REPLACE FUNCTION get_paid_sms_by_user(id 
