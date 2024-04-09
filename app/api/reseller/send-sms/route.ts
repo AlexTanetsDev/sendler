@@ -14,7 +14,8 @@ import {
 	updateUserBalance,
 	correctUserBalance,
 	fetchGroupIdByName,
-	fetchUserRejectedSmsByHistoryId
+	fetchUserRejectedSmsByHistoryId,
+	fetchUser
 } from "@/api-actions";
 import { createGroup } from "../../controllers/sending-groups";
 import { createClient } from "../../controllers/clients";
@@ -22,8 +23,7 @@ import { updateSmsStatusesByHistoryId } from "@/app/utils/updateSmsStatusesByHis
 
 import { QueryResult } from "pg";
 import { SmsStatusEnum } from "@/globaltypes/types";
-import { IClientDatabase, ISendSMS, ISession } from "@/globaltypes/types";
-import { IGroupId } from "@/globaltypes/types";
+import { IClientDatabase, ISendSMS, ISession, IGroupId } from "@/globaltypes/types";
 
 export async function POST(request: Request) {
 	const session: ISession | null = await getServerSession(options);
@@ -33,10 +33,13 @@ export async function POST(request: Request) {
 			{ message: "The userId doesn't exist." },
 			{ status: 400 }
 		);
-	}
+	};
+	const userData = await fetchUser(String(userId));
+	const balance = userData?.balance;
+
+	;
 	try {
 		const body: ISendSMS = await request.json();
-
 		const { error, value } = schemaSendSMS.validate(body);
 
 		if (error) {
@@ -103,22 +106,24 @@ export async function POST(request: Request) {
 				const res = await updateSmsStatusesByHistoryId(history_id);
 				if (res === null) { return 0 };
 				const resRejectedSms = await fetchUserRejectedSmsByHistoryId(userId, history_id);
-				console.log(resRejectedSms, rejectedSms);
-				if (rejectedSms !== null && resRejectedSms !== null) {
-					correctQuantitySms = resRejectedSms - rejectedSms;
-					console.log('correctQuantitySms', correctQuantitySms);
-				};
-				if (correctQuantitySms > 0) {
-					await correctUserBalance(userId, correctQuantitySms);
-					rejectedSms = resRejectedSms;
-				};
-				// await updateUserBalance(userId);
+				// console.log(resRejectedSms, rejectedSms);
+				// if (rejectedSms !== null && resRejectedSms !== null) {
+				// 	correctQuantitySms = resRejectedSms - rejectedSms;
+				// 	console.log('correctQuantitySms', correctQuantitySms);
+				// };
+				// if (correctQuantitySms > 0) {
+				// 	await correctUserBalance(userId, correctQuantitySms);
+				// 	rejectedSms = resRejectedSms;
+				// };
+				await updateUserBalance(userId);
 				res.map(item => {
 					statuses.push(item.recipient_status);
 				});
 				return await updateSmsStatusesInRealTime(i - 60000);
 			}, 60000);
 		};
+
+
 
 		for (let i = 0; i < recipients.length; i++) {
 			if (typeof recipients[i] === "number") {
@@ -149,6 +154,13 @@ export async function POST(request: Request) {
 			};
 		};
 
+		let clientsBalance: IClientDatabase[];
+		if (balance && clients.length > balance) {
+			clientsBalance = clients.slice(0, balance);
+		} else {
+			clientsBalance = clients;
+		};
+
 		let res;
 		if (diff > 0) {
 			res = await addSendingHistory(groupIdArray, contentSMS, send_method, userName, diffSecond);
@@ -161,11 +173,10 @@ export async function POST(request: Request) {
 		const sendSmsAgrigatorFunctions = async () => {
 			const { sending_permission } = await fetchHistoryId(history_id);
 			if (sending_permission) {
-				const smsQuerystr = createSmsUrlStr(clients, contentSMS);
-				const identificators = await smsSender(authRes, smsQuerystr, clients.length, userName);
-				await addSmsIdentificators(history_id, clients, identificators);
-				console.log('clients.length', -clients.length);
-				await correctUserBalance(userId, (-clients.length));
+				const smsQuerystr = createSmsUrlStr(clientsBalance, contentSMS);
+				const identificators = await smsSender(authRes, smsQuerystr, clientsBalance.length, userName);
+				await addSmsIdentificators(history_id, clientsBalance, identificators);
+				await correctUserBalance(userId, (-clientsBalance.length));
 				await updateSmsStatusesInRealTime(21600000);
 				return;
 			};
@@ -187,4 +198,4 @@ export async function POST(request: Request) {
 			{ status: 500, }
 		);
 	}
-}
+};

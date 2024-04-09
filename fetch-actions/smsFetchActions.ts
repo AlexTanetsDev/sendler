@@ -1,6 +1,8 @@
 import { AxiosResponse } from 'axios';
 import { axiosInstance } from '@/helpers/AxiosInstance';
 
+import { ISendSMS, IClientDatabase, IClientArray } from '@/globaltypes/types';
+
 const api = axiosInstance;
 
 export async function sendSMS(
@@ -32,4 +34,18 @@ export async function sendSMS(
 		return res;
 	} catch (error: any) { };
 };
+
+export async function getSendSmsClients(recipients: (string | number)[]) {
+	try {
+		const res = await api.post<IClientArray, AxiosResponse<IClientArray>, {
+			recipients: (string | number)[],
+		}>
+			(`/api/reseller/get-recipients`,
+				{
+					recipients,
+				});
+		return res.data.clients;
+	} catch (error: any) { };
+};
+
 

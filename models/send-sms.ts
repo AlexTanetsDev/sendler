@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { ISendSMS } from '@/globaltypes/types';
+import { ISendSMS, IGetSendSmsClients } from '@/globaltypes/types';
 
 export const schemaSendSMS: Joi.ObjectSchema<ISendSMS> = Joi.object({
 	userName: Joi.string().required().messages({
@@ -23,4 +23,11 @@ export const schemaSendSMS: Joi.ObjectSchema<ISendSMS> = Joi.object({
 			'Enter recipients, piease.',
 	}),
 	send_method: Joi.string().valid('api', 'web').required(),
+});
+
+export const schemaGetQuantitySendSMSRecipients: Joi.ObjectSchema<IGetSendSmsClients> = Joi.object({
+	recipients: Joi.array().items(Joi.string(), Joi.number()).required().messages({
+		"string.pattern.base":
+			'Enter recipients, piease.',
+	}),
 });

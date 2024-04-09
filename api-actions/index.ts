@@ -37,6 +37,8 @@ export { default as fetchUserRejectedSmsByHistoryId } from './fetchUserRejectedS
 export { default as fetchUserAdjusmentSms } from './fetchUserAdjusmentSms';
 export { default as fetchUserPaymentHistory } from './fetchUserPaymentHistory';
 export { default as correctUserBalance } from './correctUserBalance';
+export { default as fetchUserPendingSms } from './fetchUserPendingSms';
+
 
 
 

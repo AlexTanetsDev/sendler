@@ -65,6 +65,19 @@ export interface INewDataUser {
 	user_password: string;
 }
 
+export interface IGroup extends IGroupId, IGroupName, IUserId { }
+
+export interface IGroupData extends IClientDatabase, IGroupName { }
+
+export interface IUserChangePassword {
+	oldPassword: string;
+	newPassword: string;
+}
+
+export interface IClientsIdWithTel extends IClientId, ITel { }
+
+export type SmsStatusEnum = 'pending' | 'rejected' | 'fullfield';
+
 export interface IClient {
 	tel: string;
 	first_name?: string;
@@ -85,6 +98,16 @@ export interface IClientData {
 	parameter_2: string | undefined;
 }
 
+export interface IClientReq {
+	userId: number;
+	groupId: IGroupId;
+	client: IClient;
+}
+
+export interface IClientArray {
+	clients: IClientDatabase[];
+}
+
 export interface IClientInput extends IClient {
 	client_id?: number;
 	ua_date_of_birth?: string;
@@ -99,31 +122,20 @@ export interface IClientDatabase extends IClientId, IClient, IUserId {
 	total_count?: number;
 }
 
-export interface IGroup extends IGroupId, IGroupName, IUserId { }
-
-export interface IGroupData extends IClientDatabase, IGroupName { }
-
-export interface IUserChangePassword {
-	oldPassword: string;
-	newPassword: string;
-}
-
-export interface IClientsIdWithTel extends IClientId, ITel { }
-
-export type SmsStatusEnum = 'pending' | 'rejected' | 'fullfield';
-
-export interface IClientReq {
-	userId: number;
-	groupId: IGroupId;
-	client: IClient;
-}
-
 export interface IClientUpdateReq {
 	client: IClientDatabase;
 }
 
 export interface IClientsDeleteReq {
 	clientsId: IClientId[];
+}
+
+export interface IGroupUpdateReq {
+	clients: IClient[];
+}
+
+export interface IGroupEditReq {
+	clients: IClientId[];
 }
 
 export interface IClientId {
@@ -170,14 +182,6 @@ export interface IDebts {
 
 
 export interface IGroupCreateReq extends IGroupName, IGroupUpdateReq { }
-
-export interface IGroupUpdateReq {
-	clients: IClient[];
-}
-
-export interface IGroupEditReq {
-	clients: IClientId[];
-}
 
 export interface IUserChangePassword {
 	oldPassword: string;
@@ -252,6 +256,10 @@ export interface ISendSMS {
 	time?: string;
 	contentSMS: string;
 	send_method: 'api' | 'web';
+};
+
+export interface IGetSendSmsClients {
+	recipients: (string | number)[];
 }
 
 export interface ISendHistoryDatabase {
