@@ -45,6 +45,7 @@ export interface IUser extends ITel, IUserId {
 	alfa_names_disable: string[];
 	sent_sms: number;
 	delivered_sms: number;
+	pending_sms: number;
 	paymentHistory: IPaymentHistory[];
 };
 

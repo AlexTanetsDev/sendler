@@ -66,6 +66,10 @@ export default function UserAccountPage() {
 						<div className='w-52 mr-8'>Усього доставлено</div>
 						<div className='text-xl font-montserrat font-normal'>{user?.delivered_sms} SMS</div>
 					</div>
+					<div className='flex'>
+						<div className='w-52 mr-8'>В процесі відправки</div>
+						<div className='text-xl font-montserrat font-normal'>{user?.pending_sms} SMS</div>
+					</div>
 				</div>
 			</div>
 			<div className='content-block mb-20 pl-[26px]'>
