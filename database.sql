@@ -111,7 +111,7 @@ CREATE TABLE sendler_name (
 );
 
 CREATE TABLE user_sms_adjustments (
-	adjustment_id SERIAL,
+	adjustment_id SERIAL NOT NULL,
 	create_time TIMESTAMPTZ DEFAULT NOW():: timestamp(0),
 	user_id INT REFERENCES users (user_id) ON DELETE CASCADE,
 	sms_count INTEGER

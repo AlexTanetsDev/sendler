@@ -1,5 +1,5 @@
 import db from "@/db";
-import { fetchUserAdjusmentSms, fetchUserDeliveredSms, fetchUserPaymentHistory, fetchUserSentSms, updateUserBalance } from ".";
+import { fetchUserDeliveredSms, fetchUserPaymentHistory, fetchUserPendingSms, fetchUserSentSms, updateUserBalance } from ".";
 import { QueryResult } from "pg";
 import { IUser } from "@/globaltypes/types";
 
@@ -49,9 +49,11 @@ export default async function fetchUser(id: string): Promise<IUser | null> {
 	} else {
 		user.sent_sms = sentSms;
 	};
-	const adjusmentSms = await fetchUserAdjusmentSms(Number(id));
-	if (adjusmentSms && user.balance) {
-		user.balance = user.balance - adjusmentSms;
+	const pendingSms = await fetchUserPendingSms(Number(id));
+	if (!pendingSms) {
+		user.pending_sms = 0;
+	} else {
+		user.pending_sms = pendingSms;
 	};
 	let paymentHistory = await fetchUserPaymentHistory(Number(id));
 	if (!paymentHistory) {

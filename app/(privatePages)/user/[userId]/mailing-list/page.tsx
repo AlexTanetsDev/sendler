@@ -328,7 +328,7 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 							/>
 						)}
 					</div>
-					{(user?.alfa_names_disable)?.length && (
+					{!((user?.alfa_names_disable)?.length === undefined || (user?.alfa_names_disable)?.length === 0) && (
 						<div className="text-mainTextColor text-base font-montserrat">
 							<p className="mb-2 font-normal">Імена що знаходяться на узгодженні</p>
 							<ul className="w-64 h-32 flex flex-wrap gap-2  overflow-auto">
@@ -529,13 +529,6 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 						<OfferContract />
 					</Modal>
 				</span>
-				{/* <GreenButton
-					size="big"
-					onClick={handleClickSubmit}
-					isDisabled={setDisabledSendBtn() || isDisabled}
-				>
-					Надіслати
-				</GreenButton> */}
 				<SendSmsModal handleClickSubmit={handleClickSubmit} setDisabledSendBtn={setDisabledSendBtn} isDisabled={isDisabled} recipients={recipients} balance={user?.balance} />
 			</div>
 		</>
