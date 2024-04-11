@@ -46,6 +46,8 @@ export interface IUser extends ITel, IUserId {
 	sent_sms: number;
 	delivered_sms: number;
 	pending_sms: number;
+	paid_sms: number;
+	adjusment_sms: number;
 	paymentHistory: IPaymentHistory[];
 };
 

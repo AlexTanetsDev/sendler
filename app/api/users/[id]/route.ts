@@ -10,23 +10,29 @@ import { fetchUser } from "@/api-actions";
 
 
 export async function GET(req: Request, { params }: { params: { id: string } }) {
-	const id = params.id;
+	try {
+		const id = params.id;
 
-	const user = await fetchUser(id);
+		const user = await fetchUser(id);
+		if (!user) {
+			return NextResponse.json(
+				{ message: `User information not found` },
+				{ status: 500 }
+			);
+		}
 
-	if (user === null) {
+		if (user) {
+			return NextResponse.json(
+				{ user },
+				{ status: 200 }
+			);
+		};
+	} catch (error) {
 		return NextResponse.json(
-			{ message: `User information not found` },
-			{ status: 404 }
-		);
+			{ error, message: "Something went rong." },
+			{ status: 500 });
 	}
 
-	if (user) {
-		return NextResponse.json(
-			{ user },
-			{ status: 200 }
-		);
-	};
 };
 
 // update user
