@@ -21,9 +21,7 @@ export async function GET(req: Request, { params }: { params: { id: string } }):
 	try {
 		const id = params.id;
 
-		const user: IUser | NextResponse<{
-			error: string;
-		}> = await fetchUser(id);
+		const user: IUser | null = await fetchUser(id);
 		if (user === null) {
 			return NextResponse.json(
 				{ message: `User information not found` },

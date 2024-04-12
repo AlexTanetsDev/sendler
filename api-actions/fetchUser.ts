@@ -21,12 +21,10 @@ import {
 	IResPendingdSms
 } from "@/globaltypes/types";
 
-export default async function fetchUser(id: string): Promise<IUser | NextResponse<{
-	error: string;
-}>> {
+export default async function fetchUser(id: string): Promise<IUser | null> {
 	try {
 		if (!id) {
-			return HttpError(400, `Can not get user id.`);
+			return null;
 		};
 		await updateUserBalance(Number(id));
 		const res: QueryResult<IUser> = await db.query(
