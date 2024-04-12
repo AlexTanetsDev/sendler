@@ -1,33 +1,46 @@
 import db from "@/db";
-import { fetchUserDeliveredSms, fetchUserPaidSms, fetchUserPendingSms, fetchUserAdjusmentSms } from ".";
+
+import { QueryResult } from "pg";
+import {
+	fetchUserDeliveredSms,
+	fetchUserPaidSms,
+	fetchUserPendingSms,
+	fetchUserAdjusmentSms
+} from ".";
+import {
+	IResPaidSms,
+	IResDeliveredSms,
+	IResPendingdSms,
+	IResAjustmentSms
+} from "@/globaltypes/types";
 
 export default async function updateUserBalance(id: number | undefined): Promise<number | undefined | null> {
-	if (id) { return null; }
-	let balance: number;
-	let paidSms: number | null;
-	let deliveredSms: number | null;
-	let pendingSms: number | null;
-	let adjusmentSms: number | null;
+	try {
+		if (id === null || id === undefined) { return null; }
+		else {
+			let balance: number;
+			let paidSms: number;
+			let deliveredSms: number;
+			let pendingSms: number;
+			let adjusmentSms: number;
 
-	if (id) {
-		paidSms = await fetchUserPaidSms(id);
-		deliveredSms = await fetchUserDeliveredSms(id);
-		pendingSms = await fetchUserPendingSms(id);
-		adjusmentSms = await fetchUserAdjusmentSms(id);
-		if (paidSms === null) {
-			paidSms = 0;
+			const resPaidSms: QueryResult<IResPaidSms> = await fetchUserPaidSms(id);
+			paidSms = Number(resPaidSms.rows[0].paid_sms);
+
+			const resDeliveredSms: QueryResult<IResDeliveredSms> = await fetchUserDeliveredSms(id);
+			deliveredSms = Number(resDeliveredSms.rows[0].delevered_sms);
+
+			const resPendigSms: QueryResult<IResPendingdSms> = await fetchUserPendingSms(id);
+			pendingSms = Number(resPendigSms.rows[0].pending_sms);
+
+			const resAjustmentSms: QueryResult<IResAjustmentSms> = await fetchUserAdjusmentSms(id);
+			adjusmentSms = Number(resAjustmentSms.rows[0].sum);
+
+			balance = paidSms - deliveredSms - pendingSms - adjusmentSms;
+			await db.query(`UPDATE users SET balance = ${balance} WHERE user_id = ${id} RETURNING *`);
+			return balance;
 		};
-		if (deliveredSms === null) {
-			deliveredSms = 0;
-		};
-		if (pendingSms === null) {
-			pendingSms = 0;
-		}
-		if (adjusmentSms === null) {
-			adjusmentSms = 0;
-		}
-		balance = paidSms - deliveredSms - pendingSms - adjusmentSms;
-		await db.query(`UPDATE users SET balance = ${balance} where user_id = ${id}`);
-		return balance;
+	} catch (error: any) {
+		throw new Error(error.message);
 	};
 };

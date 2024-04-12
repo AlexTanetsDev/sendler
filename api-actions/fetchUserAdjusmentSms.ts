@@ -1,17 +1,13 @@
 import db from "@/db";
 
 import { QueryResult } from "pg";
+import { IResAjustmentSms } from "@/globaltypes/types";
 
-export default async function fetchUserAdjusmentSms(id: number): Promise<number | null> {
-	const res: QueryResult<any> = await db.query(
+export default async function fetchUserAdjusmentSms(id: number): Promise<QueryResult<IResAjustmentSms>> {
+	const res: QueryResult<IResAjustmentSms> = await db.query(
 		`SELECT SUM(sms_count)
 		FROM user_sms_adjustments
 		WHERE user_id = ${id}`
 	);
-	if (!res) {
-		return null;
-	};
-
-	const sentSms = Number(res.rows[0].sum);
-	return sentSms;
+	return res;
 };

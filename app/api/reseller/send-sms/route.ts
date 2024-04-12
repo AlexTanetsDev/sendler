@@ -14,7 +14,6 @@ import {
 	updateUserBalance,
 	correctUserBalance,
 	fetchGroupIdByName,
-	fetchUserRejectedSmsByHistoryId,
 	fetchUser
 } from "@/api-actions";
 import { createGroup } from "../../controllers/sending-groups";
@@ -23,9 +22,19 @@ import { updateSmsStatusesByHistoryId } from "@/app/utils/updateSmsStatusesByHis
 
 import { QueryResult } from "pg";
 import { SmsStatusEnum } from "@/globaltypes/types";
-import { IClientDatabase, ISendSMS, ISession, IGroupId } from "@/globaltypes/types";
+import {
+	IClientDatabase,
+	ISendSMS,
+	ISession,
+	IGroupId,
+	IUser
+} from "@/globaltypes/types";
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<NextResponse<{
+	message: string;
+}> | NextResponse<{
+	error: string;
+}>> {
 	const session: ISession | null = await getServerSession(options);
 	const userId = session?.user.user_id;
 	if (!userId) {
@@ -34,9 +43,17 @@ export async function POST(request: Request) {
 			{ status: 400 }
 		);
 	};
-	const userData = await fetchUser(String(userId));
-	const balance = userData?.balance;
+	const res: IUser | null = await fetchUser(String(userId));
+	let balance: number | undefined;
 
+	if (res === null) {
+		return NextResponse.json(
+			{ message: "Can not get user." },
+			{ status: 500 }
+		);
+	} else {
+		balance = res?.balance;
+	}
 	;
 	try {
 		const body: ISendSMS = await request.json();
@@ -94,8 +111,6 @@ export async function POST(request: Request) {
 
 		const clients: IClientDatabase[] = [];
 		const groupIdArray: number[] = [];
-		let rejectedSms: number | null = 0;
-		let correctQuantitySms: number;
 
 		const updateSmsStatusesInRealTime = async (i: number) => {
 			if (i <= 0) {
@@ -105,16 +120,6 @@ export async function POST(request: Request) {
 			setTimeout(async () => {
 				const res = await updateSmsStatusesByHistoryId(history_id);
 				if (res === null) { return 0 };
-				const resRejectedSms = await fetchUserRejectedSmsByHistoryId(userId, history_id);
-				// console.log(resRejectedSms, rejectedSms);
-				// if (rejectedSms !== null && resRejectedSms !== null) {
-				// 	correctQuantitySms = resRejectedSms - rejectedSms;
-				// 	console.log('correctQuantitySms', correctQuantitySms);
-				// };
-				// if (correctQuantitySms > 0) {
-				// 	await correctUserBalance(userId, correctQuantitySms);
-				// 	rejectedSms = resRejectedSms;
-				// };
 				await updateUserBalance(userId);
 				res.map(item => {
 					statuses.push(item.recipient_status);

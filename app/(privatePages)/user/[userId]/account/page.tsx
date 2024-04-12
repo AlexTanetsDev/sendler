@@ -52,37 +52,51 @@ export default function UserAccountPage() {
 		<>
 			<Title type='h2' color="dark">Особистий кабінет</Title>
 			<div className='content-block mb-20 mt-[50px] pl-[26px]'>
-				<Title type="accent-main_text" color="dark">Кількість СМС</Title>
-				<div className='flex flex-col gap-8 mt-10'>
-					<div className='flex'>
-						<div className='w-52 mr-8'>Баланс на рахунку</div>
-						<div className='text-xl font-montserrat font-normal'>{user?.balance} SMS</div>
+				<div className='mb-10'>
+					<Title type="accent-main_text" color="dark">Кількість СМС</Title>
+				</div>
+				<div className='flex gap-16'>
+					<div className='flex flex-col gap-8'>
+						<div className='flex'>
+							<div className='w-52 mr-2'>Проплачено СМС</div>
+							<div className='text-xl font-montserrat font-normal'>{user?.paid_sms} SMS</div>
+						</div>
+						<div className='flex'>
+							<div className='w-52 mr-2'>Скореговано СМС</div>
+							<div className='text-xl font-montserrat font-normal'>{user?.adjusment_sms} SMS</div>
+						</div>
+						<div className='flex'>
+							<div className='w-52 mr-2'>Баланс на рахунку</div>
+							<div className='text-xl font-montserrat font-normal'>{user?.balance} SMS</div>
+						</div>
 					</div>
-					<div className='flex'>
-						<div className='w-52 mr-8'>Всього відправлено</div>
-						<div className='text-xl font-montserrat font-normal'>{user?.sent_sms} SMS</div>
-					</div>
-					<div className='flex'>
-						<div className='w-52 mr-8'>Усього доставлено</div>
-						<div className='text-xl font-montserrat font-normal'>{user?.delivered_sms} SMS</div>
-					</div>
-					<div className='flex'>
-						<div className='w-52 mr-8'>В процесі відправки</div>
-						<div className='text-xl font-montserrat font-normal'>{user?.pending_sms} SMS</div>
+					<div className='flex flex-col gap-8'>
+						<div className='flex'>
+							<div className='w-52 mr-2'>Всього відправлено</div>
+							<div className='text-xl font-montserrat font-normal'>{user?.sent_sms} SMS</div>
+						</div>
+						<div className='flex'>
+							<div className='w-52 mr-2'>Усього доставлено</div>
+							<div className='text-xl font-montserrat font-normal'>{user?.delivered_sms} SMS</div>
+						</div>
+						<div className='flex'>
+							<div className='w-52 mr-2'>В процесі відправки</div>
+							<div className='text-xl font-montserrat font-normal'>{user?.pending_sms} SMS</div>
+						</div>
 					</div>
 				</div>
-			</div>
-			<div className='content-block mb-20 pl-[26px]'>
-				<Title type="accent-main_text" color="dark">Поповнити рахунок</Title>
-				<p className="mt-10 mb-3">Введіть потрібну кількість SMS</p>
-				<CreateAccount />
-				<p className="w-[906px] text-xl accent-main_text">Якщо Ви працюєте з ТОВ &quot;Інноваційні медіа рішення&quot; за договором як Юридична особа, то для виставлення рахунку Вам потрібно зв&apos;язатися з нами або зателефонувати нам за номером (097) 678-12-59.</p>
 			</div>
 			<div className='content-block mb-20'>
 				<div className="pl-[26px]">
 					<Title type="accent-main_text" color="dark">Історія платежів</Title>
 				</div>
 				{userId && <PaymentsList arrayUserPaymentHistory={user?.paymentHistory} />}
+			</div>
+			<div className='content-block mb-20 pl-[26px]'>
+				<Title type="accent-main_text" color="dark">Поповнити рахунок</Title>
+				<p className="mt-10 mb-3">Введіть потрібну кількість SMS</p>
+				<CreateAccount />
+				<p className="w-[906px] text-xl accent-main_text">Якщо Ви працюєте з ТОВ &quot;Інноваційні медіа рішення&quot; за договором як Юридична особа, то для виставлення рахунку Вам потрібно зв&apos;язатися з нами або зателефонувати нам за номером (097) 678-12-59.</p>
 			</div>
 			<UpdateUserForm userId={userId} />
 		</>
