@@ -25,11 +25,11 @@ export default function PaymentsList({ arrayUserPaymentHistory }: Props) {
 				))
 					:
 					<>
-						<tr className="h-12 border-b border-rowUnderLine">
+						<tr className="h-12 border-rowUnderLine">
 						</tr>
-						<tr className="h-12 border-b border-rowUnderLine">
+						<tr className="h-12 border-rowUnderLine">
 						</tr>
-						<tr className="h-12 border-b border-rowUnderLine">
+						<tr className="h-12 border-rowUnderLine">
 						</tr>
 					</>}
 			</tbody>

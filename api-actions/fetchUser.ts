@@ -1,11 +1,33 @@
 import db from "@/db";
+import HttpError from '@/helpers/HttpError';
 import { NextResponse } from "next/server";
-import { fetchUserAdjusmentSms, fetchUserDeliveredSms, fetchUserPaidSms, fetchUserPaymentHistory, fetchUserPendingSms, fetchUserSentSms, updateUserBalance } from ".";
+import {
+	fetchUserAdjusmentSms,
+	fetchUserDeliveredSms,
+	fetchUserPaidSms,
+	fetchUserPaymentHistory,
+	fetchUserPendingSms,
+	fetchUserSentSms,
+	updateUserBalance
+} from ".";
 import { QueryResult } from "pg";
-import { IUser } from "@/globaltypes/types";
+import {
+	IUser,
+	IResAjustmentSms,
+	IResPaidSms,
+	IPaymentHistory,
+	IResDeliveredSms,
+	IResSentdSms,
+	IResPendingdSms
+} from "@/globaltypes/types";
 
-export default async function fetchUser(id: string): Promise<IUser | null> {
+export default async function fetchUser(id: string): Promise<IUser | NextResponse<{
+	error: string;
+}>> {
 	try {
+		if (!id) {
+			return HttpError(400, `Can not get user id.`);
+		};
 		await updateUserBalance(Number(id));
 		const res: QueryResult<IUser> = await db.query(
 			`SELECT balance, email, user_active, user_create_date, user_id, user_login, user_name, user_role, tel
@@ -13,18 +35,10 @@ export default async function fetchUser(id: string): Promise<IUser | null> {
 		WHERE user_id = ${id}`
 		);
 
-		if (!res) {
-			return null;
-		};
-
 		const resAlfaNames: QueryResult<{ alfa_name: string, alfa_name_active: boolean }> = await db.query(`SELECT alfa_name, alfa_name_active
 	FROM sendler_name
 	WHERE user_id = ${id}`
 		);
-
-		if (!resAlfaNames) {
-			return null;
-		};
 
 		const alfaNamesActive: string[] = [];
 		const alfaNamesDisable: string[] = [];
@@ -38,47 +52,29 @@ export default async function fetchUser(id: string): Promise<IUser | null> {
 		};
 
 		const user = res.rows[0];
-		const deliveredSms = await fetchUserDeliveredSms(Number(id));
-		if (!deliveredSms) {
-			user.delivered_sms = 0;
-		} else {
-			user.delivered_sms = deliveredSms;
-		};
-		const sentSms = await fetchUserSentSms(Number(id));
-		if (!sentSms) {
-			user.sent_sms = 0;
-		} else {
-			user.sent_sms = sentSms;
-		};
-		const pendingSms = await fetchUserPendingSms(Number(id));
-		if (!pendingSms) {
-			user.pending_sms = 0;
-		} else {
-			user.pending_sms = pendingSms;
-		};
-		const paidSms = await fetchUserPaidSms(Number(id));
-		if (!paidSms) {
-			user.paid_sms = 0;
-		} else {
-			user.paid_sms = paidSms;
-		};
-		const adjusmentSms = await fetchUserAdjusmentSms(Number(id));
-		if (!adjusmentSms) {
-			user.adjusment_sms = 0;
-		} else {
-			user.adjusment_sms = adjusmentSms;
-		};
+		const deliveredSms: QueryResult<IResDeliveredSms> = await fetchUserDeliveredSms(Number(id));
+		user.delivered_sms = Number(deliveredSms.rows[0].delevered_sms);
 
-		let paymentHistory = await fetchUserPaymentHistory(Number(id));
-		if (!paymentHistory) {
-			paymentHistory = [];
-		};
+		const sentSms: QueryResult<IResSentdSms> = await fetchUserSentSms(Number(id));
+		user.sent_sms = Number(sentSms?.rows[0].sent_sms);
+
+		const pendingSms: QueryResult<IResPendingdSms> = await fetchUserPendingSms(Number(id));
+		user.pending_sms = Number(pendingSms?.rows[0].pending_sms);
+
+		const paidSms: QueryResult<IResPaidSms> = await fetchUserPaidSms(Number(id));
+		user.paid_sms = Number(paidSms?.rows[0].paid_sms);
+
+		const adjusmentSms: QueryResult<IResAjustmentSms> = await fetchUserAdjusmentSms(Number(id));
+		user.adjusment_sms = Number(adjusmentSms?.rows[0].sum);
+
+		let paymentHistory: QueryResult<IPaymentHistory> = await fetchUserPaymentHistory(Number(id));
+		user.paymentHistory = paymentHistory.rows;
 
 		user.alfa_names_active = alfaNamesActive;
 		user.alfa_names_disable = alfaNamesDisable;
-		user.paymentHistory = paymentHistory;
+
 		return user;
 	} catch (error: any) {
-		return error
+		throw new Error(error.message);
 	};
 };

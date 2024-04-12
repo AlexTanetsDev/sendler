@@ -9,12 +9,22 @@ import { IUser } from "@/globaltypes/types";
 import { fetchUser } from "@/api-actions";
 
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
+export async function GET(req: Request, { params }: { params: { id: string } }): Promise<NextResponse<{
+	message: string;
+}> | NextResponse<{
+	user: IUser | NextResponse<{
+		error: string;
+	}>;
+}> | NextResponse<{
+	error: any;
+}> | undefined> {
 	try {
 		const id = params.id;
 
-		const user = await fetchUser(id);
-		if (!user) {
+		const user: IUser | NextResponse<{
+			error: string;
+		}> = await fetchUser(id);
+		if (user === null) {
 			return NextResponse.json(
 				{ message: `User information not found` },
 				{ status: 500 }
@@ -27,9 +37,9 @@ export async function GET(req: Request, { params }: { params: { id: string } }) 
 				{ status: 200 }
 			);
 		};
-	} catch (error) {
+	} catch (error: any) {
 		return NextResponse.json(
-			{ error, message: "Something went rong." },
+			{ error: error.message },
 			{ status: 500 });
 	}
 

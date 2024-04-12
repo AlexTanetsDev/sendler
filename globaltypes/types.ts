@@ -332,3 +332,23 @@ export interface combinedAlfaNameAndUser {
 export interface IResUserRejectedSmsByHistoryId {
 	rejected_sms: number;
 }
+
+export interface IResAjustmentSms {
+	sum: string;
+};
+
+export interface IResPaidSms {
+	paid_sms: string;
+};
+
+export interface IResDeliveredSms {
+	delevered_sms: string;
+};
+
+export interface IResSentdSms {
+	sent_sms: string;
+};
+
+export interface IResPendingdSms {
+	pending_sms: string;
+};

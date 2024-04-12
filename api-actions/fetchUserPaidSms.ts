@@ -1,17 +1,10 @@
 import db from "@/db";
 
 import { QueryResult } from "pg";
+import { IResPaidSms } from "@/globaltypes/types";
 
-export default async function fetchUserPaidSms(id: number): Promise<number | null | undefined> {
-	try {
-		const res: QueryResult<any> = await db.query(`SELECT get_paid_sms_by_user (${id}) AS paid_sms`
-		);
-		if (!res) {
-			return null;
-		};
-
-		const paidSms = Number(res.rows[0].paid_sms);
-		return paidSms;
-	} catch (error) { };
-
+export default async function fetchUserPaidSms(id: number): Promise<QueryResult<IResPaidSms>> {
+	const res: QueryResult<IResPaidSms> = await db.query(`SELECT get_paid_sms_by_user (${id}) AS paid_sms`
+	);
+	return res;
 };

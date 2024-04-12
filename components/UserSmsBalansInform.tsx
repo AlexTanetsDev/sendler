@@ -43,7 +43,6 @@ export default function UserSmsInform({ session }: { session: ISession | Session
 		handleSendMessage();
 		socket.on("message", (user) => {
 			if (user) {
-				console.log('BALANCE COMPONENT', user.balance);
 				setUser(user);
 			};
 		});
