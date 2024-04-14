@@ -52,3 +52,8 @@ export interface IGetUserHistory {
 export interface IGetUserHistoryDetails {
   history: IHistoryDetailsResponce[];
 }
+
+export interface Option {
+  value: string;
+  label: string;
+}

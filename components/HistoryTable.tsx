@@ -18,6 +18,9 @@ export default function HistoryTable({ id }: Props) {
 
   const [userHistory, setUserHistory] = useState<IHistoryResponce[] | undefined>([]);
   const [historyPeriod, setHistoryPeriod] = useState<IHistoryPeriod | undefined>(undefined);
+console.log(userHistory);
+console.log("historyPeriod", historyPeriod);
+
 
   useEffect(() => {
     if (startDate && endDate) {

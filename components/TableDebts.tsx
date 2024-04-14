@@ -41,7 +41,7 @@ const TableDebts = () => {
       </thead>
       {debts && (
         <tbody className=" text-xl">
-          {debts ? (
+          {debts.length !== 0 ? (
             debts.map(elem => (
               <tr key={elem.transaction_id}>
                 <td className="py-4 px-3 border font-montserrat text-xl">{elem.user_login}</td>

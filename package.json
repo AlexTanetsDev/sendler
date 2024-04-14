@@ -1,6 +1,7 @@
 {
   "name": "sendler",
   "version": "0.1.0",
+  
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -15,6 +16,7 @@
     "autoprefixer": "10.4.15",
     "axios": "^1.5.1",
     "bcrypt": "^5.1.1",
+    "chart.js": "^4.4.2",
     "cookie": "^0.6.0",
     "eslint": "8.48.0",
     "eslint-config-next": "13.4.19",
@@ -26,6 +28,7 @@
     "pg": "^8.11.3",
     "postcss": "8.4.29",
     "react": "^18.2.0",
+    "react-chartjs-2": "^5.2.0",
     "react-datepicker": "^6.3.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.48.2",

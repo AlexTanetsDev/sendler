@@ -103,3 +103,18 @@ export const PricesArray = [
   { id: 6, count: '100000-499999', price: 0.7, desc: '(від 70 000 грн)' },
   { id: 7, count: '500000 i бiльше', price: null, desc: 'договірна' },
 ];
+
+export const months  = [
+  { id: 1, value: 'січень', label: 'Січень' },
+  { id: 2, value: 'лютий', label: 'Лютий' },
+  { id: 3, value: 'березень', label: 'Березень' },
+  { id: 4, value: 'квітень', label: 'Квітень' },
+  { id: 5, value: 'травень', label: 'Травень' },
+  { id: 6, value: 'червень', label: 'Червень' },
+  { id: 7, value: 'липень', label: 'Липень' },
+  { id: 8, value: 'серпень', label: 'Серпень' },
+  { id: 9, value: 'вересень', label: 'Вересень' },
+  { id: 10, value: 'жовтень', label: 'Жовтень' },
+  { id: 11, value: 'листопад', label: 'Листопад' },
+  { id: 12, value: 'грудень', label: 'Грудень' }
+];
