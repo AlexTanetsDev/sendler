@@ -201,33 +201,35 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 		setIsOfferContractChecked(!isOfferContractChecked);
 	};
 
-	const handleClickSubmit = async () => {
-		setIsDisabled(true);
-		if (hour && minute && second && date) {
-			await sendSMS(userName, recipients, contentSMS, date, `${hour}:${minute}:${second}`, 'api');
-			setContentSMS('');
-			setRecipients([]);
-			setDate('');
-			setHour('');
-			setMinute('');
-			setSecond('');
-			setIsChecked(false);
-			await getData();
-			getUpdate();
-			setIsDisabled(false);
-			return;
-		}
+  const handleClickSubmit = async () => {
+    setIsDisabled(true);
+    if (hour && minute && second && date) {
+      await sendSMS(userName, recipients, contentSMS, date, `${hour}:${minute}:${second}`, 'api');
+      setContentSMS('');
+      setRecipients([]);
+      setDate('');
+      setHour('');
+      setMinute('');
+      setSecond('');
+      setIsChecked(false);
+      await getData();
+      getUpdate();
+      setIsDisabled(false);
+      setIsOfferContractChecked(false)
+      return;
+    }
 
-		// date and time completeness control
-		if (!hour && !minute && !second && !date) {
-			await sendSMS(userName, recipients, contentSMS, '', '', 'api');
-			setContentSMS('');
-			setRecipients([]);
-			await getData();
-			getUpdate();
-			setIsDisabled(false);
-			return;
-		}
+    // date and time completeness control
+    if (!hour && !minute && !second && !date) {
+      await sendSMS(userName, recipients, contentSMS, '', '', 'api');
+      setContentSMS('');
+      setRecipients([]);
+      await getData();
+      getUpdate();
+      setIsDisabled(false);
+      setIsOfferContractChecked(false)
+      return;
+    }
 
 		toast.error('Введіть повну дату й час.', {
 			position: 'bottom-center',

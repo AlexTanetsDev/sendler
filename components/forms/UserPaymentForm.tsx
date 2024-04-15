@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { userPaymant } from '@/helpers/fetchUserId';
 import { EnterOnlyFigures } from '@/helpers/EnterOnlyFigures';
 import { defineSmsCount } from '@/helpers/DefinSum';
+import { fetchUserBalance, updateUserBalance } from '@/api-actions';
 
 type Props = {
   userId: number;
@@ -26,6 +27,8 @@ const UserPaymentForm = ({ userId }: Props) => {
 
     await userPaymant(userId, data.summ, String(SMS), isPaid);
     setInputValue('0');
+    
+    // fetchUserBalance(userId)
     reset();
   };
 

@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import db from '@/db';
+import { updateUserBalance } from '@/api-actions';
 
 
 export async function POST(req: Request) {
@@ -13,6 +14,7 @@ export async function POST(req: Request) {
       }) RETURNING *`,
       [user_id, sms_count, money_count, paid]
     );
+    await updateUserBalance(user_id);
 
     const newUserPaid = newPaid.rows[0];
 
@@ -64,7 +66,8 @@ export async function DELETE(req: Request) {
   try {
     const body = await req.json();
     const { user_id, sms_count } = body;
-    const currentSmsCount = await db.query('SELECT balance FROM  users WHERE user_id = $1', [
+
+    const currentSmsCount = await db.query('SELECT balance FROM  transactions_history WHERE user_id = $1', [
       user_id,
     ]);
 
@@ -76,6 +79,7 @@ export async function DELETE(req: Request) {
       newCountSms,
       user_id,
     ]);
+    await updateUserBalance(user_id);
 
     const newUserPaid = newPaid.rows[0];
 
