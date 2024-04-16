@@ -1,6 +1,5 @@
 import db from "@/db";
-import HttpError from '@/helpers/HttpError';
-import { NextResponse } from "next/server";
+
 import {
 	fetchUserAdjusmentSms,
 	fetchUserDeliveredSms,
@@ -8,7 +7,8 @@ import {
 	fetchUserPaymentHistory,
 	fetchUserPendingSms,
 	fetchUserSentSms,
-	updateUserBalance
+	updateUserBalance,
+	fetchUserRejectedSmsByUserId
 } from ".";
 import { QueryResult } from "pg";
 import {
@@ -18,7 +18,8 @@ import {
 	IPaymentHistory,
 	IResDeliveredSms,
 	IResSentdSms,
-	IResPendingdSms
+	IResPendingSms,
+	IResRejectedSms
 } from "@/globaltypes/types";
 
 export default async function fetchUser(id: string): Promise<IUser | null> {
@@ -37,20 +38,20 @@ export default async function fetchUser(id: string): Promise<IUser | null> {
 	FROM sendler_name
 	WHERE user_id = ${id}`);
 
-  if (!resAlfaNames) {
-    return null;
-  }
+		if (!resAlfaNames) {
+			return null;
+		}
 
 		const alfaNamesActive: string[] = [];
 		const alfaNamesDisable: string[] = [];
 
-  for (const resAlfaName of resAlfaNames.rows) {
-    if (resAlfaName.alfa_name_active) {
-      alfaNamesActive.push(resAlfaName.alfa_name);
-    } else {
-      alfaNamesDisable.push(resAlfaName.alfa_name);
-    }
-  }
+		for (const resAlfaName of resAlfaNames.rows) {
+			if (resAlfaName.alfa_name_active) {
+				alfaNamesActive.push(resAlfaName.alfa_name);
+			} else {
+				alfaNamesDisable.push(resAlfaName.alfa_name);
+			}
+		}
 		for (const resAlfaName of resAlfaNames.rows) {
 			if (resAlfaName.alfa_name_active) {
 				alfaNamesActive.push(resAlfaName.alfa_name)
@@ -66,8 +67,11 @@ export default async function fetchUser(id: string): Promise<IUser | null> {
 		const sentSms: QueryResult<IResSentdSms> = await fetchUserSentSms(Number(id));
 		user.sent_sms = Number(sentSms?.rows[0].sent_sms);
 
-		const pendingSms: QueryResult<IResPendingdSms> = await fetchUserPendingSms(Number(id));
+		const pendingSms: QueryResult<IResPendingSms> = await fetchUserPendingSms(Number(id));
 		user.pending_sms = Number(pendingSms?.rows[0].pending_sms);
+
+		const rejectedSms: QueryResult<IResRejectedSms> = await fetchUserRejectedSmsByUserId(Number(id));
+		user.rejected_sms = Number(rejectedSms?.rows[0].rejected_sms);
 
 		const paidSms: QueryResult<IResPaidSms> = await fetchUserPaidSms(Number(id));
 		user.paid_sms = Number(paidSms?.rows[0].paid_sms);
