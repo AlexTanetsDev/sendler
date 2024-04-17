@@ -10,6 +10,7 @@ export interface IHistoryResponce extends IHistoryId, IGroupName {
   recipient_status: SmsStatusEnum[];
   text_sms?: string;
   user_name?: string;
+  alfa_name?: string;
   clients?: number[];
   sending_permission?: boolean;
 }
@@ -19,6 +20,7 @@ export interface ISendingHistoryResponce extends IHistoryId {
   send_method: string;
   text_sms: string;
   sending_permission: boolean;
+  alfa_name?: string;
 }
 
 export interface IHistoryDetailsResponce extends IHistoryId, IGroupName, ITel {
@@ -26,6 +28,7 @@ export interface IHistoryDetailsResponce extends IHistoryId, IGroupName, ITel {
   send_method: string;
   recipient_status: SmsStatusEnum[];
   text_sms: string;
+  alfa_name?: string;
   user_name: string;
   client_id?: number;
   sending_permission?: boolean;
