@@ -7,7 +7,6 @@ import Title from '@/components/Title';
 import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
 import { getUserHistoryDetails } from '@/fetch-actions/historyFetchActions';
 import { IHistoryDetailsResponce } from '@/globaltypes/historyTypes';
-import Link from 'next/link';
 
 export default function HistoryDetails({
   params,
@@ -38,7 +37,7 @@ export default function HistoryDetails({
       userHistoryDetails.forEach(history => {
         formatedHistory.push({
           ['Одержувач']: history.tel,
-          ['Відправник']: history.user_name,
+          ['Відправник']: history.alfa_name,
           ['Відправлено']: new Date(history.sending_group_date).toLocaleDateString('uk-UA', {
             year: 'numeric',
             month: 'numeric',
@@ -74,8 +73,6 @@ export default function HistoryDetails({
     }
   };
 
-  console.log(userHistoryDetails);
-
   return (
     <section className="container mx-auto">
       <Title type="h1" color="dark">
@@ -100,7 +97,7 @@ export default function HistoryDetails({
             </div>
             <div className="mr-28 font-montserrat text-lg">
               <p className="mb-4 text-[#2366E8]">
-                {userHistoryDetails[0] ? userHistoryDetails[0]?.user_name : '-'}
+                {userHistoryDetails[0] ? userHistoryDetails[0]?.alfa_name : '-'}
               </p>
               <p className="mb-4">
                 {userHistoryDetails.some(history => {

@@ -89,14 +89,16 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
                     <p className="w-[130px] text-[#2366E8] text-ellipsis whitespace-nowrap overflow-hidden">
                       <Link href={`by-date/${item.history_id}`}>{item.text_sms}</Link>
                     </p>
-                    <p className="w-[118px]">{item.user_name}</p>
+                    <p className="w-[118px]">{item.alfa_name}</p>
                     <p className="w-[126px]">
                       {item.sending_group_date >= new Date() && item.sending_permission === true
                         ? 'Заплановано'
                         : item.sending_permission === false
                         ? 'Зупинено'
                         : item.sending_group_date < new Date() &&
-                          item.recipient_status.some(item => item === 'pending') ? 'Відправлено' : 'Завершено'}
+                          item.recipient_status.some(item => item === 'pending')
+                        ? 'Відправлено'
+                        : 'Завершено'}
                     </p>
                     <p className="w-[160px]">
                       {item.recipient_status.filter(item => item === 'fullfield').length}/
