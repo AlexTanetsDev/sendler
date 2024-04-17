@@ -6,7 +6,7 @@ interface ChartData {
   value: number | undefined;
 }
 
-const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#AF19FF', '#FF6347'];
+const COLORS = ['#0088FE','#FFBB28', '#00C49F' ];
 
 const renderCustomizedLabel = ({
   cx,
