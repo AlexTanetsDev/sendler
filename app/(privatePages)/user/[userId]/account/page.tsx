@@ -14,8 +14,6 @@ import { IUser } from '@/globaltypes/types';
 import React from 'react';
 import CircleDiagram from '@/components/CircleDiagram';
 
-
-
 export default function UserAccountPage() {
   const { data: session } = useSession();
 
@@ -53,15 +51,10 @@ export default function UserAccountPage() {
   }, [userId, message, roomName, NEXT_PUBLIC_SOCKET_URL]);
 
   const data = [
-    { name: 'Проплачено СМС', value: user?.paid_sms  },
-    { name: 'Скореговано СМС', value: user?.adjusment_sms },
-    { name: 'Баланс на рахунку', value: user?.balance },
-    { name: 'Всього відправлено', value: user?.sent_sms },
-    { name: 'Усього доставлено', value:  user?.delivered_sms },
-    { name: 'В процесі відправки', value: user?.pending_sms},
-  
+    { name: 'Відхилені', value: user?.rejected_sms },
+    { name: 'Усього доставлено', value: user?.delivered_sms },
+    { name: 'В процесі відправки', value: user?.pending_sms },
   ];
-
 
   return (
     <>
@@ -70,46 +63,53 @@ export default function UserAccountPage() {
       </Title>
       <div className="content-block mb-20 mt-[50px] pl-[26px] flex  items-center">
         <div>
-				<div className="mb-10">
-          <Title type="accent-main_text" color="dark">
-            Кількість СМС
-          </Title>
+          <div className="mb-10">
+            <Title type="accent-main_text" color="dark">
+              Кількість СМС
+            </Title>
+          </div>
+          <div className="flex gap-16">
+            <div className="flex flex-col gap-8">
+              <div className="flex">
+                <div className="w-52 mr-2">Проплачено СМС</div>
+                <div className="text-xl font-montserrat font-normal">{user?.paid_sms} SMS</div>
+              </div>
+              <div className="flex">
+                <div className="w-52 mr-2">Скореговано СМС</div>
+                <div className="text-xl font-montserrat font-normal">{user?.adjusment_sms} SMS</div>
+              </div>
+              <div className="flex">
+                <div className="w-52 mr-2">Баланс на рахунку</div>
+                <div className="text-xl font-montserrat font-normal">{user?.balance} SMS</div>
+              </div>
+            </div>
+            <div className="flex flex-col gap-8">
+              <div className="flex">
+                <div className="w-52 mr-2">Всього відправлено</div>
+                <div className="text-xl font-montserrat font-normal">{user?.sent_sms} SMS</div>
+              </div>
+              <div className="flex relative">
+                <div className="w-52 mr-2">Усього доставлено</div>
+                <div className="text-xl font-montserrat font-normal">{user?.delivered_sms} SMS</div>
+                <div className="h-5 w-5 rounded-full bg-[#FFBB28]  absolute right-[-30px] top-1/2 transform -translate-y-1/2"></div>
+              </div>
+              <div className="flex relative">
+                <div className="w-52 mr-2  ">В процесі відправки</div>
+
+                <div className="text-xl font-montserrat font-normal">{user?.pending_sms} SMS</div>
+                <div className="h-5 w-5 rounded-full bg-[#00C49F] absolute right-[-30px] top-1/2 transform -translate-y-1/2"></div>
+              </div>
+              <div className="flex relative">
+                <div className="w-52 mr-2">Відхилені</div>
+                <div className="text-xl font-montserrat font-normal">{user?.rejected_sms} SMS</div>
+                <div className="h-5 w-5 rounded-full  bg-[#0088FE] absolute right-[-30px] top-1/2 transform -translate-y-1/2"></div>
+              </div>
+            </div>
+          </div>
         </div>
-        <div className="flex gap-16">
-          <div className="flex flex-col gap-8">
-            <div className="flex">
-              <div className="w-52 mr-2">Проплачено СМС</div>
-              <div className="text-xl font-montserrat font-normal">{user?.paid_sms} SMS</div>
-            </div>
-            <div className="flex">
-              <div className="w-52 mr-2">Скореговано СМС</div>
-              <div className="text-xl font-montserrat font-normal">{user?.adjusment_sms} SMS</div>
-            </div>
-            <div className="flex">
-              <div className="w-52 mr-2">Баланс на рахунку</div>
-              <div className="text-xl font-montserrat font-normal">{user?.balance} SMS</div>
-            </div>
-          </div>
-          <div className="flex flex-col gap-8">
-            <div className="flex">
-              <div className="w-52 mr-2">Всього відправлено</div>
-              <div className="text-xl font-montserrat font-normal">{user?.sent_sms} SMS</div>
-            </div>
-            <div className="flex">
-              <div className="w-52 mr-2">Усього доставлено</div>
-              <div className="text-xl font-montserrat font-normal">{user?.delivered_sms} SMS</div>
-            </div>
-            <div className="flex">
-              <div className="w-52 mr-2">В процесі відправки</div>
-              <div className="text-xl font-montserrat font-normal">{user?.pending_sms} SMS</div>
-            </div>
-          </div>
-          
+        <div className="w-[300px] h-[300px] p-2 ml-40">
+          <CircleDiagram data={data} />
         </div>
-				</div>
-				<div className='w-[300px] h-[300px] p-2 ml-20'>
-            <CircleDiagram data={data} />
-          </div>
       </div>
       <div className="content-block mb-20">
         <div className="pl-[26px]">

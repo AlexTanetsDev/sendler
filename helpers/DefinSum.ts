@@ -30,15 +30,23 @@ export function defineSum(smsCount: number) {
 }
 
 export function defineSmsCount(sum: number) {
-  let smsCount = 0;
-
   for (let i = PricesArray.length - 1; i >= 0; i--) {
-    const price = PricesArray[i].price;
-    if (price !== null && sum >= price) {
-      const smsForPrice = Math.floor(sum / price);
-      smsCount += smsForPrice;
-      sum -= smsForPrice * price;
+    const { count, price } = PricesArray[i];
+    const [min, max] = count.split('-').map(Number);
+    
+    // Sprawdź, czy wprowadzona kwota jest większa niż minimalna dla danego przedziału
+    if (sum >= min) {
+      if (price !== null) {
+        // Jeśli cena nie jest null, oblicz ilość SMS na podstawie ceny
+        const smsCount = Math.floor(sum / price);
+        return smsCount;
+      } else {
+        // Jeśli cena jest null, zwróć informację o długości umowy
+        return 'Договірна';
+      }
     }
   }
-  return smsCount;
+
+  // Jeśli wprowadzona kwota nie mieści się w żadnym zakresie cenowym
+  return 0;
 }

@@ -48,6 +48,7 @@ export interface IUser extends ITel, IUserId {
 	pending_sms: number;
 	paid_sms: number;
 	adjusment_sms: number;
+	rejected_sms: number;
 	paymentHistory: IPaymentHistory[];
 };
 
@@ -349,6 +350,10 @@ export interface IResSentdSms {
 	sent_sms: string;
 };
 
-export interface IResPendingdSms {
+export interface IResPendingSms {
 	pending_sms: string;
+};
+
+export interface IResRejectedSms {
+	rejected_sms: string;
 };
