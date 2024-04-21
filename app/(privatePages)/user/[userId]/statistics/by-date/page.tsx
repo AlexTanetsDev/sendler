@@ -9,6 +9,7 @@ import formatTableDate from '@/app/utils/formatTableDate';
 import Title from '@/components/Title';
 import SendingPermissionBtn from '@/components/buttons/SendingPermissionBtn';
 import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
+import { countSuccessfullySentNumbers } from '@/helpers/getCountSuccessfullySentNumbers';
 import { IHistoryPeriod, IHistoryResponce } from '@/globaltypes/historyTypes';
 import { SmsStatusEnum } from '@/globaltypes/types';
 
@@ -35,24 +36,6 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
   useEffect(() => {
     memoizedUserHistory();
   }, [memoizedUserHistory]);
-
-  const countSuccessfullySentNumbers = (item: IHistoryResponce): number => {
-    const clientStatusMap: any = {};
-
-    item.clients?.forEach((client, index) => {
-      const status = item?.recipient_status[index];
-
-      clientStatusMap[client] = clientStatusMap[client]
-        ? [...clientStatusMap[client], status]
-        : [status];
-    });
-
-    const sentSms = Object.values(clientStatusMap).filter(client =>
-      (client as SmsStatusEnum[]).every((status: string) => status === 'fullfield')
-    );
-
-    return sentSms.length;
-  };
 
   return (
     <section className="container mx-auto">
@@ -83,7 +66,7 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
               userHistory.map(item => {
                 return (
                   <li
-                    key={item.history_id}
+                    key={item.history_id as number}
                     className="flex items-center justify-between h-[47px] px-[26px] font-roboto text-lg text-black border-b border-[#B5C9BE]"
                   >
                     <p className="w-[130px] text-[#2366E8] text-ellipsis whitespace-nowrap overflow-hidden">

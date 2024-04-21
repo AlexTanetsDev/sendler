@@ -62,7 +62,7 @@ export async function PATCH(
       return HttpError(400, `Failed to update sending permission`);
     }
 
-    return NextResponse.json( result );
+    return NextResponse.json(result);
   } catch (error: any) {
     return NextResponse.json({ message: 'Server error', error: error.message }, { status: 500 });
   }
