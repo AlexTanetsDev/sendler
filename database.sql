@@ -52,8 +52,6 @@ CREATE TABLE
 				automatically_generated BOOLEAN DEFAULT FALSE
 				);
 
-CREATE UNIQUE INDEX send_groups_group_id_idx ON send_groups (group_id);
-
 CREATE TABLE groups_members (
     group_id INT REFERENCES send_groups (group_id) ON DELETE CASCADE, client_id INT REFERENCES clients (client_id) ON DELETE CASCADE, PRIMARY KEY (group_id, client_id)
 );
@@ -78,8 +76,6 @@ CREATE TYPE status_type AS ENUM(
     'pending', 'fullfield', 'rejected'
 );
 
-CREATE UNIQUE INDEX clients_client_id_idx ON clients (client_id);
-
 CREATE TABLE
     recipients_status(
         recipient_id SERIAL,
@@ -91,6 +87,7 @@ CREATE TABLE
         status_changing_date TIMESTAMPTZ DEFAULT NOW():: timestamp(0)
     );
 
+ 
 CREATE TABLE
     transactions_history(
         transaction_id SERIAL,
@@ -115,6 +112,10 @@ CREATE TABLE user_sms_adjustments (
 	create_time TIMESTAMPTZ DEFAULT NOW():: timestamp(0),
 	user_id INT REFERENCES users (user_id) ON DELETE CASCADE,
 	sms_count INTEGER
+);
+
+CREATE TABLE example_recipients_status (
+    recipient_id SERIAL, history_id INT, recipient_status status_type, PRIMARY KEY (recipient_id)
 );
 
 CREATE OR REPLACE FUNCTION get_sms_by_user(id bigint
@@ -146,6 +147,23 @@ $$
 	    AND rs.history_id = sm.history_id
 	WHERE
 	    u.user_id = id $$ LANGUAGE
+SQL; 
+
+CREATE OR REPLACE FUNCTION get_delivered_sms_by_user_and_history_id
+(id bigint, historyId bigint) RETURNS bigint AS 
+$$
+	SELECT COUNT(*)
+	FROM
+	    send_groups sg
+	    INNER JOIN users u ON u.user_id = sg.user_id
+	    INNER JOIN groups_members gm ON gm.group_id = sg.group_id
+	    INNER JOIN sending_members sm ON sm.group_id = sg.group_id
+	    INNER JOIN recipients_status rs ON rs.client_id = gm.client_id
+	    AND rs.history_id = sm.history_id
+	WHERE
+	    u.user_id = id
+	    AND rs.history_id = historyId
+	    AND recipient_status = 'fullfield' $$ LANGUAGE
 SQL; 
 
 CREATE OR REPLACE FUNCTION get_delivered_sms_by_user
@@ -197,8 +215,8 @@ $$
 	    AND recipient_status = 'rejected' $$ LANGUAGE
 SQL; 
 
-CREATE OR REPLACE FUNCTION get_pending_sms_by_user(
-id bigint) RETURNS bigint AS 
+CREATE OR REPLACE FUNCTION get_pending_sms_by_user_and_history_id
+(id bigint, historyId bigint) RETURNS bigint AS 
 $$
 	SELECT COUNT(*)
 	FROM
@@ -214,6 +232,23 @@ $$
 	    AND recipient_status = 'pending' $$ LANGUAGE
 SQL; 
 
+CREATE OR REPLACE FUNCTION get_pending_sms_by_user(
+id bigint) RETURNS bigint AS 
+$$
+	SELECT COUNT(*)
+	FROM
+	    send_groups sg
+	    INNER JOIN users u ON u.user_id = sg.user_id
+	    INNER JOIN groups_members gm ON gm.group_id = sg.group_id
+	    INNER JOIN sending_members sm ON sm.group_id = sg.group_id
+	    INNER JOIN recipients_status rs ON rs.client_id = gm.client_id
+	    AND rs.history_id = sm.history_id
+	WHERE
+	    u.user_id = id
+	    -- AND rs.history_id = historyId
+	    AND recipient_status = 'pending' $$ LANGUAGE
+SQL; 
+
 CREATE OR REPLACE FUNCTION get_paid_sms_by_user(id 
 bigint) RETURNS bigint AS 
 $$
@@ -225,12 +260,42 @@ $$
 	    user_id $$ LANGUAGE
 SQL; 
 
-CREATE OR REPLACE FUNCTION get_user_balance(id bigint
-) RETURNS bigint AS 
+CREATE OR REPLACE FUNCTION get_adjustment_sms_by_user
+(id bigint) RETURNS bigint AS 
 $$
-	SELECT
-	    get_paid_sms_by_user (id) - get_delivered_sms_by_user (id) AS balance,
-	    $$ LANGUAGE
+	  SELECT SUM ( sms_count ) FROM user_sms_adjustments WHERE user_id = ${id} $$ LANGUAGE
+	
 SQL; 
+
+CREATE OR REPLACE FUNCTION get_user_balance(id bigint
+, OUT result bigint) AS 
+$$
+DECLARE
+	paid bigint;
+	delivered bigint;
+	pending bigint;
+	adjustment bigint;
+BEGIN
+	paid = get_paid_sms_by_user (id);
+	delivered = get_delivered_sms_by_user (id);
+	pending = get_pending_sms_by_user (id);
+	adjustment = get_adjustment_sms_by_user (id);
+	IF(paid IS NULL) THEN paid = 0;
+END
+	IF;
+	IF(delivered IS NULL) THEN delivered = 0;
+END
+	IF;
+	IF(pending IS NULL) THEN pending = 0;
+END
+	IF;
+	IF(adjustment IS NULL) THEN adjustment = 0;
+END
+	IF;
+	result = paid - delivered - pending - adjustment;
+END
+$$
+LANGUAGE
+plpgsql; 
 
 ALTER TYPE send_method_type RENAME VALUE 'veb' TO 'web';

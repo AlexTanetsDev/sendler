@@ -50,6 +50,7 @@ export interface IUser extends ITel, IUserId {
 	adjusment_sms: number;
 	rejected_sms: number;
 	paymentHistory: IPaymentHistory[];
+	sendingSms: ISendingProcess[];
 };
 
 
@@ -330,10 +331,6 @@ export interface combinedAlfaNameAndUser {
 	description: string;
 };
 
-export interface IResUserRejectedSmsByHistoryId {
-	rejected_sms: number;
-}
-
 export interface IResAjustmentSms {
 	sum: string;
 };
@@ -357,3 +354,28 @@ export interface IResPendingSms {
 export interface IResRejectedSms {
 	rejected_sms: string;
 };
+
+export interface IResAlfaNames {
+	alfa_name: string;
+	alfa_name_active: boolean;
+};
+
+export interface IResUserBalance {
+	result: number;
+};
+
+export interface IResUserSmsSendingInProgress {
+	history_id: number;
+	recipient_status: string;
+	count: number
+};
+
+export interface ISendingProcess {
+	history_id: number;
+	fullfield?: number;
+	rejected?: number;
+	pending?: number;
+	date: Date;
+};
+
+export interface IUserResData extends IResAjustmentSms, IResPaidSms, IResDeliveredSms, IResSentdSms, IResPendingSms, IResRejectedSms, IResAlfaNames { };

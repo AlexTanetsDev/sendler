@@ -10,7 +10,6 @@ interface Props {
 const Recipient = ({
 	recipient,
 	index,
-
 	register,
 	onSelect
 }: Props) => {
