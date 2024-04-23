@@ -39,6 +39,10 @@ export { default as fetchUserPaymentHistory } from './fetchUserPaymentHistory';
 export { default as correctUserBalance } from './correctUserBalance';
 export { default as fetchUserPendingSms } from './fetchUserPendingSms';
 export { default as fetchUserRejectedSmsByUserId } from './fetchUserRejectedSmsByUserId';
+export { default as fetchUserAlfaNames } from './fetchUserAlfaNames';
+export { default as fetchUserDataFromDatabase } from './fetchUserDataFromDatabase';
+export { default as fetchUserSmsSendingInProgress } from './fetchUserSmsSendingInProgress';
+
 
 
 

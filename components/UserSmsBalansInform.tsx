@@ -46,7 +46,7 @@ export default function UserSmsInform({ session }: { session: ISession | Session
 				setUser(user);
 			};
 		});
-	}, [userId, message, roomName, NEXT_PUBLIC_SOCKET_URL]);
+	}, [userId, message, roomName, NEXT_PUBLIC_SOCKET_URL, user?.balance]);
 
 	return (
 		<div className="flex justify-end mb-[50px]">

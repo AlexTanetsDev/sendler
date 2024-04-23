@@ -53,8 +53,7 @@ export async function POST(request: Request): Promise<NextResponse<{
 		);
 	} else {
 		balance = res?.balance;
-	}
-	;
+	};
 	try {
 		const body: ISendSMS = await request.json();
 		const { error, value } = schemaSendSMS.validate(body);

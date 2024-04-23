@@ -1,18 +1,10 @@
 import db from "@/db";
-
+import { IResUserBalance } from "@/globaltypes/types";
 import { QueryResult } from "pg";
 
-export default async function fetchUserBalance(id: number): Promise<number | null> {
-	const res: QueryResult<any> = await db.query(
-		`SELECT balance
-		FROM users
-		WHERE user_id = ${id}`
+export default async function fetchUserBalance(id: number): Promise<QueryResult<IResUserBalance>> {
+	const res: QueryResult<IResUserBalance> = await db.query(
+		`SELECT * FROM get_user_balance(${id})`
 	);
-
-	if (!res) {
-		return null;
-	};
-
-	const balance = Number(res.rows[0].balance);
-	return balance;
+	return res;
 };
