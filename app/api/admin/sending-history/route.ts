@@ -24,16 +24,30 @@ export async function GET(
       return HttpError(400, `ID required for getting user's history`);
     }
 
-    const result: null | IHistoryResponce[] = await getUserHistory(userId, {
-      startDate,
-      endDate,
-    });
+    // const result: null | IHistoryResponce[] = await getUserHistory(userId, {
+    //   startDate,
+    //   endDate,
+    // });
+    const query = `
+            SELECT sh.history_id, sh.alfa_name, sh.sending_permission, sh.send_method, sh.text_sms, sh.sending_group_date, u.user_name, COALESCE(ARRAY_AGG(DISTINCT rs.recipient_status), ARRAY[CAST('pending' AS status_type)]) AS recipient_status, ARRAY_AGG(DISTINCT rs.client_id) AS clients
+            FROM send_groups sg
+            INNER JOIN sending_members sm ON sg.group_id = sm.group_id
+            INNER JOIN sending_history sh ON sm.history_id = sh.history_id
+            LEFT JOIN recipients_status rs ON rs.history_id = sh.history_id
+            INNER JOIN users u ON sg.user_id = u.user_id
+            WHERE u.user_id = $1 
+            AND sh.sending_group_date >= $2 
+            AND sh.sending_group_date <= $3
+            GROUP BY sh.history_id, sh.alfa_name, sh.send_method, sh.text_sms, sh.sending_group_date, u.user_name
+        `;
+    const result = await db.query(query, [userId, startDate, endDate]);
+    const userHistory: null | IHistoryResponce[] = result.rows;
 
-    if (!result) {
+    if (!userHistory) {
       return HttpError(400, `Failed to get user's history by userID = ${userId}`);
     }
 
-    const formatedHistory = result.map(history => {
+    const formatedHistory = userHistory.map(history => {
       return {
         ...history,
         recipient_status: `${history.recipient_status as unknown as string}`
@@ -42,34 +56,14 @@ export async function GET(
       };
     });
 
-    return NextResponse.json({
-      history: formatedHistory,
-    });
+    return NextResponse.json(
+      {
+        history: formatedHistory,
+      },
+      { status: 200 }
+    );
   } catch (error: any) {
     return NextResponse.json({ message: 'Server error', error: error.message }, { status: 500 });
-  }
-}
-
-export async function PUT(req: Request) {
-  try {
-    const body = await req.json();
-    const { user_id } = body;
-
-    const userById = await db.query('SELECT * FROM transactions_history WHERE user_id = $1 ', [
-      user_id,
-    ]);
-    const userTransactionsHistory = userById.rows;
-
-    if (userTransactionsHistory.length === 0) {
-      return NextResponse.json(
-        { data: null, message: `Користувач з ID ${user_id} не має жодної історії транзакцій` },
-        { status: 200 }
-      );
-    }
-
-    return NextResponse.json({ userTransactionsHistory }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
   }
 }
 
@@ -90,19 +84,3 @@ export async function PUT(req: Request) {
 //     return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
 //   }
 // }
-
-export async function PATCH(req: Request) {
-  try {
-    const body = await req.json();
-    const { transaction_id } = body;
-
-    await db.query(
-      'UPDATE transactions_history SET paid = true, paymant_date = NOW() WHERE transaction_id = $1 ',
-      [transaction_id]
-    );
-
-    return NextResponse.json({ message: 'Рахунек оплачено' }, { status: 200 });
-  } catch (error) {
-    return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
-  }
-}

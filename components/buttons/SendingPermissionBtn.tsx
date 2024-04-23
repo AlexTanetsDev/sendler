@@ -13,7 +13,7 @@ export default function SendingPermissionBtn({ history }: Props) {
 
   const togglePermission = async () => {
     const updatedHistory: ISendingHistoryResponce | undefined = await toggleSendingPermission(
-      history.history_id
+      history.history_id as number
     );
 
     if (!updatedHistory) {

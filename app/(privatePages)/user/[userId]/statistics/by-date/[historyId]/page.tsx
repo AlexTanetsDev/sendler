@@ -73,6 +73,8 @@ export default function HistoryDetails({
     }
   };
 
+  console.log(userHistoryDetails);
+
   return (
     <section className="container mx-auto">
       <Title type="h1" color="dark">
@@ -131,10 +133,10 @@ export default function HistoryDetails({
         <ul>
           {userHistoryDetails &&
             userHistoryDetails.length !== 0 &&
-            userHistoryDetails.map(item => {
+            userHistoryDetails.map((item, index) => {
               return (
                 <li
-                  key={item.client_id}
+                  key={index}
                   className="flex items-center gap-[100px] h-[47px] px-[26px] font-roboto text-l text-black border-b border-[#B5C9BE]"
                 >
                   <p className="w-[166px]">{item.tel}</p>
