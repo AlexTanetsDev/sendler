@@ -1,8 +1,12 @@
 import React from 'react';
+import Link from 'next/link';
+import { SmsStatusEnum } from '@/globaltypes/types';
+import formatTableDate from '@/app/utils/formatTableDate';
+import { IHistoryPeriod, IHistoryResponce } from '@/globaltypes/historyTypes';
 
-type Props = {};
+type Props = { userHistory: IHistoryResponce[] };
 
-const TableAdminStatistics = (props: Props) => {
+const TableAdminStatistics = ({ userHistory }: Props) => {
   return (
     <table className="w-full border bg-priceTableBg text-center">
       <thead className="bg-lightGreen ">
@@ -19,17 +23,31 @@ const TableAdminStatistics = (props: Props) => {
       </thead>
 
       <tbody className=" text-xl">
-        {/*        
-          .map(elem => (
-            <tr key={elem.}>
-              <td className="py-4 px-3 border font-montserrat text-xl"></td>
-              <td className="py-4 px-3 border font-montserrat text-xl"></td>
-              <td className="py-4 px-3 border font-montserrat text-xl">{elem}</td>
-              <td className="py-4 px-3 border font-montserrat text-xl">
-                {elem}
-              </td>
-             
-            </tr>    ) */}
+        {userHistory.map((elem: IHistoryResponce, index: number) => (
+          <tr key={index}>
+            <td className="py-4 px-3 border font-montserrat text-xl text-[#2366E8]">
+              <Link
+                href={{
+                  pathname: `general-statistics/day/`,
+                  query: {
+                    date: new Date(elem.sending_group_date).toString(),
+                  },
+                }}
+              >
+                {formatTableDate(elem.sending_group_date)}
+              </Link>
+            </td>
+            <td className="py-4 px-3 border font-montserrat text-xl">
+              {Array.from(new Set(elem.clients)).length}
+            </td>
+            <td className="py-4 px-3 border font-montserrat text-xl">
+              {elem.recipient_status.length}
+            </td>
+            <td className="py-4 px-3 border font-montserrat text-xl">
+              {elem.recipient_status.filter((item: SmsStatusEnum) => item === 'fullfield').length}
+            </td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );

@@ -19,7 +19,7 @@ export default function HistoryList({ userHistory }: Props) {
         sortHistory.map(item => {
           return (
             <li
-              key={item.history_id}
+              key={typeof item.history_id === 'number' ? item.history_id : item.history_id[0]}
               className="flex items-center gap-[100px] h-[47px] px-[26px] font-roboto text-[20px] text-black border-b border-[#B5C9BE]"
             >
               {}

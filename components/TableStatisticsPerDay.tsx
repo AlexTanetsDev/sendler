@@ -1,8 +1,10 @@
 import React from 'react';
+import { countSuccessfullySentNumbers } from '@/helpers/getCountSuccessfullySentNumbers';
+import { IHistoryPeriod, IHistoryResponce } from '@/globaltypes/historyTypes';
 
-type Props = {};
+type Props = { userHistory: IHistoryResponce[] };
 
-const TableStatisticsPerDay = (props: Props) => {
+const TableStatisticsPerDay = ({ userHistory }: Props) => {
   return (
     <table className="w-full border bg-priceTableBg text-center">
       <thead className="bg-lightGreen ">
@@ -21,20 +23,39 @@ const TableStatisticsPerDay = (props: Props) => {
       </thead>
 
       <tbody className=" text-xl">
-        {/*        
-          .map(elem => (
-            <tr key={elem.}>
-              <td className="py-4 px-3 border font-montserrat text-xl"></td>
-              <td className="py-4 px-3 border font-montserrat text-xl"></td>
-              <td className="py-4 px-3 border font-montserrat text-xl">{elem}</td>
-              <td className="py-4 px-3 border font-montserrat text-xl">
-              <td className="py-4 px-3 border font-montserrat text-xl"></td>
-              <td className="py-4 px-3 border font-montserrat text-xl"></td>
-              <td className="py-4 px-3 border font-montserrat text-xl">{elem}</td>
-              <td className="py-4 px-3 border font-montserrat text-xl">
-              <td className="py-4 px-3 border font-montserrat text-xl"></td>
-              <td className="py-4 px-3 border font-montserrat text-xl"></td>             
-            </tr>    ) */}
+        {userHistory.map((elem: IHistoryResponce, index: number) => (
+          <tr key={index}>
+            <td className="py-4 px-3 border font-montserrat text-xl">{}</td>
+            <td className="py-4 px-3 border font-montserrat text-xl">{elem.text_sms}</td>
+            <td className="py-4 px-3 border font-montserrat text-xl">{elem.alfa_name}</td>
+            <td className="py-4 px-3 border font-montserrat text-xl">
+              {elem.sending_group_date >= new Date() && elem.sending_permission === true
+                ? 'Заплановано'
+                : elem.sending_permission === false
+                ? 'Зупинено'
+                : elem.sending_group_date < new Date() &&
+                  elem.recipient_status.some(item => item === 'pending')
+                ? 'Відправлено'
+                : 'Завершено'}
+            </td>
+            <td className="py-4 px-3 border font-montserrat text-xl">
+              {elem.recipient_status.length}
+            </td>
+            <td className="py-4 px-3 border font-montserrat text-xl">
+              {elem.recipient_status.filter(item => item === 'fullfield').length}
+            </td>
+            <td className="py-4 px-3 border font-montserrat text-xl">
+              {Array.from(new Set(elem.clients)).length}
+            </td>
+            <td className="py-4 px-3 border font-montserrat text-xl">
+              {countSuccessfullySentNumbers(elem)}
+            </td>
+            <td className="py-4 px-3 border font-montserrat text-xl">
+              {new Date(elem.sending_group_date).toLocaleString('uk-UA', { timeZone: 'UTC' })}
+            </td>
+            <td className="py-4 px-3 border font-montserrat text-xl">&#8212;</td>
+          </tr>
+        ))}
       </tbody>
     </table>
   );

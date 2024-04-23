@@ -4,7 +4,7 @@ export interface IHistoryId {
   history_id: number;
 }
 
-export interface IHistoryResponce extends IHistoryId, IGroupName {
+export interface IHistoryResponce extends IGroupName {
   sending_group_date: Date;
   send_method: string;
   recipient_status: SmsStatusEnum[];
@@ -12,6 +12,7 @@ export interface IHistoryResponce extends IHistoryId, IGroupName {
   user_name?: string;
   alfa_name?: string;
   clients?: number[];
+  history_id: number | number[];
   sending_permission?: boolean;
 }
 

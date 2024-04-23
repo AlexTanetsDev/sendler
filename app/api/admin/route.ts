@@ -2,7 +2,6 @@ import { NextResponse } from 'next/server';
 import db from '@/db';
 import { updateUserBalance } from '@/api-actions';
 
-
 export async function POST(req: Request) {
   try {
     const body = await req.json();
@@ -64,31 +63,22 @@ export async function PATCH(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
-    const body = await req.json();
-    const { user_id, sms_count } = body;
+  const body = await req.json();
+  const { user_id, sms_count } = body;
 
-    const currentSmsCount = await db.query('SELECT balance FROM  transactions_history WHERE user_id = $1', [
-      user_id,
-    ]);
+  const newPaid = await db.query(
+    `INSERT INTO user_sms_adjustments (user_id, sms_count, create_time) VALUES ($1, $2, NOW()) RETURNING *`,
+    [user_id, sms_count]
+  );
 
-    const summSms: number = currentSmsCount.rows[0].balance;
+  const newUserPaid = newPaid.rows[0];
 
-    const newCountSms = Number(summSms) - Number(sms_count);
-
-    const newPaid = await db.query('UPDATE users SET balance = $1 WHERE user_id = $2 RETURNING *', [
-      newCountSms,
-      user_id,
-    ]);
-    await updateUserBalance(user_id);
-
-    const newUserPaid = newPaid.rows[0];
-
-    if (newUserPaid) {
-      return NextResponse.json(
-        { newUserPaid, message: `${sms_count} SMS було знято з користувача. ` },
-        { status: 200 }
-      );
-    }
+  if (newUserPaid) {
+    return NextResponse.json(
+      { newUserPaid, message: `${sms_count} SMS було знято з користувача. ` },
+      { status: 200 }
+    );
+  }
   } catch (error) {
     return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
   }
