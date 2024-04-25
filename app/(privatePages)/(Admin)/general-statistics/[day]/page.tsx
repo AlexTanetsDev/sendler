@@ -18,20 +18,18 @@ const testUserId = 23;
 
 type Props = {};
 
-const DayHistory = ({ params }: { params: { day: string } }) => {
-  // const day = params.day;
-  // const searchParams = useSearchParams();
-  // const historyDate = searchParams.get('months');
-
+const DayHistory = ({ params: { day } }: { params: { day: string } }) => {
   const [userHistory, setUserHistory] = useState<IHistoryResponce[]>([]);
 
-  const searchParams = useSearchParams();
-  const historyDate = searchParams.get('date');
+  function parseDateString(dateString: string) {
+    const [day, month, year] = dateString.split('.').map(Number);
+    return new Date(year, month - 1, day);
+  }
 
   const memoizedUserHistory = useCallback(async () => {
     const historyPeriod: IHistoryPeriod = {
-      startDate: historyDate ? new Date(historyDate) : undefined,
-      endDate: historyDate ? new Date(historyDate) : undefined,
+      startDate: day ? parseDateString(day) : undefined,
+      endDate: day ? parseDateString(day) : undefined,
     };
     const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
       id: testUserId,
@@ -39,7 +37,7 @@ const DayHistory = ({ params }: { params: { day: string } }) => {
     });
 
     if (userHistory) setUserHistory(userHistory);
-  }, [historyDate, testUserId]);
+  }, [day, testUserId]);
 
   useEffect(() => {
     memoizedUserHistory();
@@ -47,9 +45,7 @@ const DayHistory = ({ params }: { params: { day: string } }) => {
 
   return (
     <>
-      <p>
-        Statistict for {historyDate}
-      </p>
+      <p>Statistict for {day ?? ''}</p>
       <div className="flex gap-4 mb-4 mt-4">
         <GreenButton size="normal">Site</GreenButton>
         <GreenButton size="normal">Api</GreenButton>

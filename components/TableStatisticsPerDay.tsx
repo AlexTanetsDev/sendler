@@ -1,5 +1,7 @@
 import React from 'react';
+import Link from 'next/link';
 import { countSuccessfullySentNumbers } from '@/helpers/getCountSuccessfullySentNumbers';
+import formatTableDate from '@/app/utils/formatTableDate';
 import { IHistoryPeriod, IHistoryResponce } from '@/globaltypes/historyTypes';
 
 type Props = { userHistory: IHistoryResponce[] };
@@ -53,7 +55,24 @@ const TableStatisticsPerDay = ({ userHistory }: Props) => {
             <td className="py-4 px-3 border font-montserrat text-xl">
               {new Date(elem.sending_group_date).toLocaleString('uk-UA', { timeZone: 'UTC' })}
             </td>
-            <td className="py-4 px-3 border font-montserrat text-xl">&#8212;</td>
+            <td className="py-4 px-3 border font-montserrat text-xl">
+              {elem.send_method === 'api' ? (
+                <Link
+                  href={{
+                    pathname: `/general-statistics/${formatTableDate(
+                      elem.sending_group_date
+                    )}/statistic-site`,
+                    query: {
+                      history_id: elem.history_id,
+                    },
+                  }}
+                >
+                  <div className="text-[#2366E8]">Детальніше</div>
+                </Link>
+              ) : (
+                <>&#8212;</>
+              )}
+            </td>
           </tr>
         ))}
       </tbody>

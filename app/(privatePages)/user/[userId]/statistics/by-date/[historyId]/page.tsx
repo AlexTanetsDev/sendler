@@ -15,8 +15,10 @@ export default function HistoryDetails({
 }) {
   const [userHistoryDetails, setUserHistoryDetails] = useState<IHistoryDetailsResponce[]>([]);
 
-  const userId = Number(params.userId);
   const historyId = String(params.historyId);
+  const sendingGroups = Object.keys(
+    userHistoryDetails.reduce((acc, obj) => ({ ...acc, [obj.group_name]: obj }), {})
+  ).join(', ');
 
   const memoizedUserHistoryDetails = useCallback(async () => {
     const userHistory: IHistoryDetailsResponce[] | undefined = await getUserHistoryDetails(
@@ -73,8 +75,6 @@ export default function HistoryDetails({
     }
   };
 
-  console.log(userHistoryDetails);
-
   return (
     <section className="container mx-auto">
       <Title type="h1" color="dark">
@@ -113,7 +113,7 @@ export default function HistoryDetails({
                   ? 'Зупинено'
                   : 'Завершено'}
               </p>
-              <p>Україна</p>
+              <p className="max-w-[300px]">{sendingGroups}</p>
             </div>
             <div>
               <p className="mb-4">Текст sms</p>
