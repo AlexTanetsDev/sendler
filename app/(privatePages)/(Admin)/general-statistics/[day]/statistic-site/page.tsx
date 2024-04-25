@@ -8,7 +8,7 @@ import { IHistoryDetailsResponce } from '@/globaltypes/historyTypes';
 
 type Props = {};
 
-const siteHistoryDetails = () => {
+const SiteHistoryDetails = () => {
   const [userHistoryDetails, setUserHistoryDetails] = useState<IHistoryDetailsResponce[]>([]);
 
   const searchParams = useSearchParams();
@@ -108,4 +108,4 @@ const siteHistoryDetails = () => {
   );
 };
 
-export default siteHistoryDetails;
+export default SiteHistoryDetails;
