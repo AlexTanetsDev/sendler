@@ -35,6 +35,6 @@
     "components/UserSmsBalansInform.tsx",
     "app/(privatePages)/user/contacts-manage/edit-group/[id]/page.tsx",
     "app/(privatePages)/user/contacts-manage/update-group/[id]/page.tsx"
-, "app/(privatePages)/user/[userId]/test/page.jsx", "fetch-actions/groupsActions.js"  ],
+, "app/(privatePages)/user/[userId]/test/page.jsx", "fetch-actions/groupsActions.js", "components/buttons/ExportGroupBtn.tsx"  ],
   "exclude": ["node_modules"]
 }

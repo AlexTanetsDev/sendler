@@ -10,7 +10,10 @@ export default async function correctUserBalance(id: number, quantity: number): 
 	if (!balance) {
 		return null;
 	};
-	await db.query(`UPDATE users SET balance = ${balance + quantity} where user_id = ${id}`);
+	await db.query(
+		`UPDATE users
+		SET balance = ${balance + quantity} where user_id = ${id}`
+	);
 	const res = await fetchUserBalance(id);
 	return res;
 };

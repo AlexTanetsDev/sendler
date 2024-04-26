@@ -11,7 +11,10 @@ export default async function updateUserBalance(id: number | undefined) {
 
 			const res: QueryResult<IResUserBalance> = await fetchUserBalance(id);
 			const balance = res.rows[0].result;
-			await db.query(`UPDATE users SET balance = ${balance} WHERE user_id = ${id} RETURNING *`);
+			await db.query(
+				`UPDATE users
+				SET balance = ${balance}
+				WHERE user_id = ${id} RETURNING *`);
 			return balance;
 		};
 	} catch (error: any) {
