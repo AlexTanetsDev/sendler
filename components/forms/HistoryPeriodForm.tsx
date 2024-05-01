@@ -75,7 +75,7 @@ export default function HistoryPeriodForm() {
 
   return (
     <div className="ml-[26px]">
-      <p className="mb-10 text-xl font-roboto text-[#1B1B30]">Пріод відправки SMS</p>
+      <p className="mb-10 text-xl font-roboto text-[#1B1B30]">Пeріод відправки SMS</p>
       <form onSubmit={handleSubmit(onSubmit)} className="flex items-center gap-8 w-full mb-10">
         <label htmlFor="startDate" className="text-xl text-mainTextColor flex cursor-pointer">
           <DatePicker
