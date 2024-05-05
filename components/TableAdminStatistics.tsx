@@ -28,10 +28,7 @@ const TableAdminStatistics = ({ userHistory }: Props) => {
             <td className="py-4 px-3 border font-montserrat text-xl text-[#2366E8]">
               <Link
                 href={{
-                  pathname: `general-statistics/day/`,
-                  query: {
-                    date: new Date(elem.sending_group_date).toString(),
-                  },
+                  pathname: `general-statistics/${formatTableDate(elem.sending_group_date)}/`,
                 }}
               >
                 {formatTableDate(elem.sending_group_date)}

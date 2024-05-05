@@ -22,12 +22,8 @@ export async function GET(
 
     if (!userId) {
       return HttpError(400, `ID required for getting user's history`);
-    }
-
-    // const result: null | IHistoryResponce[] = await getUserHistory(userId, {
-    //   startDate,
-    //   endDate,
-    // });
+		}
+		
     const query = `
             SELECT sh.history_id, sh.alfa_name, sh.sending_permission, sh.send_method, sh.text_sms, sh.sending_group_date, u.user_name, COALESCE(ARRAY_AGG(DISTINCT rs.recipient_status), ARRAY[CAST('pending' AS status_type)]) AS recipient_status, ARRAY_AGG(DISTINCT rs.client_id) AS clients
             FROM send_groups sg
@@ -66,21 +62,3 @@ export async function GET(
     return NextResponse.json({ message: 'Server error', error: error.message }, { status: 500 });
   }
 }
-
-// export async function GET() {
-//   try {
-//     const res = await db.query(
-//       `SELECT user_login, transactions_history.user_id, transaction_id, sms_count ,money_count, paid, transactions_date
-//     FROM users
-//     FULL OUTER JOIN transactions_history ON transactions_history.user_id = users.user_id
-//     WHERE transactions_history.paid = false `
-//     );
-//     const allDebts = res.rows;
-
-//     if (allDebts) {
-//       return NextResponse.json({ allDebts, message: 'All debts' }, { status: 200 });
-//     }
-//   } catch (error) {
-//     return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
-//   }
-// }
