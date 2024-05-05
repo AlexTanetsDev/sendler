@@ -14,11 +14,10 @@ export default function ContactManagmentPage({ params }: { params: { userId: str
 	const [groups, setGroups] = useState<IGroupDatabase[] | undefined>([]);
 	const userId = Number(params.userId);
 
+	// get list of groups from database
 	const getData = async () => {
 		const res = await getUserGroups(userId);
-		if (res) {
-			setGroups(res);
-		}
+		setGroups(res);
 	};
 
 	const memoizedgetData = useCallback(getData, [userId]);

@@ -2,7 +2,7 @@ import { axiosInstance } from '@/helpers/AxiosInstance';
 import { AxiosResponse } from 'axios';
 
 import { IGetUserGroups } from './types';
-import { IGroupDatabase } from '@/globaltypes/types';
+import { IClientDatabase, IGroupDatabase } from '@/globaltypes/types';
 
 const api = axiosInstance;
 
@@ -42,4 +42,35 @@ export async function createGroup(groupName: string, userId: number | undefined)
 				}
 			);
 	} catch (error: any) { };
+};
+
+export async function getGroupById(id: number) {
+	try {
+		const res = await api.get<{
+			res: {
+				groupName: string;
+				clients: IClientDatabase[];
+			}
+		}, AxiosResponse<{
+			res: {
+				groupName: string;
+				clients: IClientDatabase[];
+			}
+		}, {
+			params: {
+				userId: null,
+				filter: '',
+				limit: null,
+				visible: 0,
+			}
+		}>>(`api/sending-groups/${id}`, {
+			params: {
+				userId: null,
+				filter: '',
+				limit: null,
+				visible: 0,
+			},
+		});
+		return res;
+	} catch (error) { };
 };

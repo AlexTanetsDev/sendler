@@ -1,47 +1,161 @@
-import db from "@/db";
-
+import {
+	fetchUserAdjusmentSms,
+	fetchUserDeliveredSms,
+	fetchUserPaidSms,
+	fetchUserPaymentHistory,
+	fetchUserPendingSms,
+	fetchUserSentSms,
+	updateUserBalance,
+	fetchUserRejectedSmsByUserId,
+	fetchUserAlfaNames,
+	fetchUserDataFromDatabase,
+	fetchUserSmsSendingInProgress
+} from ".";
 import { QueryResult } from "pg";
-import { NextResponse } from "next/server";
 
-import { IUser } from "@/globaltypes/types";
+import {
+	IUser,
+	IResAjustmentSms,
+	IResPaidSms,
+	IPaymentHistory,
+	IResDeliveredSms,
+	IResSentdSms,
+	IResPendingSms,
+	IResRejectedSms,
+	IResAlfaNames,
+	ISendingProcess,
+} from "@/globaltypes/types";
 
-export default async function fetchUser(id: string): Promise<IUser | NextResponse<{
-	user: null;
-	message: string;
-}>> {
+export default async function fetchUser(id: string): Promise<IUser | null> {
+	try {
 
-	const res: QueryResult<IUser> = await db.query(
-		`SELECT balance, email, user_active, user_create_date, user_id, user_login, user_name, user_role, tel
-  	FROM users
-		WHERE user_id = ${id}`
-	);
+		if (!id) {
+			return null;
+		};
 
-	if (!res) {
-		return NextResponse.json(
-			{ user: null, message: `User not found` },
-			{ status: 404 }
-		);
-	}
+		const AlfaNamesData = fetchUserAlfaNames(Number(id));
+		const deliveredSmsData = fetchUserDeliveredSms(Number(id));
+		const sentSmsData = fetchUserSentSms(Number(id));
+		const pendingSmsData = fetchUserPendingSms(Number(id));
+		const rejectedSmsData = fetchUserRejectedSmsByUserId(Number(id));
+		const paidSmsData = fetchUserPaidSms(Number(id));
+		const adjusmentSmsData = fetchUserAdjusmentSms(Number(id));
+		const paymentHistoryData = fetchUserPaymentHistory(Number(id));
+		const userResData = fetchUserDataFromDatabase(Number(id));
+		const updateUserBalanceData = updateUserBalance(Number(id));
+		const sendingSmsData = fetchUserSmsSendingInProgress(Number(id));
 
-	const resAlfaNames: QueryResult<{ alfa_name: string, alfa_name_active: boolean }> = await db.query(`SELECT alfa_name, alfa_name_active
-	FROM sendler_name
-	WHERE user_id = ${id}`
-	);
+		const [
+			AlfaNames,
+			deliveredSms,
+			sentSms,
+			pendingSms,
+			rejectedSms,
+			paidSms,
+			adjusmentSms,
+			paymentHistory,
+			userRes,
+			updateUserBal,
+			sendingSms
+		]: [PromiseSettledResult<QueryResult<IResAlfaNames>>,
+				PromiseSettledResult<QueryResult<IResDeliveredSms>>,
+				PromiseSettledResult<QueryResult<IResSentdSms>>,
+				PromiseSettledResult<QueryResult<IResPendingSms>>,
+				PromiseSettledResult<QueryResult<IResRejectedSms>>,
+				PromiseSettledResult<QueryResult<IResPaidSms>>,
+				PromiseSettledResult<QueryResult<IResAjustmentSms>>,
+				PromiseSettledResult<QueryResult<IPaymentHistory>>,
+				PromiseSettledResult<QueryResult<IUser>>,
+				PromiseSettledResult<number | null>,
+				PromiseSettledResult<ISendingProcess[]>
+			] = await Promise.allSettled([
+				AlfaNamesData,
+				deliveredSmsData,
+				sentSmsData,
+				pendingSmsData,
+				rejectedSmsData,
+				paidSmsData,
+				adjusmentSmsData,
+				paymentHistoryData,
+				userResData,
+				updateUserBalanceData,
+				sendingSmsData
+			]);
 
-	const alfaNamesActive: string[] = [];
-	const alfaNamesDisable: string[] = [];
+		let user: IUser;
+		if (userRes.status === 'fulfilled') {
+			user = userRes.value.rows[0];
 
-	for (const resAlfaName of resAlfaNames.rows) {
-		if (resAlfaName.alfa_name_active) {
-			alfaNamesActive.push(resAlfaName.alfa_name)
+			if (AlfaNames.status === 'fulfilled') {
+				const alfaNamesActive: string[] = [];
+				const alfaNamesDisable: string[] = [];
+				for (const resAlfaName of AlfaNames.value.rows) {
+					if (resAlfaName.alfa_name_active) {
+						alfaNamesActive.push(resAlfaName.alfa_name);
+					} else {
+						alfaNamesDisable.push(resAlfaName.alfa_name);
+					}
+				};
+				user.alfa_names_active = alfaNamesActive;
+				user.alfa_names_disable = alfaNamesDisable;
+			} else {
+				throw AlfaNames.reason;
+			};
+
+			if (deliveredSms.status === 'fulfilled') {
+				user.delivered_sms = Number(deliveredSms?.value.rows[0].delevered_sms);
+			} else {
+				throw deliveredSms.reason;
+			};
+
+			if (sentSms.status === 'fulfilled') {
+				user.sent_sms = Number(sentSms?.value.rows[0].sent_sms);
+			} else {
+				throw sentSms.reason;
+			};
+
+			if (pendingSms.status === 'fulfilled') {
+				user.pending_sms = Number(pendingSms?.value.rows[0].pending_sms);
+			} else {
+				throw pendingSms.reason;
+			};
+
+			if (rejectedSms.status === 'fulfilled') {
+				user.rejected_sms = Number(rejectedSms?.value.rows[0].rejected_sms);
+			} else {
+				throw rejectedSms.reason;
+			};
+
+			if (paidSms.status === 'fulfilled') {
+				user.paid_sms = Number(paidSms?.value.rows[0].paid_sms);
+			} else {
+				throw paidSms.reason;
+			};
+
+			if (adjusmentSms.status === 'fulfilled') {
+				user.adjusment_sms = Number(adjusmentSms?.value.rows[0].sum);
+			} else {
+				throw adjusmentSms.reason;
+			};
+
+			if (paymentHistory.status === 'fulfilled') {
+				user.paymentHistory = paymentHistory?.value.rows;
+			} else {
+				throw paymentHistory.reason;
+			};
+
+			if (sendingSms.status === 'fulfilled') {
+				user.sendingSms = sendingSms?.value
+			} else {
+				throw sendingSms.reason;
+			};
+
+			return user;
 		} else {
-			alfaNamesDisable.push(resAlfaName.alfa_name)
-		}
-	}
+			throw userRes.reason;
+		};
 
-	const user = res.rows[0];
-	user.alfa_names_active = alfaNamesActive;
-	user.alfa_names_disable = alfaNamesDisable;
-
-	return user;
+	} catch (error: any) {
+		throw new Error(error.message);
+	};
 };

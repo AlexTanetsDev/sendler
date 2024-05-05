@@ -9,7 +9,7 @@ type Props = {
   userHistory: IHistoryResponce[] | undefined;
 };
 
-export default async function HistoryList({ userHistory }: Props) {
+export default function HistoryList({ userHistory }: Props) {
   const sortHistory = userHistory ? summarizeHistoryByDate(userHistory) : undefined;
 
   return (
@@ -19,7 +19,7 @@ export default async function HistoryList({ userHistory }: Props) {
         sortHistory.map(item => {
           return (
             <li
-              key={item.history_id}
+              key={typeof item.history_id === 'number' ? item.history_id : item.history_id[0]}
               className="flex items-center gap-[100px] h-[47px] px-[26px] font-roboto text-[20px] text-black border-b border-[#B5C9BE]"
             >
               {}
@@ -29,7 +29,7 @@ export default async function HistoryList({ userHistory }: Props) {
                   href={{
                     pathname: `statistics/by-date/`,
                     query: {
-                      date: item.sending_group_date.toISOString(),
+                      date: new Date(item.sending_group_date).toString(),
                     },
                   }}
                 >
@@ -38,7 +38,7 @@ export default async function HistoryList({ userHistory }: Props) {
               </p>
               <p className="w-[150px]">{item.recipient_status.length}</p>
               <p className="w-[150px]">
-                {item.recipient_status.filter((item: SmsStatusEnum) => item === 'fulfield').length}
+                {item.recipient_status.filter((item: SmsStatusEnum) => item === 'fullfield').length}
               </p>
             </li>
           );
@@ -56,7 +56,8 @@ export default async function HistoryList({ userHistory }: Props) {
               {sortHistory?.reduce(
                 (acc, item) =>
                   acc +
-                  item.recipient_status.filter((item: SmsStatusEnum) => item === 'fulfield').length,
+                  item.recipient_status.filter((item: SmsStatusEnum) => item === 'fullfield')
+                    .length,
                 0
               )}
             </p>

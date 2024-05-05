@@ -65,11 +65,13 @@ const UpdateUserForm = ({ userId }: Props) => {
 	});
 
 	const getData = async () => {
-		const res = await getUser(userId);
-		if (res) {
-			setUserState(res.data.user);
-		}
-	}
+		if (userId) {
+			const res = await getUser(userId);
+			if (res) {
+				setUserState(res.data.user);
+			}
+		};
+	};
 
 	const memoizedgetData = useCallback(getData, [userId]);
 
@@ -90,7 +92,7 @@ const UpdateUserForm = ({ userId }: Props) => {
 		<form
 			autoComplete="off"
 			onSubmit={handleSubmit(onSubmit)}
-			className={`max-w-[526px] mx-auto py-[26px] ${isOpen ? "form-visible" : "form-hidden"} justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg px-[26px] overflow-hidden`}
+			className={`max-w-[526px] mx-auto p-[26px] ${isOpen ? "form-visible" : "form-hidden"} justify-items-center  items-center flex-col leading-6 rounded-[18px] border-gray-700  bg-formBg overflow-hidden`}
 		>
 			<div className="relative w-full text-center">
 				<p color="dark" className="form-title">Анкета користувача</p>

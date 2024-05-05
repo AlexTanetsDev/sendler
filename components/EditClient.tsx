@@ -17,8 +17,8 @@ const EditClient = ({ groupId,
 	client,
 	updateClients,
 	getUpdate }: Props) => {
-
-	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+	const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
 
 	const openModal = () => {
 		setIsModalOpen(true);
@@ -30,13 +30,19 @@ const EditClient = ({ groupId,
 		document.body.classList.remove('overflow-hidden');
 	};
 
+	// control keydown 'Escape' depend on open select in CreateClientForm 
+	const openSelect = (isOpen: boolean) => {
+		setIsSelectOpen(isOpen);
+	};
+
 	return (
 		<>
 			<button type="button" onClick={openModal} className="row-table__btn">Редагувати</button>
-			<Modal isOpen={isModalOpen} onClose={closeModal}>
+			<Modal isOpen={isModalOpen} isSelectOpen={isSelectOpen} onClose={closeModal}>
 				{groupId ?
 					<CreateClientForm
 						onClose={closeModal}
+						openSelect={openSelect}
 						groupId={groupId}
 						currentClient={client}
 						updateClients={updateClients}
@@ -45,6 +51,7 @@ const EditClient = ({ groupId,
 					/> :
 					<CreateClientForm
 						onClose={closeModal}
+						openSelect={openSelect}
 						updateClients={updateClients}
 						currentClient={client}
 						getUpdate={getUpdate}

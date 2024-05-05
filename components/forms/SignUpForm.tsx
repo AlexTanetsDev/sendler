@@ -10,8 +10,9 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 import ShowPassword from '../buttons/ShowPassword';
 import { fetchUserId } from '@/helpers/fetchUserId';
-import { handleKeyPress } from '@/helpers/EnterOnlyFigures';
+import { EnterOnlyFigures } from '@/helpers/EnterOnlyFigures';
 import axios from 'axios';
+import Image from 'next/image';
 
 const SingUpForm = () => {
   const {
@@ -44,7 +45,11 @@ const SingUpForm = () => {
 
   const router = useRouter();
   const [show, setShow] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(false);
+  const [isDisabled, setIsDisabled] = useState(true);
+
+  const handleClickChecked = () => {
+    setIsDisabled(!isDisabled);
+  };
 
   const onSubmit: SubmitHandler<FormInputsSignUp> = async data => {
     setIsDisabled(true);
@@ -109,7 +114,7 @@ const SingUpForm = () => {
           <input
             id="phone"
             type="tel"
-            onKeyPress={handleKeyPress}
+            onKeyPress={EnterOnlyFigures}
             {...register('phone')}
             className="w-full border py-2 pr-11 pl-[50px] focus:outline-none focus:border-blue-500 rounded-[18px] input"
             required
@@ -181,6 +186,26 @@ const SingUpForm = () => {
             <span className="form-errors ">{errors.repeatPassword.message}</span>
           )}
         </div>
+        <span className="flex items-center justify-center mt-4">
+          {isDisabled ? (
+            <Image
+              src="/svg/checkbox-empty.svg"
+              width={24}
+              height={24}
+              alt="Check box"
+              onClick={handleClickChecked}
+            />
+          ) : (
+            <Image
+              src="/svg/checkbox-checked.svg"
+              width={24}
+              height={24}
+              alt="Check box checked"
+              onClick={handleClickChecked}
+            />
+          )}
+          <span className=" text-redStar"> * </span> Я даю згоду на обробку моїх персональних даних
+        </span>
       </div>
       <GreenButton size="big" isDisabled={isDisabled}>
         Реєстрація

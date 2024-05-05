@@ -12,7 +12,7 @@ import {
 } from "@/api-actions";
 
 
-export default async function createGroup(groupName: string, userId: number, method: string): Promise<IGroupDatabase | ErrorCase> {
+export default async function createGroup(groupName: string, userId: number, automaticallyGenerated?: boolean): Promise<IGroupDatabase | ErrorCase> {
 
 	try {
 		//checking user_id existense
@@ -35,7 +35,7 @@ export default async function createGroup(groupName: string, userId: number, met
 			return 2;
 		};
 
-		const group: QueryResult<IGroupDatabase> = await insertNewGroup(groupName, userId);
+		const group: QueryResult<IGroupDatabase> = await insertNewGroup(groupName, userId, automaticallyGenerated);
 
 		return group.rows[0];
 	} catch (error: any) {

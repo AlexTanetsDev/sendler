@@ -1,15 +1,13 @@
 import { NextResponse } from "next/server";
-import { cookies } from "next/headers";
-import { serialize } from "cookie";
 import db from "@/db";
 
 import { compare } from "bcrypt";
 
 import { generateToken } from "@/helpers/Users";
+import { fetchUserDeliveredSms, fetchUserPaidSms, updateUserBalance } from "@/api-actions";
 
 
 // login User
-
 export async function POST(req: Request) {
 	try {
 		const body = await req.json();
@@ -48,28 +46,21 @@ export async function POST(req: Request) {
 						{ message: "Token generation failed" },
 						{ status: 500 }
 					);
-				}
+				};
 				await db.query("UPDATE users SET  user_token = $1 where user_id = $2", [
 					token,
 					user_id,
 				]);
 
+				await updateUserBalance(user_id);
 				const userWithToken = await db.query(
 					"SELECT * FROM users WHERE user_id = $1",
 					[user_id]
 				);
-
-				const { user_password: disible, email: hiddenEmail, tel: hiddenTel, user_token:hiddenTokenclear,  ...rest } = userWithToken.rows[0];
-				
-				const cookie = serialize("token", token, {
-					httpOnly: true,
-					maxAge: 60 * 60 * 24, // Термін життя, наприклад, 24 години
-					path: "/", // Шлях доступу
-					sameSite: "strict", // Захист від CSRF-атак
-				});
+				const { user_password: disible, email: hiddenEmail, tel: hiddenTel, user_token: hiddenTokenclear, ...rest } = userWithToken.rows[0];
 				return NextResponse.json(
 					{ rest, message: "User login successfully" },
-					{ status: 200, headers: { "Set-Cookie": cookie } }
+					{ status: 200 }
 				);
 			} else {
 				return NextResponse.json(

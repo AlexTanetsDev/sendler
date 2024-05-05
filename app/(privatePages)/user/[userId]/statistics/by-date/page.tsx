@@ -3,63 +3,15 @@
 import { useState, useCallback, useEffect } from 'react';
 import Link from 'next/link';
 import { useSearchParams } from 'next/navigation';
-import Image from 'next/image';
 
-import getUserHistory from '@/app/utils/getUserHistory';
+import { getUserHistory } from '@/fetch-actions/historyFetchActions';
 import formatTableDate from '@/app/utils/formatTableDate';
 import Title from '@/components/Title';
-import HistoryPeriodForm from '@/components/forms/HistoryPeriodForm';
+import SendingPermissionBtn from '@/components/buttons/SendingPermissionBtn';
 import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
+import { countSuccessfullySentNumbers } from '@/helpers/getCountSuccessfullySentNumbers';
 import { IHistoryPeriod, IHistoryResponce } from '@/globaltypes/historyTypes';
-
-//testData
-const userHistoryTest: IHistoryResponce[] = [
-  {
-    sending_group_date: new Date(),
-    history_id: 123457676,
-    group_name: 'Group name',
-    send_method: 'API',
-    recipient_status: ['fulfield', 'fulfield', 'fulfield'],
-    text_sms: 'Запрошуємо',
-    user_name: 'FASONCHIKI',
-  },
-  {
-    sending_group_date: new Date(),
-    history_id: 12345,
-    group_name: 'Group name',
-    send_method: 'API',
-    recipient_status: ['fulfield', 'rejected'],
-    text_sms: 'Запрошуємо',
-    user_name: 'FASONCHIKI',
-  },
-  {
-    sending_group_date: new Date(),
-    history_id: 1234512,
-    group_name: 'Group name',
-    send_method: 'Site',
-    recipient_status: ['fulfield', 'rejected', 'fulfield', 'fulfield'],
-    text_sms: 'Запрошуємо',
-    user_name: 'FASONCHIKI',
-  },
-  {
-    sending_group_date: new Date(2021, 1, 10),
-    history_id: 1256345,
-    group_name: 'Group name',
-    send_method: 'API',
-    recipient_status: ['pending', 'fulfield'],
-    text_sms: 'Запрошуємо',
-    user_name: 'FASONCHIKI',
-  },
-  {
-    sending_group_date: new Date(2021, 12, 20),
-    history_id: 12336545,
-    group_name: 'Group name',
-    send_method: 'API',
-    recipient_status: ['fulfield', 'fulfield', 'fulfield', 'fulfield'],
-    text_sms: 'Запрошуємо',
-    user_name: 'FASONCHIKI',
-  },
-];
+import { SmsStatusEnum } from '@/globaltypes/types';
 
 export default function DayHistory({ params }: { params: { userId: string } }) {
   const [userHistory, setUserHistory] = useState<IHistoryResponce[]>([]);
@@ -92,7 +44,6 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
       </Title>
       <div className="mt-[60px]">
         <div className="content-block">
-          <HistoryPeriodForm />
           <div className="ml-[26px]">
             <p className="mb-5 text-xl font-roboto text-[#1B1B30]">
               Розсилки за {historyDate ? formatTableDate(new Date(historyDate)) : '-'}
@@ -107,36 +58,46 @@ export default function DayHistory({ params }: { params: { userId: string } }) {
             <p className="w-[126px]">Статус </p>
             <p className="w-[160px]">Доставлено sms</p>
             <p className="w-[200px]">Доставлено номерів</p>
-            <p className="w-[77px]">
-              <Image src="/svg/excel.svg" alt="Excel icon" width={42} height={42} />
-            </p>
-            <p className="w-[73px]">Дії</p>
+            <p className="w-[113px]">Дії</p>
           </div>
-
           <ul>
             {userHistory &&
               userHistory.length !== 0 &&
               userHistory.map(item => {
                 return (
                   <li
-                    key={item.history_id}
+                    key={item.history_id as number}
                     className="flex items-center justify-between h-[47px] px-[26px] font-roboto text-lg text-black border-b border-[#B5C9BE]"
                   >
-                    <p className="w-[130px] text-[#2366E8]">
+                    <p className="w-[130px] text-[#2366E8] text-ellipsis whitespace-nowrap overflow-hidden">
                       <Link href={`by-date/${item.history_id}`}>{item.text_sms}</Link>
                     </p>
-                    <p className="w-[118px]">{item.user_name}</p>
-                    <p className="w-[126px]">Доставлено</p>
+                    <p className="w-[118px]">{item.alfa_name}</p>
+                    <p className="w-[126px]">
+                      {item.sending_group_date >= new Date() && item.sending_permission === true
+                        ? 'Заплановано'
+                        : item.sending_permission === false
+                        ? 'Зупинено'
+                        : item.sending_group_date < new Date() &&
+                          item.recipient_status.some(item => item === 'pending')
+                        ? 'Відправлено'
+                        : 'Завершено'}
+                    </p>
                     <p className="w-[160px]">
-                      {item.recipient_status.filter(item => item === 'fulfield').length}/
+                      {item.recipient_status.filter(item => item === 'fullfield').length}/
                       {item.recipient_status.length}
                     </p>
                     <p className="w-[200px]">
-                      {item.recipient_status.filter(item => item === 'fulfield').length}/
-                      {item.recipient_status.length}
+                      {countSuccessfullySentNumbers(item)}/
+                      {Array.from(new Set(item.clients)).length}
                     </p>
-                    <p className="w-[77px] text-[#2366E8]">Export</p>
-                    <p className="w-[73px]">&#8212;</p>
+                    <p className="w-[113px]">
+                      {new Date(item.sending_group_date) > new Date() ? (
+                        <SendingPermissionBtn history={item} />
+                      ) : (
+                        <>&#8212;</>
+                      )}
+                    </p>
                   </li>
                 );
               })}

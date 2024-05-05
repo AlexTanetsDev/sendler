@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import HttpError from '@/helpers/HttpError';
 import { getUserHistory, createUserHistory } from '@/app/api/controllers/sending-history';
-import { IErrorResponse } from '@/globaltypes/types';
+import { IErrorResponse, SmsStatusEnum } from '@/globaltypes/types';
 import { IHistoryProps, IHistoryResponce } from '@/globaltypes/historyTypes';
 
 export async function GET(
@@ -16,6 +16,8 @@ export async function GET(
 
     const startDate = start_date ? new Date(start_date) : undefined;
     const endDate = end_date ? new Date(end_date) : undefined;
+    startDate?.setHours(0, 0, 0, 0);
+    endDate?.setHours(23, 59, 59, 999);
 
     if (!userId) {
       return HttpError(400, `ID required for getting user's history`);
@@ -29,7 +31,19 @@ export async function GET(
     if (!result) {
       return HttpError(400, `Failed to get user's history by userID = ${userId}`);
     }
-    return NextResponse.json({ history: result });
+
+    const formatedHistory = result.map(history => {
+      return {
+        ...history,
+        recipient_status: `${history.recipient_status as unknown as string}`
+          ?.replace(/{|}/g, '')
+          .split(',') as SmsStatusEnum[],
+      };
+    });
+
+    return NextResponse.json({
+      history: formatedHistory,
+    });
   } catch (error: any) {
     return NextResponse.json({ message: 'Server error', error: error.message }, { status: 500 });
   }

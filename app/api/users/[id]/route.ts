@@ -9,53 +9,37 @@ import { IUser } from "@/globaltypes/types";
 import { fetchUser } from "@/api-actions";
 
 
-export async function GET(req: Request, { params }: { params: { id: string } }) {
-	const id = params.id;
+export async function GET(req: Request, { params }: { params: { id: string } }): Promise<NextResponse<{
+	message: string;
+}> | NextResponse<{
+	user: IUser | NextResponse<{
+		error: string;
+	}>;
+}> | NextResponse<{
+	error: any;
+}> | undefined> {
+	try {
+		const id = params.id;
 
-	const user = await fetchUser(id);
+		const user: IUser | null = await fetchUser(id);
+		if (user === null) {
+			return NextResponse.json(
+				{ message: `User information not found` },
+				{ status: 500 }
+			);
+		}
 
-	if (user) {
+		if (user) {
+			return NextResponse.json(
+				{ user },
+				{ status: 200 }
+			);
+		};
+	} catch (error: any) {
 		return NextResponse.json(
-			{ user },
-			{ status: 200 }
-		);
-	};
-
-	// const res: QueryResult<IUser> = await db.query(
-	// 	`SELECT balance, email, user_active, user_create_date, user_id, user_login, user_name, user_role, tel
-	// 	FROM users
-	// 	WHERE user_id = ${id}`
-	// );
-
-	// const resAlfaNames = await db.query(`SELECT alfa_name
-	// FROM sendler_name
-	// WHERE user_id = ${id}`
-	// );
-
-	// const alfaNames = [];
-
-	// for (const name of resAlfaNames.rows) {
-	// 	alfaNames.push(name.alfa_name)
-	// }
-
-	// if (!res) {
-	// 	return NextResponse.json(
-	// 		{ user: null, message: `User not found` },
-	// 		{ status: 404 }
-	// 	);
-	// }
-
-	// const user = res.rows[0];
-	// user.alfa_names = alfaNames;
-
-	// console.log('user', user)
-
-	// if (res) {
-	// 	return NextResponse.json(
-	// 		{ user },
-	// 		{ status: 200 }
-	// 	);
-	// };
+			{ error: error.message },
+			{ status: 500 });
+	}
 
 };
 
@@ -145,7 +129,6 @@ export async function PUT(req: Request, { params }: { params: { id: string } }):
 }
 
 //update password
-
 export async function PATCH(
 	req: Request,
 	{ params }: { params: { id: string } }
@@ -165,59 +148,65 @@ export async function PATCH(
 
 		const { oldPassword, newPassword } = value;
 
-		const isTheSamePassword = oldPassword === newPassword;
+		if (oldPassword || oldPassword) {
+			const isTheSamePassword = oldPassword === newPassword;
 
-		if (isTheSamePassword) {
-			return NextResponse.json(
-				{ message: " This the same password " },
-				{ status: 400 }
+			if (isTheSamePassword) {
+				return NextResponse.json(
+					{ message: " This the same password " },
+					{ status: 400 }
+				);
+			};
+
+			const isUserActive = await userActive(id);
+
+			if (!isUserActive.user_active) {
+				return NextResponse.json(
+					{ user: null, message: `User with id ${id} not active` },
+					{ status: 404 }
+				);
+			}
+
+			const response = await db.query(
+				"SELECT user_password FROM users WHERE user_id = $1",
+				[id]
 			);
+
+			const userPassword = response.rows[0].user_password;
+
+			if (!userPassword) {
+				return NextResponse.json(
+					{ user: null, message: `User with id ${id} not found` },
+					{ status: 404 }
+				);
+			};
+
+			const isPasswordMatched = await compare(oldPassword, userPassword);
+
+			if (!isPasswordMatched) {
+				return NextResponse.json(
+					{ user: null, message: `Old password is incorrect` },
+					{ status: 400 }
+				);
+			};
+
+			const newHashPassword = await hash(newPassword, 10);
+
+			await db.query("UPDATE users SET  user_password = $1 where user_id = $2", [
+				newHashPassword,
+				id,
+			]);
+
+			return NextResponse.json({ message: `Password updated` }, { status: 200 });
 		};
 
-		const isUserActive = await userActive(id);
-
-		if (!isUserActive.user_active) {
-			return NextResponse.json(
-				{ user: null, message: `User with id ${id} not active` },
-				{ status: 404 }
-			);
-		}
-
-		const response = await db.query(
-			"SELECT user_password FROM users WHERE user_id = $1",
-			[id]
-		);
-
-		const userPassword = response.rows[0].user_password;
-
-		if (!userPassword) {
-			return NextResponse.json(
-				{ user: null, message: `User with id ${id} not found` },
-				{ status: 404 }
-			);
-		};
-
-		const isPasswordMatched = await compare(oldPassword, userPassword);
-
-		if (!isPasswordMatched) {
-			return NextResponse.json(
-				{ user: null, message: `Old password is incorrect` },
-				{ status: 400 }
-			);
-		};
-
-		const newHashPassword = await hash(newPassword, 10);
-
-		await db.query("UPDATE users SET  user_password = $1 where user_id = $2", [
-			newHashPassword,
-			id,
-		]);
-
-		return NextResponse.json({ message: `Password updated` }, { status: 200 });
 	} catch (error) {
 		return NextResponse.json(
 			{ message: "Something went wrong!" },
 			{ status: 500 }
 		);
 	};
-}
+};
+
+
+

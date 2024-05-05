@@ -3,33 +3,47 @@ import RSC from "react-scrollbars-custom";
 
 type Props = {
 	selectOptions?: string[];
-	selectedOption: string;
-	getSelect: (item: string) => void;
+	selectedOption: string | undefined;
+	getSelect: (item: string | undefined) => void;
+	openSelect: (isOpen: boolean) => void;
 	widthValue?: number;
 	startValue?: string;
-	heightBodySelect: number;
+	isModal?: boolean;
 }
 
-const SelectTime = ({ selectOptions, selectedOption, getSelect, widthValue = 474, startValue, heightBodySelect }: Props) => {
+const SelectTime = ({ selectOptions,
+	selectedOption,
+	getSelect,
+	openSelect,
+	widthValue = 474,
+	startValue,
+	isModal }: Props) => {
 	const [isOpen, setIsOpen] = useState<boolean>(false);
 
 	const selectBodyRef = useRef<HTMLDivElement | null>(null);
 	let key = 0;
 
 	const onClose = () => {
-		setIsOpen(!isOpen)
+		setIsOpen(!isOpen);
 	};
 
 	const memoizedClose = useCallback(onClose, [isOpen])
 
 	useEffect(() => {
 		const handleKeyDown = (e: KeyboardEvent) => {
-			if (e.key === 'Escape') {
+			//close select if it is opened
+			if (e.key === 'Escape' && selectBodyRef?.current) {
+				openSelect(true);
 				memoizedClose();
+			};
+			// close modal
+			if (e.key === 'Escape' && !selectBodyRef?.current) {
+				openSelect(false);
 			};
 		};
 
-		const handleCloseClick = (e: any) => {
+		// close select if click outside of select
+		const handleClickCloseInput = (e: any) => {
 			if (selectBodyRef?.current && !selectBodyRef?.current?.contains(e.target as Node)) {
 				memoizedClose();
 				if (startValue === '00') {
@@ -40,16 +54,35 @@ const SelectTime = ({ selectOptions, selectedOption, getSelect, widthValue = 474
 			};
 		};
 
-		document.addEventListener('keydown', handleKeyDown);
-		document.addEventListener('click', handleCloseClick);
+		// control click or keydown for close select
+		if (isModal) {
+			// if select is inside modal
+			document.body.addEventListener('keydown', handleKeyDown);
+			document.body.addEventListener('click', handleClickCloseInput);
+		}
+		else {
+			// if select is outside modal
+			document.addEventListener('keydown', handleKeyDown);
+			document.addEventListener('click', handleClickCloseInput);
+		}
+
 		return () => {
-			document.removeEventListener('keydown', handleKeyDown);
-			document.removeEventListener('click', handleCloseClick);
+			if (isModal) {
+				// if select is inside modal
+				document.body.removeEventListener('keydown', handleKeyDown);
+				document.body.removeEventListener('click', handleClickCloseInput);
+			}
+			else {
+				// if select is outside modal
+				document.removeEventListener('keydown', handleKeyDown);
+				document.removeEventListener('click', handleClickCloseInput);
+			}
 		};
-	}, [memoizedClose, getSelect, startValue]);
+
+	}, [memoizedClose, getSelect, startValue, isModal, openSelect, isOpen]);
 
 	return (
-		<div onClick={onClose} className={`select-wrap w-[${widthValue}px] ${isOpen ? ` rounded-t-[18px]` : `border-[#E6E6E6] rounded-[18px]`}`}>
+		<div onClick={onClose} className={`select-wrap relative w-[${widthValue}px] ${isOpen ? `rounded-t-[18px]` : `border-[#E6E6E6] rounded-[18px]`}`}>
 			<div className='select'>
 				<div className='absolute top-1/2 -translate-y-1/2 left-7 font-montserrat font-normal text-lg leading-6'>
 					{isOpen && !selectedOption ? startValue : selectedOption}</div>
@@ -69,13 +102,13 @@ const SelectTime = ({ selectOptions, selectedOption, getSelect, widthValue = 474
 					/>}
 			</div>
 
-			{isOpen && <div className={`w-full overflow-auto h-60 -mt-[2px] bg-white rounded-b-[18px] border-[1px] border-[#E6E6E6] border-t-0`} ref={selectBodyRef}>
+			{isOpen ? <div className={`w-[${widthValue}px] absolute overflow-auto h-60 -ml-[1px] -mt-[2px] bg-white rounded-b-[18px] border-[1px] border-[#E6E6E6] border-t-0`} ref={selectBodyRef}>
 				<RSC>
 					{selectOptions?.map((selectOption) => (
 						<div key={key++} onClick={() => getSelect(selectOption)} className="select-item">{selectOption}</div>
 					))}
 				</RSC>
-			</div >}
+			</div > : null}
 		</div>
 	)
 }

@@ -5,6 +5,7 @@ import { useForm, SubmitHandler } from "react-hook-form";
 import { schemaSearchClient } from "@/models/clients";
 import { useState } from "react";
 import GreenButton from "../buttons/GreenButton";
+import { EnterOnlyFigures } from "@/helpers/EnterOnlyFigures";
 
 interface IFormInput {
 	tel: string;
@@ -63,6 +64,7 @@ export default function SearchClientForm({ getFilter, resetFilter }: Props) {
 
 		setIsDisabled(true);
 		reset({ tel: '' });
+		setFilter('380');
 		resetFilter();
 		setIsDisabled(false);
 	};
@@ -82,10 +84,11 @@ export default function SearchClientForm({ getFilter, resetFilter }: Props) {
 					{...register("tel")}
 					className='w-[474px] h-12 mr-8 px-4 input'
 					onChange={onChange}
+					onKeyDown={EnterOnlyFigures}
 					required
 				/>
 				{errors.tel && (
-					<span className="text-red-500 ">{errors.tel.message}</span>
+					<span className="form-errors">{errors.tel.message}</span>
 				)}
 				<GreenButton size="normal" isDisabled={isDisabled}>Скинути</GreenButton>
 			</div>

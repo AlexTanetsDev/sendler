@@ -15,6 +15,7 @@ interface Props {
 const AddClient = ({ groupId, updateClients, getUpdate }: Props) => {
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isDisabled, setIsDisabled] = useState(false);
+	const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
 
 	const openModal = () => {
 		setIsModalOpen(true);
@@ -27,6 +28,12 @@ const AddClient = ({ groupId, updateClients, getUpdate }: Props) => {
 		setIsDisabled(false);
 		document.body.classList.remove('overflow-hidden');
 	};
+
+	// control keydown 'Escape' depend on open select in CreateClientForm 
+	const openSelect = (isOpen: boolean) => {
+		setIsSelectOpen(isOpen);
+	};
+
 	return (
 		<>
 			<GreenButton
@@ -37,9 +44,10 @@ const AddClient = ({ groupId, updateClients, getUpdate }: Props) => {
 			>
 				Додати контакт
 			</GreenButton>
-			<Modal isOpen={isModalOpen} onClose={closeModal}>
+			<Modal isOpen={isModalOpen} isSelectOpen={isSelectOpen} onClose={closeModal}>
 				<CreateClientForm
 					onClose={closeModal}
+					openSelect={openSelect}
 					updateClients={updateClients}
 					groupId={groupId}
 					getUpdate={getUpdate} title='Редагування групи' />

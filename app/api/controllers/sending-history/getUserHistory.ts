@@ -1,4 +1,4 @@
-import { fetchUserHistory } from '@/app/utils';
+import fetchUserHistory from '@/api-actions/fetchUserHistory';
 
 import { QueryResult } from 'pg';
 import { IHistoryResponce, IHistoryPeriod } from '@/globaltypes/historyTypes';
@@ -12,6 +12,7 @@ export default async function getUserHistory(
 
     return history.rows;
   } catch (error: any) {
+    console.log(error);
     throw new Error(error.message);
   }
 }

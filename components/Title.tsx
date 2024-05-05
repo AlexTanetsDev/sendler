@@ -39,6 +39,9 @@ export default function Title({ type, color, children }: ITitleProps) {
 
 		case "accent-main_text-dark":
 			return <p className="accent-main_text text-mainTextColor">{children}</p>;
+		
+		default:
+			return <p className="accent-main_text text-mainTextColor">{children}</p>;
 
 	}
 };

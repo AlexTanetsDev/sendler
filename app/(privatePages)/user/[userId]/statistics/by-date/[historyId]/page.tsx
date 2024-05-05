@@ -1,11 +1,11 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import Link from 'next/link';
 import Image from 'next/image';
+import * as XLSX from 'xlsx/xlsx.mjs';
 import Title from '@/components/Title';
 import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
-import getUserHistoryDetails from '@/app/utils/getUserHistoryDetails';
+import { getUserHistoryDetails } from '@/fetch-actions/historyFetchActions';
 import { IHistoryDetailsResponce } from '@/globaltypes/historyTypes';
 
 export default function HistoryDetails({
@@ -30,6 +30,51 @@ export default function HistoryDetails({
     memoizedUserHistoryDetails();
   }, [memoizedUserHistoryDetails]);
 
+  const handleClick = async () => {
+    try {
+      const formatedHistory: any[] = [];
+
+      userHistoryDetails.forEach(history => {
+        formatedHistory.push({
+          ['Одержувач']: history.tel,
+          ['Відправник']: history.alfa_name,
+          ['Відправлено']: history.sending_group_date,
+          // ['Відправлено']: new Date(history.sending_group_date).toLocaleDateString('uk-UA', {
+          // 	year: 'numeric',
+          // 	month: 'numeric',
+          // 	day: 'numeric',
+          // 	hour: 'numeric',
+          // 	minute: 'numeric',
+          // 	second: 'numeric',
+          ['Статус']: history.recipient_status.every(item => item === 'fullfield')
+            ? 'Доставлено'
+            : 'Недоставлено',
+          ['Текст повідомлення']: history.text_sms,
+        });
+      });
+
+      const keysObject = Object.keys(formatedHistory[0]);
+      const ws = XLSX.utils.json_to_sheet(formatedHistory, {
+        header: keysObject,
+      });
+
+      if (!ws['!cols']) ws['!cols'] = [];
+      const range = XLSX.utils.decode_range(ws['!ref']);
+      const width = 20;
+      for (let i = range.s.c; i <= range.e.c; i++) {
+        ws['!cols'][i] = { wch: width };
+      }
+
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, ws, 'Sheet 1');
+      XLSX.writeFile(workbook, `Statistics.xlsx`);
+    } catch (error: any) {
+      console.log(error);
+    }
+  };
+
+  console.log(userHistoryDetails);
+
   return (
     <section className="container mx-auto">
       <Title type="h1" color="dark">
@@ -39,9 +84,9 @@ export default function HistoryDetails({
         <div className="ml-[26px]">
           <div className="flex items-center gap-3 mb-5">
             <p className="text-xl font-roboto text-[#1B1B30]">Розсилки за</p>
-            <Link href={`/statistics/`}>
+            <button type="button" onClick={handleClick}>
               <Image src="/svg/excel.svg" alt="Excel icon" width={42} height={42} />
-            </Link>
+            </button>
           </div>
           <BackStatisticsBtn>
             <p>Повернутись до статистики за день</p>
@@ -53,14 +98,27 @@ export default function HistoryDetails({
               <p>Назва групи</p>
             </div>
             <div className="mr-28 font-montserrat text-lg">
-              <p className="mb-4 text-[#2366E8]">FASONCHIKI</p>
-              <p className="mb-4">Відіслано</p>
+              <p className="mb-4 text-[#2366E8]">
+                {userHistoryDetails[0] ? userHistoryDetails[0]?.alfa_name : '-'}
+              </p>
+              <p className="mb-4">
+                {userHistoryDetails.some(history => {
+                  history.recipient_status.some(status => status === 'pending');
+                })
+                  ? 'Відправлено'
+                  : userHistoryDetails[0]?.sending_group_date >= new Date() &&
+                    userHistoryDetails[0]?.sending_permission === true
+                  ? 'Заплановано'
+                  : userHistoryDetails[0]?.sending_permission === false
+                  ? 'Зупинено'
+                  : 'Завершено'}
+              </p>
               <p>Україна</p>
             </div>
             <div>
               <p className="mb-4">Текст sms</p>
               <p className="mr-28 font-montserrat text-base">
-                Святкові знижки і подарунки вже на сайті
+                {userHistoryDetails[0] ? userHistoryDetails[0]?.text_sms : '-'}
               </p>
             </div>
           </div>
@@ -75,29 +133,22 @@ export default function HistoryDetails({
         <ul>
           {userHistoryDetails &&
             userHistoryDetails.length !== 0 &&
-            userHistoryDetails.map(item => {
+            userHistoryDetails.map((item, index) => {
               return (
                 <li
-                  key={item.client_id}
+                  key={index}
                   className="flex items-center gap-[100px] h-[47px] px-[26px] font-roboto text-l text-black border-b border-[#B5C9BE]"
                 >
                   <p className="w-[166px]">{item.tel}</p>
                   <p className="w-[196px]">
-                    {new Date(item.sending_group_date).toLocaleString('uk-UA', {
-                      day: '2-digit',
-                      month: '2-digit',
-                      year: 'numeric',
-                      hour: '2-digit',
-                      minute: '2-digit',
-                      second: '2-digit',
-                    })}
+                    {String(item.sending_group_date)}
+                    {/* {new Date(item.sending_group_date).toLocaleString('uk-UA', { timeZone: 'UTC' })} */}
                   </p>
                   <p className="w-[130px]">{item.recipient_status.length}</p>
                   <p className="w-[130px]">
-                    {item.recipient_status.every(item => item === 'fulfield')
+                    {item.recipient_status.every(item => item === 'fullfield')
                       ? 'Доставлено'
                       : 'Недоставлено'}
-                    /{item.recipient_status.length}
                   </p>
                 </li>
               );

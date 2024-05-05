@@ -8,7 +8,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <div
       className={`w-full h-[1162px] mb-20 overflow-y-auto  bg-cover bg-center ${
-        width > 1160 ? "bg-[url('/bg-auth.png')]" : 'bg-[url("/bg-auth-tablet.png")]'
+        width > 1160 ? "bg-[url('/bg-auth.jpg')]" : 'bg-[url("/bg-auth-tablet.jpg")]'
       } flex items-left justify-left pt-[190px] mb-20}`}
     >
       <div className=" container mx-auto flex items-start">

@@ -132,6 +132,10 @@ footer {
   @apply w-[110px] py-[3px] hover:bg-blueHoverBtn hover:text-white hover:border-transparent text-base  text-center font-roboto font-normal border border-headerTable rounded-xl;
 }
 
+.row-table__btn_delete {
+  @apply py-[3px] hover:bg-blueHoverBtn hover:text-white hover:border-transparent text-base  text-center font-roboto font-normal border border-headerTable rounded-xl;
+}
+
 .row-table-disable__btn {
   @apply w-[110px] py-[3px]  text-base  text-center text-rowBtnDisableText font-roboto font-normal border border-rowBtnDisableBorder rounded-xl;
 }
@@ -141,7 +145,6 @@ footer {
 }
 
 .input {
-  @apply bg-white rounded-[18px];
   @apply bg-white border border-inputBorder rounded-[18px];
 }
 
@@ -185,7 +188,7 @@ footer {
 }
 
 .form-visible {
-  height: 815px;
+  height: 744px;
   -webkit-transition: height 1s;
   transition: height;
   transition-duration: 200ms;
@@ -317,7 +320,7 @@ select::-ms-expand {
 }
 
 .select-item {
-  @apply h-6 px-7 hover:bg-formBg font-montserrat font-normal text-lg leading-6;
+  @apply h-6 px-7 hover:bg-formBg font-montserrat font-normal text-base leading-6;
 }
 
 input[type='checkbox']:checked,
@@ -409,4 +412,8 @@ input[type='checkbox']:checked + label:after {
 
 .tHuMbY {
   background-color: red;
+}
+
+.print-page {
+  padding: 40px;
 }
