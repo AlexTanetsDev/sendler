@@ -128,6 +128,10 @@ export interface IClientDatabase extends IClientId, IClient, IUserId {
 	total_count?: number;
 };
 
+export interface IClientDatabaseWithGroupId extends IClientDatabase {
+	group_id?: number;
+}
+
 export interface IClientExport {
 	tel: string;
 	first_name?: string;
@@ -307,6 +311,7 @@ export interface IRecipientStatusDatabase {
 	recipient_status: SmsStatusEnum;
 	status_changing_date: Date;
 	identificator: string;
+	group_id: number;
 }
 
 export interface IStatusSmsRes {

@@ -24,6 +24,7 @@ import { QueryResult } from "pg";
 import { SmsStatusEnum } from "@/globaltypes/types";
 import {
 	IClientDatabase,
+	IClientDatabaseWithGroupId,
 	ISendSMS,
 	ISession,
 	IGroupId,
@@ -108,7 +109,7 @@ export async function POST(request: Request): Promise<NextResponse<{
 		const authRes = await resellerAuth();
 		if (!authRes) throw new Error("Authorisation error");
 
-		const clients: IClientDatabase[] = [];
+		const clients: IClientDatabaseWithGroupId[] = [];
 		const groupIdArray: number[] = [];
 
 		const updateSmsStatusesInRealTime = async (i: number) => {
@@ -116,6 +117,7 @@ export async function POST(request: Request): Promise<NextResponse<{
 				return 0;
 			};
 			let statuses: SmsStatusEnum[] = [];
+
 			setTimeout(async () => {
 				const res = await updateSmsStatusesByHistoryId(history_id);
 				if (res === null) { return 0 };
@@ -127,8 +129,6 @@ export async function POST(request: Request): Promise<NextResponse<{
 			}, 60000);
 		};
 
-
-
 		for (let i = 0; i < recipients.length; i++) {
 			if (typeof recipients[i] === "number") {
 				const currentDate = new Date().toLocaleString('en');
@@ -138,9 +138,11 @@ export async function POST(request: Request): Promise<NextResponse<{
 					const res: QueryResult<IGroupId> = await fetchGroupIdByName(userId, group_name);
 					const { group_id } = res.rows[0];
 					await createClient({ tel: String(recipients[i]) }, userId, group_id);
-					const resClientsGroup: QueryResult<IClientDatabase> = await fetchGroupClients(group_id, null, 0, '');
-					if (resClientsGroup.rows.length > 0) {
-						clients.push(resClientsGroup.rows[0]);
+					const resClientGroup: QueryResult<IClientDatabase> = await fetchGroupClients(group_id, null, 0, '');
+					if (resClientGroup.rows.length > 0) {
+						const clientWithGroupId: IClientDatabaseWithGroupId = resClientGroup.rows[0];
+						clientWithGroupId.group_id = group_id;
+						clients.push(clientWithGroupId);
 					};
 					groupIdArray.push(group_id);
 				};
@@ -150,7 +152,9 @@ export async function POST(request: Request): Promise<NextResponse<{
 				const { group_id } = res.rows[0];
 				const resClientsGroup: QueryResult<IClientDatabase> = await fetchGroupClients(group_id, null, 0, '');
 				if (resClientsGroup.rows.length > 0) {
-					resClientsGroup.rows.forEach(client => {
+					const clientsWithGroupId: IClientDatabaseWithGroupId[] = resClientsGroup.rows;
+					clientsWithGroupId.forEach(client => {
+						client.group_id = group_id;
 						clients.push(client);
 					});
 				};
@@ -158,11 +162,11 @@ export async function POST(request: Request): Promise<NextResponse<{
 			};
 		};
 
-		let clientsBalance: IClientDatabase[];
+		let clientsInBalance: IClientDatabaseWithGroupId[];
 		if (balance && clients.length > balance) {
-			clientsBalance = clients.slice(0, balance);
+			clientsInBalance = clients.slice(0, balance);
 		} else {
-			clientsBalance = clients;
+			clientsInBalance = clients;
 		};
 
 		let res;
@@ -177,10 +181,10 @@ export async function POST(request: Request): Promise<NextResponse<{
 		const sendSmsAgrigatorFunctions = async () => {
 			const { sending_permission } = await fetchHistoryId(history_id);
 			if (sending_permission) {
-				const smsQuerystr = createSmsUrlStr(clientsBalance, contentSMS);
-				const identificators = await smsSender(authRes, smsQuerystr, clientsBalance.length, userName);
-				await addSmsIdentificators(history_id, clientsBalance, identificators);
-				await correctUserBalance(userId, (-clientsBalance.length));
+				const smsQuerystr = createSmsUrlStr(clientsInBalance, contentSMS);
+				const identificators = await smsSender(authRes, smsQuerystr, clientsInBalance.length, userName);
+				await addSmsIdentificators(history_id, clientsInBalance, identificators);
+				await correctUserBalance(userId, (-clientsInBalance.length));
 				await updateSmsStatusesInRealTime(21600000);
 				return;
 			};
