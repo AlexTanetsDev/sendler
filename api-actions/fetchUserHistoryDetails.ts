@@ -3,10 +3,10 @@ import { QueryResult } from 'pg';
 import { IHistoryDetailsResponce } from '@/globaltypes/historyTypes';
 
 export default async function fetchUserHistoryDetails(
-  historyId: string
+	historyId: string
 ): Promise<QueryResult<IHistoryDetailsResponce>> {
-  const query = `
-SELECT cl.tel, cl.client_id, sh.alfa_name, sh.sending_permission, sh.text_sms, sh.sending_group_date, sg.group_name, u.user_name, (
+	const query = `
+        SELECT cl.tel, cl.client_id, sh.alfa_name, sh.sending_permission, sh.text_sms, to_char(sending_group_date::timestamptz at time zone 'Europe/Vilnius', 'DD.MM.YYYY HH24:MI:SS') AS sending_group_date, sg.group_name, u.user_name, (
         SELECT ARRAY_AGG(rs.recipient_status)
         FROM recipients_status rs
         WHERE rs.history_id = sh.history_id AND rs.client_id = cl.client_id
@@ -35,9 +35,9 @@ rs.history_id, sh.history_id,
     sh.alfa_name, 
     sh.sending_permission, 
     sh.text_sms, 
-    sh.sending_group_date, 
+    sh.sending_group_date,
     u.user_name;
         `;
 
-  return await db.query(query, [historyId]);
+	return await db.query(query, [historyId]);
 }

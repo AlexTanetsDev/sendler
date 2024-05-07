@@ -51,7 +51,10 @@ export default function UserSmsInform({ session }: { session: ISession | Session
 	return (
 		<div className="flex justify-end mb-[50px]">
 			<div className="flex flex-row justify-center items-center px-[35px] py-[14px] text-2xl rounded-[18px] bg-formBg">
-				{user?.user_login}: {user?.balance} SMS
+				<div className='min-w-[100px] mr-1'>{user?.user_login}</div>
+				<div className='mr-2'>:</div>
+				<div className='min-w-[40px] text-end mr-2'>{user?.balance}</div>
+				<div>SMS</div>
 			</div>
 		</div>
 	);

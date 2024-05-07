@@ -133,7 +133,7 @@ footer {
 }
 
 .row-table__btn_delete {
-  @apply  py-[3px] hover:bg-blueHoverBtn hover:text-white hover:border-transparent text-base  text-center font-roboto font-normal border border-headerTable rounded-xl;
+  @apply py-[3px] hover:bg-blueHoverBtn hover:text-white hover:border-transparent text-base  text-center font-roboto font-normal border border-headerTable rounded-xl;
 }
 
 .row-table-disable__btn {
@@ -188,7 +188,7 @@ footer {
 }
 
 .form-visible {
-  height: 815px;
+  height: 744px;
   -webkit-transition: height 1s;
   transition: height;
   transition-duration: 200ms;

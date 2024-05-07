@@ -15,10 +15,8 @@ export default function HistoryDetails({
 }) {
   const [userHistoryDetails, setUserHistoryDetails] = useState<IHistoryDetailsResponce[]>([]);
 
+  const userId = Number(params.userId);
   const historyId = String(params.historyId);
-  const sendingGroups = Object.keys(
-    userHistoryDetails.reduce((acc, obj) => ({ ...acc, [obj.group_name]: obj }), {})
-  ).join(', ');
 
   const memoizedUserHistoryDetails = useCallback(async () => {
     const userHistory: IHistoryDetailsResponce[] | undefined = await getUserHistoryDetails(
@@ -40,14 +38,14 @@ export default function HistoryDetails({
         formatedHistory.push({
           ['Одержувач']: history.tel,
           ['Відправник']: history.alfa_name,
-          ['Відправлено']: new Date(history.sending_group_date).toLocaleDateString('uk-UA', {
-            year: 'numeric',
-            month: 'numeric',
-            day: 'numeric',
-            hour: 'numeric',
-            minute: 'numeric',
-            second: 'numeric',
-          }),
+          ['Відправлено']: history.sending_group_date,
+          // ['Відправлено']: new Date(history.sending_group_date).toLocaleDateString('uk-UA', {
+          // 	year: 'numeric',
+          // 	month: 'numeric',
+          // 	day: 'numeric',
+          // 	hour: 'numeric',
+          // 	minute: 'numeric',
+          // 	second: 'numeric',
           ['Статус']: history.recipient_status.every(item => item === 'fullfield')
             ? 'Доставлено'
             : 'Недоставлено',
@@ -74,6 +72,8 @@ export default function HistoryDetails({
       console.log(error);
     }
   };
+
+  console.log(userHistoryDetails);
 
   return (
     <section className="container mx-auto">
@@ -113,7 +113,7 @@ export default function HistoryDetails({
                   ? 'Зупинено'
                   : 'Завершено'}
               </p>
-              <p className="max-w-[300px]">{sendingGroups}</p>
+              <p>Україна</p>
             </div>
             <div>
               <p className="mb-4">Текст sms</p>
@@ -141,7 +141,8 @@ export default function HistoryDetails({
                 >
                   <p className="w-[166px]">{item.tel}</p>
                   <p className="w-[196px]">
-                    {new Date(item.sending_group_date).toLocaleString('uk-UA', { timeZone: 'UTC' })}
+                    {String(item.sending_group_date)}
+                    {/* {new Date(item.sending_group_date).toLocaleString('uk-UA', { timeZone: 'UTC' })} */}
                   </p>
                   <p className="w-[130px]">{item.recipient_status.length}</p>
                   <p className="w-[130px]">

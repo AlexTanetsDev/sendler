@@ -126,6 +126,20 @@ export interface IClientId {
 export interface IClientDatabase extends IClientId, IClient, IUserId {
 	ua_date_of_birth?: string;
 	total_count?: number;
+};
+
+export interface IClientExport {
+	tel: string;
+	first_name?: string;
+	middle_name?: string;
+	last_name?: string;
+	date_of_birth?: DateTime;
+	parameter_1?: string;
+	parameter_2?: string;
+	client_id?: number;
+	ua_date_of_birth?: string;
+	total_count?: number;
+	id?: number;
 }
 
 export interface IClientUpdateReq {

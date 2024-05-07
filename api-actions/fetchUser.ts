@@ -150,8 +150,6 @@ export default async function fetchUser(id: string): Promise<IUser | null> {
 				throw sendingSms.reason;
 			};
 
-			console.log("USER 1", user)
-
 			return user;
 		} else {
 			throw userRes.reason;
