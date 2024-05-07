@@ -10,7 +10,7 @@ import CreateAccount from '@/components/CreateAccount';
 import PaymentsList from '@/components/PaymentsList';
 import { getUser } from '@/fetch-actions/usersFetchActions';
 
-import { ISendingProcess, IUser } from '@/globaltypes/types';
+import { IUser } from '@/globaltypes/types';
 import React from 'react';
 import CircleDiagram from '@/components/CircleDiagram';
 
