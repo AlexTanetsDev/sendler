@@ -9,7 +9,7 @@ import { IHistoryPeriod, IHistoryResponce } from '@/globaltypes/historyTypes';
 import { getUserHistory } from '@/fetch-actions/historyFetchActions';
 import { summarizeHistoryByDate } from '@/helpers/SortHistoryByDate';
 
-const testUserId = 23;
+const ALL_USERS = -1;
 
 const GeneralStatistics = () => {
   const [userHistory, setUserHistory] = useState<IHistoryResponce[]>([]);
@@ -50,14 +50,14 @@ const GeneralStatistics = () => {
   const memoizedUserHistory = useCallback(async () => {
     const historyPeriod: IHistoryPeriod = getMonthDateRange(selectedMonth);
     const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
-      id: testUserId,
+      id: ALL_USERS,
       historyPeriod,
     });
 
     if (userHistory) {
       setUserHistory(summarizeHistoryByDate(userHistory));
     }
-  }, [selectedMonth, testUserId]);
+  }, [selectedMonth]);
 
   useEffect(() => {
     memoizedUserHistory();

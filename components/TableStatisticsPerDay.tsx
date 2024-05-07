@@ -56,7 +56,7 @@ const TableStatisticsPerDay = ({ userHistory }: Props) => {
               {new Date(elem.sending_group_date).toLocaleString('uk-UA', { timeZone: 'UTC' })}
             </td>
             <td className="py-4 px-3 border font-montserrat text-xl">
-              {elem.send_method === 'api' ? (
+              {elem.send_method === 'web' ? (
                 <Link
                   href={{
                     pathname: `/general-statistics/${formatTableDate(

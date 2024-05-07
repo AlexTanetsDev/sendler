@@ -47,6 +47,8 @@ export default function HistoryTable({ id }: Props) {
     fetchAPI();
   }, [historyPeriod]);
 
+  console.log(userHistory);
+
   return (
     <>
       <div className="content-block">

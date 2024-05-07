@@ -6,12 +6,12 @@ export default async function fetchUserHistoryDetails(
   historyId: string
 ): Promise<QueryResult<IHistoryDetailsResponce>> {
   const query = `
-            SELECT cl.tel, cl.client_id, sh.alfa_name, sh.sending_permission, sh.text_sms, sh.sending_group_date, sg.group_name, u.user_name, (
+SELECT cl.tel, cl.client_id, sh.alfa_name, sh.sending_permission, sh.text_sms, sh.sending_group_date, sg.group_name, u.user_name, (
         SELECT ARRAY_AGG(rs.recipient_status)
         FROM recipients_status rs
         WHERE rs.history_id = sh.history_id AND rs.client_id = cl.client_id
     ) AS recipient_status
-           FROM 
+FROM 
     clients cl
 INNER JOIN 
     groups_members gm ON cl.client_id = gm.client_id

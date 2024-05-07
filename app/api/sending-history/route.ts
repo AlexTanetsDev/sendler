@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 
 import HttpError from '@/helpers/HttpError';
 import { getUserHistory, createUserHistory } from '@/app/api/controllers/sending-history';
-import { IErrorResponse, SmsStatusEnum } from '@/globaltypes/types';
+import { IErrorResponse, SmsStatusEnum, SendMethodType } from '@/globaltypes/types';
 import { IHistoryProps, IHistoryResponce } from '@/globaltypes/historyTypes';
 
 export async function GET(
@@ -13,6 +13,7 @@ export async function GET(
     const userId = Number(searchParams.get('userId'));
     const start_date = searchParams.get('start_date');
     const end_date = searchParams.get('end_date');
+    const sendMethod: any = searchParams.get('send_method') ?? null;
 
     const startDate = start_date ? new Date(start_date) : undefined;
     const endDate = end_date ? new Date(end_date) : undefined;
@@ -23,7 +24,7 @@ export async function GET(
       return HttpError(400, `ID required for getting user's history`);
     }
 
-    const result: null | IHistoryResponce[] = await getUserHistory(userId, {
+    const result: null | IHistoryResponce[] = await getUserHistory(userId, sendMethod, {
       startDate,
       endDate,
     });

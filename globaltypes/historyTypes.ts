@@ -1,4 +1,4 @@
-import { IUserId, IGroupName, ITel, SmsStatusEnum } from '@/globaltypes/types';
+import { IUserId, IGroupName, ITel, SmsStatusEnum, SendMethodType } from '@/globaltypes/types';
 
 export interface IHistoryId {
   history_id: number;
@@ -54,5 +54,6 @@ export interface IHistoryPeriod {
 
 export interface IGetHistoryProps {
   id: number | undefined;
+  sendMethod?: SendMethodType | null;
   historyPeriod?: IHistoryPeriod;
 }
