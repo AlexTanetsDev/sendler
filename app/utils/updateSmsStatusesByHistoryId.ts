@@ -16,7 +16,6 @@ interface IClientSmsStat extends Partial<ResultObject> {
 	status: string;
 };
 
-
 export const updateSmsStatusesByHistoryId = async (history_id: number): Promise<IRecipientStatusDatabase[] | null> => {
 	const smsIdentificators: QueryResult<ResultObject> = await db.query(
 		`SELECT client_id, identificator, recipient_status FROM recipients_status WHERE history_id = $1 AND recipient_status != 'fullfield'`,
@@ -32,12 +31,7 @@ export const updateSmsStatusesByHistoryId = async (history_id: number): Promise<
 
 	if (finalyArr.length > 0) {
 		const smsStatUpdateQString = smsStatusUpdateQueryCreator(finalyArr);
-
-		const statusResult = await updateResipientsStatusDb(
-			smsStatUpdateQString,
-			history_id
-		);
-
+		const statusResult = await updateResipientsStatusDb(smsStatUpdateQString, history_id);
 		return statusResult.rows;
 	}
 	return null;

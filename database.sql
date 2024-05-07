@@ -81,11 +81,15 @@ CREATE TABLE
         recipient_id SERIAL,
         history_id INT REFERENCES sending_history(history_id) ON DELETE CASCADE,
         client_id INT REFERENCES clients(client_id) ON DELETE CASCADE,
+				group_id INT REFERENCES send_groups (group_id) ON DELETE CASCADE,
         recipient_status status_type,
 				identificator TEXT NOT NULL,
         PRIMARY KEY (recipient_id),
         status_changing_date TIMESTAMPTZ DEFAULT NOW():: timestamp(0)
     );
+
+ALTER TABLE recipients_status
+ADD group_id INT REFERENCES send_groups (group_id) ON DELETE CASCADE;
 
  
 CREATE TABLE
