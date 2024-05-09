@@ -5,7 +5,7 @@ import { ISendingProcess } from "@/globaltypes/types";
 
 export default async function fetchUserSmsSendingInProgress(id: number): Promise<ISendingProcess[]> {
 	const res: QueryResult<any> = await db.query(
-		`SELECT rs.history_id, recipient_status, COUNT(*), to_char(sh.sending_group_date, 'DD.MM.YYYY HH24:MI:SS') AS sending_group_date
+		`SELECT rs.history_id, recipient_status, COUNT(*), to_char(sh.sending_group_date::timestamptz at time zone 'Europe/Vilnius', 'DD.MM.YYYY HH24:MI:SS') AS sending_group_date
 		FROM recipients_status rs
 		INNER JOIN sending_history sh ON sh.history_id = rs.history_id
 		WHERE rs.history_id IN (
