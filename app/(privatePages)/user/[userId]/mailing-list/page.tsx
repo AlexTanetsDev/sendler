@@ -202,7 +202,9 @@ const MailingList = ({ params }: { params: { userId: string } }) => {
 
 	const handleClickSubmit = async () => {
 		setIsDisabled(true);
-		if ((new Date(date).getTime() - Date.now()) < 0) {
+		const dateString: string[] = String(date).split(' ');
+		const dateSelected = new Date(`${dateString[1]} ${dateString[2]}, ${dateString[3]} ${hour}:${minute}:${second}`).getTime();
+		if (((dateSelected) - new Date().getTime()) < 0 && isChecked === true) {
 			toast.error('Ви ввели не вірну дату та час.', {
 				position: 'bottom-center',
 				className: 'toast_error',

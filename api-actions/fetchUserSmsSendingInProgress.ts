@@ -12,8 +12,7 @@ export default async function fetchUserSmsSendingInProgress(id: number): Promise
 		SELECT DISTINCT rs.history_id
 		FROM recipients_status rs
 		INNER JOIN sending_history sh ON sh.history_id = rs.history_id
-		INNER JOIN sending_members sm ON sh.history_id = sm.history_id
-		INNER JOIN send_groups sg ON sg.group_id = sm.group_id
+		INNER JOIN send_groups sg ON sg.group_id = rs.group_id
 		WHERE rs.recipient_status = 'pending' AND sg.user_id = ${id})
 		GROUP BY rs.history_id, recipient_status, sh.sending_group_date`
 	);
