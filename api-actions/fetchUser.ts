@@ -6,7 +6,7 @@ import {
 	fetchUserPendingSms,
 	fetchUserSentSms,
 	updateUserBalance,
-	fetchUserRejectedSmsByUserId,
+	fetchUserRejectedSms,
 	fetchUserAlfaNames,
 	fetchUserDataFromDatabase,
 	fetchUserSmsSendingInProgress
@@ -37,7 +37,7 @@ export default async function fetchUser(id: string): Promise<IUser | null> {
 		const deliveredSmsData = fetchUserDeliveredSms(Number(id));
 		const sentSmsData = fetchUserSentSms(Number(id));
 		const pendingSmsData = fetchUserPendingSms(Number(id));
-		const rejectedSmsData = fetchUserRejectedSmsByUserId(Number(id));
+		const rejectedSmsData = fetchUserRejectedSms(Number(id));
 		const paidSmsData = fetchUserPaidSms(Number(id));
 		const adjusmentSmsData = fetchUserAdjusmentSms(Number(id));
 		const paymentHistoryData = fetchUserPaymentHistory(Number(id));
