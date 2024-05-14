@@ -51,7 +51,7 @@ const DayHistory = ({ params: { day } }: { params: { day: string } }) => {
 
   return (
     <>
-      <p>Statistict for {day ?? ''}</p>
+      <p>Statistics for {day ?? ''}</p>
       <div className="flex gap-4 mb-4 mt-4">
         <GreenButton size="normal" onClick={() => handleSendMethod('web')}>
           Site

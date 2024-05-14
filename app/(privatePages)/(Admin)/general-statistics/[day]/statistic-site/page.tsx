@@ -81,9 +81,7 @@ const SiteHistoryDetails = () => {
                 className="flex items-center gap-[100px] h-[47px] px-[26px] font-roboto text-l text-black border-b border-[#B5C9BE]"
               >
                 <p className="w-[166px]">{item.tel}</p>
-                <p className="w-[196px]">
-                  {new Date(item.sending_group_date).toLocaleString('uk-UA', { timeZone: 'UTC' })}
-                </p>
+                <p className="w-[196px]">{item.sending_group_date.toLocaleString('uk-UA')}</p>
                 <p className="w-[130px]">{item.recipient_status.length}</p>
                 <p className="w-[130px]">
                   {item.recipient_status.every(item => item === 'fullfield')

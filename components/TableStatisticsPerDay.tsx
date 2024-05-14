@@ -53,7 +53,7 @@ const TableStatisticsPerDay = ({ userHistory }: Props) => {
               {countSuccessfullySentNumbers(elem)}
             </td>
             <td className="py-4 px-3 border font-montserrat text-xl">
-              {new Date(elem.sending_group_date).toLocaleString('uk-UA', { timeZone: 'UTC' })}
+              {new Date(elem.sending_group_date).toLocaleString('uk-UA')}
             </td>
             <td className="py-4 px-3 border font-montserrat text-xl">
               {elem.send_method === 'web' ? (

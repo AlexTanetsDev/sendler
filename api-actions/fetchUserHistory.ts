@@ -12,54 +12,6 @@ export default async function fetchUserHistory(
   sendMethod: SendMethodType | null,
   { startDate, endDate }: IHistoryPeriod
 ): Promise<QueryResult<IHistoryResponce>> {
-  //   if (!startDate || !endDate) {
-  //     const query = `
-  // SELECT
-  //     sh.history_id,
-  //     sh.alfa_name,
-  //     sh.sending_permission,
-  //     sh.send_method,
-  //     sh.text_sms,
-  //     sh.sending_group_date,
-  //     (
-  //         SELECT ARRAY_AGG(COALESCE(rs.recipient_status, 'pending'))
-  //         FROM groups_members gm
-  //         JOIN sending_members sm ON gm.group_id = sm.group_id
-  //         LEFT JOIN recipients_status rs ON rs.client_id = gm.client_id AND rs.history_id = sh.history_id
-  //         WHERE sm.history_id = sh.history_id
-  //     ) AS recipient_status,
-  //     (
-  //         SELECT ARRAY_AGG(gm.client_id)
-  //         FROM groups_members gm
-  //         JOIN sending_members sm ON gm.group_id = sm.group_id
-  //         WHERE sm.history_id = sh.history_id
-  //     ) AS clients
-  // FROM
-  //     sending_history sh
-  // JOIN
-  //     sending_members sm ON sh.history_id = sm.history_id
-  // JOIN
-  //     send_groups sg ON sg.group_id = sm.group_id
-  // JOIN
-  //     users u ON sg.user_id = u.user_id
-  // WHERE
-  //     ($1 = -1 OR u.user_id = $1)
-  //     AND (sh.send_method = $2 OR $2 IS NULL)
-  // GROUP BY
-  //     sh.history_id,
-  //     sh.alfa_name,
-  //     sh.sending_permission,
-  //     sh.send_method,
-  //     sh.text_sms,
-  //     sh.sending_group_date,
-  //     u.user_name,
-  //     recipient_status,
-  //     clients
-  // ORDER BY sh.sending_group_date DESC;
-  //         `;
-  //     return await db.query(query, [userId, sendMethod]);
-  //   }
-
   const query = `
 SELECT
     sh.history_id,
@@ -68,25 +20,22 @@ SELECT
     sh.send_method,
     sh.text_sms,
     sh.sending_group_date,
+    ARRAY_AGG(COALESCE(rs.recipient_status, 'pending')) AS recipient_status,
     (
-        SELECT ARRAY_AGG(COALESCE(rs.recipient_status, 'pending'))
-        FROM groups_members gm
-        JOIN sending_members sm ON gm.group_id = sm.group_id
-        LEFT JOIN recipients_status rs ON rs.client_id = gm.client_id AND rs.history_id = sh.history_id
-        WHERE sm.history_id = sh.history_id
-    ) AS recipient_status,
-    (
-        SELECT ARRAY_AGG(gm.client_id)
-        FROM groups_members gm
-        JOIN sending_members sm ON gm.group_id = sm.group_id
-        WHERE sm.history_id = sh.history_id
+        SELECT ARRAY_AGG(DISTINCT CONCAT(rs.client_id, rs.group_id))
+        FROM recipients_status rs
+        LEFT JOIN groups_members gm ON gm.client_id = rs.client_id
+        WHERE rs.history_id = sh.history_id AND gm.group_id = rs.group_id
+        ORDER BY 1
     ) AS clients
 FROM
     sending_history sh
-JOIN
-    sending_members sm ON sh.history_id = sm.history_id
+LEFT JOIN
+    recipients_status rs ON rs.history_id = sh.history_id
+LEFT JOIN 
+    groups_members gm ON gm.group_id = rs.group_id AND gm.client_id = rs.client_id
 JOIN 
-    send_groups sg ON sg.group_id = sm.group_id
+    send_groups sg ON sg.group_id = rs.group_id
 JOIN
     users u ON sg.user_id = u.user_id
 WHERE 
@@ -101,9 +50,7 @@ GROUP BY
     sh.send_method, 
     sh.text_sms, 
     sh.sending_group_date, 
-    u.user_name,
-    recipient_status,
-    clients
+    u.user_name
 ORDER BY sh.sending_group_date DESC;
         `;
 

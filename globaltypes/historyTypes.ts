@@ -5,15 +5,15 @@ export interface IHistoryId {
 }
 
 export interface IHistoryResponce extends IGroupName {
-	sending_group_date: Date;
-	send_method: string;
-	recipient_status: SmsStatusEnum[];
-	text_sms?: string;
-	user_name?: string;
-	alfa_name?: string;
-	clients?: number[];
-	history_id: number | number[];
-	sending_permission?: boolean;
+  sending_group_date: Date;
+  send_method: string;
+  recipient_status: SmsStatusEnum[];
+  text_sms?: string;
+  user_name?: string;
+  alfa_name?: string;
+  clients?: string[];
+  history_id: number | number[];
+  sending_permission?: boolean;
 }
 
 export interface ISendingHistoryResponce extends IHistoryId {
