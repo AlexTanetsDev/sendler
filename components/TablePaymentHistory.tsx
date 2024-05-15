@@ -1,5 +1,6 @@
 import { IPaymentHistory } from '@/globaltypes/types';
 import { getByIdUserTransactionHistory } from '@/helpers/fetchUserId';
+import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
 
 type Props = {
@@ -33,6 +34,9 @@ const TablePaymentHistory = ({ userId }: Props) => {
           <th className="border px-4 py-3 font-normal">SMS</th>
           <th className="border px-4 py-3 font-normal">Дата поповнення</th>
           <th className="border px-4 py-3 font-normal">Дата оплати</th>
+          <th className="border px-4 py-3 font-normal">Дата зміни</th>
+          <th className="border px-4 py-3 font-normal">Додаткова інформація</th>
+          <th className="border px-4 py-3 font-normal">Редагувати</th>
         </tr>
       </thead>
       <tbody className=" text-xl text-center">
@@ -46,6 +50,18 @@ const TablePaymentHistory = ({ userId }: Props) => {
               </td>
               <td className="py-4 w-1/3 px-3 border font-montserrat text-xl">
                 {elem.paymant_date && elem.paymant_date.toString().split('T')[0]}
+              </td>
+              <td className="py-4 w-1/3 px-3 border font-montserrat text-xl">
+                {elem.change_date && elem.change_date.toString().split('T')[0]}
+              </td>
+              <td className="py-4 w-1/3 px-3 border font-montserrat text-xl">{elem.description}</td>
+              <td className="py-4 w-1/3 px-3 border font-montserrat text-xl">
+                <Link
+                  href={`${elem.transaction_id}/edit_transaction`}
+                  className="row-table__btn mr-2 px-2"
+                >
+                  Редагувати
+                </Link>
               </td>
             </tr>
           ))

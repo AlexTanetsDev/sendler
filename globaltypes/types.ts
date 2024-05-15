@@ -191,6 +191,8 @@ export interface IPaymentHistory {
 	transactions_date: string;
 	paymant_date: string | null;
 	paid: boolean;
+	change_date:  string | null;
+	description:  string | null;
 }
 
 export interface IDebts {

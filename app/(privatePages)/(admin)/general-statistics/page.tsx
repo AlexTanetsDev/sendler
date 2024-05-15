@@ -8,6 +8,7 @@ import { useState, useCallback, useEffect } from 'react';
 import { IHistoryPeriod, IHistoryResponce } from '@/globaltypes/historyTypes';
 import { getUserHistory } from '@/fetch-actions/historyFetchActions';
 import { summarizeHistoryByDate } from '@/helpers/SortHistoryByDate';
+import BackBtn from '@/components/buttons/BackBtn';
 
 const testUserId = 23;
 
@@ -69,6 +70,7 @@ const GeneralStatistics = () => {
 
   return (
     <>
+    <BackBtn/>
       <div className="flex items-center mb-8">
         <Link
           href={{
