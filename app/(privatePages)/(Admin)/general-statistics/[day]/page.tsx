@@ -12,14 +12,15 @@ import Title from '@/components/Title';
 import SendingPermissionBtn from '@/components/buttons/SendingPermissionBtn';
 import BackStatisticsBtn from '@/components/buttons/BackStatisticsBtn';
 import { IHistoryPeriod, IHistoryResponce } from '@/globaltypes/historyTypes';
-import { SmsStatusEnum } from '@/globaltypes/types';
+import { SmsStatusEnum, SendMethodType } from '@/globaltypes/types';
 
-const testUserId = 23;
+const ALL_USERS = -1;
 
 type Props = {};
 
 const DayHistory = ({ params: { day } }: { params: { day: string } }) => {
   const [userHistory, setUserHistory] = useState<IHistoryResponce[]>([]);
+  const [sendMethod, setSendMethod] = useState<SendMethodType>('web');
 
   function parseDateString(dateString: string) {
     const [day, month, year] = dateString.split('.').map(Number);
@@ -32,23 +33,32 @@ const DayHistory = ({ params: { day } }: { params: { day: string } }) => {
       endDate: day ? parseDateString(day) : undefined,
     };
     const userHistory: IHistoryResponce[] | undefined = await getUserHistory({
-      id: testUserId,
+      id: ALL_USERS,
+      sendMethod,
       historyPeriod,
     });
 
     if (userHistory) setUserHistory(userHistory);
-  }, [day, testUserId]);
+  }, [day, sendMethod]);
 
   useEffect(() => {
     memoizedUserHistory();
   }, [memoizedUserHistory]);
 
+  const handleSendMethod = (method: SendMethodType) => {
+    setSendMethod(method);
+  };
+
   return (
     <>
-      <p>Statistict for {day ?? ''}</p>
+      <p>Statistics for {day ?? ''}</p>
       <div className="flex gap-4 mb-4 mt-4">
-        <GreenButton size="normal">Site</GreenButton>
-        <GreenButton size="normal">Api</GreenButton>
+        <GreenButton size="normal" onClick={() => handleSendMethod('web')}>
+          Site
+        </GreenButton>
+        <GreenButton size="normal" onClick={() => handleSendMethod('api')}>
+          Api
+        </GreenButton>
       </div>
       <TableStatisticsPerDay userHistory={userHistory} />
     </>

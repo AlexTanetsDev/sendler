@@ -27,7 +27,7 @@ const TableStatisticsPerDay = ({ userHistory }: Props) => {
       <tbody className=" text-xl">
         {userHistory.map((elem: IHistoryResponce, index: number) => (
           <tr key={index}>
-            <td className="py-4 px-3 border font-montserrat text-xl">{}</td>
+            <td className="py-4 px-3 border font-montserrat text-xl">{elem.history_id}</td>
             <td className="py-4 px-3 border font-montserrat text-xl">{elem.text_sms}</td>
             <td className="py-4 px-3 border font-montserrat text-xl">{elem.alfa_name}</td>
             <td className="py-4 px-3 border font-montserrat text-xl">
@@ -53,10 +53,10 @@ const TableStatisticsPerDay = ({ userHistory }: Props) => {
               {countSuccessfullySentNumbers(elem)}
             </td>
             <td className="py-4 px-3 border font-montserrat text-xl">
-              {new Date(elem.sending_group_date).toLocaleString('uk-UA', { timeZone: 'UTC' })}
+              {new Date(elem.sending_group_date).toLocaleString('uk-UA')}
             </td>
             <td className="py-4 px-3 border font-montserrat text-xl">
-              {elem.send_method === 'api' ? (
+              {elem.send_method === 'web' ? (
                 <Link
                   href={{
                     pathname: `/general-statistics/${formatTableDate(

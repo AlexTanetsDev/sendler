@@ -7,23 +7,26 @@ import {
   IHistoryDetailsResponce,
   ISendingHistoryResponce,
 } from '@/globaltypes/historyTypes';
+import { SendMethodType } from '@/globaltypes/types';
 import { IGetUserHistory, IGetUserHistoryDetails } from './types';
 
 const api = axiosInstance;
 
-export async function getUserHistory({ id, historyPeriod }: IGetHistoryProps) {
+export async function getUserHistory({ id, sendMethod, historyPeriod }: IGetHistoryProps) {
   try {
     const response = await api.get<
       IGetUserHistory,
       AxiosResponse<IGetUserHistory>,
       {
         userId: number | undefined;
+        sendMethod: SendMethodType | undefined;
         start_date: Date | undefined;
         end_date: Date | undefined;
       }
     >(`api/sending-history`, {
       params: {
         userId: id,
+        send_method: sendMethod,
         start_date: historyPeriod?.startDate,
         end_date: historyPeriod?.endDate,
       },

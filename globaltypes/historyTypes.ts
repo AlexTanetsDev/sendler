@@ -1,19 +1,19 @@
-import { IUserId, IGroupName, ITel, SmsStatusEnum } from '@/globaltypes/types';
+import { IUserId, IGroupName, ITel, SmsStatusEnum, SendMethodType } from '@/globaltypes/types';
 
 export interface IHistoryId {
 	history_id: number;
 }
 
 export interface IHistoryResponce extends IGroupName {
-	sending_group_date: Date;
-	send_method: string;
-	recipient_status: SmsStatusEnum[];
-	text_sms?: string;
-	user_name?: string;
-	alfa_name?: string;
-	clients?: number[];
-	history_id: number | number[];
-	sending_permission?: boolean;
+  sending_group_date: Date;
+  send_method: string;
+  recipient_status: SmsStatusEnum[];
+  text_sms?: string;
+  user_name?: string;
+  alfa_name?: string;
+  clients?: string[];
+  history_id: number | number[];
+  sending_permission?: boolean;
 }
 
 export interface ISendingHistoryResponce extends IHistoryId {
@@ -53,6 +53,7 @@ export interface IHistoryPeriod {
 }
 
 export interface IGetHistoryProps {
-	id: number | undefined;
-	historyPeriod?: IHistoryPeriod;
+  id: number | undefined;
+  sendMethod?: SendMethodType | null;
+  historyPeriod?: IHistoryPeriod;
 }

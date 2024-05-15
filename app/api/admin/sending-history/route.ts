@@ -22,7 +22,7 @@ export async function GET(
 
     if (!userId) {
       return HttpError(400, `ID required for getting user's history`);
-		}
+    }
 		
     const query = `
             SELECT sh.history_id, sh.alfa_name, sh.sending_permission, sh.send_method, sh.text_sms, sh.sending_group_date, u.user_name, COALESCE(ARRAY_AGG(DISTINCT rs.recipient_status), ARRAY[CAST('pending' AS status_type)]) AS recipient_status, ARRAY_AGG(DISTINCT rs.client_id) AS clients
