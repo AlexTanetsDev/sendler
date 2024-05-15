@@ -27,7 +27,7 @@ const TableStatisticsPerDay = ({ userHistory }: Props) => {
       <tbody className=" text-xl">
         {userHistory.map((elem: IHistoryResponce, index: number) => (
           <tr key={index}>
-            <td className="py-4 px-3 border font-montserrat text-xl">{}</td>
+            <td className="py-4 px-3 border font-montserrat text-xl">{elem.history_id}</td>
             <td className="py-4 px-3 border font-montserrat text-xl">{elem.text_sms}</td>
             <td className="py-4 px-3 border font-montserrat text-xl">{elem.alfa_name}</td>
             <td className="py-4 px-3 border font-montserrat text-xl">
