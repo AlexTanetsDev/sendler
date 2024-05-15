@@ -3,15 +3,15 @@ import db from '@/db';
 import { updateUserBalance } from '@/api-actions';
 
 export async function POST(req: Request) {
-  try {
+  // try {
     const body = await req.json();
-    const { user_id, sms_count, money_count, paid } = body;
+    const { user_id, sms_count, money_count, paid, description } = body;
 
     const newPaid = await db.query(
-      `INSERT INTO transactions_history (user_id, sms_count, money_count, paid, transactions_date, paymant_date ) VALUES ($1, $2, $3, $4, NOW(), ${
+      `INSERT INTO transactions_history (user_id, sms_count, money_count, paid, transactions_date, paymant_date, description ) VALUES ($1, $2, $3, $4, NOW(), ${
         paid ? 'NOW()' : 'NULL'
-      }) RETURNING *`,
-      [user_id, sms_count, money_count, paid]
+      }, $5) RETURNING *`,
+      [user_id, sms_count, money_count, paid, description]
     );
     await updateUserBalance(user_id);
 
@@ -20,9 +20,9 @@ export async function POST(req: Request) {
     if (newUserPaid) {
       return NextResponse.json({ newUserPaid, message: 'Платіж збережено' }, { status: 200 });
     }
-  } catch (error) {
-    return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
-  }
+  // } catch (error) {
+  //   return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
+  // }
 }
 
 export async function PUT(req: Request) {
@@ -63,22 +63,22 @@ export async function PATCH(req: Request) {
 
 export async function DELETE(req: Request) {
   try {
-  const body = await req.json();
-  const { user_id, sms_count } = body;
+    const body = await req.json();
+    const { transactionId, sms_count, description } = body;
 
-  const newPaid = await db.query(
-    `INSERT INTO user_sms_adjustments (user_id, sms_count, create_time) VALUES ($1, $2, NOW()) RETURNING *`,
-    [user_id, sms_count]
-  );
-
-  const newUserPaid = newPaid.rows[0];
-
-  if (newUserPaid) {
-    return NextResponse.json(
-      { newUserPaid, message: `${sms_count} SMS було знято з користувача. ` },
-      { status: 200 }
+    const newPaid = await db.query(
+      `UPDATE transactions_history SET sms_count = $2, description = $3, change_date = NOW() WHERE transaction_id = $1 RETURNING *`,
+      [transactionId, sms_count, description]
     );
-  }
+
+    const newUserPaid = newPaid.rows[0];
+
+    if (newUserPaid) {
+      return NextResponse.json(
+        { newUserPaid, message: `${sms_count} SMS було знято з користувача. ` },
+        { status: 200 }
+      );
+    }
   } catch (error) {
     return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
   }

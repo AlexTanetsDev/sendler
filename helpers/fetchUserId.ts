@@ -50,13 +50,14 @@ export const getByIdUserTransactionHistory = async (id: number) => {
   }
 };
 
-export async function userPaymant(userId: number, summ: number, countSms: string, isPaid: boolean) {
+export async function userPaymant(userId: number, summ: number, countSms: string, isPaid: boolean, description:string) {
   try {
     const response = await api.post('/api/admin', {
       user_id: userId,
       sms_count: countSms,
       money_count: summ,
       paid: isPaid,
+      description
     });
     return response.data;
   } catch (error) {
@@ -64,10 +65,10 @@ export async function userPaymant(userId: number, summ: number, countSms: string
   }
 }
 
-export async function deleteSMSFromUser(userId: number, countSms: string) {
+export async function deleteSMSFromUser(transactionId: number, countSms: string, description:string) {
   try {
     const response = await api.delete('/api/admin', {
-      data: { user_id: userId, sms_count: countSms },
+      data: { transactionId: transactionId, sms_count: countSms, description: description },
     });
     return response.data;
   } catch (error) {

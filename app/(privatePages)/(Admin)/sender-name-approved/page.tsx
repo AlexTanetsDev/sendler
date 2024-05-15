@@ -1,5 +1,6 @@
 'use client';
 
+import BackBtn from '@/components/buttons/BackBtn';
 import { combinedAlfaNameAndUser } from '@/globaltypes/types';
 
 import { ActiveAlfaName, CombinedAlfaNamesAndUser, DeleteAlfaName } from '@/helpers/AlfaName';
@@ -39,6 +40,7 @@ const SenderNameApproved = () => {
 
   return (
     <>
+    <BackBtn/>
       <table className="mt-10 w-full border bg-priceTableBg">
         <thead>
           <tr className="bg-headerTable text-white text-xl font-roboto  leading-[30px]">
