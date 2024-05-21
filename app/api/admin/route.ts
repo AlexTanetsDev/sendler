@@ -3,7 +3,7 @@ import db from '@/db';
 import { updateUserBalance } from '@/api-actions';
 
 export async function POST(req: Request) {
-  // try {
+  try {
     const body = await req.json();
     const { user_id, sms_count, money_count, paid, description } = body;
 
@@ -20,9 +20,9 @@ export async function POST(req: Request) {
     if (newUserPaid) {
       return NextResponse.json({ newUserPaid, message: 'Платіж збережено' }, { status: 200 });
     }
-  // } catch (error) {
-  //   return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
-  // }
+  } catch (error) {
+    return NextResponse.json({ message: 'Something went wrong!' }, { status: 500 });
+  }
 }
 
 export async function PUT(req: Request) {
